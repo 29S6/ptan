@@ -3,297 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sổ Nhật Ký Bí Mật Of Us 🌸</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Itim&display=swap" rel="stylesheet">
+    <title>Our Secret Diary 🌸</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;600;700&family=Itim&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --pink-dark: #ff7597;
-            --pink-main: #fca3b7;
-            --pink-light: #ffe5ec;
-            --pink-bg: #fff0f3;
-            --text-color: #4a4a4a;
-            --shadow: 0 10px 30px rgba(255, 117, 151, 0.12);
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Comfortaa', sans-serif; }
-        
-        body { 
-            background: linear-gradient(135deg, #fff0f3 0%, #ffe5ec 100%); 
-            color: var(--text-color); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 20px; 
-        }
-        
-        /* Khung chứa Web chỉn chu, bo góc mềm mại */
-        .container { 
-            width: 100%; 
-            max-width: 480px; 
-            background: rgba(255, 255, 255, 0.95); 
-            border-radius: 30px; 
-            box-shadow: var(--shadow); 
-            padding: 30px 24px; 
-            border: 4px solid white; 
-            position: relative; 
-            backdrop-filter: blur(10px);
-        }
-        
-        h2 { color: var(--pink-dark); text-align: center; margin-bottom: 25px; font-weight: 700; font-size: 24px; }
-        h3 { color: var(--pink-dark); font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
-
-        /* Hiệu ứng Loading dễ thương */
-        #loading { 
-            display: none; 
-            text-align: center; 
-            color: var(--pink-dark); 
-            font-weight: bold; 
-            font-size: 13px; 
-            background: var(--pink-light); 
-            padding: 10px; 
-            border-radius: 20px; 
-            margin-bottom: 20px; 
-            border: 2px dashed var(--pink-main);
+            --pink-deep: #ff6b8b;
+            --pink-soft: #fca3b7;
+            --pink-light: #fff0f3;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text-main: #4a3f41;
+            --text-muted: #8a7e81;
         }
 
-        /* MÀN HÌNH KHÓA BẢO MẬT */
-        #lock-screen { text-align: center; padding: 40px 10px; }
-        .lock-icon { font-size: 60px; margin-bottom: 15px; animation: float 3s ease-in-out infinite; }
-        .pass-input { 
-            width: 85%; 
-            padding: 14px; 
-            border: 2.5px solid var(--pink-main); 
-            border-radius: 20px; 
-            text-align: center; 
-            font-size: 24px; 
-            outline: none; 
-            letter-spacing: 8px; 
-            color: var(--pink-dark); 
-            background: var(--pink-bg);
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #ffe5ec 0%, #fcd3de 50%, #ffcbd7 100%);
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Hiệu ứng loading tinh tế */
+        #loading {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 24px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(255, 107, 139, 0.15);
+            border: 1px solid var(--pink-soft);
+            z-index: 100;
+            font-size: 14px;
+            color: var(--pink-deep);
+            font-weight: 600;
+        }
+
+        /* KHUNG CHỨA GIAO DIỆN KÍNH MỜ (GLASSMORPHISM) */
+        .app-container {
+            width: 100%;
+            max-width: 960px; /* Mở rộng không gian hiển thị */
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 32px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(255, 107, 139, 0.1);
+            padding: 35px;
+            transition: all 0.5s ease;
+        }
+
+        /* MÀN HÌNH KHÓA SANG TRỌNG */
+        #lock-screen {
+            max-width: 400px;
+            margin: 60px auto;
+            text-align: center;
+        }
+        .lock-logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 42px;
+            color: var(--pink-deep);
+            margin-bottom: 10px;
+        }
+        .pass-container {
+            position: relative;
+            margin: 25px 0;
+        }
+        .pass-input {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid rgba(252, 163, 183, 0.5);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 12px;
+            outline: none;
+            color: var(--pink-deep);
             transition: 0.3s;
         }
-        .pass-input:focus { border-color: var(--pink-dark); box-shadow: 0 0 10px rgba(255, 117, 151, 0.2); }
-        
-        /* Thiết kế nút bấm chung */
-        .btn { 
-            background: linear-gradient(135deg, #ff85a2 0%, #ff7597 100%); 
-            color: white; 
-            border: none; 
-            padding: 14px 25px; 
-            border-radius: 20px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            margin-top: 20px; 
-            width: 85%; 
-            transition: 0.3s; 
+        .pass-input:focus {
+            border-color: var(--pink-deep);
+            background: white;
+            box-shadow: 0 0 15px rgba(255, 107, 139, 0.15);
+        }
+        .btn-enter {
+            background: linear-gradient(135deg, #ff85a2 0%, #ff6b8b 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.25);
+            transition: 0.3s;
+        }
+        .btn-enter:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(255, 107, 139, 0.35); }
+
+        /* MÀN HÌNH CHÍNH BỐ CỤC 2 CỘT HIỆN ĐẠI */
+        #main-screen { display: none; }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr; /* Chia 2 cột cân đối */
+            gap: 35px;
+        }
+        @media (max-width: 768px) {
+            .main-layout { grid-template-columns: 1fr; gap: 25px; }
+        }
+
+        .section-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 32px;
+            color: var(--pink-deep);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* THIẾT KẾ BỘ LỊCH */
+        .calendar-box {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .nav-title { font-weight: 700; font-size: 18px; color: var(--text-main); }
+        .nav-btn {
+            background: white;
+            border: 1px solid rgba(252, 163, 183, 0.3);
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pink-deep);
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(255, 117, 151, 0.3);
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 117, 151, 0.4); }
-        .btn:active { transform: translateY(0); }
-
-        /* CÁC MÀN HÌNH CHỨC NĂNG */
-        #main-screen, #form-screen, #view-screen { display: none; }
-        
-        /* BỘ LỊCH THÁNG XINH XẮN */
-        .calendar-container { background: white; border-radius: 24px; padding: 15px; box-shadow: inset 0 0 15px rgba(255,163,183,0.08); border: 1px solid var(--pink-light); margin-bottom: 25px; }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px; }
-        .calendar-btn { background: var(--pink-light); border: none; width: 35px; height: 35px; border-radius: 50%; color: var(--pink-dark); font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .calendar-btn:hover { background: var(--pink-main); color: white; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
-        .day-name { font-weight: bold; color: var(--pink-dark); font-size: 11px; padding: 5px 0; }
-        .calendar-day { 
-            background: var(--pink-bg); 
-            aspect-ratio: 1; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 14px; 
-            font-size: 13px; 
-            font-weight: 600;
-            position: relative; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            color: #666;
-        }
-        .calendar-day:hover:not(.empty) { transform: scale(1.1); background: var(--pink-light); color: var(--pink-dark); }
-        .calendar-day.has-diary { background: linear-gradient(135deg, #ffe5ec 0%, #ffcbd7 100%); color: var(--pink-dark); font-weight: 700; border: 1.5px solid var(--pink-main); }
-        .calendar-day .heart-icon { font-size: 9px; color: #ff3b30; margin-top: 1px; position: absolute; bottom: 3px; }
-        .calendar-day.empty { background: transparent; cursor: default; }
-
-        /* DANH SÁCH 5 NGÀY GẦN NHẤT (NÂNG CẤP UX) */
-        .diary-item { 
-            background: white; 
-            padding: 16px; 
-            border-radius: 20px; 
-            margin-bottom: 12px; 
-            border-left: 6px solid var(--pink-dark); 
-            cursor: pointer; 
-            transition: 0.3s; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            border-top: 1px solid #fff0f3;
-            border-right: 1px solid #fff0f3;
-            border-bottom: 1px solid #fff0f3;
-        }
-        .diary-item:hover { transform: translateX(6px); box-shadow: 0 6px 16px rgba(255, 117, 151, 0.12); background: var(--pink-bg); }
-        .diary-item-date { font-weight: 700; font-size: 12px; color: var(--pink-dark); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
-        .diary-item-title { font-size: 15px; font-weight: 700; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 3px; }
-        .diary-item-preview { font-size: 12px; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'Itim', sans-serif; }
-
-        /* NÚT TẠO MỚI NỔI BẬT (FAB) */
-        .fab { 
-            position: fixed; 
-            bottom: 35px; 
-            right: calc(50% - 215px); 
-            width: 56px; 
-            height: 56px; 
-            background: linear-gradient(135deg, #ff85a2 0%, #ff5c8a 100%); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            font-size: 28px; 
-            box-shadow: 0 6px 20px rgba(255, 92, 138, 0.4); 
-            cursor: pointer; 
-            z-index: 10; 
-            border: 2px solid white; 
-            transition: 0.3s; 
-        }
-        @media(max-width: 500px) { .fab { right: 25px; } }
-        .fab:hover { transform: rotate(90deg) scale(1.1); }
-
-        /* FORM NHẬP LIỆU NHẬT KÝ */
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--pink-dark); font-size: 13px; }
-        .form-control { 
-            width: 100%; 
-            padding: 12px 16px; 
-            border: 2px solid var(--pink-light); 
-            border-radius: 16px; 
-            outline: none; 
-            font-size: 14px; 
-            color: var(--text-color); 
-            background: var(--pink-bg);
             transition: 0.2s;
         }
-        .form-control:focus { border-color: var(--pink-main); background: white; }
-        textarea.form-control { height: 220px; resize: none; font-family: 'Itim', sans-serif; font-size: 17px; line-height: 1.5; }
+        .nav-btn:hover { background: var(--pink-deep); color: white; border-color: var(--pink-deep); }
         
-        .btn-group { display: flex; gap: 12px; margin-top: 25px; }
-        .btn-secondary { background: #e2e8f0; color: #475569; box-shadow: none; margin-top: 0; }
-        .btn-secondary:hover { background: #cbd5e1; box-shadow: none; }
-        .btn-danger { background: #ff4d6d; color: white; box-shadow: none; margin-top: 0; }
-        .btn-danger:hover { background: #ff1a43; box-shadow: none; }
-        .btn-submit { margin-top: 0; flex: 2; }
-
-        /* MÀN HÌNH XEM CHI TIẾT NHẬT KÝ */
-        .view-card { background: white; border-radius: 24px; padding: 20px; border: 1px solid var(--pink-light); box-shadow: inset 0 0 20px rgba(255,133,162,0.03); }
-        .view-date { text-align: center; font-size: 13px; color: #999; margin-bottom: 15px; font-weight: 600; }
-        .view-content { 
-            background: var(--pink-bg); 
-            padding: 20px; 
-            border-radius: 18px; 
-            min-height: 180px; 
-            line-height: 1.6; 
-            font-family: 'Itim', sans-serif; 
-            font-size: 18px; 
-            white-space: pre-wrap; 
-            margin-bottom: 20px; 
-            border: 1.5px dashed var(--pink-main); 
-            color: #3a3a3a;
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .weekday { font-weight: 700; color: var(--pink-deep); font-size: 12px; text-align: center; padding-bottom: 5px; }
+        .cell-day {
+            background: rgba(255, 255, 255, 0.7);
+            aspect-ratio: 1;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            border: 1px solid transparent;
         }
+        .cell-day:hover:not(.empty) {
+            background: white;
+            transform: scale(1.08);
+            border-color: var(--pink-soft);
+        }
+        .cell-day.has-diary {
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe5ec 100%);
+            color: var(--pink-deep);
+            font-weight: 700;
+            border: 1px solid var(--pink-soft);
+        }
+        .cell-day .heart {
+            font-size: 10px;
+            color: #ff4757;
+            position: absolute;
+            bottom: 4px;
+        }
+        .cell-day.empty { background: transparent; cursor: default; }
+
+        /* THIẾT KẾ CỘT DANH SÁCH 5 NGÀY GẦN NHẤT */
+        .timeline-box { display: flex; flex-direction: column; }
+        .diary-stream { max-height: 420px; overflow-y: auto; padding-right: 5px; }
+        /* Tùy chỉnh thanh cuộn cho tinh tế */
+        .diary-stream::-webkit-scrollbar { width: 4px; }
+        .diary-stream::-webkit-scrollbar-thumb { background: var(--pink-soft); border-radius: 10px; }
+
+        .card-diary {
+            background: white;
+            padding: 18px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+        }
+        .card-diary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 139, 0.1);
+            background: linear-gradient(to right, white, var(--pink-light));
+        }
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .card-date {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--pink-deep);
+            background: var(--pink-light);
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+        .card-title { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 4px; }
+        .card-preview { font-family: 'Itim', sans-serif; font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+        /* NÚT THÊM MỚI NỔI BẬT KHÔNG BỊ QUÊ */
+        .btn-fab {
+            position: fixed;
+            bottom: 40px;
+            right: calc(50% - 440px);
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, #ff85a2 0%, #ff6b8b 100%);
+            border: none;
+            border-radius: 18px; /* Đổi bo tròn tròn hẳn sang vuông bo góc hiện đại hơn */
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 107, 139, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            z-index: 90;
+        }
+        @media (max-width: 980px) { .btn-fab { right: 30px; } }
+        .btn-fab:hover { transform: scale(1.05) rotate(90deg); }
+
+        /* MÀN HÌNH FORM VIẾT / XEM NHẬT KÝ */
+        #form-screen, #view-screen { display: none; max-width: 650px; margin: 0 auto; }
         
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        
+        .modern-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid rgba(252, 163, 183, 0.3);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.7);
+            outline: none;
+            font-size: 14px;
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+        .modern-input:focus { border-color: var(--pink-deep); background: white; }
+        
+        textarea.modern-input {
+            height: 250px;
+            resize: none;
+            font-family: 'Itim', sans-serif;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .flex-buttons { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-action {
+            flex: 1;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .btn-main { background: linear-gradient(135deg, #ff85a2 0%, #ff6b8b 100%); color: white; box-shadow: 0 5px 15px rgba(255,107,139,0.2); }
+        .btn-main:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(255,107,139,0.3); }
+        .btn-back { background: #f1f5f9; color: #475569; }
+        .btn-back:hover { background: #e2e8f0; }
+        .btn-del { background: #fee2e2; color: #ef4444; }
+        .btn-del:hover { background: #fca5a5; }
+
+        /* MÀN HÌNH CHI TIẾT TÂM SỰ */
+        .paper-view {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid var(--pink-light);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.01);
+            position: relative;
+        }
+        .paper-view::before {
+            content: '';
+            position: absolute;
+            left: 25px; top: 0; bottom: 0; width: 1px;
+            background: rgba(255, 107, 139, 0.15);
+        }
+        .view-header-title { font-size: 22px; font-weight: 700; color: #222; text-align: center; margin-bottom: 5px; }
+        .view-header-date { font-size: 12px; text-align: center; color: var(--text-muted); margin-bottom: 25px; font-weight: 600; }
+        .view-body-content {
+            font-family: 'Itim', sans-serif;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #3a3a3a;
+            white-space: pre-wrap;
+            padding-left: 15px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="loading">✨ Đang gửi tâm tư tới Drive bí mật... ✨</div>
+<div class="app-container">
+    <div id="loading">✨ Đang đồng bộ dữ liệu... ✨</div>
 
     <div id="lock-screen">
-        <div class="lock-icon">🌸</div>
-        <h2>Sổ Nhật Ký Bí Mật</h2>
-        <p style="font-size: 13px; color: #888; margin-bottom: 20px;">Nhập mã tình yêu của hai đứa mình nè</p>
-        <input type="password" id="password" class="pass-input" placeholder="••••" maxlength="4">
-        <center><button class="btn" onclick="checkPassword()">Mở Sổ Đối Thoại 💞</button></center>
+        <div class="lock-logo">Secret Diary 🌸</div>
+        <p style="font-size: 13px; color: var(--text-muted);">Nơi lưu giữ những chiếc khoảnh khắc ngọt ngào</p>
+        <div class="pass-container">
+            <input type="password" id="password" class="pass-input" placeholder="••••" maxlength="4">
+        </div>
+        <button class="btn-enter" onclick="checkPassword()">Mở Sổ Kỷ Niệm 🤍</button>
     </div>
 
     <div id="main-screen">
-        <h2 style="font-family: 'Itim'; font-size: 26px; letter-spacing: 0.5px;">Nhật Ký Chúng Mình 💕</h2>
-        
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button class="calendar-btn" onclick="changeMonth(-1)">◀</button>
-                <h4 id="calendar-month-year" style="color: var(--pink-dark); font-weight: 700;">Tháng --/----</h4>
-                <button class="calendar-btn" onclick="changeMonth(1)">▶</button>
+        <div class="main-layout">
+            
+            <div class="calendar-box">
+                <div class="calendar-nav">
+                    <button class="nav-btn" onclick="changeMonth(-1)">◀</button>
+                    <div class="nav-title" id="calendar-month-year">Tháng --/----</div>
+                    <button class="nav-btn" onclick="changeMonth(1)">▶</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
             </div>
-            <div class="calendar-grid" id="calendar-grid"></div>
-        </div>
 
-        <div class="recent-section">
-            <h3>✨ 5 kỷ niệm gần đây nhất</h3>
-            <div id="recent-list"></div>
-        </div>
+            <div class="timeline-box">
+                <div class="section-title">Timeline Kỷ Niệm ✨</div>
+                <div class="diary-stream" id="recent-list"></div>
+            </div>
 
-        <button class="fab" onclick="showCreateScreen()">+</button>
+        </div>
+        <button class="btn-fab" onclick="showCreateScreen()">+</button>
     </div>
 
     <div id="form-screen">
-        <h2 id="form-title">Ghi Kỷ Niệm Mới</h2>
+        <div class="section-title" id="form-title">Ghi Kỷ Niệm Mới</div>
         <input type="hidden" id="diary-id">
         
-        <div class="form-group">
-            <label>📅 Ngày lưu giữ:</label>
-            <input type="date" id="diary-date" class="form-control">
+        <div class="input-group">
+            <label>📅 Ngày viết nhật ký:</label>
+            <input type="date" id="diary-date" class="modern-input">
         </div>
-        <div class="form-group">
-            <label>🌸 Tiêu đề ngày hôm nay:</label>
-            <input type="text" id="diary-title" class="form-control" placeholder="Hôm nay có gì vui không nè...">
+        <div class="input-group">
+            <label>🌸 Tiêu đề hôm nay là gì nè:</label>
+            <input type="text" id="diary-title" class="modern-input" placeholder="Một ngày thật tuyệt vời cùng anh...">
         </div>
-        <div class="form-group">
-            <label>✍️ Tâm sự với anh/em nhé:</label>
-            <textarea id="diary-content" class="form-control" placeholder="Kể cho đối phương nghe chuyện hôm nay của em nhé..."></textarea>
+        <div class="input-group">
+            <label>✍️ Tâm sự chuyện hôm nay...</label>
+            <textarea id="diary-content" class="modern-input" placeholder="Kể cho cuốn sổ nghe những điều ngọt ngào hôm nay của em đi..."></textarea>
         </div>
         
-        <div class="btn-group">
-            <button class="btn btn-secondary" onclick="showMainScreen()">Hủy</button>
-            <button class="btn btn-submit" onclick="saveDiary()">Lưu Lại Kỷ Niệm 📝</button>
+        <div class="flex-buttons">
+            <button class="btn-action btn-back" onclick="showMainScreen()">Quay Lại</button>
+            <button class="btn-action btn-main" onclick="saveDiary()" style="flex: 2;">Lưu Lại Kỷ Niệm 📝</button>
         </div>
     </div>
 
     <div id="view-screen">
-        <div class="view-card">
-            <h2 id="view-title" style="margin-bottom:5px; font-size: 22px;">Tiêu đề</h2>
-            <div class="view-date" id="view-date">Ngày --/--/----</div>
-            <div class="view-content" id="view-content">Nội dung...</div>
+        <div class="section-title">Đọc Kỷ Niệm 💕</div>
+        <div class="paper-view">
+            <h2 class="view-header-title" id="view-title">Tiêu đề</h2>
+            <div class="view-header-date" id="view-date">Ngày --/--/----</div>
+            <div class="view-body-content" id="view-content">Nội dung...</div>
         </div>
         
-        <div class="btn-group">
-            <button class="btn btn-secondary" onclick="showMainScreen()">Về Lịch</button>
-            <button class="btn btn-submit" onclick="editCurrentDiary()" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 12px rgba(217,119,6,0.3);">Sửa bài</button>
-            <button class="btn btn-danger" onclick="deleteCurrentDiary()">Xóa</button>
+        <div class="flex-buttons">
+            <button class="btn-action btn-back" onclick="showMainScreen()">Về Trang Chủ</button>
+            <button class="btn-action btn-main" onclick="editCurrentDiary()" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">Chỉnh Sửa</button>
+            <button class="btn-action btn-del" onclick="deleteCurrentDiary()">Xóa Bài</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Link cấu hình mới nhất của bạn đã được cập nhật thành công tại đây
-    const API_URL = "https://script.google.com/macros/s/AKfycbzUO4hwZcMBK2G1qUHQzoWbRVyB9KYOOgUob8h1YFk8MNXff79kqHfQTqvA-LqG-00/exec"; 
+    // Link API Google Apps Script chính thức của bạn
+    const API_URL = "https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec"; 
 
     let diaries = [];
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
     let selectedDiaryId = null;
 
-    // Cho phép ấn nút Enter khi điền mật khẩu để vào thẳng web
+    // Lắng nghe sự kiện nhấn Enter ở màn hình mật khẩu
     document.getElementById('password').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') checkPassword();
     });
@@ -309,7 +434,7 @@
         }
     }
 
-    // Tải dữ liệu từ Google Drive (Đã tối ưu hóa chống lỗi CORS hoàn toàn)
+    // Đồng bộ dữ liệu từ Google Drive về máy
     async function fetchDiaries() {
         showLoading(true);
         try {
@@ -322,12 +447,12 @@
             renderRecentDiaries();
         } catch (error) {
             console.error(error);
-            alert("Lỗi kết nối bộ nhớ Google Drive! Hãy đảm bảo bạn đã chọn 'Anyone' tại bước phân quyền trên Apps Script.");
+            alert("Lỗi đồng bộ dữ liệu. Hãy đảm bảo bạn đã cấu hình 'Anyone' trên Apps Script.");
         }
         showLoading(false);
     }
 
-    // Gửi dữ liệu đồng bộ lên Google Drive 
+    // Đẩy dữ liệu đồng bộ lên Google Drive
     async function saveToDrive() {
         showLoading(true);
         try {
@@ -338,7 +463,7 @@
                 body: JSON.stringify({ action: "write", diaries: diaries })
             });
             
-            // Tạo độ trễ ngắn 1.2s để script phía sau Google hoàn thành việc ghi dữ liệu vào file JSON
+            // Chờ 1.2 giây để Google xử lý file trước khi nạp lại giao diện mới
             setTimeout(() => {
                 renderCalendar();
                 renderRecentDiaries();
@@ -347,7 +472,7 @@
             }, 1200);
         } catch (error) {
             showLoading(false);
-            alert("Gặp lỗi khi đồng bộ lên Google Drive, hãy thử lại.");
+            alert("Đồng bộ thất bại, vui lòng thử lại.");
         }
     }
 
@@ -355,10 +480,10 @@
         document.getElementById('loading').style.display = show ? 'block' : 'none';
     }
 
-    // Xử lý tạo và hiển thị bộ lịch tháng thông minh
+    // Dựng bộ lịch tháng thông minh
     function renderCalendar() {
         const header = document.getElementById('calendar-month-year');
-        header.innerText = `Tháng ${String(currentMonth + 1).padStart(2, '0')}/${currentYear}`;
+        header.innerText = `Tháng ${String(currentMonth + 1).padStart(2, '0')} / ${currentYear}`;
 
         const grid = document.getElementById('calendar-grid');
         grid.innerHTML = '';
@@ -366,7 +491,7 @@
         const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
         dayNames.forEach(name => {
             const el = document.createElement('div');
-            el.className = 'day-name';
+            el.className = 'weekday';
             el.innerText = name;
             grid.appendChild(el);
         });
@@ -376,13 +501,13 @@
 
         for (let i = 0; i < firstDay; i++) {
             const el = document.createElement('div');
-            el.className = 'calendar-day empty';
+            el.className = 'cell-day empty';
             grid.appendChild(el);
         }
 
         for (let day = 1; day <= daysInMonth; day++) {
             const el = document.createElement('div');
-            el.className = 'calendar-day';
+            el.className = 'cell-day';
             el.innerText = day;
 
             const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -391,12 +516,12 @@
             if (diary) {
                 el.classList.add('has-diary');
                 const heart = document.createElement('span');
-                heart.className = 'heart-icon';
+                heart.className = 'heart';
                 heart.innerText = '❤️';
                 el.appendChild(heart);
                 el.onclick = () => viewDiary(diary.id);
             } else {
-                // TIỆN ÍCH UX: Bấm vào ngày trống trên lịch sẽ tự động mở trang viết bù cho đúng ngày đó
+                // UX nâng cấp: Bấm ngày nào trống trên lịch tự động mở viết bù đúng ngày đó
                 el.onclick = () => showCreateScreen(dateStr);
             }
             grid.appendChild(el);
@@ -410,7 +535,7 @@
         renderCalendar();
     }
 
-    // Hiển thị danh sách 5 ngày gần nhất kèm trích dẫn nội dung ngắn (Preview)
+    // Dựng danh sách kỷ niệm bên cột phải kèm trích dẫn ngắn (Preview)
     function renderRecentDiaries() {
         const list = document.getElementById('recent-list');
         list.innerHTML = '';
@@ -418,25 +543,25 @@
         const sorted = [...diaries].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
         
         if(sorted.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:#aaa; font-size:13px; padding: 15px 0; font-family: Itim;">Chưa có trang kỷ niệm nào được viết 🌸</p>';
+            list.innerHTML = '<p style="text-align:center; color:#baa; font-size:13px; padding: 30px 0; font-family: Itim;">Chưa có kỷ niệm nào được lưu giữ 🌸</p>';
             return;
         }
 
         sorted.forEach(diary => {
             const item = document.createElement('div');
-            item.className = 'diary-item';
+            item.className = 'card-diary';
             item.onclick = () => viewDiary(diary.id);
 
             const dateParts = diary.date.split('-');
-            const formattedDate = `Ngày ${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-            
-            // Lấy 45 ký tự đầu tiên của nội dung làm preview giúp giao diện sinh động hơn
-            const previewText = diary.content ? diary.content.substring(0, 45) + (diary.content.length > 45 ? "..." : "") : "Chưa có nội dung tâm sự...";
+            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+            const previewText = diary.content ? diary.content.substring(0, 50) + (diary.content.length > 50 ? "..." : "") : "Chưa có nội dung tâm sự...";
 
             item.innerHTML = `
-                <div class="diary-item-date">🎀 ${formattedDate}</div>
-                <div class="diary-item-title">${diary.title || "Không có tiêu đề"}</div>
-                <div class="diary-item-preview">${previewText}</div>
+                <div class="card-meta">
+                    <span class="card-date">💞 ${formattedDate}</span>
+                </div>
+                <div class="card-title">${diary.title || "Không có tiêu đề"}</div>
+                <div class="card-preview">${previewText}</div>
             `;
             list.appendChild(item);
         });
@@ -453,7 +578,7 @@
         document.getElementById('form-screen').style.display = 'block';
         document.getElementById('view-screen').style.display = 'none';
         
-        document.getElementById('form-title').innerText = "Ghi Nhật Ký Mới 📝";
+        document.getElementById('form-title').innerText = "Ghi Kỷ Niệm Mới 📝";
         document.getElementById('diary-id').value = "";
         document.getElementById('diary-title').value = "";
         document.getElementById('diary-content').value = "";
@@ -461,7 +586,6 @@
         if (specificDate) {
             document.getElementById('diary-date').value = specificDate;
         } else {
-            // Lấy ngày hiện tại chuẩn múi giờ Việt Nam (định dạng YYYY-MM-DD)
             const now = new Date();
             const offset = now.getTimezoneOffset() * 60000;
             const localISOTime = (new Date(now - offset)).toISOString().slice(0, 10);
@@ -508,9 +632,8 @@
             return;
         }
 
-        // Chống trùng lặp dữ liệu: Nếu tạo mới trùng vào một ngày đã tồn tại trang viết trước đó
         if(!id && diaries.some(d => d.date === date)) {
-            alert("Ngày này hai đứa mình đã có nhật ký rồi nè! Hãy nhấn trực tiếp vào trái tim đỏ trên lịch để chỉnh sửa nha.");
+            alert("Ngày này hai đứa mình đã viết nhật ký rồi nè, hãy nhấn trực tiếp vào trái tim đỏ trên lịch để sửa nha!");
             return;
         }
 
@@ -535,7 +658,7 @@
     }
 
     function deleteCurrentDiary() {
-        if (confirm("Cưng có chắc chắn muốn xóa trang nhật ký kỷ niệm này không? 🥺")) {
+        if (confirm("Em có chắc chắn muốn xóa đi trang kỷ niệm này không? 🥺")) {
             diaries = diaries.filter(d => d.id !== selectedDiaryId);
             saveToDrive();
         }
