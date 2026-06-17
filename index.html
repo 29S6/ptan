@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Secret Diary 🌸</title>
+    <title>Our Secret Space 🌸</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;600;700&family=Itim&display=swap" rel="stylesheet">
     
@@ -12,7 +12,7 @@
             --pink-deep: #ff6b8b;
             --pink-soft: #fca3b7;
             --pink-light: #fff0f3;
-            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.88);
             --glass-border: rgba(255, 255, 255, 0.6);
             --text-main: #4a3f41;
             --text-muted: #8a7e81;
@@ -38,10 +38,10 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 10px 24px;
             border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(255, 107, 139, 0.15);
+            box-shadow: 0 10px 25px rgba(255, 107, 139, 0.2);
             border: 1px solid var(--pink-soft);
             z-index: 100;
             font-size: 14px;
@@ -49,105 +49,148 @@
             font-weight: 600;
         }
 
+        /* KHUNG CHỨA LỚN: Tối ưu không gian hiển thị rộng rãi, chỉn chu */
         .app-container {
             width: 100%;
-            max-width: 960px;
+            max-width: 1100px;
             background: var(--glass-bg);
             border: 2px solid var(--glass-border);
             border-radius: 32px;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(255, 107, 139, 0.1);
-            padding: 35px;
+            padding: 30px;
         }
+
+        /* ĐỒNG HỒ ĐẾM NGƯỢC TÌNH YÊU SANG TRỌNG */
+        .love-clock-box {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe5ec 100%);
+            border: 1px solid rgba(255, 107, 139, 0.2);
+            border-radius: 20px;
+            padding: 15px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.05);
+        }
+        .love-clock-title { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--pink-deep); margin-bottom: 5px; }
+        .love-timer { font-size: 18px; font-weight: 700; color: #333; letter-spacing: 0.5px; }
+        .love-timer span { color: var(--pink-deep); padding: 0 2px; }
 
         /* MÀN HÌNH KHÓA */
         #lock-screen { max-width: 400px; margin: 60px auto; text-align: center; }
-        .lock-logo { font-family: 'Dancing Script', cursive; font-size: 42px; color: var(--pink-deep); margin-bottom: 10px; }
+        .lock-logo { font-family: 'Dancing Script', cursive; font-size: 46px; color: var(--pink-deep); margin-bottom: 10px; }
         .pass-container { position: relative; margin: 25px 0; }
         .pass-input {
             width: 100%; padding: 16px; border: 1.5px solid rgba(252, 163, 183, 0.5);
             background: rgba(255, 255, 255, 0.5); border-radius: 20px; font-size: 24px;
             text-align: center; letter-spacing: 12px; outline: none; color: var(--pink-deep);
         }
-        .pass-input:focus { border-color: var(--pink-deep); background: white; }
         .btn-enter {
             background: linear-gradient(135deg, #ff85a2 0%, #ff6b8b 100%); color: white;
             border: none; padding: 16px 40px; border-radius: 20px; font-size: 16px;
             font-weight: 700; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 107, 139, 0.25); transition: 0.3s;
         }
-        .btn-enter:hover { transform: translateY(-2px); }
 
-        /* MÀN HÌNH CHÍNH */
+        /* BỐ CỤC 3 CỘT KHÔNG GIAN MÁY TÍNH KHÔNG BỊ TRỐNG */
         #main-screen { display: none; }
-        .main-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 35px; }
-        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; gap: 25px; } }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr 0.9fr; /* Chia 3 cột hoàn hảo */
+            gap: 25px;
+        }
+        @media (max-width: 992px) { .main-layout { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
 
-        .section-title { font-family: 'Dancing Script', cursive; font-size: 32px; color: var(--pink-deep); margin-bottom: 20px; }
+        .section-header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .section-title { font-family: 'Dancing Script', cursive; font-size: 28px; color: var(--pink-deep); }
+        
+        /* Nút đồng bộ lại nhỏ gọn, tinh tế */
+        .btn-sync { background: white; border: 1px solid var(--pink-soft); color: var(--pink-deep); padding: 5px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-sync:hover { background: var(--pink-deep); color: white; }
 
         /* BỘ LỊCH */
-        .calendar-box { background: rgba(255, 255, 255, 0.6); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); }
-        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .nav-title { font-weight: 700; font-size: 18px; }
-        .nav-btn { background: white; border: 1px solid rgba(252, 163, 183, 0.3); width: 36px; height: 36px; border-radius: 12px; cursor: pointer; color: var(--pink-deep); font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        .calendar-box { background: rgba(255, 255, 255, 0.7); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); height: fit-content; }
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .nav-title { font-weight: 700; font-size: 16px; }
+        .nav-btn { background: white; border: 1px solid rgba(252, 163, 183, 0.2); width: 32px; height: 32px; border-radius: 10px; cursor: pointer; color: var(--pink-deep); }
         
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-        .weekday { font-weight: 700; color: var(--pink-deep); font-size: 12px; text-align: center; padding-bottom: 5px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .weekday { font-weight: 700; color: var(--pink-deep); font-size: 11px; text-align: center; padding-bottom: 5px; }
         .cell-day {
-            background: rgba(255, 255, 255, 0.7); aspect-ratio: 1; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.8); aspect-ratio: 1; border-radius: 12px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; position: relative;
+            font-size: 13px; font-weight: 600; color: var(--text-main); position: relative;
         }
-        .cell-day:hover:not(.empty) { background: white; transform: scale(1.05); }
-        .cell-day.has-diary { background: linear-gradient(135deg, #fff0f3 0%, #ffe5ec 100%); color: var(--pink-deep); font-weight: 700; border: 1px solid var(--pink-soft); }
-        .cell-day .heart { font-size: 10px; color: #ff4757; position: absolute; bottom: 4px; }
-        .cell-day.empty { background: transparent; cursor: default; }
+        .cell-day.has-diary { background: linear-gradient(135deg, #fff0f3 0%, #ffe5ec 100%); color: var(--pink-deep); font-weight: 700; border: 1px solid var(--pink-soft); cursor: pointer; }
+        .cell-day.has-diary:hover { transform: scale(1.05); }
+        .cell-day .heart { font-size: 9px; color: #ff4757; position: absolute; bottom: 2px; }
+        /* Chấm nhỏ cho ngày kỷ niệm */
+        .cell-day .anni-dot { width: 4px; height: 4px; background-color: var(--pink-deep); border-radius: 50%; position: absolute; top: 4px; }
+        .cell-day.empty { background: transparent; border: none; }
 
-        /* TIMELINE */
-        .diary-stream { max-height: 420px; overflow-y: auto; padding-right: 5px; }
-        .card-diary { background: white; padding: 18px; border-radius: 20px; margin-bottom: 14px; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255, 255, 255, 0.8); }
-        .card-diary:hover { transform: translateY(-2px); background: linear-gradient(to right, white, var(--pink-light)); }
-        .card-meta { margin-bottom: 6px; }
-        .card-date { font-size: 11px; font-weight: 700; color: var(--pink-deep); background: var(--pink-light); padding: 4px 10px; border-radius: 10px; }
-        .card-title { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 4px; }
-        .card-preview { font-family: 'Itim', sans-serif; font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+        /* TIMELINE NHẬT KÝ (CỘT CHÍNH GIỮA) */
+        .diary-stream, .anni-stream { max-height: 440px; overflow-y: auto; padding-right: 3px; }
+        .diary-stream::-webkit-scrollbar, .anni-stream::-webkit-scrollbar { width: 3px; }
+        .diary-stream::-webkit-scrollbar-thumb, .anni-stream::-webkit-scrollbar-thumb { background: var(--pink-soft); border-radius: 10px; }
 
+        .card-diary { background: white; padding: 15px; border-radius: 18px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255, 255, 255, 0.8); }
+        .card-diary:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255, 107, 139, 0.08); background: linear-gradient(to right, white, var(--pink-light)); }
+        .card-date { font-size: 10px; font-weight: 700; color: var(--pink-deep); background: var(--pink-light); padding: 3px 8px; border-radius: 8px; display: inline-block; margin-bottom: 5px; }
+        .card-title { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 3px; }
+        .card-preview { font-family: 'Itim', sans-serif; font-size: 13px; color: var(--text-muted); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* KÝ SỰ NGÀY KỶ NIỆM (CỘT PHẢI - LẤP ĐẦY KHOẢNG TRỐNG) */
+        .anni-box { background: rgba(255, 255, 255, 0.5); border-radius: 24px; padding: 18px; border: 1px solid var(--glass-border); height: fit-content; }
+        .card-anni { background: rgba(255, 255, 255, 0.9); padding: 12px; border-radius: 14px; margin-bottom: 10px; border-left: 4px solid var(--pink-deep); }
+        .card-anni-date { font-size: 11px; font-weight: 700; color: var(--pink-deep); }
+        .card-anni-name { font-size: 13px; font-weight: 600; color: #444; margin-top: 2px; }
+
+        .btn-add-anni { width: 100%; background: white; border: 1px dashed var(--pink-deep); color: var(--pink-deep); padding: 8px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn-add-anni:hover { background: var(--pink-light); }
+
+        /* NÚT THÊM FAB */
         .btn-fab {
-            position: fixed; bottom: 40px; right: calc(50% - 440px); width: 58px; height: 58px;
+            position: fixed; bottom: 35px; right: calc(50% - 510px); width: 56px; height: 56px;
             background: linear-gradient(135deg, #ff85a2 0%, #ff6b8b 100%); border: none; border-radius: 18px;
-            color: white; font-size: 28px; cursor: pointer; box-shadow: 0 10px 25px rgba(255, 107, 139, 0.35);
+            color: white; font-size: 26px; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
             display: flex; align-items: center; justify-content: center; z-index: 90; transition: 0.2s;
         }
-        @media (max-width: 980px) { .btn-fab { right: 30px; } }
+        @media (max-width: 1120px) { .btn-fab { right: 30px; } }
+        .btn-fab:hover { transform: scale(1.05); }
 
-        /* FORMS */
-        #form-screen, #view-screen { display: none; max-width: 650px; margin: 0 auto; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-        .modern-input { width: 100%; padding: 14px 18px; border: 1.5px solid rgba(252, 163, 183, 0.3); border-radius: 18px; background: rgba(255, 255, 255, 0.7); outline: none; font-size: 14px; color: var(--text-main); }
+        /* FORMS & VIEWS */
+        #form-screen, #view-screen, #anni-form-screen { display: none; max-width: 600px; margin: 0 auto; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+        .modern-input { width: 100%; padding: 12px 16px; border: 1.5px solid rgba(252, 163, 183, 0.3); border-radius: 16px; background: rgba(255, 255, 255, 0.7); outline: none; font-size: 14px; }
         .modern-input:focus { border-color: var(--pink-deep); background: white; }
-        textarea.modern-input { height: 250px; resize: none; font-family: 'Itim', sans-serif; font-size: 17px; line-height: 1.6; }
+        textarea.modern-input { height: 220px; resize: none; font-family: 'Itim', sans-serif; font-size: 17px; line-height: 1.5; }
 
-        .flex-buttons { display: flex; gap: 15px; margin-top: 30px; }
-        .btn-action { flex: 1; padding: 14px; border-radius: 16px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; text-align: center; }
+        .flex-buttons { display: flex; gap: 12px; margin-top: 25px; }
+        .btn-action { flex: 1; padding: 12px; border-radius: 14px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; text-align: center; }
         .btn-main { background: linear-gradient(135deg, #ff85a2 0%, #ff6b8b 100%); color: white; }
         .btn-back { background: #f1f5f9; color: #475569; }
         .btn-del { background: #fee2e2; color: #ef4444; }
 
-        .paper-view { background: white; border-radius: 24px; padding: 30px; border: 1px solid var(--pink-light); box-shadow: 0 4px 20px rgba(0,0,0,0.01); }
-        .view-header-title { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 5px; }
-        .view-header-date { font-size: 12px; text-align: center; color: var(--text-muted); margin-bottom: 25px; }
-        .view-body-content { font-family: 'Itim', sans-serif; font-size: 18px; line-height: 1.7; color: #3a3a3a; white-space: pre-wrap; }
+        .paper-view { background: white; border-radius: 24px; padding: 25px; border: 1px solid var(--pink-light); }
+        .view-header-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 5px; }
+        .view-header-date { font-size: 11px; text-align: center; color: var(--text-muted); margin-bottom: 20px; }
+        .view-body-content { font-family: 'Itim', sans-serif; font-size: 17px; line-height: 1.6; color: #3a3a3a; white-space: pre-wrap; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div id="loading">✨ Đang đồng bộ dữ liệu... ✨</div>
+    <div id="loading">✨ Đang đồng bộ không gian bí mật... ✨</div>
+
+    <div class="love-clock-box" id="love-clock-container" style="display:none;">
+        <div class="love-clock-title">Our Love Journey 💞</div>
+        <div class="love-timer" id="love-timer">Đang tính toán khoảnh khắc bên nhau...</div>
+    </div>
 
     <div id="lock-screen">
-        <div class="lock-logo">Secret Diary 🌸</div>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Nơi lưu giữ những chiếc khoảnh khắc ngọt ngào</p>
+        <div class="lock-logo">Secret Space 🌸</div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px;">Nơi lưu giữ những chiếc khoảnh khắc ngọt ngào</p>
         <div class="pass-container">
             <input type="password" id="password" class="pass-input" placeholder="••••" maxlength="4">
         </div>
@@ -156,6 +199,7 @@
 
     <div id="main-screen">
         <div class="main-layout">
+            
             <div class="calendar-box">
                 <div class="calendar-nav">
                     <button class="nav-btn" onclick="changeMonth(-1)">◀</button>
@@ -164,16 +208,27 @@
                 </div>
                 <div class="calendar-grid" id="calendar-grid"></div>
             </div>
+
             <div class="timeline-box">
-                <div class="section-title">Timeline Kỷ Niệm ✨</div>
+                <div class="section-header-box">
+                    <div class="section-title">Nhật Ký Tâm Sự 📜</div>
+                    <button class="btn-sync" onclick="fetchDiaries()">Đồng Bộ 🔄</button>
+                </div>
                 <div class="diary-stream" id="recent-list"></div>
             </div>
+
+            <div class="anni-box">
+                <div class="section-title" style="margin-bottom:12px;">Ngày Kỷ Niệm 🎀</div>
+                <div class="anni-stream" id="anni-list"></div>
+                <button class="btn-add-anni" onclick="showAddAnniScreen()">+ Thêm Ngày Kỷ Niệm</button>
+            </div>
+
         </div>
         <button class="btn-fab" onclick="showCreateScreen()">+</button>
     </div>
 
     <div id="form-screen">
-        <div class="section-title" id="form-title">Ghi Kỷ Niệm Mới</div>
+        <div class="section-title" id="form-title" style="margin-bottom:15px;">Ghi Kỷ Niệm Mới</div>
         <input type="hidden" id="diary-id">
         <div class="input-group">
             <label>📅 Ngày viết nhật ký:</label>
@@ -193,8 +248,24 @@
         </div>
     </div>
 
+    <div id="anni-form-screen">
+        <div class="section-title" style="margin-bottom:15px;">Thêm Ngày Kỷ Niệm Mới 🎀</div>
+        <div class="input-group">
+            <label>📅 Chọn Ngày:</label>
+            <input type="date" id="anni-date" class="modern-input">
+        </div>
+        <div class="input-group">
+            <label>🎈 Tên Ngày Kỷ Niệm:</label>
+            <input type="text" id="anni-name" class="modern-input" placeholder="Ví dụ: Kỷ niệm ngày đầu tiên gặp nhau...">
+        </div>
+        <div class="flex-buttons">
+            <button class="btn-action btn-back" onclick="showMainScreen()">Hủy</button>
+            <button class="btn-action btn-main" onclick="saveAnni()">Lưu Ngày Đặc Biệt ✨</button>
+        </div>
+    </div>
+
     <div id="view-screen">
-        <div class="section-title">Đọc Kỷ Niệm 💕</div>
+        <div class="section-title" style="margin-bottom:15px;">Đọc Kỷ Niệm 💕</div>
         <div class="paper-view">
             <h2 class="view-header-title" id="view-title">Tiêu đề</h2>
             <div class="view-header-date" id="view-date">Ngày --/--/----</div>
@@ -211,87 +282,121 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec"; 
 
-    let diaries = [];
+    // Cấu trúc dữ liệu gộp cả nhật ký và ngày kỷ niệm
+    let dbData = { diaries: [], anniversaries: [] };
+    
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
     let selectedDiaryId = null;
-
-    document.getElementById('password').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') checkPassword();
-    });
 
     function checkPassword() {
         const pass = document.getElementById('password').value;
         if(pass === "2204") {
             document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('love-clock-container').style.display = 'block';
             document.getElementById('main-screen').style.display = 'block';
+            startLoveClock(); // Kích hoạt đồng hồ đếm thời gian
             fetchDiaries(); 
         } else {
             alert("Mật mã bí mật không đúng rồi công chúa ơi! ❌");
         }
     }
 
-    // Cơ chế JSONP Tự động dọn dẹp bộ nhớ chống lỗi cache thư mục con GitHub
+    // ĐỒNG HỒ REALTIME TỪ NGÀY 22/04/2026
+    function startLoveClock() {
+        const startDate = new Date("2026-04-22T00:00:00+07:00");
+        
+        setInterval(() => {
+            const now = new Date();
+            const diffTime = now - startDate;
+            
+            if (diffTime < 0) {
+                document.getElementById('love-timer').innerText = "Sắp đến ngày hẹn ước rồi kà! 💕";
+                return;
+            }
+            
+            const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diffTime % (1000 * 60)) / 1000);
+            
+            document.getElementById('love-timer').innerHTML = `Đã bên nhau <span>${days}</span> Ngày <span>${hours}</span> Giờ <span>${minutes}</span> Phút <span>${seconds}</span> Giây`;
+        }, 1000);
+    }
+
+    // LẤY DỮ LIỆU QUA CƠ CHẾ JSONP BẢO MẬT TUYỆT ĐỐI
     function fetchDiaries() {
         showLoading(true);
-        
-        // Tạo một mã định danh ngẫu nhiên để tránh trình duyệt lưu đệm
         const cacheBuster = Date.now();
-        const scriptId = 'jsonp_script_' + cacheBuster;
-        
-        // Xóa sạch các thẻ script cũ nếu còn sót lại
-        const oldScripts = document.querySelectorAll('[id^="jsonp_script_"]');
-        oldScripts.forEach(el => el.remove());
-
         const script = document.createElement('script');
-        script.id = scriptId;
         script.src = `${API_URL}?callback=handleData&_=${cacheBuster}`;
         
         script.onerror = function() {
             showLoading(false);
-            // Thầm lặng tải mảng rỗng thay vì ném pop-up lỗi phiền toái khi mạng chập chờn
-            handleData([]); 
+            alert("Mạng chập chờn, tự động tải bộ nhớ đệm!");
+            handleData({diaries:[], anniversaries:[]});
         };
         
         document.body.appendChild(script);
     }
 
     function handleData(data) {
-        diaries = data || [];
+        // Hỗ trợ đồng bộ định dạng dữ liệu cũ và mới
+        if (Array.isArray(data)) {
+            dbData = { diaries: data, anniversaries: dbData.anniversaries || [] };
+        } else if (data && typeof data === 'object') {
+            dbData = {
+                diaries: data.diaries || [],
+                anniversaries: data.anniversaries || []
+            };
+        }
+        
         renderCalendar();
         renderRecentDiaries();
+        renderAnniversaries();
         showLoading(false);
         
-        // Ngay sau khi xử lý dữ liệu xong, tự hủy thẻ script để giải phóng bộ nhớ
-        const oldScripts = document.querySelectorAll('[id^="jsonp_script_"]');
-        oldScripts.forEach(el => el.remove());
+        // Tự hủy thẻ script thừa để làm sạch bộ nhớ trình duyệt
+        const scripts = document.querySelectorAll('script');
+        scripts.forEach(s => { if(s.src.includes('callback=handleData')) s.remove(); });
     }
 
-    async function saveToDrive() {
+    // LƯU DỮ LIỆU QUA CƠ CHẾ JSONP 2 CHIỀU (Khắc phục triệt để 100% lỗi đứng nút Lưu)
+    function saveToDrive() {
         showLoading(true);
-        try {
-            await fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: "write", diaries: diaries })
-            });
-            
-            // Chờ dữ liệu đồng bộ xong xuôi rồi kéo dữ liệu mới về làm sạch UI
-            setTimeout(() => {
-                fetchDiaries();
-                showMainScreen();
-            }, 1200);
-        } catch (error) {
+        const cacheBuster = Date.now();
+        const dataString = encodeURIComponent(JSON.stringify(dbData));
+        
+        const script = document.createElement('script');
+        script.src = `${API_URL}?callback=handleSaveResponse&action=write&diaries=${dataString}&_=${cacheBuster}`;
+        
+        script.onerror = function() {
             showLoading(false);
-            alert("Lưu thất bại, hãy kiểm tra kết nối mạng nhé.");
+            alert("Lỗi đường truyền thiết bị, vui lòng nhấn Lưu lại!");
+        };
+        
+        document.body.appendChild(script);
+    }
+
+    // Nhận phản hồi sau khi lưu thành công từ Google Drive
+    function handleSaveResponse(response) {
+        showLoading(false);
+        if (response && response.status === "success") {
+            fetchDiaries(); // Đồng bộ lại dữ liệu mới tinh về máy
+            showMainScreen();
+        } else {
+            alert("Lưu thất bại: " + (response.message || "Lỗi hệ thống Apps Script"));
         }
+        
+        const scripts = document.querySelectorAll('script');
+        scripts.forEach(s => { if(s.src.includes('callback=handleSaveResponse')) s.remove(); });
     }
 
     function showLoading(show) {
         document.getElementById('loading').style.display = show ? 'block' : 'none';
     }
 
+    // HIỂN THỊ LỊCH THÁNG
     function renderCalendar() {
         const header = document.getElementById('calendar-month-year');
         header.innerText = `Tháng ${String(currentMonth + 1).padStart(2, '0')} / ${currentYear}`;
@@ -322,7 +427,18 @@
             el.innerText = day;
 
             const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const diary = diaries.find(d => d.date === dateStr);
+            
+            // Tìm nhật ký
+            const diary = dbData.diaries.find(d => d.date === dateStr);
+            // Tìm ngày kỷ niệm (so khớp theo dạng MM-DD để lặp lại hàng năm)
+            const isAnni = dbData.anniversaries.some(a => a.date.substring(5) === dateStr.substring(5));
+
+            // Thêm chấm nhỏ nếu là ngày kỷ niệm
+            if (isAnni) {
+                const dot = document.createElement('span');
+                dot.className = 'anni-dot';
+                el.appendChild(dot);
+            }
 
             if (diary) {
                 el.classList.add('has-diary');
@@ -330,10 +446,10 @@
                 heart.className = 'heart';
                 heart.innerText = '❤️';
                 el.appendChild(heart);
+                // Bấm vào lịch CHỈ ĐỂ XEM NHẬT KÝ
                 el.onclick = () => viewDiary(diary.id);
-            } else {
-                el.onclick = () => showCreateScreen(dateStr);
             }
+            
             grid.appendChild(el);
         }
     }
@@ -345,14 +461,15 @@
         renderCalendar();
     }
 
+    // HIỂN THỊ DANH SÁCH 5 BÀI NHẬT KÝ GẦN NHẤT
     function renderRecentDiaries() {
         const list = document.getElementById('recent-list');
         list.innerHTML = '';
         
-        const sorted = [...diaries].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+        const sorted = [...dbData.diaries].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
         
         if(sorted.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:#baa; font-size:13px; padding: 30px 0; font-family: Itim;">Chưa có kỷ niệm nào được lưu giữ 🌸</p>';
+            list.innerHTML = '<p style="text-align:center; color:#baa; font-size:13px; padding: 20px 0; font-family: Itim;">Chưa có kỷ niệm nào được viết 🌸</p>';
             return;
         }
 
@@ -363,14 +480,38 @@
 
             const dateParts = diary.date.split('-');
             const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-            const previewText = diary.content ? diary.content.substring(0, 50) + (diary.content.length > 50 ? "..." : "") : "Chưa có nội dung tâm sự...";
+            const previewText = diary.content ? diary.content.substring(0, 45) + (diary.content.length > 45 ? "..." : "") : "Chưa có nội dung tâm sự...";
 
             item.innerHTML = `
-                <div class="card-meta">
-                    <span class="card-date">💞 ${formattedDate}</span>
-                </div>
+                <span class="card-date">💞 ${formattedDate}</span>
                 <div class="card-title">${diary.title || "Không có tiêu đề"}</div>
                 <div class="card-preview">${previewText}</div>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+    // HIỂN THỊ DANH SÁCH CÁC NGÀY KỶ NIỆM (CỘT 3)
+    function renderAnniversaries() {
+        const list = document.getElementById('anni-list');
+        list.innerHTML = '';
+        
+        if(!dbData.anniversaries || dbData.anniversaries.length === 0) {
+            list.innerHTML = '<p style="text-align:center; color:#baa; font-size:12px; padding: 15px 0; font-family: Itim;">Chưa có ngày kỷ niệm nào được lưu 🎀</p>';
+            return;
+        }
+
+        // Sắp xếp ngày kỷ niệm theo thứ tự ngày tháng
+        const sortedAnni = [...dbData.anniversaries].sort((a,b) => new Date(a.date) - new Date(b.date));
+
+        sortedAnni.forEach(anni => {
+            const item = document.createElement('div');
+            item.className = 'card-anni';
+            
+            const dParts = anni.date.split('-');
+            item.innerHTML = `
+                <div class="card-anni-date">🎉 Ngày ${dParts[2]}/${dParts[1]}</div>
+                <div class="card-anni-name">${anni.name}</div>
             `;
             list.appendChild(item);
         });
@@ -379,31 +520,53 @@
     function showMainScreen() {
         document.getElementById('main-screen').style.display = 'block';
         document.getElementById('form-screen').style.display = 'none';
+        document.getElementById('anni-form-screen').style.display = 'none';
         document.getElementById('view-screen').style.display = 'none';
     }
 
-    function showCreateScreen(specificDate = null) {
+    function showCreateScreen() {
         document.getElementById('main-screen').style.display = 'none';
         document.getElementById('form-screen').style.display = 'block';
-        document.getElementById('view-screen').style.display = 'none';
         
-        document.getElementById('form-title').innerText = "Ghi Kỷ Niệm Mới 📝";
+        document.getElementById('form-title').innerText = "Ghi Nhật Ký Mới 📝";
         document.getElementById('diary-id').value = "";
         document.getElementById('diary-title').value = "";
         document.getElementById('diary-content').value = "";
         
-        if (specificDate) {
-            document.getElementById('diary-date').value = specificDate;
-        } else {
-            const now = new Date();
-            const offset = now.getTimezoneOffset() * 60000;
-            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 10);
-            document.getElementById('diary-date').value = localISOTime;
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000;
+        document.getElementById('diary-date').value = (new Date(now - offset)).toISOString().slice(0, 10);
+    }
+
+    function showAddAnniScreen() {
+        document.getElementById('main-screen').style.display = 'none';
+        document.getElementById('anni-form-screen').style.display = 'block';
+        document.getElementById('anni-date').value = "";
+        document.getElementById('anni-name').value = "";
+    }
+
+    function saveAnni() {
+        const date = document.getElementById('anni-date').value;
+        const name = document.getElementById('anni-name').value.trim();
+
+        if(!date || !name) {
+            alert("Hãy điền đầy đủ ngày tháng và tên kỷ niệm nhé! 💞");
+            return;
         }
+
+        if(!dbData.anniversaries) { dbData.anniversaries = []; }
+        
+        dbData.anniversaries.push({
+            id: 'anni_' + Date.now(),
+            date: date,
+            name: name
+        });
+
+        saveToDrive();
     }
 
     function viewDiary(id) {
-        const diary = diaries.find(d => d.id === id);
+        const diary = dbData.diaries.find(d => d.id === id);
         if (!diary) return;
         selectedDiaryId = id;
 
@@ -417,7 +580,7 @@
     }
 
     function editCurrentDiary() {
-        const diary = diaries.find(d => d.id === selectedDiaryId);
+        const diary = dbData.diaries.find(d => d.id === selectedDiaryId);
         if (!diary) return;
 
         document.getElementById('view-screen').style.display = 'none';
@@ -437,30 +600,29 @@
         const content = document.getElementById('diary-content').value.trim();
 
         if (!date || !content) {
-            alert("Đừng bỏ trống ngày viết hoặc nội dung tâm sự nhé! 💕");
+            alert("Đừng bỏ trống nội dung tâm sự nhé! 💕");
             return;
         }
 
-        if(!id && diaries.some(d => d.date === date)) {
-            alert("Ngày này hai đứa mình đã viết nhật ký rồi nè, hãy nhấn trực tiếp vào trái tim đỏ trên lịch để sửa nha!");
+        if(!id && dbData.diaries.some(d => d.date === date)) {
+            alert("Ngày này hai đứa mình đã viết nhật ký rồi, hãy bấm vào bài ở danh sách Timeline để sửa nha!");
             return;
         }
 
         if (id) {
-            const diary = diaries.find(d => d.id === id);
+            const diary = dbData.diaries.find(d => d.id === id);
             if (diary) {
                 diary.date = date;
                 diary.title = title;
                 diary.content = content;
             }
         } else {
-            const newDiary = {
+            dbData.diaries.push({
                 id: 'id_' + Date.now(),
                 date: date,
                 title: title,
                 content: content
-            };
-            diaries.push(newDiary);
+            });
         }
 
         saveToDrive();
@@ -468,7 +630,7 @@
 
     function deleteCurrentDiary() {
         if (confirm("Em có chắc chắn muốn xóa đi trang kỷ niệm này không? 🥺")) {
-            diaries = diaries.filter(d => d.id !== selectedDiaryId);
+            dbData.diaries = dbData.diaries.filter(d => d.id !== selectedDiaryId);
             saveToDrive();
         }
     }
