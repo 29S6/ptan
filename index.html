@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nhật Ký Của Chúng Mình 💕</title>
+    <title>Nhật Ký Của Bé 💕</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -11,47 +11,49 @@
     <style>
         body { font-family: 'Fredoka', system-ui, sans-serif; background: linear-gradient(to bottom, #fce7f3, #fdf4ff); }
         .diary-entry { background: white; border-radius: 24px; box-shadow: 0 10px 15px -3px rgb(236 72 153); }
-        .heart-float { position: fixed; font-size: 32px; pointer-events: none; z-index: 9999; animation: floatUp 3s forwards; text-shadow: 0 0 8px rgba(236, 72, 153, 0.6); }
-        @keyframes floatUp { to { transform: translateY(-700px); opacity: 0; } }
     </style>
 </head>
-<body class="min-h-screen p-4 pb-20">
+<body class="min-h-screen p-4">
     <div class="max-w-2xl mx-auto">
-        <div class="text-center py-6">
-            <h1 class="text-4xl md:text-5xl font-bold text-pink-500">Nhật Ký Của Chúng Mình 💖</h1>
+
+        <div class="text-center py-8">
+            <h1 class="text-5xl font-bold text-pink-500">Nhật Ký Của Bé 💖</h1>
         </div>
 
-        <div id="loginScreen" class="diary-entry p-8 text-center">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="diary-entry p-10 text-center">
             <h2 class="text-2xl font-semibold text-pink-600 mb-6">Nhập mật khẩu để vào sổ tay nhé 💕</h2>
-            <input id="passwordInput" type="password" placeholder="Mật khẩu" class="border-2 border-pink-300 rounded-full px-6 py-3 w-full max-w-xs text-center">
-            <button onclick="login()" class="mt-6 bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-full font-semibold">Mở Sổ Tay ✨</button>
+            <input id="passwordInput" type="password" placeholder="Mật khẩu" 
+                   class="border-2 border-pink-300 rounded-2xl px-6 py-4 w-full text-center text-lg focus:outline-none focus:border-pink-500">
+            <button onclick="login()" 
+                    class="mt-8 bg-pink-500 hover:bg-pink-600 text-white px-10 py-4 rounded-2xl text-lg font-semibold w-full">
+                Mở Sổ Tay ✨
+            </button>
         </div>
 
+        <!-- Main App -->
         <div id="mainApp" class="hidden">
-            <div class="flex flex-wrap gap-3 justify-between mb-6">
+            <div class="flex justify-between mb-6">
                 <button onclick="logout()" class="text-pink-500">🚪 Thoát</button>
-                <button onclick="showChangePassword()" class="text-pink-500">🔑 Đổi MK</button>
-                <button onclick="newEntry()" class="bg-pink-500 text-white px-5 py-2 rounded-full">✍️ Viết mới</button>
+                <button onclick="newEntry()" class="bg-pink-500 text-white px-6 py-3 rounded-2xl">✍️ Viết mới</button>
             </div>
 
-            <div class="bg-white rounded-3xl p-4 mb-6 text-center shadow">
-                <p>Đã viết <span id="totalEntries" class="font-bold text-pink-600">0</span> ngày</p>
+            <div class="bg-white rounded-3xl p-5 mb-6 text-center">
+                Đã viết <span id="totalEntries" class="font-bold text-pink-600">0</span> ngày
             </div>
 
             <div id="newEntryForm" class="diary-entry p-6 hidden">
-                <input id="entryDate" type="date" class="w-full p-3 border border-pink-200 rounded-xl mb-4">
-                <textarea id="entryContent" rows="6" class="w-full p-4 border border-pink-200 rounded-2xl" placeholder="Hôm nay bé..."></textarea>
+                <input id="entryDate" type="date" class="w-full p-4 border border-pink-200 rounded-2xl mb-4">
+                <textarea id="entryContent" rows="5" class="w-full p-4 border border-pink-200 rounded-2xl" placeholder="Hôm nay bé..."></textarea>
                 <div class="flex gap-4 mt-6">
-                    <button onclick="saveEntry()" class="flex-1 bg-pink-500 text-white py-3 rounded-2xl font-semibold">Lưu 💕</button>
-                    <button onclick="cancelEntry()" class="flex-1 border border-pink-300 text-pink-500 py-3 rounded-2xl">Hủy</button>
+                    <button onclick="saveEntry()" class="flex-1 bg-pink-500 text-white py-4 rounded-2xl font-semibold">Lưu 💕</button>
+                    <button onclick="cancelEntry()" class="flex-1 border-2 border-pink-300 text-pink-500 py-4 rounded-2xl">Hủy</button>
                 </div>
             </div>
 
             <div id="entriesList" class="space-y-6"></div>
         </div>
     </div>
-
-    <button onclick="throwHearts()" class="fixed bottom-6 right-6 bg-pink-500 text-white w-16 h-16 rounded-full shadow-2xl text-4xl hover:scale-110 z-50">❤️</button>
 
     <script>
         const firebaseConfig = {
@@ -60,93 +62,79 @@
             projectId: "ptan2009-92b5a",
             storageBucket: "ptan2009-92b5a.firebasestorage.app",
             messagingSenderId: "745340137438",
-            appId: "1:745340137438:web:ce45b0ed2d7bc22137774f",
-            measurementId: "G-7DE8711M4Y"
+            appId: "1:745340137438:web:ce45b0ed2d7bc22137774f"
         };
 
         let currentPassword = "123456";
         let db;
 
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-        } catch (e) {
-            console.error("Firebase lỗi:", e);
-        }
+        // Khởi tạo Firebase
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
 
         async function loadEntries() {
             const container = document.getElementById('entriesList');
-            container.innerHTML = '<p class="text-center text-pink-400">Đang tải...</p>';
-
+            container.innerHTML = '<p class="text-center py-8 text-pink-400">Đang tải nhật ký...</p>';
+            
             try {
                 const snapshot = await db.collection('diaryEntries').orderBy('date', 'desc').get();
                 container.innerHTML = '';
                 let count = 0;
-                snapshot.forEach(doc => {
+
+                snapshot.forEach((doc) => {
                     count++;
                     const entry = doc.data();
                     const div = document.createElement('div');
-                    div.className = 'diary-entry p-6';
+                    div.className = "diary-entry p-6";
                     div.innerHTML = `
-                        <div class="text-pink-400 text-sm">${new Date(entry.date).toLocaleDateString('vi-VN', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
-                        <div class="mt-3 text-gray-700">${entry.content.replace(/\n/g, '<br>')}</div>
+                        <div class="text-pink-400 text-sm mb-2">${new Date(entry.date).toLocaleDateString('vi-VN', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
+                        <div class="text-gray-700 leading-relaxed">${entry.content.replace(/\n/g, '<br>')}</div>
                     `;
                     container.appendChild(div);
                 });
                 document.getElementById('totalEntries').textContent = count;
-            } catch (e) {
-                container.innerHTML = `<p class="text-red-500">Lỗi tải dữ liệu. Mở F12 xem console.</p>`;
+            } catch(e) {
+                container.innerHTML = `<p class="text-red-500 text-center py-8">Lỗi tải dữ liệu. Nhấn F12 xem lỗi.</p>`;
             }
         }
 
         function login() {
-            if (document.getElementById('passwordInput').value === currentPassword) {
+            const pass = document.getElementById('passwordInput').value;
+            if (pass === currentPassword) {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
                 loadEntries();
-            } else alert("Sai mật khẩu 💔");
+            } else {
+                alert("Sai mật khẩu rồi bé ơi 💔");
+            }
         }
 
         function logout() { location.reload(); }
-        function newEntry() { 
+
+        function newEntry() {
             document.getElementById('newEntryForm').classList.remove('hidden');
             document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
         }
-        function cancelEntry() { document.getElementById('newEntryForm').classList.add('hidden'); }
+
+        function cancelEntry() {
+            document.getElementById('newEntryForm').classList.add('hidden');
+        }
 
         async function saveEntry() {
             const date = document.getElementById('entryDate').value;
             const content = document.getElementById('entryContent').value.trim();
-            if (!date || !content) return alert("Nhớ ghi ngày và nội dung nhé 💕");
+            
+            if (!date || !content) return alert("Nhớ ghi ngày và nội dung nha 💕");
 
             try {
                 await db.collection('diaryEntries').add({ date, content, timestamp: Date.now() });
-                alert("✅ Đã lưu online thành công!");
+                alert("✅ Đã lưu thành công!");
                 cancelEntry();
                 document.getElementById('entryContent').value = '';
                 loadEntries();
-            } catch (e) {
+            } catch(e) {
+                alert("Lỗi lưu dữ liệu. Tắt Ad Blocker rồi thử lại.");
                 console.error(e);
-                alert("❌ Lỗi lưu!\n\nHãy tắt Ad Blocker và thử lại.");
-            }
-        }
-
-        function showChangePassword() {
-            const pass = prompt("Nhập mật khẩu mới:");
-            if (pass && pass.length >= 4) currentPassword = pass, alert("✅ Đổi mật khẩu thành công!");
-        }
-
-        function throwHearts() {
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    const h = document.createElement('div');
-                    h.className = 'heart-float';
-                    h.textContent = '❤️';
-                    h.style.left = Math.random()*100 + 'vw';
-                    h.style.bottom = '-60px';
-                    document.body.appendChild(h);
-                    setTimeout(() => h.remove(), 4000);
-                }, i*40);
             }
         }
     </script>
