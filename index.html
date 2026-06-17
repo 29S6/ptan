@@ -21,14 +21,12 @@
             <h1 class="text-4xl md:text-5xl font-bold text-pink-500">Nhật Ký Của Chúng Mình 💖</h1>
         </div>
 
-        <!-- Login -->
         <div id="loginScreen" class="diary-entry p-8 text-center">
             <h2 class="text-2xl font-semibold text-pink-600 mb-6">Nhập mật khẩu để vào sổ tay nhé 💕</h2>
             <input id="passwordInput" type="password" placeholder="Mật khẩu" class="border-2 border-pink-300 rounded-full px-6 py-3 w-full max-w-xs text-center">
             <button onclick="login()" class="mt-6 bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-full font-semibold">Mở Sổ Tay ✨</button>
         </div>
 
-        <!-- Main App -->
         <div id="mainApp" class="hidden">
             <div class="flex flex-wrap gap-3 justify-between mb-6">
                 <button onclick="logout()" class="text-pink-500">🚪 Thoát</button>
@@ -56,47 +54,34 @@
     <button onclick="throwHearts()" class="fixed bottom-6 right-6 bg-pink-500 text-white w-16 h-16 rounded-full shadow-2xl text-4xl hover:scale-110 z-50">❤️</button>
 
     <script>
-        // ================== THAY CONFIG Ở ĐÂY ==================
-        // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDoeCYCXvKuAQ9CnYKP0E1_6s6htBYY04",
+            authDomain: "ptan2009-92b5a.firebaseapp.com",
+            projectId: "ptan2009-92b5a",
+            storageBucket: "ptan2009-92b5a.firebasestorage.app",
+            messagingSenderId: "745340137438",
+            appId: "1:745340137438:web:ce45b0ed2d7bc22137774f",
+            measurementId: "G-7DE8711M4Y"
+        };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDDoeCYCxvKuAQ9CnYKPoE1_6s6htBYY04",
-  authDomain: "ptan2009-92b5a.firebaseapp.com",
-  projectId: "ptan2009-92b5a",
-  storageBucket: "ptan2009-92b5a.firebasestorage.app",
-  messagingSenderId: "745340137438",
-  appId: "1:745340137438:web:ce45b0ed2d7bc22137774f",
-  measurementId: "G-7DE8711M4Y"
-};
+        let currentPassword = "123456";
+        let db;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-        // Khởi tạo Firebase
         try {
             firebase.initializeApp(firebaseConfig);
             db = firebase.firestore();
-            console.log("✅ Firebase kết nối thành công");
         } catch (e) {
-            console.error("Firebase init lỗi:", e);
+            console.error("Firebase lỗi:", e);
         }
 
         async function loadEntries() {
             const container = document.getElementById('entriesList');
-            container.innerHTML = '<p class="text-center text-pink-400">Đang tải nhật ký...</p>';
+            container.innerHTML = '<p class="text-center text-pink-400">Đang tải...</p>';
 
             try {
                 const snapshot = await db.collection('diaryEntries').orderBy('date', 'desc').get();
                 container.innerHTML = '';
                 let count = 0;
-
                 snapshot.forEach(doc => {
                     count++;
                     const entry = doc.data();
@@ -104,15 +89,13 @@ const analytics = getAnalytics(app);
                     div.className = 'diary-entry p-6';
                     div.innerHTML = `
                         <div class="text-pink-400 text-sm">${new Date(entry.date).toLocaleDateString('vi-VN', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
-                        <div class="mt-3 text-gray-700 leading-relaxed">${entry.content.replace(/\n/g, '<br>')}</div>
+                        <div class="mt-3 text-gray-700">${entry.content.replace(/\n/g, '<br>')}</div>
                     `;
                     container.appendChild(div);
                 });
-
                 document.getElementById('totalEntries').textContent = count;
             } catch (e) {
-                console.error(e);
-                container.innerHTML = `<p class="text-red-500 text-center">Lỗi tải dữ liệu. Kiểm tra console (F12).</p>`;
+                container.innerHTML = `<p class="text-red-500">Lỗi tải dữ liệu. Mở F12 xem console.</p>`;
             }
         }
 
@@ -121,64 +104,49 @@ const analytics = getAnalytics(app);
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
                 loadEntries();
-            } else {
-                alert("Sai mật khẩu 💔");
-            }
+            } else alert("Sai mật khẩu 💔");
         }
 
         function logout() { location.reload(); }
-
-        function newEntry() {
+        function newEntry() { 
             document.getElementById('newEntryForm').classList.remove('hidden');
             document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
         }
-
-        function cancelEntry() {
-            document.getElementById('newEntryForm').classList.add('hidden');
-        }
+        function cancelEntry() { document.getElementById('newEntryForm').classList.add('hidden'); }
 
         async function saveEntry() {
             const date = document.getElementById('entryDate').value;
             const content = document.getElementById('entryContent').value.trim();
-
-            if (!date || !content) return alert("Nhớ ghi ngày và nội dung nha 💕");
+            if (!date || !content) return alert("Nhớ ghi ngày và nội dung nhé 💕");
 
             try {
-                await db.collection('diaryEntries').add({
-                    date: date,
-                    content: content,
-                    timestamp: Date.now()
-                });
-                alert("✅ Đã lưu nhật ký online!");
+                await db.collection('diaryEntries').add({ date, content, timestamp: Date.now() });
+                alert("✅ Đã lưu online thành công!");
                 cancelEntry();
                 document.getElementById('entryContent').value = '';
                 loadEntries();
             } catch (e) {
                 console.error(e);
-                alert("❌ Lỗi lưu dữ liệu!\n\nVui lòng kiểm tra:\n1. Config Firebase có đúng không?\n2. Đã tắt Ad Blocker chưa?");
+                alert("❌ Lỗi lưu!\n\nHãy tắt Ad Blocker và thử lại.");
             }
         }
 
         function showChangePassword() {
-            const pass = prompt("Nhập mật khẩu mới (ít nhất 4 ký tự):");
-            if (pass && pass.length >= 4) {
-                currentPassword = pass;
-                alert("✅ Đổi mật khẩu thành công!");
-            }
+            const pass = prompt("Nhập mật khẩu mới:");
+            if (pass && pass.length >= 4) currentPassword = pass, alert("✅ Đổi mật khẩu thành công!");
         }
 
         function throwHearts() {
             for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart-float';
-                    heart.textContent = '❤️';
-                    heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.bottom = '-60px';
-                    heart.style.animationDuration = '3s';
-                    document.body.appendChild(heart);
-                    setTimeout(() => heart.remove(), 4000);
-                }, i * 40);
+                    const h = document.createElement('div');
+                    h.className = 'heart-float';
+                    h.textContent = '❤️';
+                    h.style.left = Math.random()*100 + 'vw';
+                    h.style.bottom = '-60px';
+                    document.body.appendChild(h);
+                    setTimeout(() => h.remove(), 4000);
+                }, i*40);
             }
         }
     </script>
