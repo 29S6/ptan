@@ -63,13 +63,14 @@
         .view-content { background: var(--pink-bg); padding: 20px; border-radius: 15px; min-height: 150px; line-height: 1.6; font-family: 'Itim', sans-serif; font-size: 18px; white-space: pre-wrap; margin-bottom: 20px; border: 1px dashed var(--pink-main); }
         
         /* Loading */
-        #loading { display: none; text-align: center; color: var(--pink-dark); font-weight: bold; margin-bottom: 10px; }
+        #loading { display: none; text-align: center; color: var(--pink-dark); font-weight: bold; margin-bottom: 15px; font-size: 14px; background: var(--pink-light); padding: 8px; border-radius: 10px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="loading">✨ Đang gửi thư tới Drive... ✨</div>
+    <div id="loading">✨ Đang đồng bộ với Drive thân yêu... ✨</div>
 
     <div id="lock-screen">
         <div style="font-size: 50px; margin-bottom: 10px;">🔒</div>
@@ -82,9 +83,9 @@
         <h2 style="font-family: 'Itim'; font-size: 26px;">Nhật Ký Của Chúng Mình 💕</h2>
         
         <div class="calendar-header">
-            <button onclick="changeMonth(-1)" style="background:none; border:none; cursor:pointer; color:var(--pink-dark); font-weight:bold;">◀</button>
-            <h3 id="calendar-month-year" style="margin:0;">Tháng 06/2026</h3>
-            <button onclick="changeMonth(1)" style="background:none; border:none; cursor:pointer; color:var(--pink-dark); font-weight:bold;">▶</button>
+            <button onclick="changeMonth(-1)" style="background:none; border:none; cursor:pointer; color:var(--pink-dark); font-weight:bold; font-size:18px;">◀</button>
+            <h3 id="calendar-month-year" style="margin:0;">Tháng --/----</h3>
+            <button onclick="changeMonth(1)" style="background:none; border:none; cursor:pointer; color:var(--pink-dark); font-weight:bold; font-size:18px;">▶</button>
         </div>
         <div class="calendar-grid" id="calendar-grid"></div>
 
@@ -119,7 +120,7 @@
 
     <div id="view-screen">
         <h2 id="view-title" style="margin-bottom:5px;">Tiêu đề nhật ký</h2>
-        <div class="view-date" id="view-date">Ngày 22/04/2026</div>
+        <div class="view-date" id="view-date">Ngày --/--/----</div>
         <div class="view-content" id="view-content">Nội dung nhật ký...</div>
         <div class="btn-group">
             <button class="btn btn-secondary" onclick="showMainScreen()" style="margin:0;">Quay Lại</button>
@@ -130,13 +131,20 @@
 </div>
 
 <script>
-    // DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO GIỮA HAI DẤU NHÁY DƯỚI ĐÂY
-    const API_URL = "https://script.google.com/macros/s/AKfycbxOVt2Bt7rSL253LD9p3mkRfamgukzDCXQ61Q2SS9fCHrILdZOnpBqimjZaz6oyVVPR/exec"; 
+    // Link API Google Apps Script của bạn đã được tích hợp tự động vào đây
+    const API_URL = "https://script.google.com/macros/s/AKfycby4t19gA8bEFY4vw8ENnlI3JMOY1CTDfBuPhoT36NRdNW_AxdiBKgy9orTZRerf-lfO/exec"; 
 
     let diaries = [];
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
     let selectedDiaryId = null;
+
+    // Hỗ trợ nhấn Enter khi gõ mật khẩu
+    document.getElementById('password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
 
     // Kiểm tra mật khẩu
     function checkPassword() {
@@ -144,23 +152,26 @@
         if(pass === "2204") {
             document.getElementById('lock-screen').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
-            fetchDiaries(); // Tải dữ liệu từ Google Drive về
+            fetchDiaries(); // Tải dữ liệu từ Google Drive
         } else {
             alert("Mật mã bí mật không đúng rồi công chúa ơi! ❌");
         }
     }
 
-    // Tải dữ liệu từ Google Drive
+    // Tải dữ liệu từ Google Drive (Đã sửa lỗi CORS bằng cơ chế Redirect)
     async function fetchDiaries() {
-        if(API_URL.includes("THAY_LINK")) return;
         showLoading(true);
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                redirect: 'follow' // Bắt buộc phải có để đi theo đường dẫn chuyển hướng của Google
+            });
             diaries = await response.json();
             renderCalendar();
             renderRecentDiaries();
         } catch (error) {
-            alert("Lỗi kết nối bộ nhớ Google Drive!");
+            console.error(error);
+            alert("Không thể kết nối với bộ nhớ Google Drive. Hãy kiểm tra lại cấu hình phiên bản mới trên Apps Script nhé!");
         }
         showLoading(false);
     }
@@ -171,20 +182,22 @@
         try {
             await fetch(API_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Sử dụng chế độ này để tránh lỗi bảo mật cross-origin của script
+                mode: 'no-cors', // Sử dụng chế độ này để gửi dữ liệu thành công không bị chặn
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: "write", diaries: diaries })
             });
-            // Vì no-cors không trả về data đọc được, ta buộc giả định thành công và cập nhật UI luôn
+            
+            // Do chế độ no-cors không đọc được phản hồi, ta tạo độ trễ 1 giây để Drive xử lý xong rồi cập nhật UI
             setTimeout(() => {
                 renderCalendar();
                 renderRecentDiaries();
                 showMainScreen();
-            }, 1000);
+                showLoading(false);
+            }, 1200);
         } catch (error) {
-            alert("Lưu thất bại, hãy thử lại.");
+            showLoading(false);
+            alert("Gặp lỗi khi lưu lên hệ thống, hãy thử lại.");
         }
-        showLoading(false);
     }
 
     function showLoading(show) {
@@ -199,6 +212,7 @@
         const grid = document.getElementById('calendar-grid');
         grid.innerHTML = '';
 
+        // Tên các thứ trong tuần
         const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
         dayNames.forEach(name => {
             const el = document.createElement('div');
@@ -210,12 +224,14 @@
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
+        // Tạo các ô trống của tháng trước
         for (let i = 0; i < firstDay; i++) {
             const el = document.createElement('div');
             el.className = 'calendar-day empty';
             grid.appendChild(el);
         }
 
+        // Tạo các ô ngày trong tháng hiện tại
         for (let day = 1; day <= daysInMonth; day++) {
             const el = document.createElement('div');
             el.className = 'calendar-day';
@@ -250,11 +266,11 @@
         const list = document.getElementById('recent-list');
         list.innerHTML = '';
         
-        // Sắp xếp bài viết mới nhất lên đầu
+        // Sắp xếp bài viết mới nhất lên đầu dựa theo ngày tháng
         const sorted = [...diaries].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
         
         if(sorted.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:#aaa; font-size:14px;">Chưa có trang nhật ký nào được viết 🌸</p>';
+            list.innerHTML = '<p style="text-align:center; color:#aaa; font-size:14px; padding: 10px 0;">Chưa có trang nhật ký nào được viết 🌸</p>';
             return;
         }
 
@@ -295,7 +311,7 @@
         if (specificDate) {
             document.getElementById('diary-date').value = specificDate;
         } else {
-            // Lấy ngày hôm nay theo giờ địa phương Việt Nam định dạng YYYY-MM-DD
+            // Tự động lấy ngày hôm nay theo chuẩn múi giờ Việt Nam
             const now = new Date();
             const offset = now.getTimezoneOffset() * 60000;
             const localISOTime = (new Date(now - offset)).toISOString().slice(0, 10);
@@ -318,7 +334,7 @@
         document.getElementById('view-content').innerText = diary.content;
     }
 
-    // Bấm nút sửa trong màn hình xem chi tiết
+    // Sửa nhật ký hiện tại
     function editCurrentDiary() {
         const diary = diaries.find(d => d.id === selectedDiaryId);
         if (!diary) return;
@@ -333,7 +349,7 @@
         document.getElementById('diary-content').value = diary.content;
     }
 
-    // Lưu dữ liệu (tạo mới hoặc cập nhật)
+    // Lưu dữ liệu
     function saveDiary() {
         const id = document.getElementById('diary-id').value;
         const date = document.getElementById('diary-date').value;
@@ -345,14 +361,14 @@
             return;
         }
 
-        // Kiểm tra xem ngày này đã có nhật ký chưa (tránh trùng lặp khi tạo mới)
+        // Chống trùng ngày nếu cố tình tạo mới vào ngày đã có dữ liệu
         if(!id && diaries.some(d => d.date === date)) {
-            alert("Ngày này em đã viết nhật ký rồi nè, hãy bấm trực tiếp vào ngày đó trên lịch để sửa nha!");
+            alert("Ngày này em đã viết nhật ký rồi nè, hãy chọn ngày khác hoặc nhấn trực tiếp vào trái tim trên lịch để sửa nha!");
             return;
         }
 
         if (id) {
-            // Cập nhật nhật ký cũ
+            // Chế độ sửa bài cũ
             const diary = diaries.find(d => d.id === id);
             if (diary) {
                 diary.date = date;
@@ -360,7 +376,7 @@
                 diary.content = content;
             }
         } else {
-            // Tạo nhật ký mới
+            // Chế độ tạo bài mới
             const newDiary = {
                 id: 'id_' + Date.now(),
                 date: date,
