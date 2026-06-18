@@ -389,7 +389,7 @@ img{max-width:100%;display:block}
 .ml-i{display:flex;align-items:center;gap:3px;font-size:.64rem;color:var(--t2)}
 
 /* ===================================================
-   ALBUM TAB — Zalo newsfeed style + ngày giờ đăng + reaction
+   ALBUM TAB — Zalo newsfeed style + ngày giờ đăng
 =================================================== */
 .album-day-group{margin-bottom:22px}
 .album-day-hdr{
@@ -444,19 +444,6 @@ img{max-width:100%;display:block}
   font-size:1.4rem;font-weight:700;color:#fff;
   font-family:'Quicksand',sans-serif;
 }
-/* Reaction trên ảnh */
-.a-img-reaction{
-  position:absolute;bottom:6px;right:6px;
-  display:flex;align-items:center;gap:2px;
-  background:rgba(255,255,255,.82);backdrop-filter:blur(4px);
-  border-radius:12px;padding:3px 8px;font-size:.68rem;font-weight:600;
-  color:var(--p1);cursor:pointer;transition:all .15s;
-  user-select:none;border:1px solid rgba(255,255,255,.9);
-}
-.a-img-reaction:hover{transform:scale(1.1);background:rgba(255,255,255,.95);box-shadow:0 2px 8px rgba(168,84,112,.2)}
-.a-img-reaction .r-emoji{font-size:.82rem;line-height:1}
-.a-img-reaction .r-count{margin-left:1px;font-size:.66rem}
-
 .album-empty{text-align:center;color:var(--t3);padding:36px 0;font-size:.85rem}
 
 /* ===================================================
@@ -609,21 +596,9 @@ img{max-width:100%;display:block}
   margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);
   white-space:pre-wrap;max-height:40vh;overflow-y:auto;
 }
-.ve-imgs{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px;position:relative}
-.ve-img-wrap{position:relative;display:inline-block}
-.ve-img-wrap img{width:86px;height:86px;object-fit:cover;border-radius:9px;cursor:pointer;transition:transform .18s}
-.ve-img-wrap img:hover{transform:scale(1.06)}
-.ve-img-reaction{
-  position:absolute;bottom:4px;right:4px;
-  display:flex;align-items:center;gap:2px;
-  background:rgba(255,255,255,.85);backdrop-filter:blur(4px);
-  border-radius:10px;padding:2px 7px;font-size:.62rem;font-weight:600;
-  color:var(--p1);cursor:pointer;transition:all .14s;
-  user-select:none;border:1px solid rgba(255,255,255,.9);
-}
-.ve-img-reaction:hover{transform:scale(1.1);background:rgba(255,255,255,.95);box-shadow:0 2px 6px rgba(168,84,112,.2)}
-.ve-img-reaction .r-emoji{font-size:.78rem;line-height:1}
-.ve-img-reaction .r-count{margin-left:1px;font-size:.6rem}
+.ve-imgs{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.ve-imgs img{width:86px;height:86px;object-fit:cover;border-radius:9px;cursor:pointer;transition:transform .18s}
+.ve-imgs img:hover{transform:scale(1.06)}
 
 /* ===================================================
    COMMENT SECTION
@@ -1331,7 +1306,7 @@ function renderCalendar() {
     if (!eMap[e.date]) eMap[e.date] = [];
     eMap[e.date].push(e);
   });
-  // Sắp xếp bài trong mỗi ngày: mới nhất trước (theo updatedAt giảm dần)
+  // Sắp xếp bài trong mỗi ngày: mới nhất trước
   Object.keys(eMap).forEach(function(ds) {
     eMap[ds].sort(function(a, b) {
       var ua = a.updatedAt || ''; var ub = b.updatedAt || '';
@@ -1390,7 +1365,6 @@ function cm(delta) {
 ========================================================== */
 function openDayView(dateStr) {
   var entries = S.data.entries.filter(function (e) { return e.date === dateStr; });
-  // Sắp xếp mới nhất trước
   entries.sort(function (a, b) {
     var ua = a.updatedAt || ''; var ub = b.updatedAt || '';
     if (ua !== ub) return ub.localeCompare(ua);
@@ -1435,23 +1409,18 @@ function filteredEntries() {
   });
 }
 
-// Nhóm entries theo ngày
+// Nhóm entries theo ngày, mỗi nhóm đã sắp xếp mới nhất trước
 function groupEntriesByDate(entries) {
   var groups = [];
   var map = {};
   entries.forEach(function(e) {
     var d = e.date;
-    if (!map[d]) { map[d] = []; groups.push({ date: d, entries: map[d] }); }
-    map[d].push(e);
-  });
-  // Mỗi nhóm đã được sắp xếp theo thứ tự toàn cục (mới nhất trước)
-  // Nhưng cần đảm bảo trong nhóm cũng mới nhất trước
-  groups.forEach(function(g) {
-    g.entries.sort(function(a, b) {
-      var ua = a.updatedAt || ''; var ub = b.updatedAt || '';
-      if (ua !== ub) return ub.localeCompare(ua);
-      return (b.id || '').localeCompare(a.id || '');
-    });
+    if (!map[d]) {
+      var group = { date: d, entries: [] };
+      map[d] = group;
+      groups.push(group);
+    }
+    map[d].entries.push(e);
   });
   return groups;
 }
@@ -1463,16 +1432,21 @@ function renderTimeline() {
   var lm = document.getElementById('load-more');
   if (!entries.length) {
     wrap.innerHTML = '<div class="empty-hint">📝 Chưa có bài nhật ký nào~</div>';
-    lm.classList.add('hidden'); return;
+    lm.classList.add('hidden');
+    return;
   }
 
   var groups = groupEntriesByDate(entries);
-  var totalItems = 0;
+  var totalShown = 0;
+  var maxToShow = S.page * S.pageSize;
   var html = '';
-  for (var gi = 0; gi < groups.length; gi++) {
-    var g = groups[gi];
-    var showEntries = g.entries.slice(0, S.page * S.pageSize - totalItems);
-    if (showEntries.length === 0) break;
+
+  for (var i = 0; i < groups.length; i++) {
+    var g = groups[i];
+    if (totalShown >= maxToShow) break;
+    var showEntries = g.entries.slice(0, maxToShow - totalShown);
+    if (showEntries.length === 0) continue;
+
     html += '<div class="day-group">' +
       '<div class="day-group-hdr">' +
       '<div class="day-group-dot"></div>' +
@@ -1481,23 +1455,28 @@ function renderTimeline() {
       '<div class="day-group-entries">' +
       showEntries.map(tiHTML).join('') +
       '</div></div>';
-    totalItems += showEntries.length;
-    if (totalItems >= S.page * S.pageSize) break;
+
+    totalShown += showEntries.length;
   }
+
   wrap.innerHTML = html;
-  lm.classList.toggle('hidden', totalItems >= entries.length);
+  lm.classList.toggle('hidden', totalShown >= entries.length);
 }
 
 function loadMore() {
   S.page++;
   var entries = filteredEntries();
   var groups = groupEntriesByDate(entries);
-  var totalItems = 0;
+  var totalShown = 0;
+  var maxToShow = S.page * S.pageSize;
   var html = '';
-  for (var gi = 0; gi < groups.length; gi++) {
-    var g = groups[gi];
-    var showEntries = g.entries.slice(0, S.page * S.pageSize - totalItems);
-    if (showEntries.length === 0) break;
+
+  for (var i = 0; i < groups.length; i++) {
+    var g = groups[i];
+    if (totalShown >= maxToShow) break;
+    var showEntries = g.entries.slice(0, maxToShow - totalShown);
+    if (showEntries.length === 0) continue;
+
     html += '<div class="day-group">' +
       '<div class="day-group-hdr">' +
       '<div class="day-group-dot"></div>' +
@@ -1506,11 +1485,12 @@ function loadMore() {
       '<div class="day-group-entries">' +
       showEntries.map(tiHTML).join('') +
       '</div></div>';
-    totalItems += showEntries.length;
-    if (totalItems >= S.page * S.pageSize) break;
+
+    totalShown += showEntries.length;
   }
+
   document.getElementById('tl-wrap').innerHTML = html;
-  document.getElementById('load-more').classList.toggle('hidden', totalItems >= entries.length);
+  document.getElementById('load-more').classList.toggle('hidden', totalShown >= entries.length);
 }
 
 function tiHTML(e) {
@@ -1622,7 +1602,7 @@ function delAnn(id) {
 }
 
 /* ==========================================================
-   ALBUM ẢNH — ZALO NEWSFEED STYLE + NGÀY GIỜ ĐĂNG + REACTION
+   ALBUM ẢNH — ZALO NEWSFEED STYLE + NGÀY GIỜ ĐĂNG
 ========================================================== */
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1649,19 +1629,12 @@ function renderAlbum() {
     var cls = 'album-grid g' + Math.min(count, 4);
     var gridHTML = '';
     var max = Math.min(count, 4);
-    var reactions = e.reactions || {};
     for (var i = 0; i < max; i++) {
       var src = imgs[i].url || imgs[i];
       var isLast = (i === max - 1 && count > 4);
-      var imgReactions = reactions[i] || {};
-      var heartCount = imgReactions['❤️'] || 0;
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
         (isLast ? '<div class="a-img-more">+' + (count - 4) + '</div>' : '') +
-        '<div class="a-img-reaction" onclick="event.stopPropagation();reactToImage(\'' + e.id + '\', ' + i + ')" title="Thả tim ❤️">' +
-        '<span class="r-emoji">❤️</span>' +
-        (heartCount > 0 ? '<span class="r-count">' + heartCount + '</span>' : '') +
-        '</div>' +
         '</div>';
     }
 
@@ -1687,37 +1660,6 @@ function renderAlbum() {
       '</div>';
   });
   body.innerHTML = html;
-}
-
-// Thả reaction vào ảnh trong album
-function reactToImage(entryId, imgIndex) {
-  var entry = S.data.entries.find(function (x) { return x.id === entryId; });
-  if (!entry) return;
-  if (!entry.reactions) entry.reactions = {};
-  if (!entry.reactions[imgIndex]) entry.reactions[imgIndex] = {};
-  if (!entry.reactions[imgIndex]['❤️']) entry.reactions[imgIndex]['❤️'] = 0;
-  entry.reactions[imgIndex]['❤️']++;
-  entry.updatedAt = new Date().toISOString();
-  // Lưu và render lại album
-  postData({ action: 'save_entry', entry: entry }, null, function() {
-    renderAlbum();
-  });
-}
-
-// Thả reaction trong modal view
-function reactToImageInView(imgIndex) {
-  if (!S.curId) return;
-  var entry = S.data.entries.find(function (x) { return x.id === S.curId; });
-  if (!entry) return;
-  if (!entry.reactions) entry.reactions = {};
-  if (!entry.reactions[imgIndex]) entry.reactions[imgIndex] = {};
-  if (!entry.reactions[imgIndex]['❤️']) entry.reactions[imgIndex]['❤️'] = 0;
-  entry.reactions[imgIndex]['❤️']++;
-  entry.updatedAt = new Date().toISOString();
-  postData({ action: 'save_entry', entry: entry }, null, function() {
-    // Cập nhật lại modal view
-    openView(S.curId);
-  });
 }
 
 /* ==========================================================
@@ -1769,21 +1711,12 @@ function openView(id) {
   document.getElementById('ve-author').textContent = e.author ? ('Người viết: ' + e.author) : '';
   document.getElementById('ve-cnt').textContent = e.content || '';
 
-  // Ảnh kèm reaction
+  // Ảnh
   var imgHTML = '';
-  var reactions = e.reactions || {};
   if (e.images && e.images.length) {
-    imgHTML = e.images.map(function (img, idx) {
+    imgHTML = e.images.map(function (img) {
       var src = img.url || img;
-      var imgReactions = reactions[idx] || {};
-      var heartCount = imgReactions['❤️'] || 0;
-      return '<div class="ve-img-wrap">' +
-        '<img src="' + escH(src) + '" onclick="openLb(\'' + escH(src) + '\')" loading="lazy" alt="ảnh"/>' +
-        '<div class="ve-img-reaction" onclick="event.stopPropagation();reactToImageInView(' + idx + ')" title="Thả tim ❤️">' +
-        '<span class="r-emoji">❤️</span>' +
-        (heartCount > 0 ? '<span class="r-count">' + heartCount + '</span>' : '') +
-        '</div>' +
-        '</div>';
+      return '<img src="' + escH(src) + '" onclick="openLb(\'' + escH(src) + '\')" loading="lazy" alt="ảnh"/>';
     }).join('');
   }
   document.getElementById('ve-imgs').innerHTML = imgHTML;
@@ -1853,10 +1786,9 @@ function saveEntry() {
     toast('⏳ Ảnh đang xử lý, chờ xíu nhé!'); return;
   }
 
-  // Lấy comments và reactions hiện có nếu sửa bài (giữ nguyên)
+  // Lấy comments hiện có nếu sửa bài (giữ nguyên)
   var existing = S.curId ? S.data.entries.find(function (x) { return x.id === S.curId; }) : null;
   var comments = existing ? (existing.comments || []) : [];
-  var reactions = existing ? (existing.reactions || {}) : {};
 
   var entry = {
     id: S.curId || ('e_' + Date.now()),
@@ -1867,7 +1799,6 @@ function saveEntry() {
     author: S.author,
     images: S.imgs.slice(),
     comments: comments,
-    reactions: reactions,
     updatedAt: new Date().toISOString()
   };
   closeModal('modal-write');
