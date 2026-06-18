@@ -11,28 +11,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
 <style>
 /* ==========================================================
-   BIẾN THIẾT KẾ — ROSE SMOKE PALETTE V2
+   BIẾN THIẾT KẾ
    ========================================================== */
 :root {
-  --r1: #b5607a;   /* hồng đậm — accent chính */
-  --r2: #d4849c;   /* hồng vừa — gradient */
-  --r3: #e8b4c4;   /* hồng nhạt — border, highlight */
-  --r4: #f7dde8;   /* hồng phấn — nền card */
-  --r5: #fef0f5;   /* trắng sữa hồng — nền tổng */
+  --r1: #b5607a;
+  --r2: #d4849c;
+  --r3: #e8b4c4;
+  --r4: #f7dde8;
+  --r5: #fef0f5;
   --glass: rgba(255,242,248,0.70);
   --glass-b: rgba(255,255,255,0.55);
   --shadow: 0 8px 32px rgba(181,96,122,0.14);
   --shadow-sm: 0 3px 12px rgba(181,96,122,0.10);
-  --txt1: #4a2535;  /* chữ đậm */
-  --txt2: #7d4a5e;  /* chữ vừa */
-  --txt3: #b07a90;  /* chữ nhạt */
-  --rr: 16px;       /* border-radius chuẩn */
-  --rrb: 22px;      /* border-radius lớn */
-  /* Night mode */
-  --night-bg: linear-gradient(135deg,#1e0d14,#2a1020,#1a0e1a);
-  --night-glass: rgba(40,15,28,0.75);
-  --night-txt1: #f0d0dc;
-  --night-txt2: #c09aaa;
+  --txt1: #4a2535;
+  --txt2: #7d4a5e;
+  --txt3: #b07a90;
+  --rr: 16px;
+  --rrb: 22px;
 }
 
 /* ==========================================================
@@ -45,21 +40,10 @@ body{
   background:linear-gradient(135deg,#fce8f0 0%,#f5e0ee 40%,#ecdcf2 100%);
   min-height:100vh;color:var(--txt1);
   overflow-x:hidden;
-  transition:background 0.8s,color 0.8s;
 }
-body.night-mode{
-  background:var(--night-bg);
-  color:var(--night-txt1);
-}
-body.night-mode .glass-card,
-body.night-mode .modal-box{
-  background:var(--night-glass);
-  border-color:rgba(255,255,255,0.08);
-}
-body.night-mode .txt2{color:var(--night-txt2);}
 
 /* ==========================================================
-   SAKURA — HOA RƠI NỀN
+   SAKURA
    ========================================================== */
 #sakura-canvas{
   position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -88,13 +72,11 @@ body.night-mode .txt2{color:var(--night-txt2);}
   box-shadow:0 20px 60px rgba(181,96,122,0.2);
   max-width:320px;width:90%;
 }
-/* Quote lãng mạn trên lock screen */
 .lock-quote{
   font-family:'Dancing Script',cursive;
   font-size:0.95rem;color:var(--r2);
   margin-bottom:20px;min-height:42px;
   line-height:1.5;font-style:italic;
-  transition:opacity 0.6s;
 }
 .lock-heart{font-size:48px;animation:hb 1.8s ease-in-out infinite;display:block;margin-bottom:8px;}
 @keyframes hb{0%,100%{transform:scale(1)}14%{transform:scale(1.2)}28%{transform:scale(1)}42%{transform:scale(1.12)}56%{transform:scale(1)}}
@@ -116,19 +98,18 @@ body.night-mode .txt2{color:var(--night-txt2);}
   font-family:'Quicksand',sans-serif;font-size:1.15rem;font-weight:700;
   color:var(--txt1);cursor:pointer;
   transition:all 0.13s;user-select:none;
-  -webkit-tap-highlight-color:transparent;
 }
 .pk:active{transform:scale(0.91);background:var(--r4);}
 .pk.del{color:var(--r1);}
 .lock-err{color:#d05070;font-size:0.78rem;min-height:16px;margin-top:8px;font-weight:600;}
 
 /* ==========================================================
-   APP WRAPPER
+   APP
    ========================================================== */
 #app{display:none;position:relative;z-index:1;min-height:100vh;padding-bottom:80px;}
 
 /* ==========================================================
-   HEADER — ĐỒNG HỒ + NAV
+   HEADER
    ========================================================== */
 .app-header{
   background:linear-gradient(135deg,rgba(181,96,122,0.88),rgba(212,132,156,0.80));
@@ -140,22 +121,23 @@ body.night-mode .txt2{color:var(--night-txt2);}
 .header-top{
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 20px 10px;
+  flex-wrap:wrap;
+  gap:10px;
 }
 .header-logo{
   font-family:'Dancing Script',cursive;
   font-size:1.5rem;font-weight:700;color:#fff;
   text-shadow:0 2px 8px rgba(130,50,70,0.3);
 }
-.header-actions{display:flex;gap:8px;align-items:center;}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 .hdr-btn{
   background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);
   border-radius:10px;padding:7px 10px;cursor:pointer;
   font-size:0.8rem;color:#fff;font-family:'Quicksand',sans-serif;font-weight:600;
-  transition:all 0.15s;-webkit-tap-highlight-color:transparent;
+  transition:all 0.15s;
 }
 .hdr-btn:hover{background:rgba(255,255,255,0.32);}
 
-/* Clock */
 .clock-bar{
   display:flex;gap:6px;justify-content:center;
   padding:0 20px 12px;flex-wrap:wrap;
@@ -169,7 +151,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
 .cn{font-size:1.2rem;font-weight:700;color:#fff;line-height:1.1;}
 .cl{font-size:0.58rem;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.05em;}
 
-/* Next anniversary countdown */
 .ann-countdown{
   text-align:center;
   padding:6px 20px 10px;
@@ -178,7 +159,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
 }
 
 /* ==========================================================
-   DESKTOP NAV TABS (trên PC, nằm dưới header, trước layout)
+   TABS
    ========================================================== */
 .desktop-tabs{
   display:flex;gap:0;
@@ -187,6 +168,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
   border-bottom:1.5px solid rgba(181,96,122,0.12);
   padding:0 24px;
   position:sticky;top:108px;z-index:150;
+  overflow-x:auto;
 }
 @media(max-width:768px){.desktop-tabs{display:none;}}
 .dtab{
@@ -194,14 +176,10 @@ body.night-mode .txt2{color:var(--night-txt2);}
   font-size:0.85rem;font-weight:600;color:var(--txt2);
   border-bottom:2.5px solid transparent;
   transition:all 0.2s;white-space:nowrap;
-  -webkit-tap-highlight-color:transparent;
 }
 .dtab.active{color:var(--r1);border-bottom-color:var(--r1);}
 .dtab:hover{color:var(--r1);}
 
-/* ==========================================================
-   MOBILE BOTTOM NAV
-   ========================================================== */
 .mobile-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;z-index:300;
@@ -218,17 +196,17 @@ body.night-mode .txt2{color:var(--night-txt2);}
   gap:2px;padding:6px 4px;cursor:pointer;
   color:var(--txt3);font-size:0.62rem;font-weight:700;
   letter-spacing:0.03em;text-transform:uppercase;
-  transition:color 0.2s;-webkit-tap-highlight-color:transparent;
+  transition:color 0.2s;
 }
 .mnav-item.active{color:var(--r1);}
 .mnav-icon{font-size:1.3rem;line-height:1;}
 
 /* ==========================================================
-   LAYOUT 3 CỘT (desktop) / TABS (mobile)
+   LAYOUT
    ========================================================== */
 .main-layout{
   display:grid;
-  grid-template-columns:300px 1fr 270px;
+  grid-template-columns:270px 1fr 300px;
   gap:18px;
   max-width:1180px;margin:0 auto;
   padding:20px 18px 24px;
@@ -243,8 +221,8 @@ body.night-mode .txt2{color:var(--night-txt2);}
     padding:14px 12px 16px;
     gap:0;
   }
-  .col-cal,.col-diary,.col-ann{display:none;}
-  .col-cal.tab-active,.col-diary.tab-active,.col-ann.tab-active{display:block;}
+  .col-diary,.col-ann,.col-cal,.col-album{display:none;}
+  .col-diary.tab-active,.col-ann.tab-active,.col-cal.tab-active,.col-album.tab-active{display:block;}
 }
 
 /* ==========================================================
@@ -258,11 +236,17 @@ body.night-mode .txt2{color:var(--night-txt2);}
   box-shadow:var(--shadow);
   overflow:hidden;
   margin-bottom:16px;
+  transition:all 0.3s ease;
+}
+.glass-card:hover{
+  box-shadow:var(--shadow-sm);
 }
 .card-hd{
   padding:14px 18px 12px;
   border-bottom:1px solid rgba(181,96,122,0.1);
   display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
 }
 .card-title{
   font-family:'Dancing Script',cursive;
@@ -271,7 +255,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
 .card-body{padding:14px 18px;}
 
 /* ==========================================================
-   "NGÀY NÀY NĂM NGOÁI" BANNER
+   OTD & STREAK
    ========================================================== */
 .onthisday{
   background:linear-gradient(135deg,rgba(181,96,122,0.1),rgba(212,132,156,0.08));
@@ -285,9 +269,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
 .otd-title{font-weight:700;font-size:0.88rem;color:var(--txt1);}
 .otd-preview{font-size:0.75rem;color:var(--txt2);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 
-/* ==========================================================
-   STREAK BADGE
-   ========================================================== */
 .streak-bar{
   display:flex;align-items:center;gap:10px;
   background:rgba(255,200,100,0.12);
@@ -300,10 +281,11 @@ body.night-mode .txt2{color:var(--night-txt2);}
 .streak-sub{font-size:0.7rem;color:var(--txt3);font-weight:500;}
 
 /* ==========================================================
-   TÌM KIẾM
+   SEARCH
    ========================================================== */
 .search-wrap{
   display:flex;gap:8px;margin-bottom:14px;
+  flex-wrap:wrap;
 }
 .search-input{
   flex:1;background:rgba(255,255,255,0.65);
@@ -311,6 +293,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
   border-radius:24px;padding:8px 16px;
   font-family:'Quicksand',sans-serif;font-size:0.85rem;color:var(--txt1);
   outline:none;transition:border-color 0.2s;
+  min-width:150px;
 }
 .search-input:focus{border-color:var(--r1);}
 .search-input::placeholder{color:var(--txt3);}
@@ -323,7 +306,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
 }
 
 /* ==========================================================
-   TIMELINE NHẬT KÝ
+   TIMELINE
    ========================================================== */
 .timeline{display:flex;flex-direction:column;gap:10px;}
 .ti{
@@ -339,14 +322,13 @@ body.night-mode .txt2{color:var(--night-txt2);}
   border-radius:3px 0 0 3px;
 }
 .ti:hover{transform:translateX(3px);box-shadow:var(--shadow-sm);background:rgba(255,255,255,0.75);}
-.ti-top{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.ti-top{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;}
 .ti-date{font-size:0.68rem;color:var(--txt3);font-weight:600;}
 .ti-mood{font-size:0.85rem;}
 .ti-title{font-weight:700;font-size:0.88rem;color:var(--txt1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
 .ti-preview{font-size:0.75rem;color:var(--txt2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .ti-img{width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;margin-left:auto;}
 
-/* Load more */
 .load-more-btn{
   width:100%;background:rgba(181,96,122,0.08);
   border:1.5px dashed var(--r3);border-radius:var(--rr);
@@ -355,11 +337,10 @@ body.night-mode .txt2{color:var(--night-txt2);}
   transition:all 0.2s;margin-top:6px;
 }
 .load-more-btn:hover{background:var(--r4);}
-
 .empty-state{text-align:center;color:var(--txt3);font-size:0.85rem;padding:28px 0;}
 
 /* ==========================================================
-   LỊCH
+   CALENDAR
    ========================================================== */
 .cal-nav{display:flex;align-items:center;gap:6px;}
 .cnav{
@@ -381,31 +362,43 @@ body.night-mode .txt2{color:var(--night-txt2);}
   border-radius:9px;font-size:0.78rem;font-weight:600;
   color:var(--txt1);position:relative;
   min-height:34px;transition:all 0.13s;
+  cursor:default;
 }
 .cd.today{background:linear-gradient(135deg,var(--r3),var(--r1));color:#fff;box-shadow:0 3px 10px rgba(181,96,122,0.35);}
 .cd.has-entry{background:rgba(181,96,122,0.09);cursor:pointer;border:1.5px solid rgba(181,96,122,0.2);}
 .cd.has-entry:hover{background:var(--r4);transform:scale(1.1);}
 .cd-heart{font-size:0.55rem;line-height:1;}
 .cd-ann{width:5px;height:5px;border-radius:50%;background:var(--r1);margin-top:1px;}
-
-/* Bản đồ màu cảm xúc */
 .mood-map-title{font-size:0.7rem;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:0.05em;margin:10px 0 6px;}
 .mood-map-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
 .ml-item{display:flex;align-items:center;gap:3px;font-size:0.65rem;color:var(--txt2);}
 
 /* ==========================================================
-   NGÀY KỶ NIỆM
+   ANNIVERSARY
    ========================================================== */
 .ann-item{
   display:flex;align-items:center;gap:10px;
   background:rgba(255,255,255,0.5);
   border:1px solid rgba(181,96,122,0.12);
   border-radius:10px;padding:10px 12px;margin-bottom:7px;
+  transition:all 0.2s;
+  flex-wrap:wrap;
 }
+.ann-item:hover{background:rgba(255,255,255,0.75);}
 .ann-dot{width:9px;height:9px;border-radius:50%;background:var(--r1);flex-shrink:0;}
 .ann-info{flex:1;min-width:0;}
 .ann-name{font-weight:600;font-size:0.83rem;color:var(--txt1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ann-dt{font-size:0.68rem;color:var(--txt3);}
+.ann-countdown-badge{
+  font-size:0.7rem;
+  font-weight:700;
+  color:var(--r1);
+  background:rgba(181,96,122,0.1);
+  padding:2px 10px;
+  border-radius:20px;
+  border:1px solid var(--r3);
+  white-space:nowrap;
+}
 .ann-del{background:none;border:none;cursor:pointer;color:var(--r3);font-size:0.85rem;padding:2px;transition:color 0.15s;flex-shrink:0;}
 .ann-del:hover{color:#d04060;}
 .add-ann-btn{
@@ -418,24 +411,59 @@ body.night-mode .txt2{color:var(--night-txt2);}
 .add-ann-btn:hover{background:var(--r4);}
 
 /* ==========================================================
-   THỐNG KÊ
+   ALBUM
    ========================================================== */
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.stat-box{
-  background:rgba(255,255,255,0.5);border:1px solid rgba(181,96,122,0.12);
-  border-radius:12px;padding:12px;text-align:center;
+.album-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+  gap:12px;
 }
-.stat-num{font-size:1.4rem;font-weight:700;color:var(--r1);}
-.stat-lbl{font-size:0.65rem;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
-.mood-freq{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.mf-item{
-  display:flex;align-items:center;gap:4px;
-  background:rgba(255,255,255,0.5);border-radius:20px;
-  padding:4px 10px;font-size:0.75rem;font-weight:600;color:var(--txt2);
+.album-item{
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  aspect-ratio:1;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
 }
+.album-item:hover{
+  transform:scale(1.04);
+  box-shadow:0 8px 24px rgba(181,96,122,0.25);
+}
+.album-item img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+}
+.album-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(74,37,53,0.7),transparent 60%);
+  opacity:0;
+  transition:opacity 0.3s;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:10px 12px;
+}
+.album-item:hover .album-overlay{
+  opacity:1;
+}
+.album-overlay .date{
+  color:#fff;font-size:0.65rem;font-weight:600;
+  opacity:0.9;
+}
+.album-overlay .title{
+  color:#fff;font-size:0.75rem;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.album-empty{
+  grid-column:1/-1;
+  text-align:center;color:var(--txt3);
+  padding:40px 0;font-size:0.9rem;
+}
+.album-empty .icon{font-size:3rem;display:block;margin-bottom:12px;}
 
 /* ==========================================================
-   FAB — NÚT VIẾT MỚI
+   FAB
    ========================================================== */
 #fab{
   position:fixed;bottom:72px;right:20px;z-index:250;
@@ -445,7 +473,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
   box-shadow:0 6px 22px rgba(181,96,122,0.45);
   font-size:1.35rem;color:#fff;
   display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s;-webkit-tap-highlight-color:transparent;
+  transition:all 0.2s;
 }
 #fab:hover{transform:scale(1.1) rotate(8deg);box-shadow:0 10px 28px rgba(181,96,122,0.55);}
 @media(min-width:769px){
@@ -460,13 +488,14 @@ body.night-mode .txt2{color:var(--night-txt2);}
   border-radius:20px;padding:4px 12px;
   font-family:'Quicksand',sans-serif;font-size:0.73rem;font-weight:700;
   color:var(--r1);cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;gap:5px;
 }
 .sync-btn:hover{background:var(--r4);}
 .sync-btn.spin svg{animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ==========================================================
-   MODAL OVERLAY
+   MODAL
    ========================================================== */
 .modal{
   position:fixed;inset:0;z-index:500;
@@ -501,7 +530,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
   font-size:1.55rem;font-weight:700;color:var(--r1);margin-bottom:16px;
 }
 
-/* FORM */
 .fg{margin-bottom:14px;}
 .flbl{display:block;font-size:0.73rem;font-weight:700;color:var(--txt2);margin-bottom:5px;letter-spacing:0.04em;text-transform:uppercase;}
 .finp,.ftxt,.fsel{
@@ -516,17 +544,15 @@ body.night-mode .txt2{color:var(--night-txt2);}
 .ftxt{resize:vertical;min-height:130px;line-height:1.65;}
 .fsel{cursor:pointer;}
 
-/* Mood picker */
 .mood-picker{display:flex;gap:6px;flex-wrap:wrap;}
 .mp-opt{
   font-size:1.4rem;cursor:pointer;padding:5px 8px;
   border-radius:10px;border:2px solid transparent;
-  transition:all 0.15s;-webkit-tap-highlight-color:transparent;
+  transition:all 0.15s;
 }
 .mp-opt:hover{transform:scale(1.15);}
 .mp-opt.selected{border-color:var(--r1);background:var(--r4);transform:scale(1.1);}
 
-/* Writing prompt */
 .wp-box{
   background:rgba(181,96,122,0.06);
   border:1.5px solid rgba(181,96,122,0.15);
@@ -536,7 +562,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
 }
 .wp-refresh{background:none;border:none;cursor:pointer;font-size:0.85rem;color:var(--r2);padding:2px;flex-shrink:0;}
 
-/* Font size */
 .fs-ctrl{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
 .fs-btn{
   background:rgba(181,96,122,0.1);border:1px solid var(--r3);
@@ -546,7 +571,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
 }
 .fs-label{font-size:0.75rem;color:var(--txt2);font-weight:600;}
 
-/* Image upload */
 .img-upload-area{
   border:2px dashed var(--r3);border-radius:10px;
   padding:14px;text-align:center;cursor:pointer;
@@ -565,7 +589,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
   display:flex;align-items:center;justify-content:center;
 }
 
-/* Action buttons */
 .fbtn-row{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap;}
 .btn-p{
   flex:1;background:linear-gradient(135deg,var(--r3),var(--r1));
@@ -589,7 +612,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
 }
 .btn-d:hover{background:rgba(208,64,80,0.14);}
 
-/* VIEW entry */
 .ve-date{font-size:0.75rem;color:var(--txt3);font-weight:600;margin-bottom:3px;}
 .ve-mood{font-size:1.1rem;margin-bottom:8px;}
 .ve-content{
@@ -605,7 +627,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
 }
 .ve-images img:hover{transform:scale(1.06);}
 
-/* Image lightbox */
 #lightbox{
   position:fixed;inset:0;z-index:800;
   background:rgba(20,5,12,0.9);
@@ -615,9 +636,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
 #lightbox.open{display:flex;}
 #lightbox img{max-width:92vw;max-height:88vh;border-radius:12px;object-fit:contain;}
 
-/* ==========================================================
-   TOAST
-   ========================================================== */
 #toast{
   position:fixed;bottom:90px;left:50%;
   transform:translateX(-50%) translateY(16px);
@@ -630,31 +648,31 @@ body.night-mode .txt2{color:var(--night-txt2);}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 @media(min-width:769px){#toast{bottom:30px;}}
 
-/* ==========================================================
-   SPINNER
-   ========================================================== */
-.spin-icon{
-  display:inline-block;width:14px;height:14px;
-  border:2px solid rgba(181,96,122,0.3);
-  border-top-color:var(--r1);border-radius:50%;
-  animation:spin 0.7s linear infinite;
-  vertical-align:middle;
-}
-
-/* ==========================================================
-   UTILITY
-   ========================================================== */
 .hidden{display:none!important;}
+
+@media(max-width:480px){
+  .header-logo{font-size:1.2rem;}
+  .cu{padding:4px 8px;min-width:45px;}
+  .cn{font-size:1rem;}
+  .clock-bar{gap:4px;}
+  .lock-wrap{padding:30px 20px;}
+  .lock-title{font-size:1.5rem;}
+  .modal-box{padding:20px 16px;}
+  .pin-kb{gap:6px;}
+  .pk{padding:10px;font-size:1rem;}
+  .album-grid{grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));gap:8px;}
+}
+@media(min-width:769px){
+  .col-album{display:none!important;}
+}
 </style>
 </head>
 <body>
 
-<!-- SAKURA CANVAS -->
+<!-- SAKURA -->
 <canvas id="sakura-canvas"></canvas>
 
-<!-- =====================================================
-     MÀN HÌNH KHÓA
-===================================================== -->
+<!-- LOCK SCREEN -->
 <div id="lock-screen">
   <div class="lock-wrap">
     <div class="lock-quote" id="lock-quote"></div>
@@ -684,17 +702,13 @@ body.night-mode .txt2{color:var(--night-txt2);}
   </div>
 </div>
 
-<!-- =====================================================
-     APP
-===================================================== -->
+<!-- APP -->
 <div id="app">
 
-  <!-- HEADER -->
   <header class="app-header">
     <div class="header-top">
       <div class="header-logo">💕 Nhật Ký</div>
       <div class="header-actions">
-        <button class="hdr-btn" id="night-btn" onclick="toggleNight()" title="Chế độ ban đêm">🌙</button>
         <button class="hdr-btn sync-btn" id="sync-btn" onclick="syncData()">
           <svg id="sync-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
@@ -703,38 +717,53 @@ body.night-mode .txt2{color:var(--night-txt2);}
         </button>
       </div>
     </div>
-    <!-- Đồng hồ tình yêu -->
     <div class="clock-bar">
-      <div class="cu"><div class="cn" id="ck-d">000</div><div class="cl">Ngày</div></div>
-      <div class="cu"><div class="cn" id="ck-h">00</div><div class="cl">Giờ</div></div>
-      <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
-      <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
+      <div class="cu"><div class="cn" id="ck-d">0</div><div class="cl">Ngày</div></div>
+      <div class="cu"><div class="cn" id="ck-h">0</div><div class="cl">Giờ</div></div>
+      <div class="cu"><div class="cn" id="ck-m">0</div><div class="cl">Phút</div></div>
+      <div class="cu"><div class="cn" id="ck-s">0</div><div class="cl">Giây</div></div>
     </div>
-    <!-- Đếm ngược kỷ niệm -->
     <div class="ann-countdown" id="ann-countdown"></div>
   </header>
 
-  <!-- DESKTOP TABS -->
   <nav class="desktop-tabs">
-    <div class="dtab active" data-col="cal" onclick="switchDesktopTab('cal')">🗓 Lịch</div>
-    <div class="dtab" data-col="diary" onclick="switchDesktopTab('diary')">📖 Nhật ký</div>
+    <div class="dtab active" data-col="diary" onclick="switchDesktopTab('diary')">📖 Nhật ký</div>
     <div class="dtab" data-col="ann" onclick="switchDesktopTab('ann')">🌸 Kỷ niệm</div>
-    <div class="dtab" data-col="stats" onclick="switchDesktopTab('stats')">📊 Thống kê</div>
+    <div class="dtab" data-col="cal" onclick="switchDesktopTab('cal')">🗓 Lịch</div>
+    <div class="dtab" data-col="album" onclick="switchDesktopTab('album')">🖼 Album</div>
   </nav>
 
-  <!-- MAIN LAYOUT -->
   <div class="main-layout">
 
-    <!-- CỘT 1: LỊCH -->
-    <div class="col-cal tab-active" id="col-cal">
+    <div class="col-diary tab-active" id="col-diary">
+      <div class="glass-card">
+        <div class="card-hd"><div class="card-title">📖 Nhật Ký</div></div>
+        <div class="card-body">
+          <div class="search-wrap">
+            <input class="search-input" id="search-inp" placeholder="🔍 Tìm kiếm bài viết..." oninput="renderTimeline()"/>
+            <select class="filter-sel" id="filter-month" onchange="renderTimeline()">
+              <option value="">Tất cả</option>
+            </select>
+          </div>
+          <div class="timeline" id="timeline"></div>
+          <button class="load-more-btn hidden" id="load-more-btn" onclick="loadMore()">Xem thêm bài cũ hơn ↓</button>
+        </div>
+      </div>
+    </div>
 
-      <!-- Ngày này năm ngoái -->
+    <div class="col-ann" id="col-ann">
+      <div class="glass-card">
+        <div class="card-hd"><div class="card-title">🌸 Kỷ Niệm</div></div>
+        <div class="card-body" id="ann-list"></div>
+        <div style="padding:0 18px 16px;">
+          <button class="add-ann-btn" onclick="openAnnForm()">+ Thêm ngày kỷ niệm</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-cal" id="col-cal">
       <div id="otd-wrap"></div>
-
-      <!-- Streak -->
       <div id="streak-wrap"></div>
-
-      <!-- Lịch tháng -->
       <div class="glass-card">
         <div class="card-hd">
           <div class="card-title">🗓 Lịch</div>
@@ -745,111 +774,58 @@ body.night-mode .txt2{color:var(--night-txt2);}
           </div>
         </div>
         <div class="cal-grid">
-          <div class="cwdays">
-            <span>CN</span><span>T2</span><span>T3</span>
-            <span>T4</span><span>T5</span><span>T6</span><span>T7</span>
-          </div>
+          <div class="cwdays"><span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span></div>
           <div class="cdays" id="cdays"></div>
-          <!-- Bản đồ màu cảm xúc -->
           <div class="mood-map-title">Bản đồ cảm xúc tháng này</div>
           <div class="mood-map-legend" id="mood-legend"></div>
         </div>
       </div>
-
     </div>
 
-    <!-- CỘT 2: NHẬT KÝ -->
-    <div class="col-diary" id="col-diary">
-      <div class="glass-card">
-        <div class="card-hd">
-          <div class="card-title">📖 Nhật Ký</div>
-        </div>
-        <div class="card-body">
-          <!-- Tìm kiếm -->
-          <div class="search-wrap">
-            <input class="search-input" id="search-inp" placeholder="🔍 Tìm kiếm bài viết..." oninput="renderTimeline()"/>
-            <select class="filter-sel" id="filter-month" onchange="renderTimeline()">
-              <option value="">Tất cả</option>
-            </select>
-          </div>
-          <!-- Timeline -->
-          <div class="timeline" id="timeline"></div>
-          <button class="load-more-btn hidden" id="load-more-btn" onclick="loadMore()">Xem thêm bài cũ hơn ↓</button>
-        </div>
-      </div>
-    </div>
+  </div>
 
-    <!-- CỘT 3: KỶ NIỆM -->
-    <div class="col-ann" id="col-ann">
-      <div class="glass-card">
-        <div class="card-hd">
-          <div class="card-title">🌸 Kỷ Niệm</div>
-        </div>
-        <div class="card-body" id="ann-list"></div>
-        <div style="padding:0 18px 16px;">
-          <button class="add-ann-btn" onclick="openAnnForm()">+ Thêm ngày kỷ niệm</button>
-        </div>
-      </div>
-
-      <!-- Thống kê (desktop: hiện ở cột 3; mobile: tab riêng) -->
-      <div class="glass-card" id="stats-card">
-        <div class="card-hd"><div class="card-title">📊 Thống kê</div></div>
-        <div class="card-body" id="stats-body"></div>
-      </div>
-    </div>
-
-  </div><!-- /main-layout -->
-
-  <!-- STATS (mobile tab view) -->
-  <div class="col-stats hidden" id="col-stats" style="padding:14px 12px;">
+  <div class="col-album hidden" id="col-album" style="padding:14px 12px;">
     <div class="glass-card">
-      <div class="card-hd"><div class="card-title">📊 Thống kê</div></div>
-      <div class="card-body" id="stats-body-m"></div>
-    </div>
-    <div class="glass-card">
-      <div class="card-hd"><div class="card-title">🌸 Kỷ Niệm</div></div>
-      <div class="card-body" id="ann-list-m"></div>
-      <div style="padding:0 18px 16px;">
-        <button class="add-ann-btn" onclick="openAnnForm()">+ Thêm ngày kỷ niệm</button>
-      </div>
+      <div class="card-hd"><div class="card-title">🖼 Album Ảnh</div></div>
+      <div class="card-body" id="album-body"></div>
     </div>
   </div>
 
-</div><!-- /app -->
+  <div style="display:none;" id="album-desktop-wrapper">
+    <div class="glass-card">
+      <div class="card-hd"><div class="card-title">🖼 Album Ảnh</div></div>
+      <div class="card-body" id="album-body-desktop"></div>
+    </div>
+  </div>
 
-<!-- FAB -->
+</div>
+
 <button id="fab" onclick="openWriteModal()" title="✍️ Viết nhật ký mới">✍️</button>
 
-<!-- MOBILE BOTTOM NAV -->
 <nav class="mobile-nav">
-  <div class="mnav-item active" data-tab="cal" onclick="switchTab('cal')">
-    <div class="mnav-icon">🗓</div><div>Lịch</div>
-  </div>
-  <div class="mnav-item" data-tab="diary" onclick="switchTab('diary')">
+  <div class="mnav-item active" data-tab="diary" onclick="switchTab('diary')">
     <div class="mnav-icon">📖</div><div>Nhật ký</div>
   </div>
   <div class="mnav-item" data-tab="ann" onclick="switchTab('ann')">
     <div class="mnav-icon">🌸</div><div>Kỷ niệm</div>
   </div>
-  <div class="mnav-item" data-tab="stats" onclick="switchTab('stats')">
-    <div class="mnav-icon">📊</div><div>Thống kê</div>
+  <div class="mnav-item" data-tab="cal" onclick="switchTab('cal')">
+    <div class="mnav-icon">🗓</div><div>Lịch</div>
+  </div>
+  <div class="mnav-item" data-tab="album" onclick="switchTab('album')">
+    <div class="mnav-icon">🖼</div><div>Album</div>
   </div>
 </nav>
 
-<!-- =====================================================
-     MODAL: VIẾT / SỬA NHẬT KÝ
-===================================================== -->
+<!-- MODALS -->
 <div class="modal" id="modal-write">
   <div class="modal-box">
     <button class="mclose" onclick="closeModal('modal-write')">✕</button>
     <div class="modal-title" id="write-title">✍️ Viết nhật ký</div>
-
-    <!-- Writing prompt -->
     <div class="wp-box" id="wp-box">
       <span id="wp-text">💭 Hôm nay có điều gì đặc biệt không?</span>
       <button class="wp-refresh" onclick="newPrompt()" title="Gợi ý khác">🔄</button>
     </div>
-
     <div class="fg">
       <label class="flbl">Ngày viết</label>
       <input type="date" class="finp" id="e-date"/>
@@ -883,9 +859,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
     </div>
     <div class="fg">
       <label class="flbl">Thêm ảnh (tùy chọn)</label>
-      <div class="img-upload-area" onclick="document.getElementById('img-inp').click()">
-        📷 Bấm để chọn ảnh
-      </div>
+      <div class="img-upload-area" onclick="document.getElementById('img-inp').click()">📷 Bấm để chọn ảnh</div>
       <input type="file" id="img-inp" accept="image/*" multiple style="display:none" onchange="handleImgUpload(this)"/>
       <div class="img-preview-wrap" id="img-preview"></div>
     </div>
@@ -896,9 +870,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL: XEM BÀI NHẬT KÝ
-===================================================== -->
 <div class="modal" id="modal-view">
   <div class="modal-box">
     <button class="mclose" onclick="closeModal('modal-view')">✕</button>
@@ -915,9 +886,6 @@ body.night-mode .txt2{color:var(--night-txt2);}
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL: NGÀY KỶ NIỆM
-===================================================== -->
 <div class="modal" id="modal-ann">
   <div class="modal-box" style="max-width:400px;">
     <button class="mclose" onclick="closeModal('modal-ann')">✕</button>
@@ -937,47 +905,43 @@ body.night-mode .txt2{color:var(--night-txt2);}
   </div>
 </div>
 
-<!-- IMAGE LIGHTBOX -->
 <div id="lightbox" onclick="closeLightbox()">
   <img id="lb-img" src="" alt="ảnh"/>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
+<!-- ==========================================================
+   JAVASCRIPT
+========================================================== -->
 <script>
 /* ===========================================================
-   ⚙️ CẤU HÌNH — THAY ĐỔI TẠI ĐÂY
+   CẤU HÌNH
 =========================================================== */
 var CFG = {
   SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
   PIN: '2204',
-  LOVE_START: '2026-04-22',  // Ngày bắt đầu tình yêu YYYY-MM-DD
+  LOVE_START: '2026-04-22',
 };
 
 /* ===========================================================
-   STATE ỨNG DỤNG
+   STATE
 =========================================================== */
 var S = {
   data: { entries: [], anniversaries: [] },
   calYear:  new Date().getFullYear(),
   calMonth: new Date().getMonth(),
-  curId: null,         // ID bài đang xem/sửa
-  pin: '',             // Buffer PIN
-  mood: '',            // Mood đang chọn
-  imgs: [],            // Ảnh base64 đang chọn
-  editImgs: [],        // Ảnh khi đang sửa
-  fontSize: 14,        // Cỡ chữ textarea
-  pageSize: 8,         // Số bài hiện mỗi lần
+  curId: null,
+  pin: '',
+  mood: '',
+  imgs: [],
+  fontSize: 14,
+  pageSize: 8,
   page: 1,
-  nightMode: false,
 };
 
 /* ===========================================================
-   WRITING PROMPTS
+   PROMPTS & QUOTES
 =========================================================== */
 var PROMPTS = [
   '💭 Hôm nay có điều gì đặc biệt không?',
@@ -994,9 +958,6 @@ var PROMPTS = [
   '🍀 Điều ước lớn nhất của mình lúc này là gì?',
 ];
 
-/* ===========================================================
-   LOVE QUOTES CHO MÀN HÌNH KHÓA
-=========================================================== */
 var QUOTES = [
   '"Mỗi ngày bên nhau là một trang sách đẹp..."',
   '"Tình yêu không cần lý do, chỉ cần hai trái tim..."',
@@ -1008,7 +969,7 @@ var QUOTES = [
 ];
 
 /* ===========================================================
-   MÀN HÌNH KHÓA
+   LOCK SCREEN
 =========================================================== */
 document.getElementById('lock-quote').textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
 
@@ -1037,7 +998,6 @@ function checkPin() {
       document.getElementById('app').style.display='block';
       startClock();
       loadData();
-      initNightMode();
       newPrompt();
     }, 480);
   } else {
@@ -1052,7 +1012,7 @@ document.addEventListener('keydown', function(e){
 });
 
 /* ===========================================================
-   ĐỒNG HỒ TÌNH YÊU
+   CLOCK
 =========================================================== */
 function startClock() {
   var start = new Date(CFG.LOVE_START+'T00:00:00');
@@ -1062,29 +1022,16 @@ function startClock() {
     var m = Math.floor(diff/60000)%60;
     var h = Math.floor(diff/3600000)%24;
     var d = Math.floor(diff/86400000);
-    document.getElementById('ck-d').textContent = String(d).padStart(3,'0');
-    document.getElementById('ck-h').textContent = String(h).padStart(2,'0');
-    document.getElementById('ck-m').textContent = String(m).padStart(2,'0');
-    document.getElementById('ck-s').textContent = String(s).padStart(2,'0');
+    document.getElementById('ck-d').textContent = d;
+    document.getElementById('ck-h').textContent = h;
+    document.getElementById('ck-m').textContent = m;
+    document.getElementById('ck-s').textContent = s;
   }
   tick(); setInterval(tick,1000);
 }
 
 /* ===========================================================
-   NIGHT MODE
-=========================================================== */
-function initNightMode() {
-  var h = new Date().getHours();
-  if (h >= 21 || h < 6) { S.nightMode=true; document.body.classList.add('night-mode'); }
-}
-function toggleNight() {
-  S.nightMode = !S.nightMode;
-  document.body.classList.toggle('night-mode', S.nightMode);
-  document.getElementById('night-btn').textContent = S.nightMode ? '☀️' : '🌙';
-}
-
-/* ===========================================================
-   SAKURA ANIMATION
+   SAKURA
 =========================================================== */
 (function(){
   var canvas = document.getElementById('sakura-canvas');
@@ -1127,31 +1074,40 @@ function toggleNight() {
 })();
 
 /* ===========================================================
-   TẢI DỮ LIỆU (JSONP)
+   LOAD & SAVE DATA
 =========================================================== */
 function loadData(cb) {
   setSyncing(true);
   var cbName = 'jcb_'+Date.now();
   var tag;
   window[cbName] = function(data){
-    S.data = data;
-    if(!S.data.entries) S.data.entries=[];
-    if(!S.data.anniversaries) S.data.anniversaries=[];
-    S.data.entries.sort(function(a,b){return b.date.localeCompare(a.date);});
-    renderAll();
-    setSyncing(false);
-    if(typeof cb==='function') cb();
+    try {
+      S.data = data || { entries: [], anniversaries: [] };
+      if(!S.data.entries) S.data.entries=[];
+      if(!S.data.anniversaries) S.data.anniversaries=[];
+      S.data.entries.sort(function(a,b){return b.date.localeCompare(a.date);});
+      renderAll();
+      setSyncing(false);
+      if(typeof cb==='function') cb();
+    } catch(e) {
+      console.error('Lỗi xử lý dữ liệu:', e);
+      toast('⚠️ Lỗi xử lý dữ liệu!');
+      setSyncing(false);
+    }
     if(tag&&tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[cbName];
   };
   tag = document.createElement('script');
   tag.src = CFG.SCRIPT_URL+'?callback='+cbName+'&_='+Date.now();
   tag.onerror = function(){
-    toast('⚠️ Không kết nối được. Kiểm tra URL Script!');
+    toast('⚠️ Không kết nối được! Dùng dữ liệu cũ.');
     setSyncing(false);
-    delete window[cbName];
-    if(tag.parentNode) tag.parentNode.removeChild(tag);
+    if(!S.data || !S.data.entries) {
+      S.data = { entries: [], anniversaries: [] };
+    }
     renderAll();
+    if(tag.parentNode) tag.parentNode.removeChild(tag);
+    delete window[cbName];
   };
   document.head.appendChild(tag);
 }
@@ -1166,28 +1122,38 @@ function setSyncing(on) {
   btn.classList.toggle('spin', on);
 }
 
-/* ===========================================================
-   GHI DỮ LIỆU (POST)
-=========================================================== */
 function postData(payload, msg) {
+  setSyncing(true);
+  toast('⏳ Đang lưu...');
+  
   fetch(CFG.SCRIPT_URL, {
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
     body: JSON.stringify(payload)
   })
-  .then(function(){ toast(msg||'✅ Đã lưu!'); setTimeout(loadData,900); })
-  .catch(function(){
-    fetch(CFG.SCRIPT_URL,{
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload), mode:'no-cors'
-    }).then(function(){ toast(msg||'✅ Đã lưu!'); setTimeout(loadData,1500); })
-    .catch(function(){ toast('❌ Lỗi kết nối!'); });
+  .then(function(response) {
+    if (!response.ok) throw new Error('Lỗi kết nối: ' + response.status);
+    return response.json();
+  })
+  .then(function(data) {
+    setSyncing(false);
+    if (data && data.success) {
+      toast(msg || '✅ Đã lưu!');
+      setTimeout(loadData, 900);
+    } else {
+      toast('❌ Lỗi: ' + (data && data.error ? data.error : 'Không rõ nguyên nhân'));
+    }
+  })
+  .catch(function(error) {
+    console.error('Lỗi POST:', error);
+    toast('❌ Lỗi kết nối! Vui lòng kiểm tra kết nối mạng và thử lại.');
+    setSyncing(false);
   });
 }
 
 /* ===========================================================
-   RENDER TẤT CẢ
+   RENDER ALL
 =========================================================== */
 function renderAll() {
   renderOTD();
@@ -1195,26 +1161,26 @@ function renderAll() {
   renderCalendar();
   renderTimeline();
   renderAnniversaries();
-  renderStats();
   renderAnnCountdown();
+  renderAlbum();
   buildMonthFilter();
 }
 
 /* ===========================================================
-   NGÀY NÀY NĂM NGOÁI
+   OTD & STREAK
 =========================================================== */
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
+  if (!wrap) return;
   var today = todayStr();
   var mmdd = today.substring(5);
-  // Tìm bài có cùng mm-dd nhưng năm khác
   var match = S.data.entries.find(function(e){
-    return e.date.substring(5)===mmdd && e.date!==today;
+    return e.date && e.date.substring(5)===mmdd && e.date!==today;
   });
   if (!match) { wrap.innerHTML=''; return; }
   var yr = match.date.substring(0,4);
   var preview = (match.content||'').substring(0,80);
-  wrap.innerHTML = '<div class="glass-card otd-wrap-card">' +
+  wrap.innerHTML = '<div class="glass-card" style="margin-bottom:14px;">' +
     '<div class="card-body" style="padding:12px 16px;">' +
     '<div class="onthisday" onclick="openViewModal(\''+match.id+'\')">' +
     '<div class="otd-label">⏳ Ngày này năm '+yr+'</div>' +
@@ -1223,23 +1189,33 @@ function renderOTD() {
     '</div></div></div>';
 }
 
-/* ===========================================================
-   STREAK
-=========================================================== */
 function renderStreak() {
   var wrap = document.getElementById('streak-wrap');
+  if (!wrap) return;
   if (!S.data.entries.length) { wrap.innerHTML=''; return; }
-  var dates = S.data.entries.map(function(e){return e.date;}).sort().reverse();
-  var streak=0, cur=new Date();
-  for(var i=0;;i++){
-    var d = new Date(cur); d.setDate(d.getDate()-i);
-    var ds = fmtDate(d);
-    if (dates.indexOf(ds)>=0) streak++;
-    else if (i===0) { /* hôm nay chưa viết, bắt đầu từ hôm qua */ }
-    else break;
-    if (i>365) break;
+
+  var dates = S.data.entries.map(function(e){ return e.date; }).filter(Boolean).sort().reverse();
+  if (!dates.length) { wrap.innerHTML=''; return; }
+
+  var today = todayStr();
+  var yesterday = yesterdayStr();
+  var startDate = dates.includes(today) ? today : (dates.includes(yesterday) ? yesterday : null);
+  if (!startDate) { wrap.innerHTML=''; return; }
+
+  var streak = 0;
+  var cur = new Date(startDate + 'T00:00:00');
+  for (var i = 0; i < 365; i++) {
+    var ds = fmtDate(cur);
+    if (dates.includes(ds)) {
+      streak++;
+    } else {
+      break;
+    }
+    cur.setDate(cur.getDate() - 1);
   }
-  if (streak<=1) { wrap.innerHTML=''; return; }
+
+  if (streak <= 1) { wrap.innerHTML=''; return; }
+  
   wrap.innerHTML = '<div class="glass-card" style="margin-bottom:14px;">' +
     '<div class="card-body" style="padding:10px 16px;">' +
     '<div class="streak-bar">' +
@@ -1249,8 +1225,14 @@ function renderStreak() {
     '</div></div></div>';
 }
 
+function yesterdayStr() {
+  var d = new Date();
+  d.setDate(d.getDate() - 1);
+  return fmtDate(d);
+}
+
 /* ===========================================================
-   LỊCH
+   CALENDAR
 =========================================================== */
 var MONTHS = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
@@ -1270,7 +1252,6 @@ function renderCalendar() {
   var html='';
   for(var i=0;i<firstDay;i++) html+='<div class="cd"></div>';
 
-  // Bản đồ mood cho tháng này
   var moodMap = {};
 
   for(var d=1;d<=daysInMonth;d++){
@@ -1291,7 +1272,6 @@ function renderCalendar() {
   }
   document.getElementById('cdays').innerHTML=html;
 
-  // Mood legend
   var lgd='';
   Object.keys(moodMap).forEach(function(mood){
     lgd+='<div class="ml-item"><span>'+mood+'</span><span>×'+moodMap[mood]+'</span></div>';
@@ -1307,10 +1287,11 @@ function cm(delta){
 }
 
 /* ===========================================================
-   TIMELINE NHẬT KÝ (tìm kiếm + lọc + phân trang)
+   TIMELINE
 =========================================================== */
 function buildMonthFilter(){
   var sel = document.getElementById('filter-month');
+  if (!sel) return;
   var months = new Set(S.data.entries.map(function(e){return e.date?e.date.substring(0,7):''}));
   var opts='<option value="">Tất cả</option>';
   var arr = Array.from(months).sort().reverse();
@@ -1375,267 +1356,280 @@ function renderTI(e){
 }
 
 /* ===========================================================
-   KỶ NIỆM
+   ANNIVERSARY
 =========================================================== */
-function renderAnniversaries(){
+function renderAnniversaries() {
   var html = renderAnnHTML();
-  document.getElementById('ann-list').innerHTML = html;
-  // mobile tab
-  var m = document.getElementById('ann-list-m');
-  if(m) m.innerHTML=html;
+  var annList = document.getElementById('ann-list');
+  if (annList) annList.innerHTML = html;
 }
 
-function renderAnnHTML(){
-  if(!S.data.anniversaries.length)
+function renderAnnHTML() {
+  if (!S.data.anniversaries.length)
     return '<div class="empty-state">Chưa có ngày kỷ niệm nào~</div>';
-  return S.data.anniversaries.map(function(a){
+  
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  
+  return S.data.anniversaries.map(function(a) {
+    if (!a.date) return '';
+    var parts = a.date.split('-');
+    var next = new Date(today.getFullYear(), parseInt(parts[1])-1, parseInt(parts[2]));
+    if (next < today) next.setFullYear(next.getFullYear() + 1);
+    var days = Math.round((next - today) / 86400000);
+    var badge = '';
+    if (days === 0) badge = '🎉 Hôm nay!';
+    else if (days === 1) badge = '⏰ 1 ngày nữa';
+    else badge = '⏳ ' + days + ' ngày nữa';
+    
     return '<div class="ann-item">'+
       '<div class="ann-dot"></div>'+
       '<div class="ann-info">'+
         '<div class="ann-name">'+escHtml(a.name)+'</div>'+
         '<div class="ann-dt">'+fmtDateVN(a.date)+' · hằng năm</div>'+
       '</div>'+
+      '<span class="ann-countdown-badge">'+badge+'</span>'+
       '<button class="ann-del" onclick="delAnn(\''+a.id+'\')">🗑</button>'+
     '</div>';
   }).join('');
 }
 
-function renderAnnCountdown(){
+function renderAnnCountdown() {
   var el = document.getElementById('ann-countdown');
-  if(!S.data.anniversaries.length){ el.textContent=''; return; }
-  var today = new Date(); today.setHours(0,0,0,0);
-  var best=null, bestDays=9999;
-  S.data.anniversaries.forEach(function(a){
-    if(!a.date) return;
-    var parts=a.date.split('-');
-    var next = new Date(today.getFullYear(),parseInt(parts[1])-1,parseInt(parts[2]));
-    if(next<today) next.setFullYear(next.getFullYear()+1);
-    var days=Math.round((next-today)/86400000);
-    if(days<bestDays){bestDays=days;best=a;}
+  if (!el) return;
+  if (!S.data.anniversaries.length) { el.textContent = ''; return; }
+  
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var best = null, bestDays = 9999;
+  S.data.anniversaries.forEach(function(a) {
+    if (!a.date) return;
+    var parts = a.date.split('-');
+    var next = new Date(today.getFullYear(), parseInt(parts[1])-1, parseInt(parts[2]));
+    if (next < today) next.setFullYear(next.getFullYear() + 1);
+    var days = Math.round((next - today) / 86400000);
+    if (days < bestDays) { bestDays = days; best = a; }
   });
-  if(!best){ el.textContent=''; return; }
-  if(bestDays===0) el.textContent='🎉 Hôm nay là: '+best.name+'!';
-  else if(bestDays===1) el.textContent='⏰ Ngày mai: '+best.name;
-  else el.textContent='📅 Còn '+bestDays+' ngày đến: '+best.name;
+  if (!best) { el.textContent = ''; return; }
+  if (bestDays === 0) el.textContent = '🎉 Hôm nay là: ' + best.name + '!';
+  else if (bestDays === 1) el.textContent = '⏰ Ngày mai: ' + best.name;
+  else el.textContent = '📅 Còn ' + bestDays + ' ngày đến: ' + best.name;
 }
 
-function openAnnForm(){
-  document.getElementById('ann-date').value='';
-  document.getElementById('ann-name').value='';
+function openAnnForm() {
+  document.getElementById('ann-date').value = '';
+  document.getElementById('ann-name').value = '';
   openModal('modal-ann');
 }
-function saveAnn(){
-  var date=document.getElementById('ann-date').value;
-  var name=document.getElementById('ann-name').value.trim();
-  if(!date){toast('⚠️ Chọn ngày nhé!');return;}
-  if(!name){toast('⚠️ Đặt tên đi nào!');return;}
-  var ann={id:'ann_'+Date.now(),date:date,name:name};
+function saveAnn() {
+  var date = document.getElementById('ann-date').value;
+  var name = document.getElementById('ann-name').value.trim();
+  if (!date) { toast('⚠️ Chọn ngày nhé!'); return; }
+  if (!name) { toast('⚠️ Đặt tên đi nào!'); return; }
+  var ann = { id: 'ann_'+Date.now(), date: date, name: name };
   closeModal('modal-ann');
-  toast('⏳ Đang lưu...');
-  postData({action:'save_anniversary',anniversary:ann},'🌸 Đã lưu kỷ niệm!');
+  postData({ action: 'save_anniversary', anniversary: ann }, '🌸 Đã lưu kỷ niệm!');
 }
-function delAnn(id){
-  if(!confirm('Xóa ngày kỷ niệm này?')) return;
-  postData({action:'delete_anniversary',id:id},'🗑 Đã xóa!');
-}
-
-/* ===========================================================
-   THỐNG KÊ
-=========================================================== */
-function renderStats(){
-  var html = buildStatsHTML();
-  document.getElementById('stats-body').innerHTML=html;
-  var m=document.getElementById('stats-body-m');
-  if(m) m.innerHTML=html;
-}
-
-function buildStatsHTML(){
-  var total = S.data.entries.length;
-  if(!total) return '<div class="empty-state">Chưa có dữ liệu~</div>';
-
-  // Tháng viết nhiều nhất
-  var mCount={};
-  S.data.entries.forEach(function(e){
-    var m=(e.date||'').substring(0,7);
-    mCount[m]=(mCount[m]||0)+1;
-  });
-  var bestM='', bestC=0;
-  Object.keys(mCount).forEach(function(m){if(mCount[m]>bestC){bestC=mCount[m];bestM=m;}});
-
-  // Mood phổ biến
-  var moodC={};
-  S.data.entries.forEach(function(e){if(e.mood) moodC[e.mood]=(moodC[e.mood]||0)+1;});
-  var moodFreq=Object.keys(moodC).sort(function(a,b){return moodC[b]-moodC[a];}).slice(0,5);
-
-  // Streak tổng
-  var dates = S.data.entries.map(function(e){return e.date;}).sort().reverse();
-  var streakMax=0,cur=0,prevD=null;
-  dates.slice().reverse().forEach(function(d){
-    if(!prevD){ cur=1; }
-    else {
-      var diff=(new Date(d)-new Date(prevD))/86400000;
-      if(diff===1) cur++;
-      else { if(cur>streakMax)streakMax=cur; cur=1; }
-    }
-    prevD=d;
-  });
-  if(cur>streakMax) streakMax=cur;
-
-  var bmp='';
-  if(bestM){var p=bestM.split('-');bmp='T'+parseInt(p[1])+'/'+p[0];}
-
-  return '<div class="stats-grid">'+
-    '<div class="stat-box"><div class="stat-num">'+total+'</div><div class="stat-lbl">Tổng bài viết</div></div>'+
-    '<div class="stat-box"><div class="stat-num">'+streakMax+'</div><div class="stat-lbl">Streak dài nhất</div></div>'+
-    '<div class="stat-box"><div class="stat-num">'+S.data.anniversaries.length+'</div><div class="stat-lbl">Ngày kỷ niệm</div></div>'+
-    '<div class="stat-box"><div class="stat-num">'+(bmp||'—')+'</div><div class="stat-lbl">Tháng viết nhiều nhất</div></div>'+
-    '</div>'+
-    (moodFreq.length?'<div style="margin-top:12px;font-size:0.72rem;font-weight:700;color:var(--txt3);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;">Cảm xúc thường gặp</div>'+
-    '<div class="mood-freq">'+moodFreq.map(function(m){return'<div class="mf-item">'+m+'<span>×'+moodC[m]+'</span></div>';}).join('')+'</div>':'');
+function delAnn(id) {
+  if (!confirm('Xóa ngày kỷ niệm này?')) return;
+  postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
 }
 
 /* ===========================================================
-   NHẬT KÝ — VIẾT / SỬA / XEM / XÓA
+   ALBUM
 =========================================================== */
-function openWriteModal(){
-  S.curId=null; S.mood=''; S.imgs=[];
-  document.getElementById('write-title').textContent='✍️ Viết nhật ký';
-  document.getElementById('e-date').value=todayStr();
-  document.getElementById('e-title').value='';
-  document.getElementById('e-content').value='';
-  document.getElementById('img-preview').innerHTML='';
-  document.querySelectorAll('.mp-opt').forEach(function(el){el.classList.remove('selected');});
+function renderAlbum() {
+  // Lọc các bài viết có ảnh
+  var entriesWithImages = S.data.entries.filter(function(e) {
+    return e.images && e.images.length > 0;
+  });
+
+  // Tạo mảng các ảnh với thông tin kèm theo
+  var allImages = [];
+  entriesWithImages.forEach(function(entry) {
+    entry.images.forEach(function(imgSrc) {
+      allImages.push({
+        src: imgSrc,
+        date: entry.date,
+        title: entry.title || '(Không tiêu đề)',
+        entryId: entry.id
+      });
+    });
+  });
+
+  // Sắp xếp theo ngày mới nhất
+  allImages.sort(function(a, b) {
+    return b.date.localeCompare(a.date);
+  });
+
+  // Render cho mobile và desktop
+  var html = renderAlbumHTML(allImages);
+  var albumBody = document.getElementById('album-body');
+  if (albumBody) albumBody.innerHTML = html;
+  
+  var albumDesktop = document.getElementById('album-body-desktop');
+  if (albumDesktop) albumDesktop.innerHTML = html;
+}
+
+function renderAlbumHTML(images) {
+  if (!images.length) {
+    return '<div class="album-empty">' +
+      '<span class="icon">🖼</span>' +
+      'Chưa có ảnh nào trong nhật ký~<br/>' +
+      '<span style="font-size:0.8rem;color:var(--txt3);">Hãy thêm ảnh vào bài viết của bạn nhé!</span>' +
+    '</div>';
+  }
+
+  return '<div class="album-grid">' +
+    images.map(function(img) {
+      return '<div class="album-item" onclick="openLightbox(\''+img.src+'\')">' +
+        '<img src="'+img.src+'" alt="ảnh"/>' +
+        '<div class="album-overlay">' +
+          '<span class="date">'+fmtDateVN(img.date)+'</span>' +
+          '<span class="title">'+escHtml(img.title)+'</span>' +
+        '</div>' +
+      '</div>';
+    }).join('') +
+  '</div>';
+}
+
+/* ===========================================================
+   ENTRY CRUD
+=========================================================== */
+function openWriteModal() {
+  S.curId = null; S.mood = ''; S.imgs = [];
+  document.getElementById('write-title').textContent = '✍️ Viết nhật ký';
+  document.getElementById('e-date').value = todayStr();
+  document.getElementById('e-title').value = '';
+  document.getElementById('e-content').value = '';
+  document.getElementById('img-preview').innerHTML = '';
+  document.querySelectorAll('.mp-opt').forEach(function(el){ el.classList.remove('selected'); });
   newPrompt();
   openModal('modal-write');
 }
 
-function openViewModal(id){
-  var e=S.data.entries.find(function(x){return x.id===id;});
-  if(!e) return;
-  S.curId=id;
-  document.getElementById('ve-date').textContent=fmtDateVN(e.date);
-  document.getElementById('ve-mood').textContent=e.mood||'';
-  document.getElementById('ve-title').textContent=e.title||'(Không tiêu đề)';
-  document.getElementById('ve-content').textContent=e.content||'';
-  // Ảnh
-  var imgs='';
-  if(e.images&&e.images.length){
-    imgs=e.images.map(function(src){
+function openViewModal(id) {
+  var e = S.data.entries.find(function(x){ return x.id === id; });
+  if (!e) return;
+  S.curId = id;
+  document.getElementById('ve-date').textContent = fmtDateVN(e.date);
+  document.getElementById('ve-mood').textContent = e.mood || '';
+  document.getElementById('ve-title').textContent = e.title || '(Không tiêu đề)';
+  document.getElementById('ve-content').textContent = e.content || '';
+  var imgs = '';
+  if (e.images && e.images.length) {
+    imgs = e.images.map(function(src) {
       return '<img src="'+src+'" onclick="openLightbox(\''+src+'\')" alt="ảnh"/>';
     }).join('');
   }
-  document.getElementById('ve-images').innerHTML=imgs;
+  document.getElementById('ve-images').innerHTML = imgs;
   openModal('modal-view');
 }
 
-function editEntry(){
-  if(!S.curId) return;
-  var e=S.data.entries.find(function(x){return x.id===S.curId;});
-  if(!e) return;
+function editEntry() {
+  if (!S.curId) return;
+  var e = S.data.entries.find(function(x){ return x.id === S.curId; });
+  if (!e) return;
   closeModal('modal-view');
-  S.mood=e.mood||''; S.imgs=e.images?e.images.slice():[];
-  document.getElementById('write-title').textContent='✏️ Chỉnh sửa nhật ký';
-  document.getElementById('e-date').value=e.date;
-  document.getElementById('e-title').value=e.title||'';
-  document.getElementById('e-content').value=e.content||'';
-  // Hiện mood đang chọn
-  document.querySelectorAll('.mp-opt').forEach(function(el){
-    el.classList.toggle('selected',el.dataset.mood===S.mood);
+  S.mood = e.mood || ''; S.imgs = e.images ? e.images.slice() : [];
+  document.getElementById('write-title').textContent = '✏️ Chỉnh sửa nhật ký';
+  document.getElementById('e-date').value = e.date;
+  document.getElementById('e-title').value = e.title || '';
+  document.getElementById('e-content').value = e.content || '';
+  document.querySelectorAll('.mp-opt').forEach(function(el) {
+    el.classList.toggle('selected', el.dataset.mood === S.mood);
   });
-  // Hiện preview ảnh
   renderImgPreviews();
   openModal('modal-write');
 }
 
-function saveEntry(){
-  var date=document.getElementById('e-date').value;
-  var title=document.getElementById('e-title').value.trim();
-  var content=document.getElementById('e-content').value.trim();
-  if(!date){toast('⚠️ Chọn ngày viết nhé!');return;}
-  if(!content){toast('⚠️ Viết vài dòng đi nào~ 🌸');return;}
-  var entry={
-    id: S.curId||('e_'+Date.now()),
-    date:date, title:title||('Ngày '+fmtDateVN(date)),
-    content:content, mood:S.mood,
-    images:S.imgs.slice(),
-    updatedAt:new Date().toISOString()
+function saveEntry() {
+  var date = document.getElementById('e-date').value;
+  var title = document.getElementById('e-title').value.trim();
+  var content = document.getElementById('e-content').value.trim();
+  if (!date) { toast('⚠️ Chọn ngày viết nhé!'); return; }
+  if (!content) { toast('⚠️ Viết vài dòng đi nào~ 🌸'); return; }
+  var entry = {
+    id: S.curId || ('e_'+Date.now()),
+    date: date,
+    title: title || ('Ngày '+fmtDateVN(date)),
+    content: content,
+    mood: S.mood,
+    images: S.imgs.slice(),
+    updatedAt: new Date().toISOString()
   };
   closeModal('modal-write');
-  toast('⏳ Đang lưu...');
-  postData({action:'save_entry',entry:entry},'💾 Đã lưu nhật ký!');
+  postData({ action: 'save_entry', entry: entry }, '💾 Đã lưu nhật ký!');
 }
 
-function deleteEntry(){
-  if(!S.curId) return;
-  if(!confirm('Xóa bài này? Không khôi phục được đâu nha!')) return;
+function deleteEntry() {
+  if (!S.curId) return;
+  if (!confirm('Xóa bài này? Không khôi phục được đâu nha!')) return;
   closeModal('modal-view');
-  toast('⏳ Đang xóa...');
-  postData({action:'delete_entry',id:S.curId},'🗑 Đã xóa!');
-  S.curId=null;
+  postData({ action: 'delete_entry', id: S.curId }, '🗑 Đã xóa!');
+  S.curId = null;
 }
 
 /* ===========================================================
-   MOOD PICKER
+   MOOD & PROMPT
 =========================================================== */
-function selectMood(m){
-  S.mood = (S.mood===m)?'':m; // Toggle
-  document.querySelectorAll('.mp-opt').forEach(function(el){
-    el.classList.toggle('selected',el.dataset.mood===S.mood);
+function selectMood(m) {
+  S.mood = (S.mood === m) ? '' : m;
+  document.querySelectorAll('.mp-opt').forEach(function(el) {
+    el.classList.toggle('selected', el.dataset.mood === S.mood);
   });
 }
 
-/* ===========================================================
-   WRITING PROMPT
-=========================================================== */
-function newPrompt(){
-  var el=document.getElementById('wp-text');
-  if(!el) return;
-  el.textContent=PROMPTS[Math.floor(Math.random()*PROMPTS.length)];
+function newPrompt() {
+  var el = document.getElementById('wp-text');
+  if (!el) return;
+  el.textContent = PROMPTS[Math.floor(Math.random()*PROMPTS.length)];
 }
 
 /* ===========================================================
    FONT SIZE
 =========================================================== */
-function changeFontSize(delta){
-  S.fontSize=Math.min(20,Math.max(11,S.fontSize+delta));
-  document.getElementById('e-content').style.fontSize=S.fontSize+'px';
-  document.getElementById('fs-label').textContent='Cỡ chữ: '+S.fontSize+'px';
+function changeFontSize(delta) {
+  S.fontSize = Math.min(20, Math.max(11, S.fontSize + delta));
+  document.getElementById('e-content').style.fontSize = S.fontSize + 'px';
+  document.getElementById('fs-label').textContent = 'Cỡ chữ: '+S.fontSize+'px';
 }
 
 /* ===========================================================
-   ẢNH — UPLOAD & PREVIEW (Base64)
+   IMAGE UPLOAD
 =========================================================== */
-function handleImgUpload(input){
-  var files=Array.from(input.files);
-  files.forEach(function(file){
-    if(S.imgs.length>=4){toast('⚠️ Tối đa 4 ảnh mỗi bài nhé!');return;}
-    var reader=new FileReader();
-    reader.onload=function(ev){
-      // Nén ảnh xuống trước khi lưu
-      var img=new Image();
-      img.onload=function(){
-        var canvas=document.createElement('canvas');
-        var max=800;
-        var w=img.width,h=img.height;
-        if(w>max||h>max){
-          if(w>h){h=Math.round(h*max/w);w=max;}
-          else{w=Math.round(w*max/h);h=max;}
+function handleImgUpload(input) {
+  var files = Array.from(input.files);
+  files.forEach(function(file) {
+    if (S.imgs.length >= 4) { toast('⚠️ Tối đa 4 ảnh mỗi bài nhé!'); return; }
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var max = 800;
+        var w = img.width, h = img.height;
+        if (w > max || h > max) {
+          if (w > h) { h = Math.round(h*max/w); w = max; }
+          else { w = Math.round(w*max/h); h = max; }
         }
-        canvas.width=w;canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
-        var data=canvas.toDataURL('image/jpeg',0.72);
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        var data = canvas.toDataURL('image/jpeg', 0.72);
         S.imgs.push(data);
         renderImgPreviews();
       };
-      img.src=ev.target.result;
+      img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
   });
-  input.value='';
+  input.value = '';
 }
 
-function renderImgPreviews(){
-  document.getElementById('img-preview').innerHTML=S.imgs.map(function(src,i){
+function renderImgPreviews() {
+  var container = document.getElementById('img-preview');
+  if (!container) return;
+  container.innerHTML = S.imgs.map(function(src, i) {
     return '<div class="img-preview-item">'+
       '<img src="'+src+'" alt="preview"/>'+
       '<button class="img-rm" onclick="removeImg('+i+')">✕</button>'+
@@ -1643,67 +1637,72 @@ function renderImgPreviews(){
   }).join('');
 }
 
-function removeImg(i){
-  S.imgs.splice(i,1);
+function removeImg(i) {
+  S.imgs.splice(i, 1);
   renderImgPreviews();
 }
 
 /* ===========================================================
-   LIGHTBOX ẢNH
+   LIGHTBOX
 =========================================================== */
-function openLightbox(src){
-  document.getElementById('lb-img').src=src;
+function openLightbox(src) {
+  document.getElementById('lb-img').src = src;
   document.getElementById('lightbox').classList.add('open');
 }
-function closeLightbox(){
+function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
 }
 
 /* ===========================================================
    NAVIGATION
 =========================================================== */
-// Mobile tab
-function switchTab(tab){
-  var cols=['cal','diary','ann','stats'];
-  cols.forEach(function(c){
-    var el=document.getElementById('col-'+c);
-    if(el) el.classList.toggle('tab-active',c===tab);
+function switchTab(tab) {
+  var cols = ['diary', 'ann', 'cal', 'album'];
+  cols.forEach(function(c) {
+    var el = document.getElementById('col-'+c);
+    if (el) el.classList.toggle('tab-active', c === tab);
   });
-  document.querySelectorAll('.mnav-item').forEach(function(el){
-    el.classList.toggle('active',el.dataset.tab===tab);
+  document.querySelectorAll('.mnav-item').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  document.querySelectorAll('.dtab').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.col === tab);
   });
 }
 
-// Desktop tab (chỉ ảnh hưởng highlight, layout luôn 3 cột)
-function switchDesktopTab(tab){
-  document.querySelectorAll('.dtab').forEach(function(el){
-    el.classList.toggle('active',el.dataset.col===tab);
+function switchDesktopTab(tab) {
+  document.querySelectorAll('.dtab').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.col === tab);
   });
-  // Trên desktop: scroll đến section tương ứng
-  var colMap={cal:'col-cal',diary:'col-diary',ann:'col-ann',stats:'col-ann'};
-  var target=document.getElementById(colMap[tab]);
-  if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.mnav-item').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  var colMap = { diary: 'col-diary', ann: 'col-ann', cal: 'col-cal', album: 'col-album' };
+  var target = document.getElementById(colMap[tab]);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 /* ===========================================================
    MODAL HELPERS
 =========================================================== */
-function openModal(id){
+function openModal(id) {
   document.getElementById(id).classList.add('open');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
 }
-function closeModal(id){
+function closeModal(id) {
   document.getElementById(id).classList.remove('open');
-  document.body.style.overflow='';
+  document.body.style.overflow = '';
 }
-document.querySelectorAll('.modal').forEach(function(o){
-  o.addEventListener('click',function(e){
-    if(e.target===o) closeModal(o.id);
+document.querySelectorAll('.modal').forEach(function(o) {
+  o.addEventListener('click', function(e) {
+    if (e.target === o) closeModal(o.id);
   });
 });
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){
-    document.querySelectorAll('.modal.open').forEach(function(m){closeModal(m.id);});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal.open').forEach(function(m){ closeModal(m.id); });
     closeLightbox();
   }
 });
@@ -1712,29 +1711,28 @@ document.addEventListener('keydown',function(e){
    TOAST
 =========================================================== */
 var _toastTimer;
-function toast(msg){
-  var el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
   clearTimeout(_toastTimer);
-  _toastTimer=setTimeout(function(){el.classList.remove('show');},2600);
+  _toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
 }
 
 /* ===========================================================
    UTILITY
 =========================================================== */
-function p2(n){return n<10?'0'+n:''+n;}
-function todayStr(){var t=new Date();return t.getFullYear()+'-'+p2(t.getMonth()+1)+'-'+p2(t.getDate());}
-function fmtDate(d){return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
-function fmtDateVN(ds){
-  if(!ds) return '';
-  var p=ds.split('-');
-  if(p.length<3) return ds;
+function p2(n){ return n < 10 ? '0'+n : ''+n; }
+function todayStr(){ var t = new Date(); return t.getFullYear()+'-'+p2(t.getMonth()+1)+'-'+p2(t.getDate()); }
+function fmtDate(d){ return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()); }
+function fmtDateVN(ds) {
+  if (!ds) return '';
+  var p = ds.split('-');
+  if (p.length < 3) return ds;
   return 'ngày '+parseInt(p[2])+' tháng '+parseInt(p[1])+', '+p[0];
 }
-function escHtml(s){
+function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>
 </html>
-HTMLEOF
