@@ -14,1757 +14,569 @@
    DESIGN TOKENS — ROSE SMOKE PALETTE
 =================================================== */
 :root{
-  --p1:#a85470;   /* rose deep  – accent chính     */
-  --p2:#c97d96;   /* rose mid   – gradient          */
-  --p3:#e8afc3;   /* rose light – border/highlight  */
-  --p4:#f7dde8;   /* blush      – nền card          */
-  --p5:#fef2f7;   /* milk white – nền tổng          */
-  --glass:rgba(255,243,249,0.72);
-  --glass-b:rgba(255,255,255,0.60);
-  --sh:0 8px 32px rgba(168,84,112,0.13);
-  --sh-sm:0 3px 12px rgba(168,84,112,0.09);
-  --t1:#3d1f2d;   /* text đậm  */
-  --t2:#7a4a5e;   /* text vừa  */
-  --t3:#b08090;   /* text nhạt */
-  --rr:16px;
-  --rrb:22px;
+  --p1:#a85470; --p2:#c97d96; --p3:#e8afc3; --p4:#f7dde8; --p5:#fef2f7;
+  --glass:rgba(255,243,249,0.72); --glass-b:rgba(255,255,255,0.60);
+  --sh:0 8px 32px rgba(168,84,112,0.13); --sh-sm:0 3px 12px rgba(168,84,112,0.09);
+  --t1:#3d1f2d; --t2:#7a4a5e; --t3:#b08090; --rr:16px; --rrb:22px;
 }
 
-/* ===================================================
-   RESET & BASE
-=================================================== */
+/* RESET & BASE */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
-  font-family:'Quicksand','Segoe UI',sans-serif;
-  background:linear-gradient(145deg,#fce8f0 0%,#f4e0ef 50%,#ece0f5 100%);
-  min-height:100vh;color:var(--t1);overflow-x:hidden;
-}
-button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
-input,textarea,select{font-family:inherit}
-img{max-width:100%;display:block}
-
-/* ===================================================
-   SAKURA CANVAS
-=================================================== */
-#sakura-canvas{
-  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5
+  font-family:'Quicksand',sans-serif; background:linear-gradient(145deg,#fce8f0 0%,#f4e0ef 50%,#ece0f5 100%);
+  min-height:100vh; color:var(--t1); overflow-x:hidden;
 }
 
-/* ===================================================
-   LOCK SCREEN
-=================================================== */
+/* SAKURA CANVAS */
+#sakura-canvas{ position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5 }
+
+/* LOCK SCREEN */
 #lock-screen{
-  position:fixed;inset:0;z-index:9000;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(155deg,#fce0ec,#f0d5f0,#dfd8f8);
-  transition:opacity .5s,transform .5s;
+  position:fixed;inset:0;z-index:9000; display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(155deg,#fce0ec,#f0d5f0,#dfd8f8); transition:opacity .5s;
 }
-#lock-screen.hiding{opacity:0;transform:scale(1.05);pointer-events:none}
+#lock-screen.hiding{opacity:0;pointer-events:none}
 .lock-card{
-  background:rgba(255,248,253,.82);
-  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
-  border:1.5px solid rgba(255,255,255,.7);border-radius:28px;
-  padding:38px 34px 34px;text-align:center;
-  box-shadow:0 24px 64px rgba(168,84,112,.22);
-  max-width:310px;width:90%;
+  background:rgba(255,248,253,.82); backdrop-filter:blur(28px); border-radius:28px;
+  padding:38px 34px; text-align:center; box-shadow:0 24px 64px rgba(168,84,112,.22); width:90%; max-width:310px;
 }
-.lock-quote{
-  font-family:'Dancing Script',cursive;
-  font-size:.92rem;color:var(--p2);min-height:40px;
-  line-height:1.5;font-style:italic;margin-bottom:18px;
-}
-.lock-heart{font-size:46px;display:block;margin-bottom:8px;
-  animation:hb 1.9s ease-in-out infinite}
-@keyframes hb{
-  0%,100%{transform:scale(1)}
-  14%{transform:scale(1.22)}
-  28%{transform:scale(1)}
-  42%{transform:scale(1.13)}
-  56%{transform:scale(1)}
-}
-.lock-ttl{font-family:'Dancing Script',cursive;font-size:1.85rem;font-weight:700;color:var(--p1);margin-bottom:3px}
-.lock-sub{font-size:.78rem;color:var(--t3);margin-bottom:20px}
 .pin-dots{display:flex;gap:11px;justify-content:center;margin-bottom:20px}
-.pin-dot{
-  width:15px;height:15px;border-radius:50%;
-  background:rgba(168,84,112,.14);border:2px solid var(--p3);
-  transition:all .2s;
-}
+.pin-dot{ width:15px;height:15px;border-radius:50%; background:rgba(168,84,112,.14);border:2px solid var(--p3); transition:all .2s; }
 .pin-dot.on{background:var(--p1);border-color:var(--p1);transform:scale(1.18)}
 .pin-kb{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pk{
-  background:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.75);
-  border-radius:11px;padding:12px;font-size:1.1rem;font-weight:700;
-  color:var(--t1);transition:all .13s;user-select:none;
-}
-.pk:active{transform:scale(.9);background:var(--p4)}
-.pk.del{color:var(--p1)}
-.lock-err{color:#c04060;font-size:.76rem;min-height:15px;margin-top:8px;font-weight:600}
+.pk{ background:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.75); border-radius:11px;padding:12px;font-weight:700; }
 
-/* ===================================================
-   APP WRAPPER
-=================================================== */
-#app{display:none;position:relative;z-index:1;min-height:100vh;
-  padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
-
-/* ===================================================
-   HEADER
-=================================================== */
+/* APP LAYOUT */
+#app{display:none; position:relative;z-index:1; padding-bottom:80px}
 .app-hdr{
   background:linear-gradient(135deg,rgba(168,84,112,.9),rgba(201,125,150,.82));
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1.5px solid rgba(255,255,255,.28);
-  position:sticky;top:0;z-index:200;
-  box-shadow:0 4px 20px rgba(168,84,112,.2);
+  backdrop-filter:blur(20px); position:sticky;top:0;z-index:200; color:#fff;
 }
-.hdr-top{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 18px 9px;
-}
-.hdr-logo{
-  font-family:'Dancing Script',cursive;
-  font-size:1.42rem;font-weight:700;color:#fff;
-  text-shadow:0 2px 8px rgba(100,30,60,.28);
-}
-.hdr-sync{
-  background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.32);
-  border-radius:20px;padding:6px 13px;
-  font-size:.75rem;font-weight:700;color:#fff;
-  display:flex;align-items:center;gap:5px;transition:all .15s;
-}
-.hdr-sync:hover{background:rgba(255,255,255,.32)}
-.hdr-sync svg{flex-shrink:0}
-.hdr-sync.syncing svg{animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:13px 18px}
+.clock-row{display:flex;gap:6px;justify-content:center;padding-bottom:10px}
+.cu{background:rgba(255,255,255,.18);border-radius:9px;padding:4px 9px;min-width:56px;text-align:center}
+.cn{font-size:1.15rem;font-weight:700}
+.cl{font-size:.56rem;text-transform:uppercase}
 
-/* Clock */
-.clock-row{
-  display:flex;gap:6px;justify-content:center;
-  padding:0 18px 10px;flex-wrap:wrap;
-}
-.cu{
-  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);
-  border-radius:9px;padding:4px 9px;text-align:center;min-width:56px;
-}
-.cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
-.cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
+.desk-tabs{ display:none; background:rgba(255,242,248,.68); backdrop-filter:blur(12px); position:sticky; z-index:150; padding:0 22px; }
+@media(min-width:769px){ .desk-tabs{display:flex} }
+.dtab{ padding:10px 18px; cursor:pointer; font-size:.83rem; font-weight:700; color:var(--t2); border-bottom:2.5px solid transparent; }
+.dtab.on{ color:var(--p1); border-bottom-color:var(--p1) }
 
-/* Countdown strip */
-#ann-strip{
-  text-align:center;padding:0 18px 8px;
-  font-size:.74rem;font-weight:600;color:rgba(255,255,255,.92);min-height:22px;
-}
+.main-layout{ display:grid; grid-template-columns:1fr; gap:16px; max-width:1200px; margin:0 auto; padding:16px; }
+@media(min-width:769px){ .main-layout{grid-template-columns:1fr 1fr 1fr 1fr} .col-panel{display:block!important} }
 
-/* ===================================================
-   DESKTOP TABS (≥769px — 3-col grid visible; tabs just highlight)
-=================================================== */
-.desk-tabs{
-  display:none;
-  background:rgba(255,242,248,.68);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-bottom:1.5px solid rgba(168,84,112,.1);
-  position:sticky;z-index:150;
-  padding:0 22px;gap:0;
-}
-@media(min-width:769px){.desk-tabs{display:flex;top:var(--hdr-h,112px)}}
-.dtab{
-  padding:10px 18px;cursor:pointer;
-  font-size:.83rem;font-weight:700;color:var(--t2);
-  border-bottom:2.5px solid transparent;
-  transition:all .18s;white-space:nowrap;
-  display:flex;align-items:center;gap:6px;
-}
-.dtab.on{color:var(--p1);border-bottom-color:var(--p1)}
-.dtab:hover{color:var(--p1)}
+/* GLASS CARD */
+.gc{ background:var(--glass); backdrop-filter:blur(18px); border:1.5px solid var(--glass-b); border-radius:var(--rrb); box-shadow:var(--sh); margin-bottom:14px; overflow:hidden;}
+.gc-hd{ padding:13px 17px; border-bottom:1px solid rgba(168,84,112,.09); display:flex; justify-content:space-between; align-items:center; }
+.gc-ttl{ font-family:'Dancing Script',cursive; font-size:1.18rem; font-weight:700; color:var(--p1); }
+.gc-body{ padding:13px 17px }
 
-/* ===================================================
-   MOBILE BOTTOM NAV
-=================================================== */
-.mob-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;z-index:300;
-  background:rgba(255,243,249,.94);
-  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
-  border-top:1.5px solid rgba(168,84,112,.12);
-  padding:5px 0 env(safe-area-inset-bottom,5px);
-  box-shadow:0 -4px 18px rgba(168,84,112,.10);
-}
-@media(max-width:768px){.mob-nav{display:flex}}
-.mn-item{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:2px;padding:5px 3px;color:var(--t3);
-  font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
-  transition:color .18s;position:relative;
-}
-.mn-item.on{color:var(--p1)}
-.mn-icon{font-size:1.25rem;line-height:1}
-
-/* ===================================================
-   MAIN LAYOUT
-=================================================== */
-.main-layout{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:16px;
-  max-width:1160px;margin:0 auto;
-  padding:18px 16px 20px;
-}
-/* desktop */
-@media(min-width:769px){
-  .main-layout{grid-template-columns:1fr 1fr 1fr 1fr}
-  .col-panel{display:block!important}
-}
-/* mobile: từng panel ẩn/hiện theo tab */
-@media(max-width:768px){
-  .main-layout{grid-template-columns:1fr;padding:12px 11px 16px;gap:0}
-  .col-panel{display:none}
-  .col-panel.on{display:block}
-}
-
-/* ===================================================
-   GLASS CARD
-=================================================== */
-.gc{
-  background:var(--glass);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border:1.5px solid var(--glass-b);
-  border-radius:var(--rrb);
-  box-shadow:var(--sh);
-  overflow:hidden;margin-bottom:14px;
-}
-.gc-hd{
-  padding:13px 17px 11px;
-  border-bottom:1px solid rgba(168,84,112,.09);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.gc-ttl{font-family:'Dancing Script',cursive;font-size:1.18rem;font-weight:700;color:var(--p1)}
-.gc-body{padding:13px 17px}
-
-/* ===================================================
-   DIARY TAB — timeline
-=================================================== */
-.search-row{display:flex;gap:7px;margin-bottom:13px}
-.s-inp{
-  flex:1;background:rgba(255,255,255,.68);
-  border:1.5px solid rgba(168,84,112,.2);border-radius:22px;
-  padding:7px 14px;font-size:.83rem;color:var(--t1);outline:none;
-  transition:border-color .2s;
-}
-.s-inp:focus{border-color:var(--p1)}
-.s-inp::placeholder{color:var(--t3)}
-.f-sel{
-  background:rgba(255,255,255,.68);
-  border:1.5px solid rgba(168,84,112,.2);border-radius:22px;
-  padding:7px 10px;font-size:.76rem;color:var(--t2);outline:none;cursor:pointer;
-}
+/* TIMELINE & ITEM */
 .tl-wrap{display:flex;flex-direction:column;gap:9px}
-.ti{
-  background:rgba(255,255,255,.55);
-  border:1.5px solid rgba(168,84,112,.12);border-radius:var(--rr);
-  padding:11px 13px;cursor:pointer;transition:all .17s;
-  position:relative;overflow:hidden;
-}
-.ti::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(to bottom,var(--p3),var(--p1));border-radius:3px 0 0 3px;
-}
-.ti:hover{transform:translateX(3px);box-shadow:var(--sh-sm);background:rgba(255,255,255,.78)}
-.ti-row1{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.ti-date{font-size:.66rem;color:var(--t3);font-weight:600}
-.ti-mood{font-size:.82rem}
-.ti-body{display:flex;align-items:flex-start;gap:8px}
-.ti-txt{flex:1;min-width:0}
-.ti-ttl{font-weight:700;font-size:.86rem;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
-.ti-pre{font-size:.74rem;color:var(--t2);line-height:1.44;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ti-thumb{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0}
-.load-more{
-  width:100%;background:rgba(168,84,112,.07);
-  border:1.5px dashed var(--p3);border-radius:var(--rr);
-  padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);
-  transition:all .18s;margin-top:6px;
-}
-.load-more:hover{background:var(--p4)}
-.empty-hint{text-align:center;color:var(--t3);font-size:.83rem;padding:26px 0}
+.ti{ background:rgba(255,255,255,.55); border-radius:var(--rr); padding:11px 13px; cursor:pointer; position:relative; border-left:4px solid var(--p1); }
+.ti-date{ font-size:.66rem; color:var(--t3); font-weight:600 }
+.ti-ttl{ font-weight:700; font-size:.86rem; margin-bottom:2px }
+.ti-pre{ font-size:.74rem; color:var(--t2); line-height:1.4; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
 
-/* OTD */
-.otd-card{
-  background:linear-gradient(135deg,rgba(168,84,112,.09),rgba(201,125,150,.06));
-  border:1.5px solid rgba(168,84,112,.18);border-radius:var(--rr);
-  padding:13px 15px;margin-bottom:13px;cursor:pointer;transition:all .18s;
-}
-.otd-card:hover{background:rgba(168,84,112,.14);transform:translateY(-1px)}
-.otd-lbl{font-size:.65rem;font-weight:700;color:var(--p2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
-.otd-ttl{font-weight:700;font-size:.86rem;color:var(--t1)}
-.otd-pre{font-size:.73rem;color:var(--t2);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* CALENDAR */
+.c-grid{padding:10px}
+.c-wdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:.6rem;font-weight:700;color:var(--t3);margin-bottom:5px}
+.c-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cd{ aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:8px; font-size:.76rem; cursor:pointer; position:relative; }
+.cd.has-e{ background:rgba(168,84,112,.1); border:1px solid var(--p3); }
+.cd.today{ background:var(--p1)!important; color:#fff!important; }
+.cd-count{ position:absolute; top:1px; right:2px; font-size:0.55rem; background:var(--p1); color:#fff; border-radius:50%; width:12px; height:12px; display:flex; align-items:center; justify-content:center; }
 
-/* Streak */
-.streak-bar{
-  display:flex;align-items:center;gap:9px;
-  background:rgba(255,195,80,.1);border:1.5px solid rgba(255,175,40,.22);
-  border-radius:var(--rr);padding:9px 13px;margin-bottom:13px;
-}
-.s-fire{font-size:1.3rem}
-.s-ttl{font-size:.78rem;font-weight:700;color:#b07a10}
-.s-sub{font-size:.68rem;color:var(--t3)}
+/* ALBUM */
+.album-day-group{margin-bottom:20px}
+.album-day-hdr{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
+.album-time{font-size:0.7rem; color:var(--t3); font-weight:400}
+.album-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:4px; border-radius:12px; overflow:hidden;}
+.a-img{height:120px; background:#eee; position:relative}
+.a-img img{width:100%; height:100%; object-fit:cover}
 
-/* ===================================================
-   ANNIVERSARY TAB
-=================================================== */
-.ann-item{
-  display:flex;align-items:center;gap:9px;
-  background:rgba(255,255,255,.52);
-  border:1px solid rgba(168,84,112,.12);
-  border-radius:11px;padding:10px 12px;margin-bottom:8px;
-}
-.ann-dot{width:9px;height:9px;border-radius:50%;background:var(--p1);flex-shrink:0}
-.ann-info{flex:1;min-width:0}
-.ann-name{font-weight:700;font-size:.84rem;color:var(--t1);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ann-date-txt{font-size:.68rem;color:var(--t3)}
-.ann-cd{font-size:.72rem;font-weight:700;margin-top:2px}
-.ann-cd.today-ann{color:#c04060}
-.ann-cd.soon-ann{color:var(--p1)}
-.ann-cd.far-ann{color:var(--t2)}
-.ann-del{background:none;border:none;color:var(--p3);font-size:.84rem;padding:3px;transition:color .15s;flex-shrink:0}
-.ann-del:hover{color:#c04060}
-.add-ann-btn{
-  width:100%;background:rgba(168,84,112,.07);
-  border:1.5px dashed var(--p3);border-radius:11px;
-  padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);
-  transition:all .18s;
-}
-.add-ann-btn:hover{background:var(--p4)}
+/* MODAL VIEW NAV */
+.ve-nav{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(168,84,112,.05); padding:8px; border-radius:10px; }
+.vn-btn{ background:var(--p1); color:#fff; border:none; padding:4px 12px; border-radius:6px; font-size:.7rem; cursor:pointer; font-weight:600}
+.vn-btn:disabled{ background:var(--t3); opacity:0.5; cursor:not-allowed}
+.vn-info{ font-size:.75rem; font-weight:700; color:var(--p1) }
 
-/* ===================================================
-   CALENDAR TAB
-=================================================== */
-.cal-nav{display:flex;align-items:center;gap:5px}
-.cnav{
-  background:rgba(168,84,112,.1);border:1px solid var(--p4);
-  border-radius:8px;width:27px;height:27px;
-  font-size:.84rem;color:var(--p1);
-  display:flex;align-items:center;justify-content:center;transition:all .14s;
-}
-.cnav:hover{background:var(--p4)}
-.c-mlbl{font-weight:700;color:var(--t1);font-size:.83rem;min-width:90px;text-align:center}
-.c-grid{padding:9px 13px 13px}
-.c-wdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
-.c-wdays span{font-size:.6rem;font-weight:700;color:var(--t3);text-align:center;padding:2px 0;text-transform:uppercase}
-.c-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cd{
-  aspect-ratio:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  border-radius:9px;font-size:.76rem;font-weight:600;color:var(--t1);
-  min-height:33px;transition:all .13s;
-}
-.cd.today{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;box-shadow:0 3px 9px rgba(168,84,112,.32)}
-.cd.has-e{background:rgba(168,84,112,.09);cursor:pointer;border:1.5px solid rgba(168,84,112,.18)}
-.cd.has-e:hover{background:var(--p4);transform:scale(1.1)}
-.cd-ic{font-size:.52rem;line-height:1}
-.cd-ann{width:5px;height:5px;border-radius:50%;background:var(--p1);margin-top:1px}
+/* FOOTER NAV MOBILE */
+.mob-nav{ position:fixed;bottom:0;left:0;right:0;z-index:300; background:rgba(255,243,249,.94); display:flex; border-top:1px solid #eee; padding:8px 0 env(safe-area-inset-bottom); }
+@media(min-width:769px){ .mob-nav{display:none} }
+.mn-item{ flex:1; text-align:center; font-size:.6rem; color:var(--t3); }
+.mn-item.on{ color:var(--p1) }
 
-/* mood map */
-.mood-map-ttl{font-size:.68rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin:9px 0 5px}
-.mood-map-leg{display:flex;gap:7px;flex-wrap:wrap}
-.ml-i{display:flex;align-items:center;gap:3px;font-size:.64rem;color:var(--t2)}
+/* FAB */
+#fab{ position:fixed; bottom:80px; right:20px; width:56px; height:56px; border-radius:50%; background:var(--p1); color:#fff; border:none; font-size:1.5rem; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(0,0,0,0.2); z-index:400; }
 
-/* ===================================================
-   ALBUM TAB — Zalo newsfeed style
-=================================================== */
-.album-day-group{margin-bottom:22px}
-.album-day-hdr{
-  display:flex;align-items:center;gap:10px;margin-bottom:10px;
-}
-.album-day-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--p1);flex-shrink:0;
-}
-.album-day-lbl{
-  font-size:.78rem;font-weight:700;color:var(--p1);
-  flex:1;
-}
-.album-day-ttl{
-  font-size:.74rem;color:var(--t2);
-  font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;
-}
-.album-grid{
-  display:grid;gap:3px;
-  border-radius:12px;overflow:hidden;
-}
-/* 1 ảnh */
-.album-grid.g1{grid-template-columns:1fr}
-.album-grid.g1 .a-img{height:220px}
-/* 2 ảnh */
-.album-grid.g2{grid-template-columns:1fr 1fr}
-.album-grid.g2 .a-img{height:160px}
-/* 3 ảnh */
-.album-grid.g3{grid-template-columns:1fr 1fr}
-.album-grid.g3 .a-img:first-child{grid-column:1/3;height:170px}
-.album-grid.g3 .a-img:not(:first-child){height:130px}
-/* 4+ ảnh */
-.album-grid.g4{grid-template-columns:1fr 1fr}
-.album-grid.g4 .a-img{height:130px}
-.a-img{
-  position:relative;overflow:hidden;cursor:pointer;
-  background:var(--p4);
-}
-.a-img img{
-  width:100%;height:100%;object-fit:cover;
-  transition:transform .22s;display:block;
-}
-.a-img:hover img{transform:scale(1.05)}
-.a-img-more{
-  position:absolute;inset:0;
-  background:rgba(60,20,40,.5);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.4rem;font-weight:700;color:#fff;
-  font-family:'Quicksand',sans-serif;
-}
-.album-empty{text-align:center;color:var(--t3);padding:36px 0;font-size:.85rem}
-
-/* ===================================================
-   FAB
-=================================================== */
-#fab{
-  position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));right:18px;
-  z-index:250;width:52px;height:52px;border-radius:50%;
-  background:linear-gradient(135deg,var(--p3),var(--p1));
-  border:none;box-shadow:0 6px 22px rgba(168,84,112,.44);
-  font-size:1.3rem;color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .18s;
-}
-#fab:hover{transform:scale(1.1) rotate(7deg);box-shadow:0 10px 28px rgba(168,84,112,.55)}
-@media(min-width:769px){
-  #fab{bottom:24px;right:26px;width:56px;height:56px;font-size:1.42rem}
-}
-
-/* ===================================================
-   MODAL
-=================================================== */
-.modal{
-  position:fixed;inset:0;z-index:500;
-  background:rgba(61,31,45,.36);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  display:none;align-items:center;justify-content:center;padding:14px;
-}
+/* GENERAL MODAL */
+.modal{ position:fixed;inset:0; z-index:1000; background:rgba(0,0,0,0.4); display:none; align-items:center; justify-content:center; padding:15px; }
 .modal.open{display:flex}
-.mbox{
-  background:linear-gradient(158deg,#fff8fb,#fde8f0);
-  border:1.5px solid rgba(255,255,255,.72);border-radius:24px;
-  box-shadow:0 24px 64px rgba(120,40,70,.2);
-  width:100%;max-width:560px;max-height:92vh;overflow-y:auto;
-  padding:24px 24px 20px;position:relative;
-}
-.mbox::-webkit-scrollbar{width:4px}
-.mbox::-webkit-scrollbar-thumb{background:var(--p4);border-radius:4px}
-.mc{
-  position:absolute;top:13px;right:13px;
-  background:rgba(168,84,112,.1);border:1px solid var(--p4);
-  border-radius:50%;width:29px;height:29px;font-size:.86rem;color:var(--t2);
-  display:flex;align-items:center;justify-content:center;transition:all .14s;
-}
-.mc:hover{background:var(--p4);color:var(--p1)}
-.m-ttl{font-family:'Dancing Script',cursive;font-size:1.5rem;font-weight:700;color:var(--p1);margin-bottom:15px}
+.mbox{ background:#fff; width:100%; max-width:500px; border-radius:20px; padding:20px; max-height:90vh; overflow-y:auto; position:relative; }
+.mc{ position:absolute; top:15px; right:15px; background:#eee; border:none; width:30px; height:30px; border-radius:50%; }
 
-/* FORM */
-.fg{margin-bottom:13px}
-.fl{display:block;font-size:.71rem;font-weight:700;color:var(--t2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
-.fi,.fta,.fse{
-  width:100%;background:rgba(255,255,255,.7);
-  border:1.5px solid rgba(168,84,112,.2);border-radius:10px;
-  padding:8px 12px;font-size:.86rem;color:var(--t1);
-  outline:none;transition:border-color .2s;
-}
-.fi:focus,.fta:focus,.fse:focus{border-color:var(--p1)}
-.fta{resize:vertical;min-height:125px;line-height:1.65}
-.fse{cursor:pointer}
+/* FORM ELEMENTS */
+.fg{margin-bottom:12px}
+.fl{display:block; font-size:.75rem; font-weight:700; margin-bottom:4px}
+.fi, .fta{width:100%; padding:10px; border:1.2px solid #ddd; border-radius:8px; font-family:inherit;}
+.fta{height:120px; resize:none}
+.btn-p{ background:var(--p1); color:#fff; border:none; padding:12px; width:100%; border-radius:10px; font-weight:700; margin-top:10px; }
 
-/* Mood picker */
-.mood-pick{display:flex;gap:5px;flex-wrap:wrap}
-.mp-o{
-  font-size:1.35rem;cursor:pointer;padding:4px 7px;
-  border-radius:9px;border:2px solid transparent;transition:all .13s;
-}
-.mp-o:hover{transform:scale(1.15)}
-.mp-o.sel{border-color:var(--p1);background:var(--p4);transform:scale(1.08)}
-
-/* Writing prompt */
-.wp{
-  background:rgba(168,84,112,.06);border:1.5px solid rgba(168,84,112,.14);
-  border-radius:9px;padding:9px 12px;margin-bottom:9px;
-  font-size:.78rem;color:var(--t2);font-style:italic;
-  display:flex;align-items:center;justify-content:space-between;gap:7px;
-}
-.wp-r{background:none;border:none;color:var(--p2);font-size:.82rem;padding:2px;flex-shrink:0}
-
-/* Font size */
-.fs-row{display:flex;align-items:center;gap:7px;margin-bottom:8px}
-.fsb{
-  background:rgba(168,84,112,.1);border:1px solid var(--p3);
-  border-radius:7px;width:26px;height:26px;
-  font-size:.86rem;color:var(--p1);
-  display:flex;align-items:center;justify-content:center;
-}
-.fs-lbl{font-size:.73rem;color:var(--t2);font-weight:600}
-
-/* Image upload */
-.img-drop{
-  border:2px dashed var(--p3);border-radius:10px;padding:13px;
-  text-align:center;cursor:pointer;background:rgba(255,255,255,.42);
-  transition:all .18s;font-size:.78rem;color:var(--t3);
-}
-.img-drop:hover{background:var(--p4);border-color:var(--p2)}
-.img-prev-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
-.img-prev-itm{position:relative;width:60px;height:60px}
-.img-prev-itm img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-.img-rm{
-  position:absolute;top:-5px;right:-5px;
-  background:var(--p1);color:#fff;border:none;
-  border-radius:50%;width:16px;height:16px;font-size:.58rem;
-  display:flex;align-items:center;justify-content:center;
-}
-
-/* Upload progress */
-.upload-prog{
-  background:rgba(168,84,112,.07);border:1px solid rgba(168,84,112,.15);
-  border-radius:8px;padding:7px 11px;margin-top:7px;
-  font-size:.74rem;color:var(--t2);display:none;
-}
-.upload-prog.show{display:block}
-
-/* Buttons */
-.btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.btn-p{
-  flex:1;background:linear-gradient(135deg,var(--p3),var(--p1));
-  border:none;border-radius:10px;padding:10px;color:#fff;
-  font-size:.86rem;font-weight:700;transition:all .18s;min-width:90px;
-}
-.btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(168,84,112,.36)}
-.btn-s{
-  background:rgba(168,84,112,.09);border:1.5px solid var(--p4);
-  border-radius:10px;padding:10px 14px;color:var(--p1);
-  font-size:.86rem;font-weight:700;transition:all .18s;
-}
-.btn-s:hover{background:var(--p4)}
-.btn-d{
-  background:rgba(200,50,70,.07);border:1.5px solid rgba(200,50,70,.22);
-  border-radius:10px;padding:10px 13px;color:#b03050;
-  font-size:.86rem;font-weight:700;transition:all .18s;
-}
-.btn-d:hover{background:rgba(200,50,70,.13)}
-
-/* VIEW modal */
-.ve-date{font-size:.73rem;color:var(--t3);font-weight:600;margin-bottom:2px}
-.ve-mood{font-size:1.1rem;margin-bottom:7px}
-.ve-content{
-  background:rgba(255,255,255,.62);border-radius:9px;padding:13px;
-  margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);
-  white-space:pre-wrap;max-height:40vh;overflow-y:auto;
-}
-.ve-imgs{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
-.ve-imgs img{width:86px;height:86px;object-fit:cover;border-radius:9px;cursor:pointer;transition:transform .18s}
-.ve-imgs img:hover{transform:scale(1.06)}
-
-/* ===================================================
-   LIGHTBOX
-=================================================== */
-#lb{
-  position:fixed;inset:0;z-index:800;
-  background:rgba(20,5,15,.92);
-  display:none;align-items:center;justify-content:center;cursor:pointer;
-}
-#lb.open{display:flex}
-#lb img{max-width:94vw;max-height:90vh;border-radius:11px;object-fit:contain}
-
-/* ===================================================
-   TOAST
-=================================================== */
-#toast{
-  position:fixed;bottom:80px;left:50%;
-  transform:translateX(-50%) translateY(14px);
-  background:rgba(61,31,45,.88);backdrop-filter:blur(10px);
-  color:#fff;padding:8px 18px;border-radius:20px;
-  font-size:.8rem;font-weight:600;z-index:9999;
-  opacity:0;pointer-events:none;transition:all .26s;white-space:nowrap;
-}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(min-width:769px){#toast{bottom:28px}}
-
-/* ===================================================
-   UTILITY
-=================================================== */
+/* UTILS */
 .hidden{display:none!important}
 </style>
 </head>
 <body>
 
-<!-- SAKURA -->
 <canvas id="sakura-canvas"></canvas>
 
-<!-- ======================================================
-     LOCK SCREEN
-====================================================== -->
+<!-- LOCK SCREEN -->
 <div id="lock-screen">
   <div class="lock-card">
-    <div class="lock-quote" id="lock-quote"></div>
-    <span class="lock-heart">💕</span>
-    <div class="lock-ttl">Nhật ký của mình~</div>
-    <p class="lock-sub">Nhập mật mã để mở nhé 🌸</p>
+    <div style="font-family:'Dancing Script'; font-size:1.8rem; color:var(--p1); margin-bottom:10px">Nhật ký của mình~</div>
     <div class="pin-dots">
-      <div class="pin-dot" id="d0"></div>
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
+      <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
     </div>
     <div class="pin-kb">
-      <button class="pk" onclick="kp('1')">1</button>
-      <button class="pk" onclick="kp('2')">2</button>
-      <button class="pk" onclick="kp('3')">3</button>
-      <button class="pk" onclick="kp('4')">4</button>
-      <button class="pk" onclick="kp('5')">5</button>
-      <button class="pk" onclick="kp('6')">6</button>
-      <button class="pk" onclick="kp('7')">7</button>
-      <button class="pk" onclick="kp('8')">8</button>
-      <button class="pk" onclick="kp('9')">9</button>
-      <button class="pk" onclick="kp('0')" style="grid-column:2">0</button>
-      <button class="pk del" onclick="kd()">⌫</button>
+      <button class="pk" onclick="kp('1')">1</button><button class="pk" onclick="kp('2')">2</button><button class="pk" onclick="kp('3')">3</button>
+      <button class="pk" onclick="kp('4')">4</button><button class="pk" onclick="kp('5')">5</button><button class="pk" onclick="kp('6')">6</button>
+      <button class="pk" onclick="kp('7')">7</button><button class="pk" onclick="kp('8')">8</button><button class="pk" onclick="kp('9')">9</button>
+      <button class="pk" style="grid-column:2" onclick="kp('0')">0</button>
+      <button class="pk" style="color:var(--p1)" onclick="kd()">⌫</button>
     </div>
-    <div class="lock-err" id="lock-err"></div>
+    <div id="lock-err" style="color:red; font-size:.7rem; margin-top:10px"></div>
   </div>
 </div>
 
-<!-- ======================================================
-     APP
-====================================================== -->
+<!-- MAIN APP -->
 <div id="app">
-
-  <!-- HEADER -->
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
-      <div class="hdr-logo">💕 Nhật Ký</div>
-      <button class="hdr-sync" id="sync-btn" onclick="syncData()">
-        <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-          <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-        </svg>
-        Đồng bộ
-      </button>
+      <div style="font-family:'Dancing Script'; font-size:1.4rem; font-weight:700">💕 Nhật Ký</div>
+      <div onclick="syncData()" style="font-size:.75rem; cursor:pointer">🔄 Đồng bộ</div>
     </div>
     <div class="clock-row">
-      <div class="cu"><div class="cn" id="ck-d">000</div><div class="cl">Ngày</div></div>
+      <div class="cu"><div class="cn" id="ck-d">0</div><div class="cl">Ngày</div></div>
       <div class="cu"><div class="cn" id="ck-h">00</div><div class="cl">Giờ</div></div>
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <div id="ann-strip"></div>
   </header>
 
-  <!-- DESKTOP TABS -->
-  <nav class="desk-tabs" id="desk-tabs">
+  <nav class="desk-tabs">
     <div class="dtab on" data-tab="diary" onclick="switchTab('diary')">📖 Nhật ký</div>
-    <div class="dtab" data-tab="ann"   onclick="switchTab('ann')">🌸 Kỷ niệm</div>
-    <div class="dtab" data-tab="cal"   onclick="switchTab('cal')">🗓 Lịch</div>
-    <div class="dtab" data-tab="album" onclick="switchTab('album')">🖼 Album ảnh</div>
+    <div class="dtab" data-tab="ann" onclick="switchTab('ann')">🌸 Kỷ niệm</div>
+    <div class="dtab" data-tab="cal" onclick="switchTab('cal')">🗓 Lịch</div>
+    <div class="dtab" data-tab="album" onclick="switchTab('album')">🖼 Album</div>
   </nav>
 
-  <!-- MAIN LAYOUT -->
-  <div class="main-layout" id="main-layout">
-
-    <!-- CỘT 1: NHẬT KÝ -->
+  <div class="main-layout">
+    <!-- DIARY -->
     <div class="col-panel on" id="col-diary">
-
-      <!-- Ngày này năm ngoái -->
       <div id="otd-wrap"></div>
-      <!-- Streak -->
-      <div id="streak-wrap"></div>
-
       <div class="gc">
-        <div class="gc-hd">
-          <div class="gc-ttl">📖 Nhật Ký</div>
-        </div>
+        <div class="gc-hd"><div class="gc-ttl">📖 Nhật Ký</div></div>
         <div class="gc-body">
-          <div class="search-row">
-            <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm..." oninput="renderTimeline()"/>
-            <select class="f-sel" id="f-sel" onchange="renderTimeline()">
-              <option value="">Tất cả</option>
-            </select>
-          </div>
+          <input type="text" class="fi" id="s-inp" placeholder="Tìm kiếm nhật ký..." oninput="renderTimeline()" style="margin-bottom:10px">
           <div class="tl-wrap" id="tl-wrap"></div>
-          <button class="load-more hidden" id="load-more" onclick="loadMore()">Xem thêm ↓</button>
         </div>
       </div>
     </div>
 
-    <!-- CỘT 2: KỶ NIỆM -->
+    <!-- ANNIVERSARY -->
     <div class="col-panel" id="col-ann">
       <div class="gc">
-        <div class="gc-hd">
-          <div class="gc-ttl">🌸 Kỷ Niệm</div>
-        </div>
-        <div class="gc-body">
-          <div id="ann-list"></div>
-          <button class="add-ann-btn" onclick="openAnnForm()">＋ Thêm ngày kỷ niệm</button>
-        </div>
+        <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
+        <div class="gc-body" id="ann-list"></div>
       </div>
     </div>
 
-    <!-- CỘT 3: LỊCH -->
+    <!-- CALENDAR -->
     <div class="col-panel" id="col-cal">
       <div class="gc">
         <div class="gc-hd">
           <div class="gc-ttl">🗓 Lịch</div>
-          <div class="cal-nav">
-            <button class="cnav" onclick="cm(-1)">‹</button>
-            <div class="c-mlbl" id="c-mlbl"></div>
-            <button class="cnav" onclick="cm(1)">›</button>
-          </div>
+          <div style="font-size:.8rem; font-weight:700" id="c-mlbl"></div>
         </div>
         <div class="c-grid">
-          <div class="c-wdays">
-            <span>CN</span><span>T2</span><span>T3</span>
-            <span>T4</span><span>T5</span><span>T6</span><span>T7</span>
-          </div>
+          <div class="c-wdays"><span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span></div>
           <div class="c-days" id="c-days"></div>
-          <div class="mood-map-ttl">Cảm xúc tháng này</div>
-          <div class="mood-map-leg" id="mood-leg"></div>
         </div>
       </div>
     </div>
 
-    <!-- CỘT 4 (desktop hiện ở cột 1 / tab mobile): ALBUM -->
+    <!-- ALBUM -->
     <div class="col-panel" id="col-album">
       <div class="gc">
-        <div class="gc-hd">
-          <div class="gc-ttl">🖼 Album Ảnh</div>
-        </div>
+        <div class="gc-hd"><div class="gc-ttl">🖼 Album Ảnh</div></div>
         <div class="gc-body" id="album-body"></div>
       </div>
     </div>
+  </div>
+</div>
 
-  </div><!-- /main-layout -->
+<button id="fab" onclick="openWriteModal()">✍️</button>
 
-</div><!-- /app -->
-
-<!-- FAB -->
-<button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
-
-<!-- MOBILE BOTTOM NAV -->
 <nav class="mob-nav">
-  <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
-    <div class="mn-icon">📖</div><div>Nhật ký</div>
-  </div>
-  <div class="mn-item" data-tab="ann" onclick="switchTab('ann')">
-    <div class="mn-icon">🌸</div><div>Kỷ niệm</div>
-  </div>
-  <div class="mn-item" data-tab="cal" onclick="switchTab('cal')">
-    <div class="mn-icon">🗓</div><div>Lịch</div>
-  </div>
-  <div class="mn-item" data-tab="album" onclick="switchTab('album')">
-    <div class="mn-icon">🖼</div><div>Album</div>
-  </div>
+  <div class="mn-item on" onclick="switchTab('diary')">📖<br>Nhật ký</div>
+  <div class="mn-item" onclick="switchTab('ann')">🌸<br>Kỷ niệm</div>
+  <div class="mn-item" onclick="switchTab('cal')">🗓<br>Lịch</div>
+  <div class="mn-item" onclick="switchTab('album')">🖼<br>Album</div>
 </nav>
 
-<!-- ======================================================
-     MODAL: VIẾT / SỬA
-====================================================== -->
+<!-- MODAL: VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-write')">✕</button>
-    <div class="m-ttl" id="write-ttl">✍️ Viết nhật ký</div>
-
-    <div class="wp" id="wp-box">
-      <span id="wp-txt">💭 Hôm nay có điều gì đặc biệt không?</span>
-      <button class="wp-r" onclick="newPrompt()">🔄</button>
-    </div>
-
-    <div class="fg">
-      <label class="fl">Ngày viết</label>
-      <input type="date" class="fi" id="e-date"/>
-    </div>
-    <div class="fg">
-      <label class="fl">Tiêu đề</label>
-      <input type="text" class="fi" id="e-ttl" placeholder="Hôm nay mình cảm thấy..." maxlength="100"/>
-    </div>
-    <div class="fg">
-      <label class="fl">Cảm xúc hôm nay</label>
-      <div class="mood-pick" id="mood-pick">
-        <span class="mp-o" data-v="😊" onclick="selMood('😊')">😊</span>
-        <span class="mp-o" data-v="😍" onclick="selMood('😍')">😍</span>
-        <span class="mp-o" data-v="🥰" onclick="selMood('🥰')">🥰</span>
-        <span class="mp-o" data-v="😢" onclick="selMood('😢')">😢</span>
-        <span class="mp-o" data-v="😔" onclick="selMood('😔')">😔</span>
-        <span class="mp-o" data-v="😡" onclick="selMood('😡')">😡</span>
-        <span class="mp-o" data-v="😴" onclick="selMood('😴')">😴</span>
-        <span class="mp-o" data-v="✨" onclick="selMood('✨')">✨</span>
-        <span class="mp-o" data-v="🌸" onclick="selMood('🌸')">🌸</span>
-      </div>
-    </div>
-    <div class="fg">
-      <label class="fl">Nội dung</label>
-      <div class="fs-row">
-        <button class="fsb" onclick="chgFs(-1)">A−</button>
-        <span class="fs-lbl" id="fs-lbl">Cỡ chữ: 14px</span>
-        <button class="fsb" onclick="chgFs(1)">A+</button>
-      </div>
-      <textarea class="fta" id="e-cnt" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:140px"></textarea>
-    </div>
-    <div class="fg">
-      <label class="fl">Thêm ảnh (tối đa 4)</label>
-      <div class="img-drop" onclick="document.getElementById('img-inp').click()">
-        📷 Bấm để chọn ảnh từ máy
-      </div>
-      <input type="file" id="img-inp" accept="image/*" multiple style="display:none" onchange="onImgPick(this)"/>
-      <div class="upload-prog" id="upload-prog">⏳ Đang xử lý ảnh...</div>
-      <div class="img-prev-row" id="img-prev"></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-s" onclick="closeModal('modal-write')">Hủy</button>
-      <button class="btn-p" onclick="saveEntry()">💾 Lưu nhật ký</button>
-    </div>
+    <div style="font-family:'Dancing Script'; font-size:1.5rem; color:var(--p1); margin-bottom:15px">Viết nhật ký</div>
+    <div class="fg"><label class="fl">Ngày viết</label><input type="date" class="fi" id="e-date"></div>
+    <div class="fg"><label class="fl">Tiêu đề</label><input type="text" class="fi" id="e-ttl" placeholder="Hôm nay thế nào?"></div>
+    <div class="fg"><label class="fl">Nội dung</label><textarea class="fta" id="e-cnt" placeholder="Kể mình nghe nhé..."></textarea></div>
+    <div class="fg"><label class="fl">Ảnh (Tối đa 4)</label><input type="file" id="img-inp" accept="image/*" multiple onchange="onImgPick(this)"></div>
+    <div id="img-prev" style="display:flex; gap:5px; margin-bottom:10px"></div>
+    <button class="btn-p" onclick="saveEntry()">Lưu nhật ký 💾</button>
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: XEM BÀI
-====================================================== -->
+<!-- MODAL: XEM -->
 <div class="modal" id="modal-view">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')">✕</button>
-    <div class="ve-date" id="ve-date"></div>
-    <div class="ve-mood" id="ve-mood"></div>
-    <div class="m-ttl" id="ve-ttl"></div>
-    <div class="ve-content" id="ve-cnt"></div>
-    <div class="ve-imgs" id="ve-imgs"></div>
-    <div class="btn-row">
-      <button class="btn-s" onclick="editEntry()">✏️ Sửa</button>
-      <button class="btn-d" onclick="delEntry()">🗑 Xóa</button>
-      <button class="btn-p" style="flex:0;padding:10px 16px" onclick="closeModal('modal-view')">Đóng</button>
+    
+    <!-- Thanh điều hướng bài viết trong ngày -->
+    <div id="ve-nav-box" class="ve-nav hidden">
+      <button class="vn-btn" id="vn-prev" onclick="navEntry(-1)">◀ Bài trước</button>
+      <div class="vn-info" id="vn-info">1 / 1</div>
+      <button class="vn-btn" id="vn-next" onclick="navEntry(1)">Bài sau ▶</button>
+    </div>
+
+    <div id="ve-date" style="font-size:.7rem; color:var(--t3); font-weight:700"></div>
+    <div id="ve-ttl" style="font-size:1.2rem; font-weight:700; color:var(--p1); margin:5px 0"></div>
+    <div id="ve-cnt" style="font-size:.9rem; line-height:1.6; white-space:pre-wrap; margin-bottom:15px"></div>
+    <div id="ve-imgs" style="display:grid; grid-template-columns:repeat(2,1fr); gap:5px"></div>
+    
+    <div style="display:flex; gap:10px; margin-top:20px">
+      <button onclick="editEntry()" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd">Sửa</button>
+      <button onclick="delEntry()" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ffcccc; color:red">Xóa</button>
     </div>
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: KỶ NIỆM
-====================================================== -->
-<div class="modal" id="modal-ann">
-  <div class="mbox" style="max-width:400px">
-    <button class="mc" onclick="closeModal('modal-ann')">✕</button>
-    <div class="m-ttl">🌸 Thêm Kỷ Niệm</div>
-    <div class="fg">
-      <label class="fl">Ngày</label>
-      <input type="date" class="fi" id="ann-dt"/>
-    </div>
-    <div class="fg">
-      <label class="fl">Tên kỷ niệm</label>
-      <input type="text" class="fi" id="ann-nm" placeholder="Ví dụ: Ngày đầu yêu nhau 💕" maxlength="80"/>
-    </div>
-    <div class="btn-row">
-      <button class="btn-s" onclick="closeModal('modal-ann')">Hủy</button>
-      <button class="btn-p" onclick="saveAnn()">💾 Lưu</button>
-    </div>
-  </div>
-</div>
+<div id="toast" style="position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:#fff; padding:10px 20px; border-radius:20px; font-size:.8rem; opacity:0; pointer-events:none; transition:0.3s; z-index:2000"></div>
 
-<!-- LIGHTBOX -->
-<div id="lb" onclick="closeLb()"><img id="lb-img" src="" alt=""/></div>
-
-<!-- TOAST -->
-<div id="toast"></div>
-
-<!-- ======================================================
-     JAVASCRIPT
-====================================================== -->
 <script>
-/* ==========================================================
-   ⚙️ CẤU HÌNH — THAY ĐỔI TẠI ĐÂY
-========================================================== */
-var CFG = {
-  // 🔗 Dán URL Web App của Google Apps Script vào đây
+/* CẤU HÌNH */
+const CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
-  // 🔑 Mật mã 4 số
   PIN: '2204',
-  // 💕 Ngày bắt đầu tình yêu (YYYY-MM-DD)
   LOVE: '2026-04-22'
 };
 
-/* ==========================================================
-   STATE
-========================================================== */
-var S = {
+let S = {
   data: { entries: [], anniversaries: [] },
-  calY: new Date().getFullYear(),
-  calM: new Date().getMonth(),
-  curId: null,
   pin: '',
-  mood: '',
-  imgs: [],       // [{data: base64, driveId: ''}]
-  fontSize: 14,
-  page: 1,
-  pageSize: 8
+  curDateEntries: [], // Danh sách bài trong ngày đang xem
+  curIdx: 0,          // Chỉ mục bài đang xem
+  imgs: []
 };
 
-/* ==========================================================
-   WRITING PROMPTS
-========================================================== */
-var PROMPTS = [
-  '💭 Hôm nay có điều gì đặc biệt không?',
-  '🌸 Khoảnh khắc nào hôm nay khiến mình mỉm cười?',
-  '✨ Điều mình biết ơn nhất hôm nay là gì?',
-  '🌙 Nếu hôm nay là một màu sắc, nó sẽ là màu gì?',
-  '💕 Điều gì đang ở trong tim mình lúc này?',
-  '🍃 Hôm nay mình đã học được điều gì mới?',
-  '🎵 Bài hát nào đang hợp tâm trạng mình nhất?',
-  '☁️ Điều gì khiến mình lo lắng và làm thế nào để buông bỏ?',
-  '🌟 Mình tự hào về bản thân điều gì hôm nay?',
-  '💌 Nếu viết thư cho mình của 1 năm sau, mình sẽ nói gì?',
-  '🍀 Điều ước lớn nhất của mình lúc này là gì?',
-  '🌺 Sáng nay thức dậy, điều đầu tiên mình nghĩ đến là gì?'
-];
-
-/* ==========================================================
-   QUOTES MÀN HÌNH KHÓA
-========================================================== */
-var QUOTES = [
-  '"Mỗi ngày bên nhau là một trang sách đẹp..."',
-  '"Tình yêu không cần lý do, chỉ cần hai trái tim..."',
-  '"Em là trang nhật ký đẹp nhất của anh."',
-  '"Yêu là khi nhớ đến nhau cả trong khoảnh khắc bình thường."',
-  '"Có những điều không nói được bằng lời, chỉ viết thôi..."',
-  '"Mỗi khoảnh khắc đều xứng đáng được ghi lại."',
-  '"Tình yêu là những điều nhỏ nhặt được lưu giữ mãi mãi."'
-];
-
-/* ==========================================================
-   KHỞI ĐỘNG
-========================================================== */
-document.getElementById('lock-quote').textContent =
-  QUOTES[Math.floor(Math.random() * QUOTES.length)];
-
-/* ==========================================================
-   LOCK SCREEN
-========================================================== */
+/* LOCK SCREEN LOGIC */
 function kp(d) {
-  if (S.pin.length >= 4) return;
-  S.pin += d;
+  if (S.pin.length < 4) S.pin += d;
   updDots();
-  if (S.pin.length === 4) setTimeout(checkPin, 160);
+  if (S.pin.length === 4) setTimeout(checkPin, 200);
 }
-function kd() {
-  S.pin = S.pin.slice(0, -1);
-  updDots();
-  document.getElementById('lock-err').textContent = '';
-}
+function kd() { S.pin = S.pin.slice(0,-1); updDots(); }
 function updDots() {
-  for (var i = 0; i < 4; i++)
-    document.getElementById('d' + i).classList.toggle('on', i < S.pin.length);
+  for(let i=0; i<4; i++) document.getElementById('d'+i).classList.toggle('on', i<S.pin.length);
 }
 function checkPin() {
   if (S.pin === CFG.PIN) {
-    var ls = document.getElementById('lock-screen');
-    ls.classList.add('hiding');
-    setTimeout(function () {
-      ls.style.display = 'none';
+    document.getElementById('lock-screen').classList.add('hiding');
+    setTimeout(() => {
+      document.getElementById('lock-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       startClock();
       loadData();
-      newPrompt();
-      setDesktopTabsTop();
-    }, 480);
+    }, 500);
   } else {
-    document.getElementById('lock-err').textContent = 'Sai mật mã rồi iu ơi 🥺';
-    S.pin = '';
-    updDots();
+    document.getElementById('lock-err').textContent = 'Sai mật mã rồi!';
+    S.pin = ''; updDots();
   }
 }
-document.addEventListener('keydown', function (e) {
-  if (document.getElementById('lock-screen').style.display === 'none') return;
-  if (e.key >= '0' && e.key <= '9') kp(e.key);
-  if (e.key === 'Backspace') kd();
-});
 
-// Điều chỉnh top của desktop tabs theo chiều cao header
-function setDesktopTabsTop() {
-  var hdr = document.getElementById('app-hdr');
-  if (hdr) {
-    document.getElementById('desk-tabs').style.top = hdr.offsetHeight + 'px';
-  }
-}
-window.addEventListener('resize', setDesktopTabsTop);
-
-/* ==========================================================
-   ĐỒNG HỒ TÌNH YÊU
-========================================================== */
+/* ĐỒNG HỒ TÌNH YÊU */
 function startClock() {
-  var start = new Date(CFG.LOVE + 'T00:00:00');
-  function tick() {
-    var diff = Math.max(0, Date.now() - start);
-    document.getElementById('ck-d').textContent = String(Math.floor(diff / 86400000)).padStart(3, '0');
-    document.getElementById('ck-h').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
-    document.getElementById('ck-m').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
-    document.getElementById('ck-s').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
-  }
-  tick();
-  setInterval(tick, 1000);
+  const start = new Date(CFG.LOVE + 'T00:00:00');
+  setInterval(() => {
+    const diff = Date.now() - start;
+    // THAY ĐỔI 1: Bỏ hiển thị số 0 đằng trước ngày
+    document.getElementById('ck-d').textContent = Math.floor(diff/86400000);
+    document.getElementById('ck-h').textContent = String(Math.floor(diff/3600000)%24).padStart(2,'0');
+    document.getElementById('ck-m').textContent = String(Math.floor(diff/60000)%60).padStart(2,'0');
+    document.getElementById('ck-s').textContent = String(Math.floor(diff/1000)%60).padStart(2,'0');
+  }, 1000);
 }
 
-/* ==========================================================
-   SAKURA ANIMATION
-========================================================== */
-(function () {
-  var cv = document.getElementById('sakura-canvas');
-  var ctx = cv.getContext('2d');
-  var petals = [];
-  var W, H;
-  function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-  function r(a, b) { return a + Math.random() * (b - a); }
-  function Petal() {
-    this.x = r(0, W); this.y = r(-120, 0);
-    this.sz = r(5, 9); this.vy = r(0.55, 1.35); this.vx = r(-0.35, 0.35);
-    this.ang = r(0, Math.PI * 2); this.rs = r(-0.022, 0.022);
-    this.op = r(0.38, 0.80);
-    this.c = 'rgba(' + (238 + ~~r(0, 12)) + ',' + (140 + ~~r(0, 65)) + ',' + (165 + ~~r(0, 45)) + ',';
-  }
-  for (var i = 0; i < 26; i++) { var p = new Petal(); p.y = r(0, H); petals.push(p); }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    petals.forEach(function (p) {
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.ang);
-      ctx.beginPath(); ctx.ellipse(0, 0, p.sz, p.sz * 0.52, 0, 0, Math.PI * 2);
-      ctx.fillStyle = p.c + p.op + ')'; ctx.fill(); ctx.restore();
-      p.x += p.vx; p.y += p.vy; p.ang += p.rs;
-      if (p.y > H + 18) { p.y = -18; p.x = r(0, W); }
+/* DATA */
+function loadData() {
+  const fn = 'callback_' + Date.now();
+  window[fn] = (res) => {
+    S.data = res;
+    // Sắp xếp: Ngày mới nhất -> Giờ đăng (updatedAt) mới nhất
+    S.data.entries.sort((a,b) => {
+        if(b.date !== a.date) return b.date.localeCompare(a.date);
+        return (b.updatedAt || "").localeCompare(a.updatedAt || "");
     });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-
-/* ==========================================================
-   TẢI DỮ LIỆU — JSONP (bypass CORS)
-========================================================== */
-function loadData(cb) {
-  setSyncing(true);
-  var fn = 'jcb_' + Date.now(), tag;
-  window[fn] = function (data) {
-    S.data = data || { entries: [], anniversaries: [] };
-    if (!S.data.entries) S.data.entries = [];
-    if (!S.data.anniversaries) S.data.anniversaries = [];
-    S.data.entries.sort(function (a, b) { return b.date.localeCompare(a.date); });
     renderAll();
-    setSyncing(false);
-    if (typeof cb === 'function') cb();
-    if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
   };
-  tag = document.createElement('script');
-  tag.src = CFG.URL + '?callback=' + fn + '&_=' + Date.now();
-  tag.onerror = function () {
-    toast('⚠️ Không kết nối được. Kiểm tra URL Script!');
-    setSyncing(false);
-    delete window[fn];
-    if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-    renderAll();
-  };
-  document.head.appendChild(tag);
+  const script = document.createElement('script');
+  script.src = CFG.URL + '?callback=' + fn;
+  document.head.appendChild(script);
 }
 
-function syncData() {
-  toast('⏳ Đang đồng bộ...');
-  loadData(function () { toast('✅ Đồng bộ thành công!'); });
-}
-
-function setSyncing(on) {
-  document.getElementById('sync-btn').classList.toggle('syncing', on);
-}
-
-/* ==========================================================
-   GHI DỮ LIỆU — POST
-========================================================== */
 function postData(payload, msg) {
-  function doFetch(mode) {
-    return fetch(CFG.URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
-      mode: mode || 'cors'
-    });
-  }
-  doFetch('cors')
-    .then(function () { toast(msg || '✅ Đã lưu!'); setTimeout(loadData, 900); })
-    .catch(function () {
-      doFetch('no-cors')
-        .then(function () { toast(msg || '✅ Đã lưu!'); setTimeout(loadData, 1600); })
-        .catch(function () { toast('❌ Lỗi kết nối! Thử lại.'); });
-    });
+  toast('Đang xử lý...');
+  fetch(CFG.URL, { method: 'POST', body: JSON.stringify(payload) })
+    .then(() => { toast(msg); loadData(); })
+    .catch(() => toast('Lỗi kết nối!'));
 }
 
-/* ==========================================================
-   RENDER TẤT CẢ
-========================================================== */
 function renderAll() {
-  renderOTD();
-  renderStreak();
-  renderCalendar();
   renderTimeline();
-  renderAnniversaries();
+  renderCalendar();
   renderAlbum();
-  renderAnnStrip();
-  buildMonthFilter();
 }
 
-/* ==========================================================
-   "NGÀY NÀY NĂM NGOÁI"
-========================================================== */
-function renderOTD() {
-  var wrap = document.getElementById('otd-wrap');
-  var today = todayStr();
-  var mmdd = today.substring(5);
-  var match = null;
-  S.data.entries.forEach(function (e) {
-    if (e.date && e.date.substring(5) === mmdd && e.date !== today) {
-      if (!match || e.date > match.date) match = e;
-    }
-  });
-  if (!match) { wrap.innerHTML = ''; return; }
-  var yr = match.date.substring(0, 4);
-  wrap.innerHTML = '<div class="gc" style="margin-bottom:14px"><div class="gc-body" style="padding:11px 15px">' +
-    '<div class="otd-card" onclick="openView(\'' + match.id + '\')">' +
-    '<div class="otd-lbl">⏳ Ngày này năm ' + yr + '</div>' +
-    '<div class="otd-ttl">' + escH(match.title || '(Không tiêu đề)') + '</div>' +
-    '<div class="otd-pre">' + escH((match.content || '').substring(0, 90)) + '...</div>' +
-    '</div></div></div>';
+/* TIMELINE */
+function renderTimeline() {
+  const q = document.getElementById('s-inp').value.toLowerCase();
+  const list = S.data.entries.filter(e => e.title.toLowerCase().includes(q) || e.content.toLowerCase().includes(q));
+  document.getElementById('tl-wrap').innerHTML = list.map(e => `
+    <div class="ti" onclick="openView('${e.id}')">
+      <div class="ti-date">${fmtDateVN(e.date)}</div>
+      <div class="ti-ttl">${e.title}</div>
+      <div class="ti-pre">${e.content}</div>
+    </div>
+  `).join('');
 }
 
-/* ==========================================================
-   STREAK
-========================================================== */
-function renderStreak() {
-  var wrap = document.getElementById('streak-wrap');
-  if (!S.data.entries.length) { wrap.innerHTML = ''; return; }
-  var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean).sort();
-  var streak = 0, best = 0, prev = null;
-  // tính streak hiện tại (từ hôm nay hoặc hôm qua liên tiếp)
-  var cur = 0;
-  var today = todayStr();
-  var yesterday = offsetDay(today, -1);
-  var checkFrom = dates.indexOf(today) >= 0 ? today : (dates.indexOf(yesterday) >= 0 ? yesterday : null);
-  if (checkFrom) {
-    var d = checkFrom;
-    while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
-  }
-  if (cur <= 1) { wrap.innerHTML = ''; return; }
-  wrap.innerHTML = '<div class="gc" style="margin-bottom:14px"><div class="gc-body" style="padding:10px 15px">' +
-    '<div class="streak-bar">' +
-    '<div class="s-fire">🔥</div>' +
-    '<div><div class="s-ttl">' + cur + ' ngày viết liên tiếp!</div>' +
-    '<div class="s-sub">Đừng để chuỗi bị gián đoạn nhé 💪</div></div>' +
-    '</div></div></div>';
-}
-
-function offsetDay(ds, delta) {
-  var d = new Date(ds + 'T00:00:00');
-  d.setDate(d.getDate() + delta);
-  return fmtDate(d);
-}
-
-/* ==========================================================
-   LỊCH
-========================================================== */
-var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
-              'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
-
+/* LỊCH - THAY ĐỔI 2: Hỗ trợ nhiều bài 1 ngày */
 function renderCalendar() {
-  document.getElementById('c-mlbl').textContent = MNAMES[S.calM] + ' ' + S.calY;
-  var today = new Date();
-  var first = new Date(S.calY, S.calM, 1).getDay();
-  var dim = new Date(S.calY, S.calM + 1, 0).getDate();
+  const now = new Date();
+  document.getElementById('c-mlbl').textContent = `Tháng ${now.getMonth()+1} / ${now.getFullYear()}`;
+  
+  const first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+  const days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  
+  // Gom nhóm entries theo ngày
+  const eMap = {};
+  S.data.entries.forEach(e => {
+    if(!eMap[e.date]) eMap[e.date] = [];
+    eMap[e.date].push(e);
+  });
 
-  // map ngày → entry
-  var eMap = {};
-  S.data.entries.forEach(function (e) { if (e.date) eMap[e.date] = e; });
-  // Set MM-DD của kỷ niệm
-  var annSet = new Set(S.data.anniversaries.map(function (a) {
-    return a.date ? a.date.substring(5) : '';
-  }));
-
-  var html = '';
-  for (var i = 0; i < first; i++) html += '<div class="cd"></div>';
-
-  var moodMap = {};
-  for (var d = 1; d <= dim; d++) {
-    var ds = S.calY + '-' + p2(S.calM + 1) + '-' + p2(d);
-    var isToday = (d === today.getDate() && S.calM === today.getMonth() && S.calY === today.getFullYear());
-    var ent = eMap[ds];
-    var hasAnn = annSet.has(p2(S.calM + 1) + '-' + p2(d));
-    var cls = 'cd' + (isToday ? ' today' : '') + (ent ? ' has-e' : '');
-    var inner = '<span>' + d + '</span>';
-    if (ent) {
-      inner += '<span class="cd-ic">' + (ent.mood || '❤️') + '</span>';
-      if (ent.mood) moodMap[ent.mood] = (moodMap[ent.mood] || 0) + 1;
-    } else if (hasAnn) {
-      inner += '<span class="cd-ann"></span>';
-    }
-    var click = ent ? 'onclick="openView(\'' + ent.id + '\')"' : '';
-    html += '<div class="' + cls + '" ' + click + '>' + inner + '</div>';
+  let html = '';
+  for(let i=0; i<first; i++) html += '<div></div>';
+  for(let d=1; d<=days; d++) {
+    const ds = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasE = eMap[ds] || [];
+    const isToday = (d === now.getDate());
+    html += `
+      <div class="cd ${isToday?'today':''} ${hasE.length?'has-e':''}" onclick="openViewByDate('${ds}')">
+        ${d}
+        ${hasE.length > 1 ? `<span class="cd-count">${hasE.length}</span>` : ''}
+      </div>
+    `;
   }
   document.getElementById('c-days').innerHTML = html;
-
-  // mood legend
-  var lg = '';
-  Object.keys(moodMap).forEach(function (m) {
-    lg += '<div class="ml-i"><span>' + m + '</span><span>×' + moodMap[m] + '</span></div>';
-  });
-  document.getElementById('mood-leg').innerHTML = lg ||
-    '<span style="font-size:.68rem;color:var(--t3)">Chưa có bài nào tháng này</span>';
 }
 
-function cm(delta) {
-  S.calM += delta;
-  if (S.calM < 0) { S.calM = 11; S.calY--; }
-  if (S.calM > 11) { S.calM = 0; S.calY++; }
-  renderCalendar();
-}
-
-/* ==========================================================
-   TIMELINE NHẬT KÝ
-========================================================== */
-function buildMonthFilter() {
-  var sel = document.getElementById('f-sel');
-  var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
-  var arr = Array.from(ms).filter(Boolean).sort().reverse();
-  var opts = '<option value="">Tất cả</option>';
-  arr.forEach(function (m) {
-    var p = m.split('-');
-    opts += '<option value="' + m + '">T' + parseInt(p[1]) + '/' + p[0] + '</option>';
-  });
-  sel.innerHTML = opts;
-}
-
-function filteredEntries() {
-  var q = (document.getElementById('s-inp').value || '').toLowerCase().trim();
-  var fm = document.getElementById('f-sel').value;
-  return S.data.entries.filter(function (e) {
-    var mQ = !q || (e.title || '').toLowerCase().includes(q) || (e.content || '').toLowerCase().includes(q);
-    var mM = !fm || (e.date || '').startsWith(fm);
-    return mQ && mM;
-  });
-}
-
-function renderTimeline() {
-  S.page = 1;
-  var entries = filteredEntries();
-  var wrap = document.getElementById('tl-wrap');
-  var lm = document.getElementById('load-more');
-  if (!entries.length) {
-    wrap.innerHTML = '<div class="empty-hint">📝 Chưa có bài nhật ký nào~</div>';
-    lm.classList.add('hidden'); return;
-  }
-  var show = entries.slice(0, S.page * S.pageSize);
-  wrap.innerHTML = show.map(tiHTML).join('');
-  lm.classList.toggle('hidden', show.length >= entries.length);
-}
-
-function loadMore() {
-  S.page++;
-  var entries = filteredEntries();
-  var show = entries.slice(0, S.page * S.pageSize);
-  document.getElementById('tl-wrap').innerHTML = show.map(tiHTML).join('');
-  document.getElementById('load-more').classList.toggle('hidden', show.length >= entries.length);
-}
-
-function tiHTML(e) {
-  var pre = (e.content || '').replace(/\n/g, ' ').substring(0, 90);
-  var thumb = '';
-  if (e.images && e.images.length) {
-    // Nếu ảnh lưu Drive URL
-    var src = e.images[0].url || e.images[0];
-    thumb = '<img class="ti-thumb" src="' + escH(src) + '" alt="ảnh" ' +
-      'onclick="event.stopPropagation();openLb(\'' + escH(src) + '\')" loading="lazy"/>';
-  }
-  return '<div class="ti" onclick="openView(\'' + e.id + '\')">' +
-    '<div class="ti-row1">' +
-    '<span class="ti-date">' + fmtDateVN(e.date) + '</span>' +
-    '<span class="ti-mood">' + (e.mood || '') + '</span>' +
-    '</div>' +
-    '<div class="ti-body">' +
-    '<div class="ti-txt">' +
-    '<div class="ti-ttl">' + escH(e.title || '(Không tiêu đề)') + '</div>' +
-    '<div class="ti-pre">' + escH(pre) + '</div>' +
-    '</div>' + thumb +
-    '</div></div>';
-}
-
-/* ==========================================================
-   KỶ NIỆM + ĐẾM NGƯỢC
-========================================================== */
-function renderAnniversaries() {
-  var el = document.getElementById('ann-list');
-  if (!S.data.anniversaries.length) {
-    el.innerHTML = '<div class="empty-hint">Chưa có ngày kỷ niệm nào~</div>';
-    return;
-  }
-  var today = new Date(); today.setHours(0, 0, 0, 0);
-
-  el.innerHTML = S.data.anniversaries.map(function (a) {
-    var cd = annCountdown(a, today);
-    var cdCls = cd.days === 0 ? 'ann-cd today-ann' : cd.days <= 30 ? 'ann-cd soon-ann' : 'ann-cd far-ann';
-    return '<div class="ann-item">' +
-      '<div class="ann-dot"></div>' +
-      '<div class="ann-info">' +
-      '<div class="ann-name">' + escH(a.name) + '</div>' +
-      '<div class="ann-date-txt">' + fmtDateVN(a.date) + ' · hằng năm</div>' +
-      '<div class="' + cdCls + '">' + cd.text + '</div>' +
-      '</div>' +
-      '<button class="ann-del" onclick="delAnn(\'' + a.id + '\')" title="Xóa">🗑</button>' +
-      '</div>';
-  }).join('');
-}
-
-function annCountdown(a, today) {
-  if (!a.date) return { days: 999, text: '' };
-  var p = a.date.split('-');
-  var next = new Date(today.getFullYear(), parseInt(p[1]) - 1, parseInt(p[2]));
-  if (next < today) next.setFullYear(next.getFullYear() + 1);
-  var days = Math.round((next - today) / 86400000);
-  var text;
-  if (days === 0) text = '🎉 Hôm nay là ngày này!';
-  else if (days === 1) text = '⏰ Còn 1 ngày nữa thôi!';
-  else if (days <= 7) text = '🌸 Còn ' + days + ' ngày';
-  else text = '📅 Còn ' + days + ' ngày';
-  return { days: days, text: text };
-}
-
-function renderAnnStrip() {
-  var el = document.getElementById('ann-strip');
-  if (!S.data.anniversaries.length) { el.textContent = ''; return; }
-  var today = new Date(); today.setHours(0, 0, 0, 0);
-  var best = null, bestD = 9999;
-  S.data.anniversaries.forEach(function (a) {
-    var cd = annCountdown(a, today);
-    if (cd.days < bestD) { bestD = cd.days; best = a; }
-  });
-  if (!best) { el.textContent = ''; return; }
-  if (bestD === 0) el.textContent = '🎉 Hôm nay: ' + best.name + '!';
-  else if (bestD === 1) el.textContent = '⏰ Ngày mai: ' + best.name;
-  else el.textContent = '📅 Còn ' + bestD + ' ngày đến: ' + best.name;
-}
-
-function openAnnForm() {
-  document.getElementById('ann-dt').value = '';
-  document.getElementById('ann-nm').value = '';
-  openModal('modal-ann');
-}
-function saveAnn() {
-  var dt = document.getElementById('ann-dt').value;
-  var nm = document.getElementById('ann-nm').value.trim();
-  if (!dt) { toast('⚠️ Chọn ngày nhé!'); return; }
-  if (!nm) { toast('⚠️ Đặt tên đi nào!'); return; }
-  closeModal('modal-ann');
-  toast('⏳ Đang lưu...');
-  postData({ action: 'save_anniversary', anniversary: { id: 'ann_' + Date.now(), date: dt, name: nm } }, '🌸 Đã lưu kỷ niệm!');
-}
-function delAnn(id) {
-  if (!confirm('Xóa ngày kỷ niệm này?')) return;
-  postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
-}
-
-/* ==========================================================
-   ALBUM ẢNH — ZALO NEWSFEED STYLE
-========================================================== */
-function renderAlbum() {
-  var body = document.getElementById('album-body');
-  // Lọc entries có ảnh
-  var entriesWithImgs = S.data.entries.filter(function (e) {
-    return e.images && e.images.length > 0;
-  });
-  if (!entriesWithImgs.length) {
-    body.innerHTML = '<div class="album-empty">📷 Chưa có ảnh nào trong nhật ký~<br><span style="font-size:.75rem">Thêm ảnh khi viết bài để hiện ở đây!</span></div>';
-    return;
-  }
-  var html = '';
-  entriesWithImgs.forEach(function (e) {
-    var imgs = e.images;
-    var count = imgs.length;
-    var cls = 'album-grid g' + Math.min(count, 4);
-    var gridHTML = '';
-    var max = Math.min(count, 4);
-    for (var i = 0; i < max; i++) {
-      var src = imgs[i].url || imgs[i];
-      var isLast = (i === max - 1 && count > 4);
-      gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
-        '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-        (isLast ? '<div class="a-img-more">+' + (count - 4) + '</div>' : '') +
-        '</div>';
-    }
-    html += '<div class="album-day-group">' +
-      '<div class="album-day-hdr">' +
-      '<div class="album-day-dot"></div>' +
-      '<div class="album-day-lbl">' + fmtDateVN(e.date) + '</div>' +
-      '<div class="album-day-ttl">' + escH(e.title || '') + '</div>' +
-      '</div>' +
-      '<div class="' + cls + '">' + gridHTML + '</div>' +
-      '</div>';
-  });
-  body.innerHTML = html;
-}
-
-/* ==========================================================
-   NHẬT KÝ — VIẾT / SỬA / XEM / XÓA
-========================================================== */
-function openWriteModal() {
-  S.curId = null; S.mood = ''; S.imgs = [];
-  document.getElementById('write-ttl').textContent = '✍️ Viết nhật ký';
-  document.getElementById('e-date').value = todayStr();
-  document.getElementById('e-ttl').value = '';
-  document.getElementById('e-cnt').value = '';
-  document.getElementById('img-prev').innerHTML = '';
-  document.getElementById('upload-prog').classList.remove('show');
-  document.querySelectorAll('.mp-o').forEach(function (el) { el.classList.remove('sel'); });
-  newPrompt();
-  openModal('modal-write');
-}
-
+/* XEM CHI TIẾT & NEXT BÀI */
 function openView(id) {
-  var e = S.data.entries.find(function (x) { return x.id === id; });
-  if (!e) return;
-  S.curId = id;
-  document.getElementById('ve-date').textContent = fmtDateVN(e.date);
-  document.getElementById('ve-mood').textContent = e.mood || '';
-  document.getElementById('ve-ttl').textContent = e.title || '(Không tiêu đề)';
-  document.getElementById('ve-cnt').textContent = e.content || '';
-  var imgHTML = '';
-  if (e.images && e.images.length) {
-    imgHTML = e.images.map(function (img) {
-      var src = img.url || img;
-      return '<img src="' + escH(src) + '" onclick="openLb(\'' + escH(src) + '\')" loading="lazy" alt="ảnh"/>';
-    }).join('');
-  }
-  document.getElementById('ve-imgs').innerHTML = imgHTML;
+  const entry = S.data.entries.find(e => e.id === id);
+  if(!entry) return;
+  // Tìm tất cả bài trong cùng ngày đó
+  openViewByDate(entry.date, id);
+}
+
+function openViewByDate(date, focusId = null) {
+  const entries = S.data.entries.filter(e => e.date === date);
+  if(!entries.length) return;
+  
+  S.curDateEntries = entries;
+  // Nếu có ID cụ thể thì mở bài đó, không thì mở bài mới nhất (đầu danh sách)
+  S.curIdx = focusId ? entries.findIndex(e => e.id === focusId) : 0;
+  if(S.curIdx === -1) S.curIdx = 0;
+
+  updateViewModal();
   openModal('modal-view');
 }
 
-function editEntry() {
-  if (!S.curId) return;
-  var e = S.data.entries.find(function (x) { return x.id === S.curId; });
-  if (!e) return;
-  closeModal('modal-view');
-  S.mood = e.mood || '';
-  S.imgs = e.images ? e.images.slice() : [];
-  document.getElementById('write-ttl').textContent = '✏️ Chỉnh sửa nhật ký';
-  document.getElementById('e-date').value = e.date;
-  document.getElementById('e-ttl').value = e.title || '';
-  document.getElementById('e-cnt').value = e.content || '';
-  document.querySelectorAll('.mp-o').forEach(function (el) {
-    el.classList.toggle('sel', el.dataset.v === S.mood);
-  });
-  renderImgPrev();
-  document.getElementById('upload-prog').classList.remove('show');
+function updateViewModal() {
+  const e = S.curDateEntries[S.curIdx];
+  const navBox = document.getElementById('ve-nav-box');
+  
+  // Hiển thị thanh điều hướng nếu có nhiều bài
+  if(S.curDateEntries.length > 1) {
+    navBox.classList.remove('hidden');
+    document.getElementById('vn-info').textContent = `${S.curIdx + 1} / ${S.curDateEntries.length}`;
+    document.getElementById('vn-prev').disabled = (S.curIdx === 0);
+    document.getElementById('vn-next').disabled = (S.curIdx === S.curDateEntries.length - 1);
+  } else {
+    navBox.classList.add('hidden');
+  }
+
+  document.getElementById('ve-date').textContent = fmtDateVN(e.date) + (e.updatedAt ? ' lúc ' + fmtTime(e.updatedAt) : '');
+  document.getElementById('ve-ttl').textContent = e.title;
+  document.getElementById('ve-cnt').textContent = e.content;
+  document.getElementById('ve-imgs').innerHTML = (e.images || []).map(img => `<img src="${img.url || img}" style="width:100%; border-radius:8px">`).join('');
+}
+
+function navEntry(dir) {
+  const newIdx = S.curIdx + dir;
+  if(newIdx >= 0 && newIdx < S.curDateEntries.length) {
+    S.curIdx = newIdx;
+    updateViewModal();
+  }
+}
+
+/* ALBUM - THAY ĐỔI 3: Thêm giờ, sắp xếp mới nhất lên đầu */
+function renderAlbum() {
+  const body = document.getElementById('album-body');
+  // S.data.entries đã được sắp xếp ở loadData() nên ở đây chỉ cần render
+  const entriesWithImg = S.data.entries.filter(e => e.images && e.images.length);
+  
+  if(!entriesWithImg.length) {
+    body.innerHTML = '<div style="text-align:center; color:var(--t3); padding:20px">Chưa có ảnh nào~</div>';
+    return;
+  }
+
+  body.innerHTML = entriesWithImg.map(e => `
+    <div class="album-day-group">
+      <div class="album-day-hdr">
+        <div style="font-weight:700; font-size:.85rem; color:var(--p1)">${fmtDateVN(e.date)}</div>
+        <div class="album-time">⏰ ${fmtTime(e.updatedAt)}</div>
+      </div>
+      <div class="album-grid">
+        ${e.images.map(img => `<div class="a-img"><img src="${img.url || img}" onclick="openImg('${img.url || img}')"></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* VIẾT BÀI */
+function openWriteModal() {
+  S.curId = null; S.imgs = [];
+  document.getElementById('e-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('e-ttl').value = '';
+  document.getElementById('e-cnt').value = '';
+  document.getElementById('img-prev').innerHTML = '';
   openModal('modal-write');
 }
 
-function saveEntry() {
-  var date = document.getElementById('e-date').value;
-  var title = document.getElementById('e-ttl').value.trim();
-  var content = document.getElementById('e-cnt').value.trim();
-  if (!date) { toast('⚠️ Chọn ngày viết nhé!'); return; }
-  if (!content) { toast('⚠️ Viết vài dòng đi nào~ 🌸'); return; }
-
-  // Kiểm tra ảnh đang upload chưa xong
-  if (document.getElementById('upload-prog').classList.contains('show')) {
-    toast('⏳ Ảnh đang xử lý, chờ xíu nhé!'); return;
-  }
-
-  var entry = {
-    id: S.curId || ('e_' + Date.now()),
-    date: date,
-    title: title || ('Ngày ' + fmtDateVN(date)),
-    content: content,
-    mood: S.mood,
-    images: S.imgs.slice(),
-    updatedAt: new Date().toISOString()
-  };
-  closeModal('modal-write');
-  toast('⏳ Đang lưu...');
-  postData({ action: 'save_entry', entry: entry }, '💾 Đã lưu nhật ký!');
-}
-
-function delEntry() {
-  if (!S.curId) return;
-  if (!confirm('Xóa bài này? Không khôi phục được đâu!')) return;
-  var entry = S.data.entries.find(function (x) { return x.id === S.curId; });
-  closeModal('modal-view');
-  toast('⏳ Đang xóa...');
-  // Xóa ảnh trên Drive nếu có driveId
-  var driveIds = [];
-  if (entry && entry.images) {
-    entry.images.forEach(function (img) {
-      if (img.driveId) driveIds.push(img.driveId);
-    });
-  }
-  postData({ action: 'delete_entry', id: S.curId, driveIds: driveIds }, '🗑 Đã xóa!');
-  S.curId = null;
-}
-
-/* ==========================================================
-   MOOD PICKER
-========================================================== */
-function selMood(m) {
-  S.mood = S.mood === m ? '' : m;
-  document.querySelectorAll('.mp-o').forEach(function (el) {
-    el.classList.toggle('sel', el.dataset.v === S.mood);
-  });
-}
-
-/* ==========================================================
-   WRITING PROMPT
-========================================================== */
-function newPrompt() {
-  var el = document.getElementById('wp-txt');
-  if (el) el.textContent = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
-}
-
-/* ==========================================================
-   FONT SIZE
-========================================================== */
-function chgFs(delta) {
-  S.fontSize = Math.min(20, Math.max(11, S.fontSize + delta));
-  document.getElementById('e-cnt').style.fontSize = S.fontSize + 'px';
-  document.getElementById('fs-lbl').textContent = 'Cỡ chữ: ' + S.fontSize + 'px';
-}
-
-/* ==========================================================
-   ẢNH — UPLOAD LÊN DRIVE QUA APPS SCRIPT
-   
-   Quy trình:
-   1. User chọn ảnh từ máy
-   2. Frontend compress ảnh → base64
-   3. Gửi POST lên Apps Script với action: 'upload_image'
-   4. Apps Script lưu vào thư mục PHOTO_FOLDER_ID trong Drive
-   5. Trả về { driveId, url } để lưu cùng entry
-========================================================== */
 function onImgPick(input) {
-  var files = Array.from(input.files);
-  if (S.imgs.length + files.length > 4) {
-    toast('⚠️ Tối đa 4 ảnh mỗi bài nhé!');
-    files = files.slice(0, 4 - S.imgs.length);
-  }
-  if (!files.length) return;
-  document.getElementById('upload-prog').classList.add('show');
-  var done = 0;
-  files.forEach(function (file) {
-    compressImg(file, function (b64) {
-      // Upload lên Drive
-      uploadImgToDrive(b64, file.name, function (result) {
-        if (result) {
-          S.imgs.push({ url: result.url, driveId: result.driveId, data: b64 });
-        } else {
-          // Fallback: lưu base64 trực tiếp nếu Drive upload lỗi
-          S.imgs.push({ url: b64, driveId: '', data: b64 });
-        }
-        done++;
-        if (done === files.length) {
-          document.getElementById('upload-prog').classList.remove('show');
-          renderImgPrev();
-        }
-      });
-    });
-  });
-  input.value = '';
-}
-
-function compressImg(file, cb) {
-  var reader = new FileReader();
-  reader.onload = function (ev) {
-    var img = new Image();
-    img.onload = function () {
-      var canvas = document.createElement('canvas');
-      var max = 900;
-      var w = img.width, h = img.height;
-      if (w > max || h > max) {
-        if (w > h) { h = Math.round(h * max / w); w = max; }
-        else { w = Math.round(w * max / h); h = max; }
-      }
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      cb(canvas.toDataURL('image/jpeg', 0.75));
+  const files = Array.from(input.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const b64 = e.target.result;
+      S.imgs.push(b64);
+      renderImgPrev();
     };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function uploadImgToDrive(b64, filename, cb) {
-  // Tách phần data (bỏ prefix "data:image/jpeg;base64,")
-  var parts = b64.split(',');
-  var base64Data = parts[1] || parts[0];
-  var mimeType = (b64.indexOf('png') > -1) ? 'image/png' : 'image/jpeg';
-
-  fetch(CFG.URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({
-      action: 'upload_image',
-      imageData: base64Data,
-      mimeType: mimeType,
-      filename: filename || ('photo_' + Date.now() + '.jpg')
-    })
-  })
-  .then(function (r) { return r.json(); })
-  .then(function (res) {
-    if (res && res.url) cb(res);
-    else cb(null);
-  })
-  .catch(function () {
-    // Nếu CORS block dùng no-cors → không đọc được response → fallback base64
-    cb(null);
+    reader.readAsDataURL(file);
   });
 }
 
 function renderImgPrev() {
-  document.getElementById('img-prev').innerHTML = S.imgs.map(function (img, i) {
-    var src = img.url || img.data || img;
-    return '<div class="img-prev-itm">' +
-      '<img src="' + escH(src) + '" alt="preview"/>' +
-      '<button class="img-rm" onclick="rmImg(' + i + ')">✕</button>' +
-      '</div>';
-  }).join('');
+  document.getElementById('img-prev').innerHTML = S.imgs.map((img, i) => `
+    <div style="position:relative"><img src="${img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px"></div>
+  `).join('');
 }
 
-function rmImg(i) {
-  // Nếu ảnh đã upload Drive, gửi lệnh xóa
-  var img = S.imgs[i];
-  if (img && img.driveId) {
-    postData({ action: 'delete_image', driveId: img.driveId }, null);
-  }
-  S.imgs.splice(i, 1);
+function saveEntry() {
+  const entry = {
+    id: S.curId || 'e_' + Date.now(),
+    date: document.getElementById('e-date').value,
+    title: document.getElementById('e-ttl').value || 'Không tiêu đề',
+    content: document.getElementById('e-cnt').value,
+    images: S.imgs,
+    updatedAt: new Date().toISOString() // Lưu giờ đăng
+  };
+  postData({ action: 'save_entry', entry }, 'Đã lưu nhật ký!');
+  closeModal('modal-write');
+}
+
+function delEntry() {
+  if(!confirm('Xóa bài này nhé?')) return;
+  const id = S.curDateEntries[S.curIdx].id;
+  postData({ action: 'delete_entry', id }, 'Đã xóa!');
+  closeModal('modal-view');
+}
+
+function editEntry() {
+  const e = S.curDateEntries[S.curIdx];
+  S.curId = e.id;
+  S.imgs = e.images || [];
+  document.getElementById('e-date').value = e.date;
+  document.getElementById('e-ttl').value = e.title;
+  document.getElementById('e-cnt').value = e.content;
   renderImgPrev();
+  closeModal('modal-view');
+  openModal('modal-write');
 }
 
-/* ==========================================================
-   LIGHTBOX
-========================================================== */
-function openLb(src) {
-  document.getElementById('lb-img').src = src;
-  document.getElementById('lb').classList.add('open');
-}
-function closeLb() { document.getElementById('lb').classList.remove('open'); }
-
-/* ==========================================================
-   TAB NAVIGATION
-========================================================== */
-var TABS = ['diary', 'ann', 'cal', 'album'];
-
+/* UTILS */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function switchTab(tab) {
-  var isMobile = window.innerWidth < 769;
-  // Mobile: ẩn/hiện panel; Desktop: chỉ highlight không ẩn
-  TABS.forEach(function (t) {
-    var el = document.getElementById('col-' + t);
-    if (el) {
-      if (isMobile) {
-        el.classList.toggle('on', t === tab);
-        el.style.display = (t === tab) ? 'block' : 'none';
-      } else {
-        el.classList.add('on');
-        el.style.display = 'block';
-      }
-    }
+  document.querySelectorAll('.col-panel').forEach(p => p.classList.remove('on'));
+  document.getElementById('col-'+tab).classList.add('on');
+  document.querySelectorAll('.mn-item, .dtab').forEach(i => {
+    i.classList.toggle('on', i.innerText.toLowerCase().includes(tab) || (i.dataset && i.dataset.tab === tab));
   });
-
-  // Desktop tabs highlight
-  document.querySelectorAll('.dtab').forEach(function (el) {
-    el.classList.toggle('on', el.dataset.tab === tab);
-  });
-  document.querySelectorAll('.mn-item').forEach(function (el) {
-    el.classList.toggle('on', el.dataset.tab === tab);
-  });
-
-  // Desktop: cuộn đến cột tương ứng
-  if (window.innerWidth >= 769) {
-    var colMap = { diary: 'col-diary', ann: 'col-ann', cal: 'col-cal', album: 'col-album' };
-    var target = document.getElementById(colMap[tab]);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
-
-// Khởi tạo hiển thị ban đầu cho desktop (tất cả cột hiện)
-function initDesktopLayout() {
-  if (window.innerWidth >= 769) {
-    TABS.forEach(function (t) {
-      var el = document.getElementById('col-' + t);
-      if (el) {
-        el.classList.add('on');
-        el.style.display = 'block';
-      }
-    });
-    // Desktop grid 4 cột (diary, ann, cal, album)
-    document.getElementById('main-layout').style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
-  }
-}
-window.addEventListener('resize', function () {
-  if (window.innerWidth >= 769) initDesktopLayout();
-});
-
-/* ==========================================================
-   MODAL HELPERS
-========================================================== */
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.querySelectorAll('.modal').forEach(function (o) {
-  o.addEventListener('click', function (e) { if (e.target === o) closeModal(o.id); });
-});
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal.open').forEach(function (m) { closeModal(m.id); });
-    closeLb();
-  }
-});
-
-/* ==========================================================
-   TOAST
-========================================================== */
-var _tt;
-function toast(msg) {
-  var el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  clearTimeout(_tt);
-  _tt = setTimeout(function () { el.classList.remove('show'); }, 2800);
-}
-
-/* ==========================================================
-   UTILITY
-========================================================== */
-function p2(n) { return n < 10 ? '0' + n : '' + n; }
-function todayStr() {
-  var t = new Date();
-  return t.getFullYear() + '-' + p2(t.getMonth() + 1) + '-' + p2(t.getDate());
-}
-function fmtDate(d) {
-  return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
 }
 function fmtDateVN(ds) {
-  if (!ds) return '';
-  var p = ds.split('-');
-  if (p.length < 3) return ds;
-  return 'ngày ' + parseInt(p[2]) + ' tháng ' + parseInt(p[1]) + ', ' + p[0];
+  if(!ds) return '';
+  const p = ds.split('-');
+  return `Ngày ${p[2]}/${p[1]}/${p[0]}`;
 }
-function escH(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+function fmtTime(iso) {
+  if(!iso) return 'Vừa xong';
+  const d = new Date(iso);
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
+function toast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.style.opacity = 1;
+  setTimeout(() => t.style.opacity = 0, 2000);
+}
+function syncData() { loadData(); toast('Đang đồng bộ...'); }
+
+/* SAKURA */
+(function() {
+  const cv = document.getElementById('sakura-canvas');
+  const ctx = cv.getContext('2d');
+  let w, h, petals = [];
+  function resize() { w = cv.width = window.innerWidth; h = cv.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  class Petal {
+    constructor() { this.x = Math.random()*w; this.y = Math.random()*h; this.s = Math.random()*2+1; this.v = Math.random()*1+0.5; }
+    draw() {
+      ctx.beginPath(); ctx.fillStyle = '#ffb7c5';
+      ctx.ellipse(this.x, this.y, this.s*1.5, this.s, Math.PI/4, 0, Math.PI*2);
+      ctx.fill(); this.y += this.v; this.x += Math.sin(this.y/20);
+      if(this.y > h) { this.y = -10; this.x = Math.random()*w; }
+    }
+  }
+  for(let i=0; i<30; i++) petals.push(new Petal());
+  function ani() { ctx.clearRect(0,0,w,h); petals.forEach(p => p.draw()); requestAnimationFrame(ani); }
+  ani();
+})();
 </script>
 </body>
 </html>
