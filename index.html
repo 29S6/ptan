@@ -705,7 +705,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
     </div>
     <!-- Đồng hồ tình yêu -->
     <div class="clock-bar">
-      <div class="cu"><div class="cn" id="ck-d">000</div><div class="cl">Ngày</div></div>
+      <div class="cu"><div class="cn" id="ck-d">00</div><div class="cl">Ngày</div></div>
       <div class="cu"><div class="cn" id="ck-h">00</div><div class="cl">Giờ</div></div>
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
@@ -822,14 +822,14 @@ body.night-mode .txt2{color:var(--night-txt2);}
 
 <!-- MOBILE BOTTOM NAV -->
 <nav class="mobile-nav">
-  <div class="mnav-item active" data-tab="cal" onclick="switchTab('cal')">
-    <div class="mnav-icon">🗓</div><div>Lịch</div>
-  </div>
   <div class="mnav-item" data-tab="diary" onclick="switchTab('diary')">
     <div class="mnav-icon">📖</div><div>Nhật ký</div>
   </div>
   <div class="mnav-item" data-tab="ann" onclick="switchTab('ann')">
     <div class="mnav-icon">🌸</div><div>Kỷ niệm</div>
+  </div>
+   <div class="mnav-item active" data-tab="cal" onclick="switchTab('cal')">
+    <div class="mnav-icon">🗓</div><div>Lịch</div>
   </div>
   <div class="mnav-item" data-tab="stats" onclick="switchTab('stats')">
     <div class="mnav-icon">📊</div><div>Thống kê</div>
@@ -953,7 +953,7 @@ body.night-mode .txt2{color:var(--night-txt2);}
    ⚙️ CẤU HÌNH — THAY ĐỔI TẠI ĐÂY
 =========================================================== */
 var CFG = {
-  SCRIPT_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
   PIN: '2204',
   LOVE_START: '2026-04-22',  // Ngày bắt đầu tình yêu YYYY-MM-DD
 };
@@ -1073,15 +1073,7 @@ function startClock() {
 /* ===========================================================
    NIGHT MODE
 =========================================================== */
-function initNightMode() {
-  var h = new Date().getHours();
-  if (h >= 21 || h < 6) { S.nightMode=true; document.body.classList.add('night-mode'); }
-}
-function toggleNight() {
-  S.nightMode = !S.nightMode;
-  document.body.classList.toggle('night-mode', S.nightMode);
-  document.getElementById('night-btn').textContent = S.nightMode ? '☀️' : '🌙';
-}
+
 
 /* ===========================================================
    SAKURA ANIMATION
