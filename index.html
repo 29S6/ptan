@@ -14,11 +14,20 @@
    BIẾN & RESET
    ========================================================== */
 :root {
-  --r1: #b5607a;   --r2: #d4849c;   --r3: #e8b4c4;   --r4: #f7dde8;   --r5: #fef0f5;
-  --glass: rgba(255,242,248,0.70);   --glass-b: rgba(255,255,255,0.55);
-  --shadow: 0 8px 32px rgba(181,96,122,0.14);   --shadow-sm: 0 3px 12px rgba(181,96,122,0.10);
-  --txt1: #4a2535;   --txt2: #7d4a5e;   --txt3: #b07a90;
-  --rr: 16px;   --rrb: 22px;
+  --r1: #b5607a;
+  --r2: #d4849c;
+  --r3: #e8b4c4;
+  --r4: #f7dde8;
+  --r5: #fef0f5;
+  --glass: rgba(255,242,248,0.70);
+  --glass-b: rgba(255,255,255,0.55);
+  --shadow: 0 8px 32px rgba(181,96,122,0.14);
+  --shadow-sm: 0 3px 12px rgba(181,96,122,0.10);
+  --txt1: #4a2535;
+  --txt2: #7d4a5e;
+  --txt3: #b07a90;
+  --rr: 16px;
+  --rrb: 22px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -117,7 +126,7 @@ body{
 .ann-countdown{text-align:center;padding:6px 20px 10px;font-size:0.78rem;color:rgba(255,255,255,0.9);font-weight:600;min-height:24px;}
 
 /* ==========================================================
-   TABS (3 tab)
+   TABS
    ========================================================== */
 .desktop-tabs{
   display:flex;gap:0;
@@ -160,7 +169,7 @@ body{
 .mnav-icon{font-size:1.3rem;line-height:1;}
 
 /* ==========================================================
-   LAYOUT (2 cột trên desktop)
+   MAIN LAYOUT
    ========================================================== */
 .main-layout{
   display:grid;
@@ -169,18 +178,49 @@ body{
   max-width:1100px;margin:0 auto;
   padding:20px 18px 24px;
 }
-@media(max-width:960px){
-  .main-layout{grid-template-columns:1fr;gap:14px;}
-  .col-ann{display:none;}
-}
 @media(max-width:768px){
   .main-layout{
     grid-template-columns:1fr;
     padding:14px 12px 16px;
     gap:0;
   }
-  .col-diary,.col-ann,.col-cal{display:none;}
-  .col-diary.tab-active,.col-ann.tab-active,.col-cal.tab-active{display:block;}
+}
+
+/* Các cột */
+.col-diary, .col-ann, .col-cal, .col-album {
+  display: none;
+}
+.col-diary.active, .col-ann.active, .col-cal.active, .col-album.active {
+  display: block;
+}
+@media(min-width:769px){
+  .col-diary.active { display: block; }
+  .col-ann.active { display: block; }
+  .col-cal.active { display: block; }
+  .col-album.active { display: block; }
+  /* Trên desktop, khi album active, ẩn cột phải để lấy toàn bộ không gian */
+  .col-album.active ~ .col-ann,
+  .col-album.active ~ .col-cal {
+    display: none !important;
+  }
+  /* Khi album không active, hiển thị cột phải bình thường */
+  .col-diary.active ~ .col-ann,
+  .col-diary.active ~ .col-cal {
+    display: block;
+  }
+  .col-ann.active ~ .col-cal {
+    display: block;
+  }
+  .col-cal.active ~ .col-ann {
+    display: block;
+  }
+}
+/* Trên mobile, mỗi tab chiếm toàn bộ */
+@media(max-width:768px){
+  .col-diary.active, .col-ann.active, .col-cal.active, .col-album.active {
+    display: block;
+    grid-column: 1;
+  }
 }
 
 /* ==========================================================
@@ -279,7 +319,7 @@ body{
 .ti-mood{font-size:0.85rem;}
 .ti-title{font-weight:700;font-size:0.88rem;color:var(--txt1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
 .ti-preview{font-size:0.75rem;color:var(--txt2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-/* Không còn ảnh trong timeline nữa, nhưng vẫn giữ cấu trúc */
+.ti-img{width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;margin-left:auto;}
 
 .load-more-btn{
   width:100%;background:rgba(181,96,122,0.08);
@@ -356,6 +396,79 @@ body{
   transition:all 0.2s;
 }
 .add-ann-btn:hover{background:var(--r4);}
+
+/* ==========================================================
+   ALBUM (ZALO STYLE)
+   ========================================================== */
+.album-timeline{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.album-day{
+  background:rgba(255,255,255,0.4);
+  border-radius:16px;
+  padding:14px 16px 12px;
+  border:1px solid rgba(181,96,122,0.08);
+}
+.album-day-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.album-day-header .day-label{
+  font-weight:700;
+  font-size:0.8rem;
+  color:var(--r1);
+  background:rgba(181,96,122,0.08);
+  padding:2px 14px;
+  border-radius:20px;
+  border:1px solid var(--r3);
+}
+.album-day-header .day-count{
+  font-size:0.65rem;
+  color:var(--txt3);
+  font-weight:600;
+}
+.album-images-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+  gap:10px;
+}
+.album-img-item{
+  border-radius:10px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:all 0.25s;
+  aspect-ratio:1;
+  background:rgba(0,0,0,0.02);
+  position:relative;
+}
+.album-img-item:hover{
+  transform:scale(1.04);
+  box-shadow:0 4px 16px rgba(181,96,122,0.2);
+}
+.album-img-item img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+}
+.album-img-item .img-title{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  padding:4px 8px;
+  background:linear-gradient(to top,rgba(74,37,53,0.6),transparent);
+  color:#fff;
+  font-size:0.6rem;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.album-empty{
+  text-align:center;color:var(--txt3);padding:40px 0;font-size:0.9rem;
+}
+.album-empty .icon{font-size:3rem;display:block;margin-bottom:12px;}
 
 /* ==========================================================
    FAB
@@ -463,7 +576,24 @@ body{
 }
 .fs-label{font-size:0.75rem;color:var(--txt2);font-weight:600;}
 
-/* Đã xóa phần upload ảnh */
+/* Image upload */
+.img-upload-area{
+  border:2px dashed var(--r3);border-radius:10px;
+  padding:14px;text-align:center;cursor:pointer;
+  background:rgba(255,255,255,0.4);transition:all 0.2s;
+  font-size:0.8rem;color:var(--txt3);
+}
+.img-upload-area:hover{background:var(--r4);border-color:var(--r2);}
+.img-preview-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.img-preview-item{position:relative;width:64px;height:64px;}
+.img-preview-item img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+.img-rm{
+  position:absolute;top:-5px;right:-5px;
+  background:var(--r1);color:#fff;border:none;
+  border-radius:50%;width:17px;height:17px;
+  font-size:0.6rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
 
 .fbtn-row{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap;}
 .btn-p{
@@ -496,7 +626,12 @@ body{
   font-size:0.88rem;line-height:1.8;color:var(--txt1);
   white-space:pre-wrap;max-height:42vh;overflow-y:auto;
 }
-/* Đã xóa phần hiển thị ảnh trong view */
+.ve-images{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.ve-images img{
+  width:90px;height:90px;object-fit:cover;border-radius:10px;cursor:pointer;
+  transition:transform 0.2s;
+}
+.ve-images img:hover{transform:scale(1.06);}
 
 #lightbox{
   position:fixed;inset:0;z-index:800;
@@ -531,6 +666,7 @@ body{
   .modal-box{padding:20px 16px;}
   .pin-kb{gap:6px;}
   .pk{padding:10px;font-size:1rem;}
+  .album-images-row{grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));gap:6px;}
 }
 </style>
 </head>
@@ -593,17 +729,18 @@ body{
     <div class="ann-countdown" id="ann-countdown"></div>
   </header>
 
-  <!-- TABS (3 tab) -->
+  <!-- TABS -->
   <nav class="desktop-tabs">
-    <div class="dtab active" data-col="diary" onclick="switchDesktopTab('diary')">📖 Nhật ký</div>
-    <div class="dtab" data-col="ann" onclick="switchDesktopTab('ann')">🌸 Kỷ niệm</div>
-    <div class="dtab" data-col="cal" onclick="switchDesktopTab('cal')">🗓 Lịch</div>
+    <div class="dtab active" data-col="diary" onclick="switchTab('diary')">📖 Nhật ký</div>
+    <div class="dtab" data-col="ann" onclick="switchTab('ann')">🌸 Kỷ niệm</div>
+    <div class="dtab" data-col="cal" onclick="switchTab('cal')">🗓 Lịch</div>
+    <div class="dtab" data-col="album" onclick="switchTab('album')">🎞️ Album</div>
   </nav>
 
   <div class="main-layout">
 
-    <!-- CỘT TRÁI: NHẬT KÝ (mặc định) -->
-    <div class="col-diary tab-active" id="col-diary">
+    <!-- NHẬT KÝ -->
+    <div class="col-diary active" id="col-diary">
       <div class="glass-card">
         <div class="card-hd"><div class="card-title">📖 Nhật Ký</div></div>
         <div class="card-body">
@@ -619,7 +756,7 @@ body{
       </div>
     </div>
 
-    <!-- CỘT PHẢI: KỶ NIỆM + LỊCH -->
+    <!-- KỶ NIỆM -->
     <div class="col-ann" id="col-ann">
       <div class="glass-card">
         <div class="card-hd"><div class="card-title">🌸 Kỷ Niệm</div></div>
@@ -630,6 +767,7 @@ body{
       </div>
     </div>
 
+    <!-- LỊCH -->
     <div class="col-cal" id="col-cal">
       <div id="otd-wrap"></div>
       <div id="streak-wrap"></div>
@@ -651,6 +789,14 @@ body{
       </div>
     </div>
 
+    <!-- ALBUM (dùng chung cho cả desktop và mobile) -->
+    <div class="col-album" id="col-album">
+      <div class="glass-card">
+        <div class="card-hd"><div class="card-title">🎞️ Album Ảnh</div></div>
+        <div class="card-body" id="album-body"></div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -666,6 +812,9 @@ body{
   </div>
   <div class="mnav-item" data-tab="cal" onclick="switchTab('cal')">
     <div class="mnav-icon">🗓</div><div>Lịch</div>
+  </div>
+  <div class="mnav-item" data-tab="album" onclick="switchTab('album')">
+    <div class="mnav-icon">🎞️</div><div>Album</div>
   </div>
 </nav>
 
@@ -709,7 +858,12 @@ body{
       </div>
       <textarea class="ftxt" id="e-content" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:150px;"></textarea>
     </div>
-    <!-- Đã xóa phần upload ảnh -->
+    <div class="fg">
+      <label class="flbl">Thêm ảnh (tùy chọn)</label>
+      <div class="img-upload-area" onclick="document.getElementById('img-inp').click()">📷 Bấm để chọn ảnh</div>
+      <input type="file" id="img-inp" accept="image/*" multiple style="display:none" onchange="handleImgUpload(this)"/>
+      <div class="img-preview-wrap" id="img-preview"></div>
+    </div>
     <div class="fbtn-row">
       <button class="btn-s" onclick="closeModal('modal-write')">Hủy</button>
       <button class="btn-p" onclick="saveEntry()">💾 Lưu nhật ký</button>
@@ -724,7 +878,7 @@ body{
     <div class="ve-mood" id="ve-mood"></div>
     <div class="modal-title" id="ve-title"></div>
     <div class="ve-content" id="ve-content"></div>
-    <!-- Đã xóa phần hiển thị ảnh -->
+    <div class="ve-images" id="ve-images"></div>
     <div class="fbtn-row">
       <button class="btn-s" onclick="editEntry()">✏️ Sửa</button>
       <button class="btn-d" onclick="deleteEntry()">🗑 Xóa</button>
@@ -781,6 +935,7 @@ var S = {
   curId: null,
   pin: '',
   mood: '',
+  imgs: [],
   fontSize: 14,
   pageSize: 8,
   page: 1,
@@ -1008,6 +1163,7 @@ function renderAll() {
   renderTimeline();
   renderAnniversaries();
   renderAnnCountdown();
+  renderAlbum();
   buildMonthFilter();
 }
 
@@ -1182,6 +1338,10 @@ function loadMore(){
 
 function renderTI(e){
   var preview = (e.content||'').replace(/\n/g,' ').substring(0,90);
+  var imgHtml='';
+  if(e.images&&e.images.length){
+    imgHtml='<img class="ti-img" src="'+e.images[0]+'" alt="ảnh" onclick="event.stopPropagation();openLightbox(\''+e.images[0]+'\')"/>';
+  }
   return '<div class="ti" onclick="openViewModal(\''+e.id+'\')">'+
     '<div class="ti-top">'+
     '<span class="ti-date">'+fmtDateVN(e.date)+'</span>'+
@@ -1191,7 +1351,7 @@ function renderTI(e){
     '<div style="flex:1;min-width:0;">'+
     '<div class="ti-title">'+escHtml(e.title||'(Không tiêu đề)')+'</div>'+
     '<div class="ti-preview">'+escHtml(preview)+'</div>'+
-    '</div>'+
+    '</div>'+imgHtml+
     '</div>'+
   '</div>';
 }
@@ -1277,14 +1437,73 @@ function delAnn(id) {
 }
 
 /* ===========================================================
+   ALBUM (ZALO STYLE)
+=========================================================== */
+function renderAlbum() {
+  // Lấy tất cả ảnh từ các bài viết, nhóm theo ngày
+  var dayMap = {};
+  S.data.entries.forEach(function(entry) {
+    if (entry.images && entry.images.length) {
+      var dayKey = entry.date;
+      if (!dayMap[dayKey]) {
+        dayMap[dayKey] = { date: entry.date, images: [], title: entry.title || '' };
+      }
+      entry.images.forEach(function(imgSrc) {
+        dayMap[dayKey].images.push({ src: imgSrc, title: entry.title || '' });
+      });
+    }
+  });
+
+  // Chuyển thành mảng và sắp xếp theo ngày mới nhất
+  var days = Object.keys(dayMap).sort().reverse().map(function(key) {
+    return dayMap[key];
+  });
+
+  var html = renderAlbumHTML(days);
+  var container = document.getElementById('album-body');
+  if (container) {
+    container.innerHTML = html;
+  } else {
+    console.warn('Không tìm thấy #album-body');
+  }
+}
+
+function renderAlbumHTML(days) {
+  if (!days.length) {
+    return '<div class="album-empty"><span class="icon">🖼</span>Chưa có ảnh nào trong nhật ký~<br/><span style="font-size:0.8rem;color:var(--txt3);">Hãy thêm ảnh vào bài viết của bạn nhé!</span></div>';
+  }
+
+  var html = '<div class="album-timeline">';
+  days.forEach(function(day) {
+    html += '<div class="album-day">';
+    html += '<div class="album-day-header">';
+    html += '<span class="day-label">📅 ' + fmtDateVN(day.date) + '</span>';
+    html += '<span class="day-count">' + day.images.length + ' ảnh</span>';
+    html += '</div>';
+    html += '<div class="album-images-row">';
+    day.images.forEach(function(img) {
+      html += '<div class="album-img-item" onclick="openLightbox(\''+img.src+'\')">';
+      html += '<img src="'+img.src+'" alt="ảnh" loading="lazy"/>';
+      html += '<div class="img-title">'+escHtml(img.title)+'</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+/* ===========================================================
    ENTRY CRUD
 =========================================================== */
 function openWriteModal() {
-  S.curId = null; S.mood = '';
+  S.curId = null; S.mood = ''; S.imgs = [];
   document.getElementById('write-title').textContent = '✍️ Viết nhật ký';
   document.getElementById('e-date').value = todayStr();
   document.getElementById('e-title').value = '';
   document.getElementById('e-content').value = '';
+  document.getElementById('img-preview').innerHTML = '';
   document.querySelectorAll('.mp-opt').forEach(function(el){ el.classList.remove('selected'); });
   newPrompt();
   openModal('modal-write');
@@ -1298,6 +1517,13 @@ function openViewModal(id) {
   document.getElementById('ve-mood').textContent = e.mood || '';
   document.getElementById('ve-title').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('ve-content').textContent = e.content || '';
+  var imgs = '';
+  if (e.images && e.images.length) {
+    imgs = e.images.map(function(src) {
+      return '<img src="'+src+'" onclick="openLightbox(\''+src+'\')" alt="ảnh"/>';
+    }).join('');
+  }
+  document.getElementById('ve-images').innerHTML = imgs;
   openModal('modal-view');
 }
 
@@ -1306,7 +1532,7 @@ function editEntry() {
   var e = S.data.entries.find(function(x){ return x.id === S.curId; });
   if (!e) return;
   closeModal('modal-view');
-  S.mood = e.mood || '';
+  S.mood = e.mood || ''; S.imgs = e.images ? e.images.slice() : [];
   document.getElementById('write-title').textContent = '✏️ Chỉnh sửa nhật ký';
   document.getElementById('e-date').value = e.date;
   document.getElementById('e-title').value = e.title || '';
@@ -1314,6 +1540,7 @@ function editEntry() {
   document.querySelectorAll('.mp-opt').forEach(function(el) {
     el.classList.toggle('selected', el.dataset.mood === S.mood);
   });
+  renderImgPreviews();
   openModal('modal-write');
 }
 
@@ -1329,6 +1556,7 @@ function saveEntry() {
     title: title || ('Ngày '+fmtDateVN(date)),
     content: content,
     mood: S.mood,
+    images: S.imgs.slice(),
     updatedAt: new Date().toISOString()
   };
   closeModal('modal-write');
@@ -1369,7 +1597,54 @@ function changeFontSize(delta) {
 }
 
 /* ===========================================================
-   LIGHTBOX (giữ lại để xem ảnh nếu có, nhưng hiện không dùng)
+   IMAGE UPLOAD
+=========================================================== */
+function handleImgUpload(input) {
+  var files = Array.from(input.files);
+  files.forEach(function(file) {
+    if (S.imgs.length >= 4) { toast('⚠️ Tối đa 4 ảnh mỗi bài nhé!'); return; }
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var max = 800;
+        var w = img.width, h = img.height;
+        if (w > max || h > max) {
+          if (w > h) { h = Math.round(h*max/w); w = max; }
+          else { w = Math.round(w*max/h); h = max; }
+        }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        var data = canvas.toDataURL('image/jpeg', 0.72);
+        S.imgs.push(data);
+        renderImgPreviews();
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderImgPreviews() {
+  var container = document.getElementById('img-preview');
+  if (!container) return;
+  container.innerHTML = S.imgs.map(function(src, i) {
+    return '<div class="img-preview-item">'+
+      '<img src="'+src+'" alt="preview"/>'+
+      '<button class="img-rm" onclick="removeImg('+i+')">✕</button>'+
+    '</div>';
+  }).join('');
+}
+
+function removeImg(i) {
+  S.imgs.splice(i, 1);
+  renderImgPreviews();
+}
+
+/* ===========================================================
+   LIGHTBOX
 =========================================================== */
 function openLightbox(src) {
   document.getElementById('lb-img').src = src;
@@ -1380,33 +1655,31 @@ function closeLightbox() {
 }
 
 /* ===========================================================
-   NAVIGATION (3 tab)
+   TAB SWITCH
 =========================================================== */
 function switchTab(tab) {
-  var cols = ['diary', 'ann', 'cal'];
+  // Ẩn tất cả các cột
+  var cols = ['diary', 'ann', 'cal', 'album'];
   cols.forEach(function(c) {
     var el = document.getElementById('col-'+c);
-    if (el) el.classList.toggle('tab-active', c === tab);
+    if (el) el.classList.remove('active');
   });
-  document.querySelectorAll('.mnav-item').forEach(function(el) {
-    el.classList.toggle('active', el.dataset.tab === tab);
-  });
-  document.querySelectorAll('.dtab').forEach(function(el) {
-    el.classList.toggle('active', el.dataset.col === tab);
-  });
-}
 
-function switchDesktopTab(tab) {
-  document.querySelectorAll('.dtab').forEach(function(el) {
-    el.classList.toggle('active', el.dataset.col === tab);
+  // Hiện cột được chọn
+  var activeEl = document.getElementById('col-'+tab);
+  if (activeEl) activeEl.classList.add('active');
+
+  // Cập nhật trạng thái tab trên desktop và mobile
+  document.querySelectorAll('.dtab, .mnav-item').forEach(function(el) {
+    el.classList.remove('active');
+    if (el.dataset.col === tab || el.dataset.tab === tab) {
+      el.classList.add('active');
+    }
   });
-  document.querySelectorAll('.mnav-item').forEach(function(el) {
-    el.classList.toggle('active', el.dataset.tab === tab);
-  });
-  var colMap = { diary: 'col-diary', ann: 'col-ann', cal: 'col-cal' };
-  var target = document.getElementById(colMap[tab]);
-  if (target) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Nếu chuyển sang album, gọi renderAlbum để cập nhật
+  if (tab === 'album') {
+    renderAlbum();
   }
 }
 
