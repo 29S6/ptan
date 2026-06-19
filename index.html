@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.5.5 - Status slider mới: Streak + động viên, kỷ niệm gọn -->
+<!-- V5.5.6 - Chỉ hiển thị Streak dưới đồng hồ, bỏ thông báo kỷ niệm -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
-/* ===== GIỮ NGUYÊN TOÀN BỘ CSS CŨ ===== */
 :root{
   --p1:#a85470;
   --p2:#c97d96;
@@ -67,14 +66,13 @@ img{max-width:100%;display:block}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
-
-/* ===== STATUS SLIDER MỚI ===== */
+/* Status slider - chỉ hiển thị streak */
 .status-slider{
   display:flex;
-  align-items:stretch;
-  justify-content:space-between;
+  align-items:center;
+  justify-content:center;
   gap:12px;
-  padding:8px 16px;
+  padding:10px 20px;
   margin:4px 18px 10px;
   background:rgba(255,255,255,.12);
   backdrop-filter:blur(8px);
@@ -85,48 +83,12 @@ img{max-width:100%;display:block}
   color:#fff;
   text-shadow:0 1px 4px rgba(0,0,0,.15);
 }
-.status-slider .block{
-  flex:1;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:4px 6px;
-}
-.status-slider .block .icon{
-  font-size:1.6rem;
-  line-height:1;
-  flex-shrink:0;
-}
-.status-slider .block .info{
-  display:flex;
-  flex-direction:column;
-  line-height:1.3;
-}
-.status-slider .block .info .main{
-  font-size:1rem;
-  font-weight:700;
-}
-.status-slider .block .info .sub{
-  font-size:.75rem;
-  font-weight:400;
-  opacity:.85;
-}
-.status-slider .block .info .main strong{
-  font-weight:800;
-  color:#fff;
-}
-.status-slider .divider{
-  width:1px;
-  background:rgba(255,255,255,.25);
-  flex-shrink:0;
-}
-.status-slider .fire{color:#ff8c00;filter:drop-shadow(0 0 6px #ff8c0066)}
-.status-slider .ann-heart{color:#ff6b8a;filter:drop-shadow(0 0 6px #ff6b8a66)}
-.status-slider .empty{
-  color:rgba(255,255,255,.7);
-  font-size:.85rem;
-}
-
+.status-slider .icon{font-size:1.8rem;line-height:1;flex-shrink:0}
+.status-slider .info{display:flex;flex-direction:column;align-items:flex-start;line-height:1.3}
+.status-slider .info .main{font-size:1.1rem;font-weight:700}
+.status-slider .info .main strong{font-weight:800;color:#fff}
+.status-slider .info .sub{font-size:.8rem;font-weight:400;opacity:.85}
+.status-slider .fire{color:#ff8c00;filter:drop-shadow(0 0 8px #ff8c0066)}
 .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:rgba(255,243,249,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1.5px solid rgba(168,84,112,.12);padding:5px 0 env(safe-area-inset-bottom,5px);box-shadow:0 -4px 18px rgba(168,84,112,.10)}
 @media(max-width:768px){.mob-nav{display:flex}}
 .mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 3px;color:var(--t3);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;transition:color .18s;position:relative}
@@ -419,7 +381,7 @@ img{max-width:100%;display:block}
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <!-- STATUS SLIDER MỚI -->
+    <!-- Status slider chỉ hiển thị streak -->
     <div class="status-slider" id="status-slider"></div>
   </header>
 
@@ -1201,26 +1163,18 @@ var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 // ============================================================
-// STATUS SLIDER MỚI – Streak + kỷ niệm
+// STATUS SLIDER – CHỈ HIỂN THỊ STREAK
 // ============================================================
 function updateStatusSlider() {
   var container = document.getElementById('status-slider');
   if (!container) return;
 
   var streakHTML = getStreakBlock();
-  var annHTML = getAnniversaryBlock();
-
-  var html = '';
-  if (streakHTML && annHTML) {
-    html = streakHTML + '<div class="divider"></div>' + annHTML;
-  } else if (streakHTML) {
-    html = streakHTML;
-  } else if (annHTML) {
-    html = annHTML;
+  if (streakHTML) {
+    container.innerHTML = streakHTML;
   } else {
-    html = '<div class="block empty"><span class="icon">🌸</span><span class="info"><span class="main">Hãy viết nhật ký và thêm kỷ niệm nhé!</span></span></div>';
+    container.innerHTML = '<div class="icon fire">🔥</div><div class="info"><span class="main">Hãy viết nhật ký hôm nay nhé!</span></div>';
   }
-  container.innerHTML = html;
 }
 
 function getStreakBlock() {
@@ -1254,44 +1208,11 @@ function getStreakBlock() {
     subText = '👑 365 ngày – Bạn là huyền thoại!';
   }
 
-  return '<div class="block">' +
-    '<span class="icon fire">🔥</span>' +
+  return '<span class="icon fire">🔥</span>' +
     '<span class="info">' +
       '<span class="main">' + mainText + '</span>' +
       '<span class="sub">' + subText + '</span>' +
-    '</span>' +
-  '</div>';
-}
-
-function getAnniversaryBlock() {
-  var now = new Date();
-  now.setHours(0,0,0,0);
-  var nearest = null;
-  var nearestDays = 999;
-  S.data.anniversaries.forEach(function (a) {
-    if (!a.date) return;
-    var p = a.date.split('-');
-    var next = new Date(now.getFullYear(), parseInt(p[1])-1, parseInt(p[2]));
-    if (next < now) next.setFullYear(next.getFullYear() + 1);
-    var days = Math.round((next - now) / 86400000);
-    if (days < nearestDays) {
-      nearestDays = days;
-      nearest = { name: a.name, days: days };
-    }
-  });
-
-  if (!nearest) return null;
-
-  var mainText = nearest.days === 0 ? '🎉 Hôm nay!' : nearest.days + ' ngày nữa';
-  var subText = nearest.days === 0 ? nearest.name : nearest.name;
-
-  return '<div class="block">' +
-    '<span class="icon ann-heart">❤️</span>' +
-    '<span class="info">' +
-      '<span class="main">' + mainText + '</span>' +
-      '<span class="sub">' + subText + '</span>' +
-    '</span>' +
-  '</div>';
+    '</span>';
 }
 
 function offsetDay(ds, delta) {
