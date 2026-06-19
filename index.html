@@ -91,9 +91,7 @@ img{max-width:100%;display:block}
    APP WRAPPER
 =================================================== */
 #app{display:none;position:relative;z-index:1;min-height:100vh;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
-@media(min-width:769px){
-  #app{padding-bottom:24px}
-}
+@media(min-width:769px){#app{padding-bottom:24px}}
 
 /* ===================================================
    HEADER
@@ -107,10 +105,21 @@ img{max-width:100%;display:block}
 }
 .hdr-top{display:flex;align-items:center;justify-content:space-between;padding:13px 18px 9px}
 .hdr-logo{font-family:var(--font-ttl);font-size:1.46rem;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(100,30,60,.28)}
-.hdr-sync{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:6px 13px;font-size:.75rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;transition:all .15s}
-.hdr-sync:hover{background:rgba(255,255,255,.32)}
-.hdr-sync svg{flex-shrink:0}
-.hdr-sync.syncing svg{animation:spin .8s linear infinite}
+.hdr-actions{display:flex;gap:8px;align-items:center}
+.hdr-btn{
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.32);
+  border-radius:20px;
+  padding:6px 10px;
+  font-size:.85rem;
+  color:#fff;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+.hdr-btn:hover{background:rgba(255,255,255,.32)}
+.hdr-btn.syncing svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .clock-row{display:flex;gap:6px;justify-content:center;padding:0 18px 10px;flex-wrap:wrap}
@@ -165,12 +174,8 @@ img{max-width:100%;display:block}
   #col-right-desktop{order:3;display:flex;flex-direction:column;gap:20px;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
   #col-ann, #col-album{display:none!important}
 }
-
 @media(min-width:769px) and (max-width:991px){
-  .main-layout{
-    grid-template-columns: 1fr;
-    gap:16px;
-  }
+  .main-layout{grid-template-columns:1fr;gap:16px}
   #col-cal{order:1;position:static;max-height:none;overflow-y:visible}
   #col-diary{order:2}
   #col-right-desktop{order:3;display:block;position:static;max-height:none;overflow-y:visible}
@@ -301,12 +306,7 @@ img{max-width:100%;display:block}
 .album-day-lbl{font-size:.78rem;font-weight:700;color:var(--p1)}
 .album-day-time{font-size:.68rem;color:var(--t3);font-weight:600;white-space:nowrap;margin-left:auto}
 .album-day-entry-ttl{font-size:.75rem;color:var(--t2);margin-bottom:8px;padding-left:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.album-grid{
-  display:grid;
-  gap:4px;
-  border-radius:12px;
-  overflow:hidden;
-}
+.album-grid{display:grid;gap:4px;border-radius:12px;overflow:hidden}
 .album-grid.g1{grid-template-columns:1fr}
 .album-grid.g2{grid-template-columns:1fr 1fr}
 .album-grid.g3{grid-template-columns:1fr 1fr}
@@ -332,7 +332,6 @@ img{max-width:100%;display:block}
 .album-grid.g8 .a-img{height:130px}
 .album-grid.g9 .a-img{height:130px}
 .album-grid.g10 .a-img{height:130px}
-
 .album-empty{text-align:center;color:var(--t3);padding:36px 0;font-size:.85rem}
 
 /* ===================================================
@@ -362,9 +361,7 @@ img{max-width:100%;display:block}
 .mc:hover{background:var(--p4);color:var(--p1)}
 .m-ttl{font-family:var(--font-ttl);font-size:1.5rem;font-weight:700;color:var(--p1);margin-bottom:15px}
 
-@media(min-width:769px){
-  #modal-write .mbox{max-width:680px}
-}
+@media(min-width:769px){#modal-write .mbox{max-width:680px}}
 
 .fg{margin-bottom:13px}
 .fl{display:block;font-size:.71rem;font-weight:700;color:var(--t2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
@@ -399,9 +396,6 @@ img{max-width:100%;display:block}
 
 .upload-prog{background:rgba(168,84,112,.07);border:1px solid rgba(168,84,112,.15);border-radius:8px;padding:7px 11px;margin-top:7px;font-size:.74rem;color:var(--t2);display:none}
 .upload-prog.show{display:block}
-.upload-prog-bar{width:100%;height:6px;background:rgba(168,84,112,.2);border-radius:3px;margin-top:5px;overflow:hidden;display:none}
-.upload-prog-bar.show{display:block}
-.upload-prog-bar .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--p3),var(--p1));border-radius:3px;transition:width .3s}
 
 .btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .btn-p{flex:1;background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:10px;padding:10px;color:#fff;font-size:.86rem;font-weight:700;transition:all .18s;min-width:90px}
@@ -424,13 +418,7 @@ img{max-width:100%;display:block}
 /* ===================================================
    GALLERY ẢNH TRONG BÀI
 =================================================== */
-.ve-gallery{
-  display:grid;
-  gap:4px;
-  margin-top:10px;
-  border-radius:14px;
-  overflow:hidden;
-}
+.ve-gallery{display:grid;gap:4px;margin-top:10px;border-radius:14px;overflow:hidden}
 .ve-gallery.n1{grid-template-columns:1fr}
 .ve-gallery.n2{grid-template-columns:1fr 1fr}
 .ve-gallery.n3{grid-template-columns:1fr 1fr}
@@ -466,7 +454,7 @@ img{max-width:100%;display:block}
 .dl-counter{font-size:.76rem;font-weight:700;color:var(--t2)}
 
 /* ===================================================
-   COMMENTS — avatar toggle icon đơn
+   COMMENTS
 =================================================== */
 .cmt-section{margin-top:16px;border-top:1.5px solid rgba(168,84,112,.12);padding-top:14px}
 .cmt-hdr{font-size:.78rem;font-weight:700;color:var(--p1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
@@ -482,73 +470,15 @@ img{max-width:100%;display:block}
 .cmt-action-btn:hover{color:var(--p1)}
 .cmt-action-btn.del:hover{color:#c04060}
 .cmt-empty{text-align:center;font-size:.76rem;color:var(--t3);padding:10px 0}
-.cmt-input-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.cmt-avatar-toggle{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  background:rgba(168,84,112,.12);
-  border:2px solid var(--p1);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1rem;
-  cursor:pointer;
-  transition:all .15s;
-  flex-shrink:0;
-  user-select:none;
-}
-.cmt-avatar-toggle:hover{
-  background:var(--p4);
-  transform:scale(1.05);
-}
-.cmt-input-box{
-  flex:1;
-  display:flex;
-  gap:6px;
-}
-.cmt-inp{
-  flex:1;
-  background:rgba(255,255,255,.7);
-  border:1.5px solid rgba(168,84,112,.2);
-  border-radius:18px;
-  padding:8px 14px;
-  font-size:.82rem;
-  color:var(--t1);
-  outline:none;
-  transition:border-color .2s;
-}
+.cmt-input-row{display:flex;align-items:center;gap:8px}
+.cmt-avatar-toggle{width:32px;height:32px;border-radius:50%;background:rgba(168,84,112,.12);border:2px solid var(--p1);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none}
+.cmt-avatar-toggle:hover{background:var(--p4);transform:scale(1.05)}
+.cmt-input-box{flex:1;display:flex;gap:6px}
+.cmt-inp{flex:1;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:18px;padding:8px 14px;font-size:.82rem;color:var(--t1);outline:none;transition:border-color .2s}
 .cmt-inp:focus{border-color:var(--p1)}
-.cmt-send-btn{
-  background:linear-gradient(135deg,var(--p3),var(--p1));
-  border:none;
-  border-radius:50%;
-  width:36px;
-  height:36px;
-  color:#fff;
-  font-size:.95rem;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:all .18s;
-}
+.cmt-send-btn{background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:.95rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
 .cmt-send-btn:hover:not(:disabled){transform:scale(1.08)}
 .cmt-send-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-
-/* ===================================================
-   CONFIRM MODAL
-=================================================== */
-#confirm-modal .mbox{max-width:380px;text-align:center}
-#confirm-modal .m-ttl{font-size:1.2rem;margin-bottom:8px}
-#confirm-modal .confirm-msg{font-size:.9rem;color:var(--t2);margin-bottom:16px}
-.confirm-actions{display:flex;gap:10px;justify-content:center}
-.confirm-actions .btn-p{flex:0 1 auto;padding:8px 20px}
-.confirm-actions .btn-s{flex:0 1 auto;padding:8px 20px}
 
 /* ===================================================
    LIGHTBOX
@@ -567,20 +497,26 @@ img{max-width:100%;display:block}
 /* ===================================================
    SAVING OVERLAY
 =================================================== */
-#saving-overlay{
-  position:fixed;inset:0;z-index:9500;
-  background:rgba(61,31,45,.42);
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  display:none;align-items:center;justify-content:center;
-}
+#saving-overlay{position:fixed;inset:0;z-index:9500;background:rgba(61,31,45,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center}
 #saving-overlay.show{display:flex}
-.saving-box{
-  background:rgba(255,248,253,.92);border-radius:22px;
-  padding:30px 38px;text-align:center;
-  box-shadow:0 20px 50px rgba(120,40,70,.25);
-}
+.saving-box{background:rgba(255,248,253,.92);border-radius:22px;padding:30px 38px;text-align:center;box-shadow:0 20px 50px rgba(120,40,70,.25)}
 .saving-heart{font-size:38px;display:block;margin-bottom:10px;animation:hb 1s ease-in-out infinite}
 .saving-txt{font-family:var(--font-ttl);font-size:1.05rem;font-weight:700;color:var(--p1)}
+
+/* ===================================================
+   BACKUP MODAL
+=================================================== */
+.backup-list{max-height:200px;overflow-y:auto;background:rgba(255,255,255,.5);border-radius:8px;padding:6px;margin-top:8px}
+.backup-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(168,84,112,.08);cursor:pointer;transition:background .15s}
+.backup-item:hover{background:rgba(168,84,112,.08)}
+.backup-item:last-child{border-bottom:none}
+.backup-item .name{font-size:.82rem;color:var(--t1)}
+.backup-item .date{font-size:.68rem;color:var(--t3)}
+.backup-item .restore-btn{background:var(--p1);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .15s}
+.backup-item .restore-btn:hover{background:var(--p2)}
+.backup-empty{text-align:center;color:var(--t3);padding:16px 0;font-size:.8rem}
+.spinner{display:inline-block;width:18px;height:18px;border:3px solid rgba(168,84,112,.2);border-radius:50%;border-top-color:var(--p1);animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* ===================================================
    UTILITY
@@ -632,13 +568,16 @@ img{max-width:100%;display:block}
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
-      <button class="hdr-sync" id="sync-btn" onclick="syncData()">
-        <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-          <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-        </svg>
-        Đồng bộ
-      </button>
+      <div class="hdr-actions">
+        <button class="hdr-btn" id="sync-btn" onclick="syncData()" title="Đồng bộ">
+          <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+          </svg>
+          Đồng bộ
+        </button>
+        <button class="hdr-btn" onclick="openBackupModal()" title="Sao lưu & Khôi phục">📦</button>
+      </div>
     </div>
     <div class="clock-row">
       <div class="cu"><div class="cn" id="ck-d">0</div><div class="cl">Ngày</div></div>
@@ -799,7 +738,6 @@ img{max-width:100%;display:block}
       </div>
       <input type="file" id="img-inp" accept="image/*" multiple style="display:none" onchange="onImgPick(this)"/>
       <div class="upload-prog" id="upload-prog">⏳ Đang xử lý ảnh...</div>
-      <div class="upload-prog-bar" id="upload-prog-bar"><div class="fill" id="upload-prog-fill"></div></div>
       <div class="img-prev-row" id="img-prev"></div>
     </div>
     <div class="btn-row">
@@ -901,16 +839,34 @@ img{max-width:100%;display:block}
 </div>
 
 <!-- ======================================================
-     CONFIRM MODAL
+     MODAL: BACKUP & RESTORE
 ====================================================== -->
-<div class="modal" id="confirm-modal">
-  <div class="mbox">
-    <button class="mc" onclick="closeModal('confirm-modal')">✕</button>
-    <div class="m-ttl" id="confirm-ttl">Xác nhận</div>
-    <div class="confirm-msg" id="confirm-msg">Bạn có chắc chắn?</div>
-    <div class="confirm-actions">
-      <button class="btn-s" id="confirm-cancel" onclick="closeModal('confirm-modal')">Hủy</button>
-      <button class="btn-p" id="confirm-ok">Đồng ý</button>
+<div class="modal" id="modal-backup">
+  <div class="mbox" style="max-width:500px;">
+    <button class="mc" onclick="closeModal('modal-backup')">✕</button>
+    <div class="m-ttl">📦 Sao lưu & Khôi phục</div>
+    <div style="font-size:.78rem;color:var(--t3);margin-bottom:12px;">
+      Tự động backup lúc 3h sáng mỗi ngày. Giữ tối đa 10 bản gần nhất.
+    </div>
+
+    <div style="display:flex;gap:10px;margin-bottom:14px;">
+      <button class="btn-p" id="backup-now-btn" onclick="manualBackup()" style="flex:1;">
+        💾 Sao lưu ngay
+      </button>
+      <button class="btn-s" id="refresh-backup-list-btn" onclick="refreshBackupList()" style="flex:0 0 auto;padding:10px 14px;">
+        🔄
+      </button>
+    </div>
+
+    <div class="fg">
+      <label class="fl">📂 Các bản sao lưu gần đây</label>
+      <div id="backup-list-container">
+        <div class="backup-empty">Đang tải danh sách...</div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="btn-p" onclick="closeModal('modal-backup')" style="flex:1;">Đóng</button>
     </div>
   </div>
 </div>
@@ -934,7 +890,7 @@ img{max-width:100%;display:block}
 ====================================================== -->
 <script>
 /* ==========================================================
-   CẤU HÌNH
+   ⚙️ CẤU HÌNH
 ========================================================== */
 var CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
@@ -967,8 +923,7 @@ var S = {
   isSaving: false,
   editingCommentId: null,
   editingDlCommentId: null,
-  pendingActions: [],
-  isOnline: navigator.onLine
+  isBackupRestoring: false
 };
 
 var PROMPTS = [
@@ -1042,7 +997,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 /* ==========================================================
-   DESKTOP LAYOUT SETUP
+   THIẾT LẬP LAYOUT DESKTOP
 ========================================================== */
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -1094,7 +1049,7 @@ function getCurrentMobileTab() {
 }
 
 /* ==========================================================
-   CLOCK
+   ĐỒNG HỒ TÌNH YÊU
 ========================================================== */
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -1111,7 +1066,7 @@ function startClock() {
 }
 
 /* ==========================================================
-   SAKURA
+   SAKURA ANIMATION
 ========================================================== */
 (function () {
   var cv = document.getElementById('sakura-canvas');
@@ -1145,57 +1100,13 @@ function startClock() {
 })();
 
 /* ==========================================================
-   LOCAL STORAGE HELPERS
-========================================================== */
-function saveToLocal(data) {
-  try {
-    localStorage.setItem('diary_backup', JSON.stringify(data));
-  } catch (e) {}
-}
-function loadFromLocal() {
-  try {
-    var raw = localStorage.getItem('diary_backup');
-    if (raw) return JSON.parse(raw);
-  } catch (e) {}
-  return null;
-}
-
-function savePendingActions() {
-  try {
-    localStorage.setItem('pending_actions', JSON.stringify(S.pendingActions));
-  } catch (e) {}
-}
-function loadPendingActions() {
-  try {
-    var raw = localStorage.getItem('pending_actions');
-    if (raw) S.pendingActions = JSON.parse(raw) || [];
-  } catch (e) { S.pendingActions = []; }
-}
-function addPendingAction(action) {
-  S.pendingActions.push(action);
-  savePendingActions();
-}
-
-/* ==========================================================
-   LOAD DATA (có backup local)
+   TẢI DỮ LIỆU — JSONP
 ========================================================== */
 function loadData(cb) {
   setSyncing(true);
   var fn = 'jcb_' + Date.now(), tag;
   window[fn] = function (data) {
-    if (data && data.entries && data.anniversaries) {
-      S.data = data;
-      saveToLocal(data);
-    } else {
-      var local = loadFromLocal();
-      if (local) {
-        S.data = local;
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)');
-      } else {
-        S.data = { entries: [], anniversaries: [] };
-        toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối');
-      }
-    }
+    S.data = data || { entries: [], anniversaries: [] };
     if (!S.data.entries) S.data.entries = [];
     if (!S.data.anniversaries) S.data.anniversaries = [];
     S.data.entries.forEach(normalizeEntry);
@@ -1205,154 +1116,19 @@ function loadData(cb) {
     if (typeof cb === 'function') cb();
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
-    processPendingActions();
   };
   tag = document.createElement('script');
   tag.src = CFG.URL + '?callback=' + fn + '&_=' + Date.now();
   tag.onerror = function () {
-    var local = loadFromLocal();
-    if (local) {
-      S.data = local;
-      S.data.entries.forEach(normalizeEntry);
-      sortEntries(S.data.entries);
-      renderAll();
-      toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)');
-    } else {
-      toast('⚠️ Không kết nối được và không có dữ liệu lưu tạm');
-    }
+    toast('⚠️ Không kết nối được. Kiểm tra URL Script!');
     setSyncing(false);
     delete window[fn];
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-    if (typeof cb === 'function') cb();
+    renderAll();
   };
   document.head.appendChild(tag);
 }
 
-/* ==========================================================
-   PROCESS PENDING ACTIONS
-========================================================== */
-function processPendingActions() {
-  if (S.pendingActions.length === 0) return;
-  if (!navigator.onLine) return;
-  var actions = S.pendingActions.slice();
-  S.pendingActions = [];
-  savePendingActions();
-  actions.forEach(function (action) {
-    if (action.type === 'save_entry') {
-      postData(action.payload, '🔄 Đã gửi lại bài viết (retry)', function (res) {
-        if (res && res.success) toast('✅ Đã đồng bộ bài viết');
-        else {
-          S.pendingActions.push(action);
-          savePendingActions();
-        }
-      });
-    } else if (action.type === 'add_comment' || action.type === 'edit_comment' || action.type === 'delete_comment') {
-      callCommentAPI(action.payload, function (res) {
-        if (res && res.success) toast('✅ Đã đồng bộ bình luận');
-        else {
-          S.pendingActions.push(action);
-          savePendingActions();
-        }
-      }, function () {
-        S.pendingActions.push(action);
-        savePendingActions();
-      });
-    }
-  });
-}
-
-window.addEventListener('online', function () {
-  S.isOnline = true;
-  toast('📶 Đã kết nối lại, đang đồng bộ...');
-  processPendingActions();
-  loadData();
-});
-window.addEventListener('offline', function () {
-  S.isOnline = false;
-  toast('📶 Mất kết nối, dữ liệu sẽ được lưu tạm');
-});
-
-/* ==========================================================
-   POST DATA (có pending)
-========================================================== */
-function postData(payload, msg, cb) {
-  function doFetch(mode) {
-    return fetch(CFG.URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
-      mode: mode || 'cors'
-    });
-  }
-  doFetch('cors')
-    .then(function (r) { return r.json().catch(function(){return null;}); })
-    .then(function (res) {
-      if (msg) toast(msg);
-      setTimeout(function () { loadData(function(){ if (typeof cb === 'function') cb(res); }); }, 700);
-    })
-    .catch(function () {
-      var action = { type: 'save_entry', payload: payload };
-      addPendingAction(action);
-      toast('💾 Đã lưu tạm, sẽ gửi lại khi có mạng');
-      if (typeof cb === 'function') cb(null);
-    });
-}
-
-/* ==========================================================
-   CALL COMMENT API (có pending)
-========================================================== */
-function callCommentAPI(payload, onSuccess, onError) {
-  function doFetch(mode) {
-    return fetch(CFG.URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
-      mode: mode || 'cors'
-    });
-  }
-  doFetch('cors')
-    .then(function (r) { return r.json(); })
-    .then(function (res) {
-      if (res && res.success) {
-        if (onSuccess) onSuccess(res);
-      } else {
-        if (onError) onError(res);
-      }
-    })
-    .catch(function () {
-      var action = { type: payload.action, payload: payload };
-      addPendingAction(action);
-      toast('💬 Đã lưu bình luận tạm, sẽ gửi lại khi có mạng');
-      if (onError) onError(null);
-    });
-}
-
-/* ==========================================================
-   CONFIRM MODAL
-========================================================== */
-var confirmResolve = null;
-function showConfirm(title, msg) {
-  return new Promise(function (resolve) {
-    document.getElementById('confirm-ttl').textContent = title || 'Xác nhận';
-    document.getElementById('confirm-msg').textContent = msg || 'Bạn có chắc chắn?';
-    confirmResolve = resolve;
-    openModal('confirm-modal');
-    document.getElementById('confirm-ok').onclick = function () {
-      closeModal('confirm-modal');
-      if (confirmResolve) confirmResolve(true);
-      confirmResolve = null;
-    };
-    document.getElementById('confirm-cancel').onclick = function () {
-      closeModal('confirm-modal');
-      if (confirmResolve) confirmResolve(false);
-      confirmResolve = null;
-    };
-  });
-}
-
-/* ==========================================================
-   NORMALIZE & SORT
-========================================================== */
 function normalizeEntry(e) {
   if (!e.author) e.author = DEFAULT_AUTHOR;
   if (!e.comments || !Array.isArray(e.comments)) e.comments = [];
@@ -1385,7 +1161,69 @@ function setSyncing(on) {
 }
 
 /* ==========================================================
-   RENDER ALL
+   GHI DỮ LIỆU — POST
+========================================================== */
+function postData(payload, msg, cb) {
+  function doFetch(mode) {
+    return fetch(CFG.URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      mode: mode || 'cors'
+    });
+  }
+  doFetch('cors')
+    .then(function (r) { return r.json().catch(function(){return null;}); })
+    .then(function (res) {
+      if (msg) toast(msg);
+      setTimeout(function () { loadData(function(){ if (typeof cb === 'function') cb(res); }); }, 700);
+    })
+    .catch(function () {
+      doFetch('no-cors')
+        .then(function () {
+          if (msg) toast(msg);
+          setTimeout(function () { loadData(function(){ if (typeof cb === 'function') cb(null); }); }, 1500);
+        })
+        .catch(function () { toast('❌ Lỗi kết nối! Thử lại.'); });
+    });
+}
+
+/* ==========================================================
+   GỌI API BÌNH LUẬN
+========================================================== */
+function callCommentAPI(payload, onSuccess, onError) {
+  function doFetch(mode) {
+    return fetch(CFG.URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      mode: mode || 'cors'
+    });
+  }
+  doFetch('cors')
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (res && res.success) {
+        if (onSuccess) onSuccess(res);
+      } else {
+        if (onError) onError(res);
+      }
+    })
+    .catch(function () {
+      doFetch('no-cors')
+        .then(function () {
+          toast('💬 Đã gửi, đang đồng bộ lại để hiển thị...');
+          if (onError) onError(null);
+        })
+        .catch(function () {
+          toast('❌ Lỗi kết nối, thử lại nhé!');
+          if (onError) onError(null);
+        });
+    });
+}
+
+/* ==========================================================
+   RENDER TẤT CẢ
 ========================================================== */
 function renderAll() {
   renderOTD();
@@ -1399,7 +1237,7 @@ function renderAll() {
 }
 
 /* ==========================================================
-   OTD, STREAK, CALENDAR (giữ nguyên)
+   "NGÀY NÀY NĂM NGOÁI"
 ========================================================== */
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
@@ -1421,6 +1259,9 @@ function renderOTD() {
     '</div></div></div>';
 }
 
+/* ==========================================================
+   STREAK
+========================================================== */
 function renderStreak() {
   var wrap = document.getElementById('streak-wrap');
   if (!S.data.entries.length) { wrap.innerHTML = ''; return; }
@@ -1448,6 +1289,9 @@ function offsetDay(ds, delta) {
   return fmtDate(d);
 }
 
+/* ==========================================================
+   LỊCH
+========================================================== */
 var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
@@ -1510,7 +1354,7 @@ function cm(delta) {
 }
 
 /* ==========================================================
-   DAY LIST
+   DANH SÁCH BÀI CÙNG NGÀY
 ========================================================== */
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
@@ -1573,7 +1417,7 @@ function delFromDayList() {
 }
 
 /* ==========================================================
-   EDITED NOTE
+   GHI CHÚ "SỬA LẦN CUỐI"
 ========================================================== */
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
@@ -1593,7 +1437,7 @@ function renderEditedNote(elId, e) {
 }
 
 /* ==========================================================
-   TIMELINE
+   TIMELINE NHẬT KÝ
 ========================================================== */
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
@@ -1692,7 +1536,7 @@ function tiHTML(e) {
 }
 
 /* ==========================================================
-   ANNIVERSARIES
+   KỶ NIỆM + ĐẾM NGƯỢC
 ========================================================== */
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
@@ -1760,14 +1604,13 @@ function saveAnn() {
   toast('⏳ Đang lưu...');
   postData({ action: 'save_anniversary', anniversary: { id: 'ann_' + Date.now(), date: dt, name: nm } }, '🌸 Đã lưu kỷ niệm!');
 }
-async function delAnn(id) {
-  var ok = await showConfirm('🗑 Xóa kỷ niệm', 'Bạn có chắc muốn xóa kỷ niệm này?');
-  if (!ok) return;
+function delAnn(id) {
+  if (!confirm('Xóa ngày kỷ niệm này?')) return;
   postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
 }
 
 /* ==========================================================
-   ALBUM
+   ALBUM ẢNH — sắp xếp theo ngày
 ========================================================== */
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1818,7 +1661,7 @@ function renderAlbum() {
 }
 
 /* ==========================================================
-   GALLERY HTML
+   GALLERY ẢNH TRONG MODAL XEM BÀI
 ========================================================== */
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
@@ -1837,7 +1680,7 @@ function buildGalleryHTML(images) {
 }
 
 /* ==========================================================
-   WRITE / EDIT / VIEW / DELETE
+   NHẬT KÝ — VIẾT / SỬA / XEM / XÓA
 ========================================================== */
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = []; S.author = DEFAULT_AUTHOR;
@@ -1847,7 +1690,6 @@ function openWriteModal() {
   document.getElementById('e-cnt').value = '';
   document.getElementById('img-prev').innerHTML = '';
   document.getElementById('upload-prog').classList.remove('show');
-  document.getElementById('upload-prog-bar').classList.remove('show');
   document.querySelectorAll('.mp-o').forEach(function (el) { el.classList.remove('sel'); });
   updateAuthorToggleUI();
   newPrompt();
@@ -1899,14 +1741,67 @@ function editEntry() {
   updateAuthorToggleUI();
   renderImgPrev();
   document.getElementById('upload-prog').classList.remove('show');
-  document.getElementById('upload-prog-bar').classList.remove('show');
   openModal('modal-write');
 }
 
-async function delEntry() {
+/* ==========================================================
+   LƯU BÀI
+========================================================== */
+function saveEntry() {
+  var date = document.getElementById('e-date').value;
+  var title = document.getElementById('e-ttl').value.trim();
+  var content = document.getElementById('e-cnt').value.trim();
+  if (!date) { toast('⚠️ Chọn ngày viết nhé!'); return; }
+  if (!content) { toast('⚠️ Viết vài dòng đi nào~ 🌸'); return; }
+
+  if (document.getElementById('upload-prog').classList.contains('show')) {
+    toast('⏳ Ảnh đang xử lý, chờ xíu nhé!'); return;
+  }
+  if (S.isSaving) return;
+
+  var existing = S.curId ? S.data.entries.find(function (x) { return x.id === S.curId; }) : null;
+  if (existing) normalizeEntry(existing);
+
+  var isNew = !S.curId;
+  var nowIso = new Date().toISOString();
+
+  var entry = {
+    id: S.curId || ('e_' + Date.now()),
+    date: date,
+    title: title || ('Ngày ' + fmtDateVN(date)),
+    content: content,
+    mood: S.mood,
+    author: S.author || DEFAULT_AUTHOR,
+    images: S.imgs.slice(),
+    comments: existing && existing.comments ? existing.comments.slice() : [],
+    createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
+    updatedAt: nowIso
+  };
+
+  closeModal('modal-write');
+  showSavingOverlay(isNew ? 'Đang lưu nhật ký...' : 'Đang cập nhật...');
+  S.isSaving = true;
+
+  postData({ action: 'save_entry', entry: entry }, null, function (res) {
+    S.isSaving = false;
+    hideSavingOverlay();
+    toast(isNew ? '💾 Đã lưu nhật ký!' : '💾 Đã cập nhật!');
+    var savedId = (res && res.entry && res.entry.id) ? res.entry.id : entry.id;
+    setTimeout(function () { openView(savedId); }, 200);
+  });
+}
+
+function showSavingOverlay(msg) {
+  document.getElementById('saving-txt').textContent = msg || 'Đang lưu nhật ký...';
+  document.getElementById('saving-overlay').classList.add('show');
+}
+function hideSavingOverlay() {
+  document.getElementById('saving-overlay').classList.remove('show');
+}
+
+function delEntry() {
   if (!S.curId) return;
-  var ok = await showConfirm('🗑 Xóa bài viết', 'Bạn có chắc muốn xóa bài này? Không thể khôi phục!');
-  if (!ok) return;
+  if (!confirm('Xóa bài này? Không khôi phục được đâu!')) return;
   var entry = S.data.entries.find(function (x) { return x.id === S.curId; });
   closeModal('modal-view');
   toast('⏳ Đang xóa...');
@@ -1921,7 +1816,7 @@ async function delEntry() {
 }
 
 /* ==========================================================
-   AUTHOR
+   NGƯỜI VIẾT
 ========================================================== */
 function selAuthor(v) {
   S.author = v;
@@ -1934,7 +1829,7 @@ function updateAuthorToggleUI() {
 }
 
 /* ==========================================================
-   MOOD
+   MOOD PICKER
 ========================================================== */
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
@@ -1955,7 +1850,7 @@ function chgFs(delta) {
 }
 
 /* ==========================================================
-   UPLOAD IMAGES (có progress)
+   ẢNH — UPLOAD LÊN DRIVE
 ========================================================== */
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -1964,16 +1859,10 @@ function onImgPick(input) {
     files = files.slice(0, 10 - S.imgs.length);
   }
   if (!files.length) return;
-  var progEl = document.getElementById('upload-prog');
-  var progBar = document.getElementById('upload-prog-bar');
-  var fillBar = document.getElementById('upload-prog-fill');
-  progEl.classList.add('show');
-  progBar.classList.add('show');
-  fillBar.style.width = '0%';
+  document.getElementById('upload-prog').classList.add('show');
   document.getElementById('save-entry-btn').disabled = true;
   var dateForFolder = document.getElementById('e-date').value || todayStr();
   var done = 0;
-  var total = files.length;
   files.forEach(function (file) {
     compressImg(file, function (b64) {
       uploadImgToDrive(b64, file.name, dateForFolder, function (result) {
@@ -1983,15 +1872,10 @@ function onImgPick(input) {
           S.imgs.push({ url: b64, driveId: '', data: b64 });
         }
         done++;
-        var percent = Math.round((done / total) * 100);
-        fillBar.style.width = percent + '%';
-        if (done === total) {
-          setTimeout(function () {
-            progEl.classList.remove('show');
-            progBar.classList.remove('show');
-            document.getElementById('save-entry-btn').disabled = false;
-            renderImgPrev();
-          }, 300);
+        if (done === files.length) {
+          document.getElementById('upload-prog').classList.remove('show');
+          document.getElementById('save-entry-btn').disabled = false;
+          renderImgPrev();
         }
       });
     });
@@ -2068,62 +1952,7 @@ function rmImg(i) {
 }
 
 /* ==========================================================
-   SAVE ENTRY
-========================================================== */
-function saveEntry() {
-  var date = document.getElementById('e-date').value;
-  var title = document.getElementById('e-ttl').value.trim();
-  var content = document.getElementById('e-cnt').value.trim();
-  if (!date) { toast('⚠️ Chọn ngày viết nhé!'); return; }
-  if (!content) { toast('⚠️ Viết vài dòng đi nào~ 🌸'); return; }
-
-  if (document.getElementById('upload-prog').classList.contains('show')) {
-    toast('⏳ Ảnh đang xử lý, chờ xíu nhé!'); return;
-  }
-  if (S.isSaving) return;
-
-  var existing = S.curId ? S.data.entries.find(function (x) { return x.id === S.curId; }) : null;
-  if (existing) normalizeEntry(existing);
-
-  var isNew = !S.curId;
-  var nowIso = new Date().toISOString();
-
-  var entry = {
-    id: S.curId || ('e_' + Date.now()),
-    date: date,
-    title: title || ('Ngày ' + fmtDateVN(date)),
-    content: content,
-    mood: S.mood,
-    author: S.author || DEFAULT_AUTHOR,
-    images: S.imgs.slice(),
-    comments: existing && existing.comments ? existing.comments.slice() : [],
-    createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
-    updatedAt: nowIso
-  };
-
-  closeModal('modal-write');
-  showSavingOverlay(isNew ? 'Đang lưu nhật ký...' : 'Đang cập nhật...');
-  S.isSaving = true;
-
-  postData({ action: 'save_entry', entry: entry }, null, function (res) {
-    S.isSaving = false;
-    hideSavingOverlay();
-    toast(isNew ? '💾 Đã lưu nhật ký!' : '💾 Đã cập nhật!');
-    var savedId = (res && res.entry && res.entry.id) ? res.entry.id : entry.id;
-    setTimeout(function () { openView(savedId); }, 200);
-  });
-}
-
-function showSavingOverlay(msg) {
-  document.getElementById('saving-txt').textContent = msg || 'Đang lưu nhật ký...';
-  document.getElementById('saving-overlay').classList.add('show');
-}
-function hideSavingOverlay() {
-  document.getElementById('saving-overlay').classList.remove('show');
-}
-
-/* ==========================================================
-   COMMENTS (modal-view)
+   BÌNH LUẬN — MODAL XEM BÀI (modal-view)
 ========================================================== */
 function toggleCmtAvatar() {
   var current = S.cmtAuthor;
@@ -2232,9 +2061,8 @@ function startEditComment(commentId) {
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
 
-async function delComment(commentId) {
-  var ok = await showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?');
-  if (!ok) return;
+function delComment(commentId) {
+  if (!confirm('Xóa bình luận này?')) return;
   if (!S.curId) return;
   callCommentAPI({ action: 'delete_comment', entryId: S.curId, commentId: commentId }, function (res) {
     var e = S.data.entries.find(function (x) { return x.id === S.curId; });
@@ -2252,7 +2080,7 @@ async function delComment(commentId) {
 }
 
 /* ==========================================================
-   COMMENTS (modal-daylist)
+   BÌNH LUẬN — MODAL DANH SÁCH CÙNG NGÀY (modal-daylist)
 ========================================================== */
 function toggleDlCmtAvatar() {
   var current = S.dlCmtAuthor;
@@ -2349,9 +2177,8 @@ function startEditDlComment(commentId) {
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
 
-async function delDlComment(commentId) {
-  var ok = await showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?');
-  if (!ok) return;
+function delDlComment(commentId) {
+  if (!confirm('Xóa bình luận này?')) return;
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
   callCommentAPI({ action: 'delete_comment', entryId: e.id, commentId: commentId }, function (res) {
@@ -2380,7 +2207,7 @@ function openLb(src) {
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
 /* ==========================================================
-   TAB
+   TAB NAVIGATION — chỉ cho MOBILE
 ========================================================== */
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
@@ -2476,11 +2303,130 @@ function escH(s) {
     .replace(/'/g, '&#39;');
 }
 
-// Khởi tạo
-loadPendingActions();
-if (!navigator.onLine) {
-  toast('📶 Đang ở chế độ offline, dữ liệu sẽ được lưu tạm');
+/* ==========================================================
+   BACKUP & RESTORE — MỚI
+========================================================== */
+
+// Mở modal backup
+function openBackupModal() {
+  openModal('modal-backup');
+  refreshBackupList();
 }
+
+// Làm mới danh sách backup
+function refreshBackupList() {
+  var container = document.getElementById('backup-list-container');
+  container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang tải...</div>';
+
+  fetch(CFG.URL + '?action=get_backup_list&_=' + Date.now(), {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.success && res.files) {
+      renderBackupList(res.files);
+    } else {
+      container.innerHTML = '<div class="backup-empty">Không có file backup nào.</div>';
+    }
+  })
+  .catch(function() {
+    container.innerHTML = '<div class="backup-empty">❌ Không thể tải danh sách backup.</div>';
+  });
+}
+
+function renderBackupList(files) {
+  var container = document.getElementById('backup-list-container');
+  if (!files || files.length === 0) {
+    container.innerHTML = '<div class="backup-empty">📭 Chưa có bản sao lưu nào.</div>';
+    return;
+  }
+  var html = '<div class="backup-list">';
+  files.forEach(function(f) {
+    var dateStr = f.date ? new Date(f.date).toLocaleString('vi-VN') : 'Không rõ';
+    html += '<div class="backup-item">' +
+      '<div><div class="name">' + escH(f.name) + '</div>' +
+      '<div class="date">🕐 ' + escH(dateStr) + '</div></div>' +
+      '<button class="restore-btn" onclick="restoreFromBackup(\'' + escH(f.id) + '\')">Khôi phục</button>' +
+      '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// Sao lưu ngay
+function manualBackup() {
+  if (S.isBackupRestoring) return;
+  var btn = document.getElementById('backup-now-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Đang sao lưu...';
+
+  postData({ action: 'manual_backup' }, null, function(res) {
+    btn.disabled = false;
+    btn.innerHTML = '💾 Sao lưu ngay';
+    if (res && res.success) {
+      toast('✅ Đã tạo bản sao lưu!');
+      refreshBackupList();
+    } else {
+      toast('⚠️ Lỗi sao lưu, thử lại!');
+    }
+  });
+}
+
+// Khôi phục từ backup
+function restoreFromBackup(fileId) {
+  if (S.isBackupRestoring) return;
+  if (!confirm('⚠️ Khôi phục sẽ ghi đè toàn bộ dữ liệu hiện tại.\nBạn có chắc chắn?')) return;
+
+  S.isBackupRestoring = true;
+  var container = document.getElementById('backup-list-container');
+  container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang khôi phục...</div>';
+
+  fetch(CFG.URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'restore_from_backup', fileId: fileId })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    S.isBackupRestoring = false;
+    if (res && res.success) {
+      toast('✅ Đã khôi phục thành công!');
+      loadData(function() {
+        refreshBackupList();
+        closeModal('modal-backup');
+      });
+    } else {
+      toast('⚠️ Lỗi khôi phục: ' + (res.error || 'không xác định'));
+      refreshBackupList();
+    }
+  })
+  .catch(function(err) {
+    S.isBackupRestoring = false;
+    toast('❌ Lỗi kết nối khi khôi phục.');
+    refreshBackupList();
+  });
+}
+
+// Đóng modal backup reset trạng thái
+var origCloseModal = closeModal;
+closeModal = function(id) {
+  origCloseModal(id);
+  if (id === 'modal-backup') {
+    var btn = document.getElementById('backup-now-btn');
+    if (btn) { btn.disabled = false; btn.innerHTML = '💾 Sao lưu ngay'; }
+    S.isBackupRestoring = false;
+  }
+};
+
+// Khởi tạo cỡ chữ toàn cục (nếu có)
+(function() {
+  var saved = localStorage.getItem('globalFontSize');
+  if (saved) {
+    document.body.style.fontSize = saved + 'px';
+  }
+})();
+
 </script>
 </body>
 </html>
