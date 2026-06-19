@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.5.4 - Xóa streak trong nhật ký, nâng cấp status slider -->
+<!-- V5.5.5 - Status slider mới: Streak + động viên, kỷ niệm gọn -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
+/* ===== GIỮ NGUYÊN TOÀN BỘ CSS CŨ ===== */
 :root{
   --p1:#a85470;
   --p2:#c97d96;
@@ -66,31 +67,66 @@ img{max-width:100%;display:block}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
+
+/* ===== STATUS SLIDER MỚI ===== */
 .status-slider{
   display:flex;
-  align-items:center;
-  justify-content:center;
+  align-items:stretch;
+  justify-content:space-between;
   gap:12px;
-  padding:10px 20px;
+  padding:8px 16px;
   margin:4px 18px 10px;
-  background:rgba(255,255,255,.15);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.25);
-  min-height:48px;
-  font-size:.95rem;
-  font-weight:600;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.2);
+  min-height:56px;
   color:#fff;
   text-shadow:0 1px 4px rgba(0,0,0,.15);
-  transition:all .3s;
 }
-.status-slider .icon{font-size:1.4rem;line-height:1}
-.status-slider .text{flex:1;text-align:center}
-.status-slider .text strong{color:#fff;font-weight:800}
+.status-slider .block{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:4px 6px;
+}
+.status-slider .block .icon{
+  font-size:1.6rem;
+  line-height:1;
+  flex-shrink:0;
+}
+.status-slider .block .info{
+  display:flex;
+  flex-direction:column;
+  line-height:1.3;
+}
+.status-slider .block .info .main{
+  font-size:1rem;
+  font-weight:700;
+}
+.status-slider .block .info .sub{
+  font-size:.75rem;
+  font-weight:400;
+  opacity:.85;
+}
+.status-slider .block .info .main strong{
+  font-weight:800;
+  color:#fff;
+}
+.status-slider .divider{
+  width:1px;
+  background:rgba(255,255,255,.25);
+  flex-shrink:0;
+}
 .status-slider .fire{color:#ff8c00;filter:drop-shadow(0 0 6px #ff8c0066)}
 .status-slider .ann-heart{color:#ff6b8a;filter:drop-shadow(0 0 6px #ff6b8a66)}
-.status-slider .sub{font-size:.75rem;font-weight:400;opacity:.85;margin-left:4px}
+.status-slider .empty{
+  color:rgba(255,255,255,.7);
+  font-size:.85rem;
+}
+
 .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:rgba(255,243,249,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1.5px solid rgba(168,84,112,.12);padding:5px 0 env(safe-area-inset-bottom,5px);box-shadow:0 -4px 18px rgba(168,84,112,.10)}
 @media(max-width:768px){.mob-nav{display:flex}}
 .mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 3px;color:var(--t3);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;transition:color .18s;position:relative}
@@ -383,10 +419,8 @@ img{max-width:100%;display:block}
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <div class="status-slider" id="status-slider">
-      <span class="icon">🌸</span>
-      <span class="text">Hãy viết nhật ký hôm nay nhé!</span>
-    </div>
+    <!-- STATUS SLIDER MỚI -->
+    <div class="status-slider" id="status-slider"></div>
   </header>
 
   <div class="main-layout" id="main-layout">
@@ -738,7 +772,7 @@ function checkPin() {
       loadData();
       newPrompt();
       setupDesktopLayout();
-      initStatusSlider();
+      updateStatusSlider();
     }, 480);
   } else {
     document.getElementById('lock-err').textContent = 'Sai mật mã rồi iu ơi 🥺';
@@ -1167,17 +1201,29 @@ var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 // ============================================================
-// STATUS SLIDER (Streak + Anniversary Countdown)
+// STATUS SLIDER MỚI – Streak + kỷ niệm
 // ============================================================
-var statusTimer = null;
-var statusIndex = 0;
-var statusData = [];
-
 function updateStatusSlider() {
   var container = document.getElementById('status-slider');
   if (!container) return;
-  statusData = [];
-  // Streak
+
+  var streakHTML = getStreakBlock();
+  var annHTML = getAnniversaryBlock();
+
+  var html = '';
+  if (streakHTML && annHTML) {
+    html = streakHTML + '<div class="divider"></div>' + annHTML;
+  } else if (streakHTML) {
+    html = streakHTML;
+  } else if (annHTML) {
+    html = annHTML;
+  } else {
+    html = '<div class="block empty"><span class="icon">🌸</span><span class="info"><span class="main">Hãy viết nhật ký và thêm kỷ niệm nhé!</span></span></div>';
+  }
+  container.innerHTML = html;
+}
+
+function getStreakBlock() {
   var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
   var cur = 0;
   var today = todayStr();
@@ -1187,21 +1233,37 @@ function updateStatusSlider() {
     var d = checkFrom;
     while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
   }
-  if (cur >= 1) {
-    statusData.push({
-      icon: '🔥',
-      text: '<strong>' + cur + '</strong> ngày viết liên tiếp!',
-      cls: 'fire'
-    });
+
+  var mainText = cur > 0 ? '<strong>' + cur + '</strong> ngày liên tiếp' : 'Chưa có streak';
+  var subText = '';
+  if (cur === 0) {
+    subText = '💪 Hãy bắt đầu viết hôm nay!';
+  } else if (cur < 5) {
+    subText = '🔥 Tiếp tục giữ lửa nào!';
+  } else if (cur < 10) {
+    subText = '🌟 Cố lên, sắp 10 ngày rồi!';
+  } else if (cur < 30) {
+    subText = '🌈 Gần đến 30 ngày, cố gắng nhé!';
+  } else if (cur < 50) {
+    subText = '🎯 Chỉ còn ' + (50 - cur) + ' ngày nữa là 50 ngày!';
+  } else if (cur < 100) {
+    subText = '🚀 Tiến tới 100 ngày nào!';
+  } else if (cur < 365) {
+    subText = '🏆 ' + cur + ' ngày, sắp chạm 365 rồi!';
   } else {
-    statusData.push({
-      icon: '🌸',
-      text: 'Hãy viết nhật ký hôm nay nhé!',
-      cls: ''
-    });
+    subText = '👑 365 ngày – Bạn là huyền thoại!';
   }
 
-  // Anniversary countdown
+  return '<div class="block">' +
+    '<span class="icon fire">🔥</span>' +
+    '<span class="info">' +
+      '<span class="main">' + mainText + '</span>' +
+      '<span class="sub">' + subText + '</span>' +
+    '</span>' +
+  '</div>';
+}
+
+function getAnniversaryBlock() {
   var now = new Date();
   now.setHours(0,0,0,0);
   var nearest = null;
@@ -1217,49 +1279,19 @@ function updateStatusSlider() {
       nearest = { name: a.name, days: days };
     }
   });
-  if (nearest) {
-    var annMsg = '';
-    if (nearest.days === 0) annMsg = '🎉 Hôm nay là ' + nearest.name + '!';
-    else if (nearest.days === 1) annMsg = '⏰ Ngày mai là ' + nearest.name + '!';
-    else if (nearest.days <= 7) annMsg = '🌸 Còn ' + nearest.days + ' ngày đến ' + nearest.name;
-    else annMsg = '📅 Còn ' + nearest.days + ' ngày đến ' + nearest.name;
-    statusData.push({
-      icon: '❤️',
-      text: annMsg,
-      cls: 'ann-heart'
-    });
-  }
 
-  if (statusData.length === 0) {
-    container.innerHTML = '<span class="icon">🌸</span><span class="text">Hãy viết nhật ký và thêm kỷ niệm nhé!</span>';
-    return;
-  }
+  if (!nearest) return null;
 
-  if (statusData.length === 1) {
-    renderStatusItem(0);
-    return;
-  }
+  var mainText = nearest.days === 0 ? '🎉 Hôm nay!' : nearest.days + ' ngày nữa';
+  var subText = nearest.days === 0 ? nearest.name : nearest.name;
 
-  statusIndex = 0;
-  renderStatusItem(0);
-  if (statusTimer) clearInterval(statusTimer);
-  statusTimer = setInterval(function () {
-    statusIndex = (statusIndex + 1) % statusData.length;
-    renderStatusItem(statusIndex);
-  }, 15000);
-}
-
-function renderStatusItem(idx) {
-  var container = document.getElementById('status-slider');
-  if (!container) return;
-  if (idx >= statusData.length) return;
-  var item = statusData[idx];
-  container.innerHTML = '<span class="icon ' + item.cls + '">' + item.icon + '</span>' +
-    '<span class="text">' + item.text + '</span>';
-}
-
-function initStatusSlider() {
-  updateStatusSlider();
+  return '<div class="block">' +
+    '<span class="icon ann-heart">❤️</span>' +
+    '<span class="info">' +
+      '<span class="main">' + mainText + '</span>' +
+      '<span class="sub">' + subText + '</span>' +
+    '</span>' +
+  '</div>';
 }
 
 function offsetDay(ds, delta) {
