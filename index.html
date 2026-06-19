@@ -8,7 +8,6 @@
 <title>💕 Nhật Ký Của Mình</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<!-- THAY FONT: Baloo 2 và Itim (không nghiêng, đáng yêu) -->
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
 /* ===================================================
@@ -30,7 +29,7 @@
   --rr:16px;
   --rrb:22px;
   --font-ttl:'Baloo 2',sans-serif;
-  --font-body:'Itim','Baloo 2',sans-serif;  /* Itim không nghiêng, dễ thương */
+  --font-body:'Itim','Baloo 2',sans-serif;
 }
 
 /* ===================================================
@@ -122,7 +121,7 @@ img{max-width:100%;display:block}
 #ann-strip{text-align:center;padding:0 18px 8px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.92);min-height:22px}
 
 /* ===================================================
-   MOBILE BOTTOM NAV (giữ nguyên)
+   MOBILE BOTTOM NAV
 =================================================== */
 .mob-nav{
   display:none;
@@ -139,13 +138,13 @@ img{max-width:100%;display:block}
 .mn-icon{font-size:1.25rem;line-height:1}
 
 /* ===================================================
-   MAIN LAYOUT
+   MAIN LAYOUT — DESKTOP 3 cột (khôi phục ban đầu)
 =================================================== */
 .main-layout{
   display:grid;
   grid-template-columns:1fr;
   gap:0;
-  max-width:1160px;margin:0 auto;
+  max-width:1440px;margin:0 auto;
   padding:12px 11px 16px;
 }
 @media(max-width:768px){
@@ -153,21 +152,32 @@ img{max-width:100%;display:block}
   .col-panel.on{display:block}
 }
 
-/* ===================================================
-   DESKTOP LAYOUT (≥769px)
-=================================================== */
+/* ----- DESKTOP (≥769px) : 3 cột, nhật ký ở giữa to nhất ----- */
 @media(min-width:769px){
   .main-layout{
     display:grid;
-    grid-template-columns: 300px minmax(0,1fr) 340px;
+    grid-template-columns: 280px 1fr 320px;
     gap:20px;
-    max-width:1440px;
     padding:22px 26px 30px;
   }
   .col-panel{display:block!important}
   #col-cal{order:1;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
   #col-diary{order:2;min-width:0}
   #col-right-desktop{order:3;display:flex;flex-direction:column;gap:20px;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
+  /* Ẩn hai cột gốc (ann và album) vì đã được chuyển vào col-right-desktop */
+  #col-ann, #col-album{display:none!important}
+}
+
+/* Khi màn hình thu nhỏ dưới 992px, chuyển cột phải xuống dòng dưới để nhật ký rộng hơn */
+@media(min-width:769px) and (max-width:991px){
+  .main-layout{
+    grid-template-columns: 1fr;
+    gap:16px;
+  }
+  #col-cal{order:1;position:static;max-height:none;overflow-y:visible}
+  #col-diary{order:2}
+  #col-right-desktop{order:3;display:block;position:static;max-height:none;overflow-y:visible}
+  #col-right-desktop .gc{margin-bottom:14px}
 }
 
 /* ===================================================
@@ -193,7 +203,7 @@ img{max-width:100%;display:block}
 }
 
 /* ===================================================
-   DIARY TAB — timeline
+   DIARY
 =================================================== */
 .search-row{display:flex;gap:7px;margin-bottom:13px}
 .s-inp{flex:1;background:rgba(255,255,255,.68);border:1.5px solid rgba(168,84,112,.2);border-radius:22px;padding:7px 14px;font-size:.83rem;color:var(--t1);outline:none;transition:border-color .2s}
@@ -246,7 +256,7 @@ img{max-width:100%;display:block}
 .s-sub{font-size:.68rem;color:var(--t3)}
 
 /* ===================================================
-   ANNIVERSARY TAB
+   ANNIVERSARY
 =================================================== */
 .ann-item{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.52);border:1px solid rgba(168,84,112,.12);border-radius:11px;padding:10px 12px;margin-bottom:8px}
 .ann-dot{width:9px;height:9px;border-radius:50%;background:var(--p1);flex-shrink:0}
@@ -263,7 +273,7 @@ img{max-width:100%;display:block}
 .add-ann-btn:hover{background:var(--p4)}
 
 /* ===================================================
-   CALENDAR TAB
+   CALENDAR
 =================================================== */
 .cal-nav{display:flex;align-items:center;gap:5px}
 .cnav{background:rgba(168,84,112,.1);border:1px solid var(--p4);border-radius:8px;width:27px;height:27px;font-size:.84rem;color:var(--p1);display:flex;align-items:center;justify-content:center;transition:all .14s}
@@ -286,7 +296,7 @@ img{max-width:100%;display:block}
 .ml-i{display:flex;align-items:center;gap:3px;font-size:.64rem;color:var(--t2)}
 
 /* ===================================================
-   ALBUM TAB — bố cục ảnh linh hoạt (hỗ trợ đến 10 ảnh)
+   ALBUM
 =================================================== */
 .album-day-group{margin-bottom:22px}
 .album-day-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
@@ -300,7 +310,6 @@ img{max-width:100%;display:block}
   border-radius:12px;
   overflow:hidden;
 }
-/* Số cột theo số lượng ảnh */
 .album-grid.g1{grid-template-columns:1fr}
 .album-grid.g2{grid-template-columns:1fr 1fr}
 .album-grid.g3{grid-template-columns:1fr 1fr}
@@ -311,12 +320,10 @@ img{max-width:100%;display:block}
 .album-grid.g8{grid-template-columns:1fr 1fr 1fr 1fr}
 .album-grid.g9{grid-template-columns:1fr 1fr 1fr 1fr}
 .album-grid.g10{grid-template-columns:1fr 1fr 1fr 1fr}
-/* Chiều cao ảnh linh hoạt */
 .album-grid .a-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4);border-radius:6px}
 .album-grid .a-img img{width:100%;height:100%;object-fit:cover;transition:transform .22s;display:block}
 .album-grid .a-img:hover img{transform:scale(1.05)}
 .album-grid .a-img-more{position:absolute;inset:0;background:rgba(60,20,40,.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff}
-/* Điều chỉnh chiều cao cho từng số lượng ảnh */
 .album-grid.g1 .a-img{height:240px}
 .album-grid.g2 .a-img{height:180px}
 .album-grid.g3 .a-img:first-child{grid-column:1/3;height:200px}
@@ -406,7 +413,7 @@ img{max-width:100%;display:block}
 .btn-d:hover{background:rgba(200,50,70,.13)}
 
 /* ===================================================
-   VIEW modal — thời gian viết / sửa lần cuối
+   VIEW MODAL
 =================================================== */
 .ve-date{font-size:.78rem;color:var(--t1);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ve-author-badge{font-size:.66rem;font-weight:700;color:var(--p2);background:rgba(168,84,112,.1);border-radius:8px;padding:2px 8px}
@@ -415,7 +422,7 @@ img{max-width:100%;display:block}
 .ve-content{background:rgba(255,255,255,.62);border-radius:9px;padding:13px;margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);white-space:pre-wrap;max-height:40vh;overflow-y:auto}
 
 /* ===================================================
-   GALLERY ẢNH TRONG BÀI (linh hoạt, hỗ trợ đến 10 ảnh)
+   GALLERY ẢNH TRONG BÀI
 =================================================== */
 .ve-gallery{
   display:grid;
@@ -437,7 +444,6 @@ img{max-width:100%;display:block}
 .ve-gallery .vg-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4);border-radius:10px}
 .ve-gallery .vg-img img{width:100%;height:100%;object-fit:cover;transition:transform .25s}
 .ve-gallery .vg-img:hover img{transform:scale(1.06)}
-/* Chiều cao tùy số lượng */
 .ve-gallery.n1 .vg-img{height:320px}
 .ve-gallery.n2 .vg-img{height:220px}
 .ve-gallery.n3 .vg-img:first-child{grid-column:1/3;height:240px}
@@ -460,7 +466,7 @@ img{max-width:100%;display:block}
 .dl-counter{font-size:.76rem;font-weight:700;color:var(--t2)}
 
 /* ===================================================
-   COMMENTS
+   COMMENTS — avatar toggle icon đơn
 =================================================== */
 .cmt-section{margin-top:16px;border-top:1.5px solid rgba(168,84,112,.12);padding-top:14px}
 .cmt-hdr{font-size:.78rem;font-weight:700;color:var(--p1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
@@ -476,17 +482,63 @@ img{max-width:100%;display:block}
 .cmt-action-btn:hover{color:var(--p1)}
 .cmt-action-btn.del:hover{color:#c04060}
 .cmt-empty{text-align:center;font-size:.76rem;color:var(--t3);padding:10px 0}
-.cmt-input-row{display:flex;flex-direction:column;gap:8px}
-.cmt-author-toggle{display:flex;gap:6px}
-.cmt-at-opt{flex:1;background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.16);border-radius:9px;padding:5px 8px;text-align:center;cursor:pointer;font-size:.74rem;font-weight:700;color:var(--t2);transition:all .15s}
-.cmt-at-opt:hover{background:var(--p4)}
-.cmt-at-opt.sel{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;border-color:var(--p1)}
-.cmt-input-box{display:flex;gap:7px}
-.cmt-inp{flex:1;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:18px;padding:8px 14px;font-size:.82rem;color:var(--t1);outline:none;transition:border-color .2s}
+.cmt-input-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.cmt-avatar-toggle{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:rgba(168,84,112,.12);
+  border:2px solid var(--p1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1rem;
+  cursor:pointer;
+  transition:all .15s;
+  flex-shrink:0;
+  user-select:none;
+}
+.cmt-avatar-toggle:hover{
+  background:var(--p4);
+  transform:scale(1.05);
+}
+.cmt-input-box{
+  flex:1;
+  display:flex;
+  gap:6px;
+}
+.cmt-inp{
+  flex:1;
+  background:rgba(255,255,255,.7);
+  border:1.5px solid rgba(168,84,112,.2);
+  border-radius:18px;
+  padding:8px 14px;
+  font-size:.82rem;
+  color:var(--t1);
+  outline:none;
+  transition:border-color .2s;
+}
 .cmt-inp:focus{border-color:var(--p1)}
-.cmt-send-btn{background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:.95rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
-.cmt-send-btn:hover{transform:scale(1.08)}
-.cmt-send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.cmt-send-btn{
+  background:linear-gradient(135deg,var(--p3),var(--p1));
+  border:none;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  color:#fff;
+  font-size:.95rem;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .18s;
+}
+.cmt-send-btn:hover:not(:disabled){transform:scale(1.08)}
+.cmt-send-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
 
 /* ===================================================
    LIGHTBOX
@@ -590,7 +642,7 @@ img{max-width:100%;display:block}
   <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
-    <!-- LỊCH (desktop: cột trái sticky | mobile: tab) -->
+    <!-- LỊCH -->
     <div class="col-panel" id="col-cal">
       <div class="gc">
         <div class="gc-hd">
@@ -613,7 +665,7 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- NHẬT KÝ (desktop: cột giữa to | mobile: tab mặc định) -->
+    <!-- NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
       <div id="streak-wrap"></div>
@@ -635,7 +687,7 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- KỶ NIỆM (mobile: tab riêng | desktop: sẽ được JS chuyển vào col-right-desktop) -->
+    <!-- KỶ NIỆM + ALBUM (sẽ được chuyển vào col-right-desktop trên desktop) -->
     <div class="col-panel" id="col-ann">
       <div class="gc">
         <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
@@ -646,7 +698,6 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- ALBUM (mobile: tab riêng | desktop: sẽ được JS chuyển vào col-right-desktop) -->
     <div class="col-panel" id="col-album">
       <div class="gc">
         <div class="gc-hd"><div class="gc-ttl">🖼 Album Ảnh</div></div>
@@ -654,7 +705,7 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- Vùng chứa CỘT PHẢI cho desktop -->
+    <!-- Vùng chứa cột phải cho desktop -->
     <div id="col-right-desktop" style="display:none"></div>
 
   </div><!-- /main-layout -->
@@ -769,10 +820,7 @@ img{max-width:100%;display:block}
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
       <div class="cmt-input-row">
-        <div class="cmt-author-toggle" id="cmt-author-toggle">
-          <div class="cmt-at-opt" data-v="Ánh Ngọc 🌻" onclick="selCmtAuthor('Ánh Ngọc 🌻')">🌻 Ánh Ngọc</div>
-          <div class="cmt-at-opt" data-v="Anh 💖" onclick="selCmtAuthor('Anh 💖')">💖 Anh</div>
-        </div>
+        <div class="cmt-avatar-toggle" id="cmt-avatar-toggle" onclick="toggleCmtAvatar()" title="Chọn người bình luận"></div>
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
           <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
@@ -809,10 +857,7 @@ img{max-width:100%;display:block}
       <div class="cmt-hdr">💬 Bình luận <span id="dl-cmt-count-lbl"></span></div>
       <div class="cmt-list" id="dl-cmt-list"></div>
       <div class="cmt-input-row">
-        <div class="cmt-author-toggle" id="dl-cmt-author-toggle">
-          <div class="cmt-at-opt" data-v="Ánh Ngọc 🌻" onclick="selDlCmtAuthor('Ánh Ngọc 🌻')">🌻 Ánh Ngọc</div>
-          <div class="cmt-at-opt" data-v="Anh 💖" onclick="selDlCmtAuthor('Anh 💖')">💖 Anh</div>
-        </div>
+        <div class="cmt-avatar-toggle" id="dl-cmt-avatar-toggle" onclick="toggleDlCmtAvatar()" title="Chọn người bình luận"></div>
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
           <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
@@ -981,10 +1026,16 @@ function setupDesktopLayout() {
     rightCol.appendChild(albumCol);
     rightCol.style.display = 'flex';
   }
-  ['col-cal', 'col-diary', 'col-ann', 'col-album'].forEach(function (id) {
+  // Các cột luôn hiển thị trên desktop
+  ['col-cal', 'col-diary', 'col-right-desktop'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) { el.style.display = 'block'; el.classList.add('on'); }
   });
+  // Ẩn ann và album vì đã chuyển vào right-desktop
+  var ann = document.getElementById('col-ann');
+  var alb = document.getElementById('col-album');
+  if (ann) ann.style.display = 'none';
+  if (alb) alb.style.display = 'none';
 }
 
 var _lastIsDesktop = window.innerWidth >= 769;
@@ -993,6 +1044,7 @@ window.addEventListener('resize', function () {
   if (nowDesktop && !_lastIsDesktop) {
     setupDesktopLayout();
   } else if (!nowDesktop && _lastIsDesktop) {
+    // Quay lại mobile: đưa ann và album ra khỏi right-desktop
     var mainLayout = document.getElementById('main-layout');
     var rightCol = document.getElementById('col-right-desktop');
     var albumCol = document.getElementById('col-album');
@@ -1002,6 +1054,11 @@ window.addEventListener('resize', function () {
       mainLayout.insertBefore(albumCol, rightCol);
       rightCol.style.display = 'none';
     }
+    // Ẩn right-desktop và hiển thị ann, album như cũ
+    var ann = document.getElementById('col-ann');
+    var alb = document.getElementById('col-album');
+    if (ann) ann.style.display = '';
+    if (alb) alb.style.display = '';
     switchTab(getCurrentMobileTab());
   }
   _lastIsDesktop = nowDesktop;
@@ -1108,15 +1165,12 @@ function normalizeEntry(e) {
 ========================================================== */
 function sortEntries(arr) {
   arr.sort(function (a, b) {
-    // So sánh date trước (giảm dần)
     var da = a.date || '';
     var db = b.date || '';
     if (da !== db) return db.localeCompare(da);
-    // Cùng ngày: so sánh updatedAt (giảm dần)
     var ua = a.updatedAt || (a.date ? a.date + 'T00:00:00.000Z' : '');
     var ub = b.updatedAt || (b.date ? b.date + 'T00:00:00.000Z' : '');
     if (ub !== ua) return ub.localeCompare(ua);
-    // Cùng updatedAt: so sánh id (giảm dần)
     return (b.id || '').localeCompare(a.id || '');
   });
   return arr;
@@ -1174,17 +1228,22 @@ function callCommentAPI(payload, onSuccess, onError) {
   doFetch('cors')
     .then(function (r) { return r.json(); })
     .then(function (res) {
-      if (res && res.success) { if (onSuccess) onSuccess(res); }
-      else { if (onError) onError(res); }
+      if (res && res.success) {
+        if (onSuccess) onSuccess(res);
+      } else {
+        if (onError) onError(res);
+      }
     })
     .catch(function () {
-      doFetch('no-cors').then(function () {
-        toast('💬 Đã gửi, đang đồng bộ lại để hiển thị...');
-        if (onError) onError(null);
-      }).catch(function () {
-        toast('❌ Lỗi kết nối, thử lại nhé!');
-        if (onError) onError(null);
-      });
+      doFetch('no-cors')
+        .then(function () {
+          toast('💬 Đã gửi, đang đồng bộ lại để hiển thị...');
+          if (onError) onError(null);
+        })
+        .catch(function () {
+          toast('❌ Lỗi kết nối, thử lại nhé!');
+          if (onError) onError(null);
+        });
     });
 }
 
@@ -1576,7 +1635,7 @@ function delAnn(id) {
 }
 
 /* ==========================================================
-   ALBUM ẢNH (hỗ trợ đến 10 ảnh, bố cục linh hoạt)
+   ALBUM ẢNH — sắp xếp theo ngày
 ========================================================== */
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1585,9 +1644,12 @@ function renderAlbum() {
   }).slice();
 
   entriesWithImgs.sort(function (a, b) {
-    var ta = a.updatedAt || (a.date ? a.date + 'T00:00:00.000Z' : '');
-    var tb = b.updatedAt || (b.date ? b.date + 'T00:00:00.000Z' : '');
-    return tb.localeCompare(ta);
+    var da = a.date || '';
+    var db = b.date || '';
+    if (da !== db) return db.localeCompare(da);
+    var ua = a.updatedAt || (a.date ? a.date + 'T00:00:00.000Z' : '');
+    var ub = b.updatedAt || (b.date ? b.date + 'T00:00:00.000Z' : '');
+    return ub.localeCompare(ua);
   });
 
   if (!entriesWithImgs.length) {
@@ -1624,7 +1686,7 @@ function renderAlbum() {
 }
 
 /* ==========================================================
-   GALLERY ẢNH TRONG MODAL XEM BÀI (linh hoạt đến 10 ảnh)
+   GALLERY ẢNH TRONG MODAL XEM BÀI
 ========================================================== */
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
@@ -1708,7 +1770,7 @@ function editEntry() {
 }
 
 /* ==========================================================
-   LƯU BÀI — hiện overlay chờ, lưu xong tự mở bài ra xem
+   LƯU BÀI
 ========================================================== */
 function saveEntry() {
   var date = document.getElementById('e-date').value;
@@ -1813,8 +1875,7 @@ function chgFs(delta) {
 }
 
 /* ==========================================================
-   ẢNH — UPLOAD LÊN DRIVE (tự động lưu vào thư mục con theo ngày)
-   Giới hạn tối đa 10 ảnh
+   ẢNH — UPLOAD LÊN DRIVE
 ========================================================== */
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -1918,14 +1979,18 @@ function rmImg(i) {
 /* ==========================================================
    BÌNH LUẬN — MODAL XEM BÀI (modal-view)
 ========================================================== */
+function toggleCmtAvatar() {
+  var current = S.cmtAuthor;
+  var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
+  selCmtAuthor(next);
+}
 function selCmtAuthor(v) {
   S.cmtAuthor = v;
   updateCmtToggleUI();
 }
 function updateCmtToggleUI() {
-  document.querySelectorAll('#cmt-author-toggle .cmt-at-opt').forEach(function (el) {
-    el.classList.toggle('sel', el.dataset.v === S.cmtAuthor);
-  });
+  var icon = S.cmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
+  document.getElementById('cmt-avatar-toggle').textContent = icon;
 }
 
 function renderComments() {
@@ -1969,6 +2034,7 @@ function sendComment() {
   var btn = document.getElementById('cmt-send-btn');
   if (btn.disabled) return;
   btn.disabled = true;
+  btn.textContent = '⏳';
 
   if (S.editingCommentId) {
     callCommentAPI({
@@ -1981,9 +2047,11 @@ function sendComment() {
       btn.disabled = false;
       btn.textContent = '➤';
       renderComments();
+      renderTimeline();
     }, function () {
       btn.disabled = false;
-      loadData(function () { renderComments(); });
+      btn.textContent = '➤';
+      loadData(function () { renderComments(); renderTimeline(); });
     });
     return;
   }
@@ -1995,10 +2063,12 @@ function sendComment() {
     if (e) e.comments = res.comments;
     inp.value = '';
     btn.disabled = false;
+    btn.textContent = '➤';
     renderComments();
     renderTimeline();
   }, function () {
     btn.disabled = false;
+    btn.textContent = '➤';
     loadData(function () { renderComments(); renderTimeline(); });
   });
 }
@@ -2037,14 +2107,18 @@ function delComment(commentId) {
 /* ==========================================================
    BÌNH LUẬN — MODAL DANH SÁCH CÙNG NGÀY (modal-daylist)
 ========================================================== */
+function toggleDlCmtAvatar() {
+  var current = S.dlCmtAuthor;
+  var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
+  selDlCmtAuthor(next);
+}
 function selDlCmtAuthor(v) {
   S.dlCmtAuthor = v;
   updateDlCmtToggleUI();
 }
 function updateDlCmtToggleUI() {
-  document.querySelectorAll('#dl-cmt-author-toggle .cmt-at-opt').forEach(function (el) {
-    el.classList.toggle('sel', el.dataset.v === S.dlCmtAuthor);
-  });
+  var icon = S.dlCmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
+  document.getElementById('dl-cmt-avatar-toggle').textContent = icon;
 }
 
 function renderDlComments() {
@@ -2074,6 +2148,7 @@ function sendDlComment() {
   var btn = document.getElementById('dl-cmt-send-btn');
   if (btn.disabled) return;
   btn.disabled = true;
+  btn.textContent = '⏳';
 
   if (S.editingDlCommentId) {
     callCommentAPI({
@@ -2087,9 +2162,11 @@ function sendDlComment() {
       btn.disabled = false;
       btn.textContent = '➤';
       renderDlComments();
+      renderTimeline();
     }, function () {
       btn.disabled = false;
-      loadData(function () { renderDlComments(); });
+      btn.textContent = '➤';
+      loadData(function () { renderDlComments(); renderTimeline(); });
     });
     return;
   }
@@ -2102,10 +2179,12 @@ function sendDlComment() {
     if (master) master.comments = res.comments;
     inp.value = '';
     btn.disabled = false;
+    btn.textContent = '➤';
     renderDlComments();
     renderTimeline();
   }, function () {
     btn.disabled = false;
+    btn.textContent = '➤';
     loadData(function () { renderDlComments(); renderTimeline(); });
   });
 }
