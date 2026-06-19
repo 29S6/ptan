@@ -8,8 +8,8 @@
 <title>💕 Nhật Ký Của Mình</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<!-- Font tiếng Việt dễ thương, phong cách manga/cute thay cho Dancing Script (chữ nghiêng khó đọc) -->
-<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+<!-- THAY FONT: Baloo 2 và Itim (không nghiêng, đáng yêu) -->
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
 /* ===================================================
    DESIGN TOKENS — ROSE SMOKE PALETTE
@@ -29,8 +29,8 @@
   --t3:#b08090;
   --rr:16px;
   --rrb:22px;
-  --font-ttl:'Baloo 2',sans-serif;   /* tiêu đề cute, manga-style, KHÔNG nghiêng */
-  --font-body:'Mali','Baloo 2',sans-serif; /* nội dung, tiếng Việt rõ nét */
+  --font-ttl:'Baloo 2',sans-serif;
+  --font-body:'Itim','Baloo 2',sans-serif;  /* Itim không nghiêng, dễ thương */
 }
 
 /* ===================================================
@@ -122,12 +122,7 @@ img{max-width:100%;display:block}
 #ann-strip{text-align:center;padding:0 18px 8px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.92);min-height:22px}
 
 /* ===================================================
-   DESKTOP TABS — chỉ hiện trên MOBILE từ giờ (desktop bỏ tab)
-=================================================== */
-.desk-tabs{display:none}
-
-/* ===================================================
-   MOBILE BOTTOM NAV (giữ nguyên y như cũ, KHÔNG đổi)
+   MOBILE BOTTOM NAV (giữ nguyên)
 =================================================== */
 .mob-nav{
   display:none;
@@ -144,7 +139,7 @@ img{max-width:100%;display:block}
 .mn-icon{font-size:1.25rem;line-height:1}
 
 /* ===================================================
-   MOBILE LAYOUT (≤768px) — giữ nguyên cấu trúc cũ y hệt V4
+   MAIN LAYOUT
 =================================================== */
 .main-layout{
   display:grid;
@@ -159,8 +154,7 @@ img{max-width:100%;display:block}
 }
 
 /* ===================================================
-   DESKTOP LAYOUT (≥769px) — MỚI: 3 vùng, không tab
-   Trái: Lịch | Giữa: Nhật ký (to, chiếm chỗ) | Phải: Kỷ niệm + Album
+   DESKTOP LAYOUT (≥769px)
 =================================================== */
 @media(min-width:769px){
   .main-layout{
@@ -171,14 +165,9 @@ img{max-width:100%;display:block}
     padding:22px 26px 30px;
   }
   .col-panel{display:block!important}
-  /* Cột trái: Lịch, sticky để luôn nhìn thấy khi cuộn nhật ký */
   #col-cal{order:1;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
-  /* Cột giữa: Nhật ký, chiếm trọn không gian giữa, to rõ */
   #col-diary{order:2;min-width:0}
-  /* Cột phải: gộp Kỷ niệm + Album, sticky cùng kiểu cột trái */
   #col-right-desktop{order:3;display:flex;flex-direction:column;gap:20px;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
-  /* Trên desktop, col-ann và col-album được di chuyển vào col-right-desktop bằng JS;
-     ẩn placeholder gốc để tránh hiển thị lặp ở vị trí cũ */
 }
 
 /* ===================================================
@@ -197,7 +186,6 @@ img{max-width:100%;display:block}
 .gc-body{padding:13px 17px}
 
 @media(min-width:769px){
-  /* Desktop: card nhật ký to hơn, dễ đọc hơn */
   #col-diary .gc-ttl{font-size:1.5rem}
   #col-diary .gc-body{padding:20px 26px}
   #col-diary .s-inp{font-size:.95rem;padding:10px 18px}
@@ -298,7 +286,7 @@ img{max-width:100%;display:block}
 .ml-i{display:flex;align-items:center;gap:3px;font-size:.64rem;color:var(--t2)}
 
 /* ===================================================
-   ALBUM TAB — Zalo newsfeed style
+   ALBUM TAB — bố cục ảnh linh hoạt (hỗ trợ đến 10 ảnh)
 =================================================== */
 .album-day-group{margin-bottom:22px}
 .album-day-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
@@ -306,20 +294,41 @@ img{max-width:100%;display:block}
 .album-day-lbl{font-size:.78rem;font-weight:700;color:var(--p1)}
 .album-day-time{font-size:.68rem;color:var(--t3);font-weight:600;white-space:nowrap;margin-left:auto}
 .album-day-entry-ttl{font-size:.75rem;color:var(--t2);margin-bottom:8px;padding-left:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.album-grid{display:grid;gap:3px;border-radius:12px;overflow:hidden}
+.album-grid{
+  display:grid;
+  gap:4px;
+  border-radius:12px;
+  overflow:hidden;
+}
+/* Số cột theo số lượng ảnh */
 .album-grid.g1{grid-template-columns:1fr}
-.album-grid.g1 .a-img{height:220px}
 .album-grid.g2{grid-template-columns:1fr 1fr}
-.album-grid.g2 .a-img{height:160px}
 .album-grid.g3{grid-template-columns:1fr 1fr}
-.album-grid.g3 .a-img:first-child{grid-column:1/3;height:170px}
-.album-grid.g3 .a-img:not(:first-child){height:130px}
-.album-grid.g4{grid-template-columns:1fr 1fr}
-.album-grid.g4 .a-img{height:130px}
-.a-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4)}
-.a-img img{width:100%;height:100%;object-fit:cover;transition:transform .22s;display:block}
-.a-img:hover img{transform:scale(1.05)}
-.a-img-more{position:absolute;inset:0;background:rgba(60,20,40,.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff}
+.album-grid.g4{grid-template-columns:1fr 1fr 1fr}
+.album-grid.g5{grid-template-columns:1fr 1fr 1fr}
+.album-grid.g6{grid-template-columns:1fr 1fr 1fr}
+.album-grid.g7{grid-template-columns:1fr 1fr 1fr 1fr}
+.album-grid.g8{grid-template-columns:1fr 1fr 1fr 1fr}
+.album-grid.g9{grid-template-columns:1fr 1fr 1fr 1fr}
+.album-grid.g10{grid-template-columns:1fr 1fr 1fr 1fr}
+/* Chiều cao ảnh linh hoạt */
+.album-grid .a-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4);border-radius:6px}
+.album-grid .a-img img{width:100%;height:100%;object-fit:cover;transition:transform .22s;display:block}
+.album-grid .a-img:hover img{transform:scale(1.05)}
+.album-grid .a-img-more{position:absolute;inset:0;background:rgba(60,20,40,.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff}
+/* Điều chỉnh chiều cao cho từng số lượng ảnh */
+.album-grid.g1 .a-img{height:240px}
+.album-grid.g2 .a-img{height:180px}
+.album-grid.g3 .a-img:first-child{grid-column:1/3;height:200px}
+.album-grid.g3 .a-img:not(:first-child){height:150px}
+.album-grid.g4 .a-img{height:150px}
+.album-grid.g5 .a-img{height:140px}
+.album-grid.g6 .a-img{height:140px}
+.album-grid.g7 .a-img{height:130px}
+.album-grid.g8 .a-img{height:130px}
+.album-grid.g9 .a-img{height:130px}
+.album-grid.g10 .a-img{height:130px}
+
 .album-empty{text-align:center;color:var(--t3);padding:36px 0;font-size:.85rem}
 
 /* ===================================================
@@ -349,7 +358,6 @@ img{max-width:100%;display:block}
 .mc:hover{background:var(--p4);color:var(--p1)}
 .m-ttl{font-family:var(--font-ttl);font-size:1.5rem;font-weight:700;color:var(--p1);margin-bottom:15px}
 
-/* Modal viết bài rộng hơn trên desktop để soạn dễ hơn */
 @media(min-width:769px){
   #modal-write .mbox{max-width:680px}
 }
@@ -407,21 +415,40 @@ img{max-width:100%;display:block}
 .ve-content{background:rgba(255,255,255,.62);border-radius:9px;padding:13px;margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);white-space:pre-wrap;max-height:40vh;overflow-y:auto}
 
 /* ===================================================
-   GALLERY ẢNH TRONG BÀI — bố cục đẹp tùy theo số ảnh
+   GALLERY ẢNH TRONG BÀI (linh hoạt, hỗ trợ đến 10 ảnh)
 =================================================== */
-.ve-gallery{margin-top:10px;border-radius:14px;overflow:hidden;display:grid;gap:4px}
+.ve-gallery{
+  display:grid;
+  gap:4px;
+  margin-top:10px;
+  border-radius:14px;
+  overflow:hidden;
+}
 .ve-gallery.n1{grid-template-columns:1fr}
-.ve-gallery.n1 .vg-img{height:300px}
 .ve-gallery.n2{grid-template-columns:1fr 1fr}
-.ve-gallery.n2 .vg-img{height:200px}
 .ve-gallery.n3{grid-template-columns:1fr 1fr}
-.ve-gallery.n3 .vg-img:first-child{grid-column:1/3;height:220px}
-.ve-gallery.n3 .vg-img:not(:first-child){height:150px}
-.ve-gallery.n4{grid-template-columns:1fr 1fr}
-.ve-gallery.n4 .vg-img{height:160px}
-.vg-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4);border-radius:10px}
-.vg-img img{width:100%;height:100%;object-fit:cover;transition:transform .25s}
-.vg-img:hover img{transform:scale(1.06)}
+.ve-gallery.n4{grid-template-columns:1fr 1fr 1fr}
+.ve-gallery.n5{grid-template-columns:1fr 1fr 1fr}
+.ve-gallery.n6{grid-template-columns:1fr 1fr 1fr}
+.ve-gallery.n7{grid-template-columns:1fr 1fr 1fr 1fr}
+.ve-gallery.n8{grid-template-columns:1fr 1fr 1fr 1fr}
+.ve-gallery.n9{grid-template-columns:1fr 1fr 1fr 1fr}
+.ve-gallery.n10{grid-template-columns:1fr 1fr 1fr 1fr}
+.ve-gallery .vg-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4);border-radius:10px}
+.ve-gallery .vg-img img{width:100%;height:100%;object-fit:cover;transition:transform .25s}
+.ve-gallery .vg-img:hover img{transform:scale(1.06)}
+/* Chiều cao tùy số lượng */
+.ve-gallery.n1 .vg-img{height:320px}
+.ve-gallery.n2 .vg-img{height:220px}
+.ve-gallery.n3 .vg-img:first-child{grid-column:1/3;height:240px}
+.ve-gallery.n3 .vg-img:not(:first-child){height:160px}
+.ve-gallery.n4 .vg-img{height:170px}
+.ve-gallery.n5 .vg-img{height:160px}
+.ve-gallery.n6 .vg-img{height:160px}
+.ve-gallery.n7 .vg-img{height:150px}
+.ve-gallery.n8 .vg-img{height:150px}
+.ve-gallery.n9 .vg-img{height:150px}
+.ve-gallery.n10 .vg-img{height:150px}
 
 /* ===================================================
    DAY LIST NAV
@@ -476,7 +503,7 @@ img{max-width:100%;display:block}
 @media(min-width:769px){#toast{bottom:28px}}
 
 /* ===================================================
-   SAVING OVERLAY — chờ khi viết nhật ký xong
+   SAVING OVERLAY
 =================================================== */
 #saving-overlay{
   position:fixed;inset:0;z-index:9500;
@@ -627,8 +654,7 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- Vùng chứa CỘT PHẢI cho desktop — chỉ hiển thị & dùng trên desktop,
-         JS sẽ "move" (di chuyển DOM thật, không clone) #col-ann và #col-album vào đây -->
+    <!-- Vùng chứa CỘT PHẢI cho desktop -->
     <div id="col-right-desktop" style="display:none"></div>
 
   </div><!-- /main-layout -->
@@ -637,7 +663,7 @@ img{max-width:100%;display:block}
 
 <button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
 
-<!-- MOBILE BOTTOM NAV (giữ nguyên y hệt V4) -->
+<!-- MOBILE BOTTOM NAV -->
 <nav class="mob-nav">
   <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
     <div class="mn-icon">📖</div><div>Nhật ký</div>
@@ -706,7 +732,7 @@ img{max-width:100%;display:block}
       <textarea class="fta" id="e-cnt" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:140px"></textarea>
     </div>
     <div class="fg">
-      <label class="fl">Ảnh (tối đa 4) — thêm, xóa, hoặc giữ ảnh cũ khi sửa bài</label>
+      <label class="fl">Ảnh (tối đa 10) — thêm, xóa, hoặc giữ ảnh cũ khi sửa bài</label>
       <div class="img-drop" onclick="document.getElementById('img-inp').click()">
         📷 Bấm để chọn ảnh từ máy
       </div>
@@ -868,8 +894,8 @@ var S = {
   dayListIdx: 0,
   pin: '',
   isSaving: false,
-  editingCommentId: null,     // id comment đang sửa (modal-view)
-  editingDlCommentId: null    // id comment đang sửa (modal-daylist)
+  editingCommentId: null,
+  editingDlCommentId: null
 };
 
 var PROMPTS = [
@@ -943,8 +969,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 /* ==========================================================
-   THIẾT LẬP LAYOUT DESKTOP — di chuyển #col-ann & #col-album
-   vào #col-right-desktop (chỉ DOM move, không đụng tab mobile)
+   THIẾT LẬP LAYOUT DESKTOP
 ========================================================== */
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -956,22 +981,18 @@ function setupDesktopLayout() {
     rightCol.appendChild(albumCol);
     rightCol.style.display = 'flex';
   }
-  // Đảm bảo mọi cột đều hiển thị (desktop không dùng khái niệm tab ẩn/hiện)
   ['col-cal', 'col-diary', 'col-ann', 'col-album'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) { el.style.display = 'block'; el.classList.add('on'); }
   });
 }
 
-// Khi resize qua lại giữa mobile/desktop, đảm bảo layout đúng
 var _lastIsDesktop = window.innerWidth >= 769;
 window.addEventListener('resize', function () {
   var nowDesktop = window.innerWidth >= 769;
   if (nowDesktop && !_lastIsDesktop) {
     setupDesktopLayout();
   } else if (!nowDesktop && _lastIsDesktop) {
-    // Quay lại mobile: đưa col-ann/col-album về main-layout theo đúng thứ tự ban đầu,
-    // rồi áp dụng lại trạng thái tab hiện tại
     var mainLayout = document.getElementById('main-layout');
     var rightCol = document.getElementById('col-right-desktop');
     var albumCol = document.getElementById('col-album');
@@ -1077,17 +1098,25 @@ function normalizeEntry(e) {
   if (!e.comments || !Array.isArray(e.comments)) e.comments = [];
   if (!e.updatedAt) e.updatedAt = e.date ? (e.date + 'T00:00:00.000Z') : new Date().toISOString();
   if (!e.images) e.images = [];
-  // createdAt dùng để hiển thị "thời gian viết" gốc; nếu chưa có thì coi như = updatedAt lần đầu
   if (!e.createdAt) e.createdAt = e.updatedAt;
   return e;
 }
 
+/* ==========================================================
+   SẮP XẾP BÀI VIẾT: ưu tiên ngày (date) mới nhất trước,
+   trong cùng ngày thì lấy updatedAt mới nhất trước
+========================================================== */
 function sortEntries(arr) {
   arr.sort(function (a, b) {
-    var ta = a.updatedAt || (a.date ? a.date + 'T00:00:00.000Z' : '');
-    var tb = b.updatedAt || (b.date ? b.date + 'T00:00:00.000Z' : '');
-    if (tb !== ta) return tb.localeCompare(ta);
-    if (b.date !== a.date) return (b.date || '').localeCompare(a.date || '');
+    // So sánh date trước (giảm dần)
+    var da = a.date || '';
+    var db = b.date || '';
+    if (da !== db) return db.localeCompare(da);
+    // Cùng ngày: so sánh updatedAt (giảm dần)
+    var ua = a.updatedAt || (a.date ? a.date + 'T00:00:00.000Z' : '');
+    var ub = b.updatedAt || (b.date ? b.date + 'T00:00:00.000Z' : '');
+    if (ub !== ua) return ub.localeCompare(ua);
+    // Cùng updatedAt: so sánh id (giảm dần)
     return (b.id || '').localeCompare(a.id || '');
   });
   return arr;
@@ -1103,7 +1132,7 @@ function setSyncing(on) {
 }
 
 /* ==========================================================
-   GHI DỮ LIỆU — POST (dùng cho entry/anniversary, KHÔNG dùng cho comment)
+   GHI DỮ LIỆU — POST
 ========================================================== */
 function postData(payload, msg, cb) {
   function doFetch(mode) {
@@ -1131,8 +1160,7 @@ function postData(payload, msg, cb) {
 }
 
 /* ==========================================================
-   GỌI API BÌNH LUẬN — atomic trên server (add/edit/delete)
-   Không tự merge mảng comments ở Frontend để tránh trùng lặp.
+   GỌI API BÌNH LUẬN
 ========================================================== */
 function callCommentAPI(payload, onSuccess, onError) {
   function doFetch(mode) {
@@ -1150,8 +1178,6 @@ function callCommentAPI(payload, onSuccess, onError) {
       else { if (onError) onError(res); }
     })
     .catch(function () {
-      // cors có thể fail do trình duyệt/mạng; thử no-cors (không đọc được response)
-      // -> báo người dùng đồng bộ lại để chắc chắn thấy comment mới
       doFetch('no-cors').then(function () {
         toast('💬 Đã gửi, đang đồng bộ lại để hiển thị...');
         if (onError) onError(null);
@@ -1357,8 +1383,7 @@ function delFromDayList() {
 }
 
 /* ==========================================================
-   GHI CHÚ "SỬA LẦN CUỐI" — chỉ hiện khi updatedAt khác createdAt
-   rõ rệt (cách nhau hơn ~1 phút, tránh hiện ngay sau khi tạo mới)
+   GHI CHÚ "SỬA LẦN CUỐI"
 ========================================================== */
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
@@ -1551,7 +1576,7 @@ function delAnn(id) {
 }
 
 /* ==========================================================
-   ALBUM ẢNH
+   ALBUM ẢNH (hỗ trợ đến 10 ảnh, bố cục linh hoạt)
 ========================================================== */
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1573,15 +1598,15 @@ function renderAlbum() {
   entriesWithImgs.forEach(function (e) {
     var imgs = e.images;
     var count = imgs.length;
-    var cls = 'album-grid g' + Math.min(count, 4);
+    var cls = 'album-grid g' + Math.min(count, 10);
     var gridHTML = '';
-    var max = Math.min(count, 4);
+    var max = Math.min(count, 10);
     for (var i = 0; i < max; i++) {
       var src = imgs[i].url || imgs[i];
-      var isLast = (i === max - 1 && count > 4);
+      var isLast = (i === max - 1 && count > 10);
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-        (isLast ? '<div class="a-img-more">+' + (count - 4) + '</div>' : '') +
+        (isLast ? '<div class="a-img-more">+' + (count - 10) + '</div>' : '') +
         '</div>';
     }
     var timeLabel = fmtTimeShort(e.updatedAt);
@@ -1599,19 +1624,19 @@ function renderAlbum() {
 }
 
 /* ==========================================================
-   GALLERY ẢNH TRONG MODAL XEM BÀI — bố cục đẹp theo số lượng ảnh
+   GALLERY ẢNH TRONG MODAL XEM BÀI (linh hoạt đến 10 ảnh)
 ========================================================== */
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
-  var n = Math.min(images.length, 4);
+  var n = Math.min(images.length, 10);
   var cls = 've-gallery n' + n;
   var html = '';
   for (var i = 0; i < n; i++) {
     var src = images[i].url || images[i];
-    var isLast = (i === n - 1 && images.length > 4);
+    var isLast = (i === n - 1 && images.length > 10);
     html += '<div class="vg-img" onclick="openLb(\'' + escH(src) + '\')">' +
       '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-      (isLast ? '<div class="a-img-more">+' + (images.length - 4) + '</div>' : '') +
+      (isLast ? '<div class="a-img-more">+' + (images.length - 10) + '</div>' : '') +
       '</div>';
   }
   return '<div class="' + cls + '">' + html + '</div>';
@@ -1667,7 +1692,7 @@ function editEntry() {
   normalizeEntry(e);
   closeModal('modal-view');
   S.mood = e.mood || '';
-  S.imgs = e.images ? e.images.slice() : [];   // giữ ảnh cũ để có thể thêm/xóa tiếp
+  S.imgs = e.images ? e.images.slice() : [];
   S.author = e.author || DEFAULT_AUTHOR;
   document.getElementById('write-ttl').textContent = '✏️ Chỉnh sửa nhật ký';
   document.getElementById('e-date').value = e.date;
@@ -1711,8 +1736,6 @@ function saveEntry() {
     mood: S.mood,
     author: S.author || DEFAULT_AUTHOR,
     images: S.imgs.slice(),
-    // comments: server tự giữ nguyên comments hiện có khi save_entry (xem Code.gs),
-    // ở đây gửi mảng rỗng/cũ chỉ để tương thích, server sẽ KHÔNG dùng field này để ghi đè.
     comments: existing && existing.comments ? existing.comments.slice() : [],
     createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
     updatedAt: nowIso
@@ -1726,7 +1749,6 @@ function saveEntry() {
     S.isSaving = false;
     hideSavingOverlay();
     toast(isNew ? '💾 Đã lưu nhật ký!' : '💾 Đã cập nhật!');
-    // Tự động mở bài vừa lưu ra xem
     var savedId = (res && res.entry && res.entry.id) ? res.entry.id : entry.id;
     setTimeout(function () { openView(savedId); }, 200);
   });
@@ -1791,13 +1813,14 @@ function chgFs(delta) {
 }
 
 /* ==========================================================
-   ẢNH — UPLOAD LÊN DRIVE (lưu vào thư mục con theo ngày viết)
+   ẢNH — UPLOAD LÊN DRIVE (tự động lưu vào thư mục con theo ngày)
+   Giới hạn tối đa 10 ảnh
 ========================================================== */
 function onImgPick(input) {
   var files = Array.from(input.files);
-  if (S.imgs.length + files.length > 4) {
-    toast('⚠️ Tối đa 4 ảnh mỗi bài nhé!');
-    files = files.slice(0, 4 - S.imgs.length);
+  if (S.imgs.length + files.length > 10) {
+    toast('⚠️ Tối đa 10 ảnh mỗi bài nhé!');
+    files = files.slice(0, 10 - S.imgs.length);
   }
   if (!files.length) return;
   document.getElementById('upload-prog').classList.add('show');
@@ -1858,7 +1881,7 @@ function uploadImgToDrive(b64, filename, dateStr, cb) {
       imageData: base64Data,
       mimeType: mimeType,
       filename: filename || ('photo_' + Date.now() + '.jpg'),
-      dateStr: dateStr // server dùng để tạo/đặt vào thư mục con DDMMYYYY
+      dateStr: dateStr
     })
   })
   .then(function (r) { return r.json(); })
@@ -1894,8 +1917,6 @@ function rmImg(i) {
 
 /* ==========================================================
    BÌNH LUẬN — MODAL XEM BÀI (modal-view)
-   Mỗi nút Gửi chỉ được bấm 1 lần cho tới khi server trả lời,
-   tránh double-submit gây hiển thị trùng bình luận.
 ========================================================== */
 function selCmtAuthor(v) {
   S.cmtAuthor = v;
@@ -1922,7 +1943,6 @@ function renderComments() {
   listEl.scrollTop = listEl.scrollHeight;
 }
 
-// scope: 'view' hoặc 'dl' — để biết gọi hàm sửa/xóa nào tương ứng đúng modal
 function cmtHTML(c, scope) {
   var editedTag = c.editedAt ? '<span class="cmt-edited-tag">(đã sửa)</span>' : '';
   var editFn = scope === 'dl' ? 'startEditDlComment' : 'startEditComment';
@@ -1947,10 +1967,9 @@ function sendComment() {
   if (!S.curId) return;
 
   var btn = document.getElementById('cmt-send-btn');
-  if (btn.disabled) return; // chặn double-click/double-submit
+  if (btn.disabled) return;
   btn.disabled = true;
 
-  // Nếu đang ở chế độ sửa comment, gọi luồng sửa thay vì thêm mới
   if (S.editingCommentId) {
     callCommentAPI({
       action: 'edit_comment', entryId: S.curId, commentId: S.editingCommentId, text: text
@@ -1964,7 +1983,6 @@ function sendComment() {
       renderComments();
     }, function () {
       btn.disabled = false;
-      // dù lỗi mạng tạm thời, đồng bộ lại để chắc chắn không lệch dữ liệu
       loadData(function () { renderComments(); });
     });
     return;
@@ -1974,7 +1992,7 @@ function sendComment() {
     action: 'add_comment', entryId: S.curId, author: S.cmtAuthor || DEFAULT_AUTHOR, text: text
   }, function (res) {
     var e = S.data.entries.find(function (x) { return x.id === S.curId; });
-    if (e) e.comments = res.comments; // dùng đúng mảng comments server trả về — nguồn sự thật duy nhất
+    if (e) e.comments = res.comments;
     inp.value = '';
     btn.disabled = false;
     renderComments();
@@ -2135,13 +2153,13 @@ function openLb(src) {
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
 /* ==========================================================
-   TAB NAVIGATION — CHỈ áp dụng cho MOBILE (giữ nguyên như V4)
+   TAB NAVIGATION — chỉ cho MOBILE
 ========================================================== */
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
   var isMobile = window.innerWidth < 769;
-  if (!isMobile) return; // Desktop không dùng tab nữa — mọi cột luôn hiển thị
+  if (!isMobile) return;
 
   TABS.forEach(function (t) {
     var el = document.getElementById('col-' + t);
@@ -2213,7 +2231,6 @@ function fmtTimeShort(iso) {
     return p2(d.getHours()) + ':' + p2(d.getMinutes());
   } catch (ex) { return ''; }
 }
-// Hiển thị đầy đủ: "ngày 19 tháng 6, 2026 lúc 20:15"
 function fmtFullDateTime(iso) {
   if (!iso) return '';
   try {
