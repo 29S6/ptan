@@ -840,7 +840,7 @@ img{max-width:100%;display:block}
 </div>
 
 <!-- ======================================================
-     MODAL: BACKUP & RESTORE (có progress bar)
+     MODAL: BACKUP & RESTORE (có progress bar, đã sửa lỗi)
 ====================================================== -->
 <div class="modal" id="modal-backup">
   <div class="mbox" style="max-width:500px;">
@@ -2252,7 +2252,7 @@ function escH(s) {
 }
 
 /* ==========================================================
-   BACKUP & RESTORE — MỚI (có progress bar)
+   BACKUP & RESTORE — SỬA LỖI (dùng fetch trực tiếp, không qua postData)
 ========================================================== */
 
 function openBackupModal() {
@@ -2264,8 +2264,8 @@ function refreshBackupList() {
   var container = document.getElementById('backup-list-container');
   container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang tải...</div>';
 
-  // Gọi GET với callback để lấy danh sách backup (dùng fetch vì không cần JSONP)
-  fetch(CFG.URL + '?action=get_backup_list&_=' + Date.now())
+  // Gọi GET với JSON (không cần callback)
+  fetch(CFG.URL + '?action=get_backup_list&_=' + Date.now(), { mode: 'cors' })
     .then(function(r) { return r.json(); })
     .then(function(res) {
       if (res && res.success && res.files) {
@@ -2274,7 +2274,8 @@ function refreshBackupList() {
         container.innerHTML = '<div class="backup-empty">Không có file backup nào.</div>';
       }
     })
-    .catch(function() {
+    .catch(function(err) {
+      console.error('Lỗi tải danh sách backup:', err);
       container.innerHTML = '<div class="backup-empty">❌ Không thể tải danh sách backup.</div>';
     });
 }
@@ -2312,7 +2313,6 @@ function manualBackup() {
   progBar.style.width = '0%';
   statusText.textContent = 'Đang tạo bản sao lưu... 0%';
 
-  // Giả lập tiến trình (thực tế không biết được, chỉ để tạo hiệu ứng)
   var progress = 0;
   var interval = setInterval(function() {
     progress += 2;
@@ -2321,7 +2321,15 @@ function manualBackup() {
     statusText.textContent = 'Đang tạo bản sao lưu... ' + progress + '%';
   }, 100);
 
-  postData({ action: 'manual_backup' }, null, function(res) {
+  // Gửi POST trực tiếp bằng fetch
+  fetch(CFG.URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'manual_backup' }),
+    mode: 'cors'
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
     clearInterval(interval);
     btn.disabled = false;
     btn.innerHTML = '💾 Sao lưu ngay';
@@ -2336,13 +2344,25 @@ function manualBackup() {
       }, 1000);
     } else {
       progBar.style.width = '0%';
-      statusText.textContent = '❌ Lỗi sao lưu!';
-      toast('⚠️ Lỗi sao lưu, thử lại!');
+      statusText.textContent = '❌ Lỗi sao lưu: ' + (res && res.error ? res.error : 'không xác định');
+      toast('⚠️ Lỗi sao lưu!');
       setTimeout(function() {
         progContainer.style.display = 'none';
         statusText.textContent = '';
       }, 2000);
     }
+  })
+  .catch(function(err) {
+    clearInterval(interval);
+    btn.disabled = false;
+    btn.innerHTML = '💾 Sao lưu ngay';
+    progBar.style.width = '0%';
+    statusText.textContent = '❌ Lỗi kết nối!';
+    toast('❌ Lỗi kết nối khi sao lưu.');
+    setTimeout(function() {
+      progContainer.style.display = 'none';
+      statusText.textContent = '';
+    }, 2000);
   });
 }
 
@@ -2354,7 +2374,6 @@ function restoreFromBackup(fileId) {
   var container = document.getElementById('backup-list-container');
   container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang khôi phục...</div>';
 
-  // Hiển thị progress bar
   var progContainer = document.getElementById('backup-progress-container');
   var progBar = document.getElementById('backup-progress-bar');
   var statusText = document.getElementById('backup-status-text');
@@ -2372,8 +2391,9 @@ function restoreFromBackup(fileId) {
 
   fetch(CFG.URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'restore_from_backup', fileId: fileId })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'restore_from_backup', fileId: fileId }),
+    mode: 'cors'
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
@@ -2393,12 +2413,13 @@ function restoreFromBackup(fileId) {
       });
     } else {
       progBar.style.width = '0%';
-      statusText.textContent = '❌ Lỗi khôi phục: ' + (res.error || 'không xác định');
+      statusText.textContent = '❌ Lỗi khôi phục: ' + (res && res.error ? res.error : 'không xác định');
       toast('⚠️ Lỗi khôi phục!');
       setTimeout(function() {
         progContainer.style.display = 'none';
         statusText.textContent = '';
         refreshBackupList();
+        S.isBackupRestoring = false;
       }, 2000);
     }
   })
@@ -2424,7 +2445,6 @@ closeModal = function(id) {
     var btn = document.getElementById('backup-now-btn');
     if (btn) { btn.disabled = false; btn.innerHTML = '💾 Sao lưu ngay'; }
     S.isBackupRestoring = false;
-    // Ẩn progress bar
     document.getElementById('backup-progress-container').style.display = 'none';
     document.getElementById('backup-status-text').textContent = '';
   }
