@@ -10,9 +10,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
-/* ===================================================
-   DESIGN TOKENS — ROSE SMOKE PALETTE
-=================================================== */
 :root{
   --p1:#a85470;
   --p2:#c97d96;
@@ -31,10 +28,6 @@
   --font-ttl:'Baloo 2',sans-serif;
   --font-body:'Itim','Baloo 2',sans-serif;
 }
-
-/* ===================================================
-   RESET & BASE
-=================================================== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
@@ -45,15 +38,7 @@ body{
 button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 input,textarea,select{font-family:inherit}
 img{max-width:100%;display:block}
-
-/* ===================================================
-   SAKURA CANVAS
-=================================================== */
 #sakura-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5}
-
-/* ===================================================
-   LOCK SCREEN
-=================================================== */
 #lock-screen{
   position:fixed;inset:0;z-index:9000;
   display:flex;align-items:center;justify-content:center;
@@ -86,16 +71,8 @@ img{max-width:100%;display:block}
 .pk:active{transform:scale(.9);background:var(--p4)}
 .pk.del{color:var(--p1)}
 .lock-err{color:#c04060;font-size:.76rem;min-height:15px;margin-top:8px;font-weight:600}
-
-/* ===================================================
-   APP WRAPPER
-=================================================== */
 #app{display:none;position:relative;z-index:1;min-height:100vh;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
 @media(min-width:769px){#app{padding-bottom:24px}}
-
-/* ===================================================
-   HEADER
-=================================================== */
 .app-hdr{
   background:linear-gradient(135deg,rgba(168,84,112,.9),rgba(201,125,150,.82));
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
@@ -121,17 +98,11 @@ img{max-width:100%;display:block}
 .hdr-btn:hover{background:rgba(255,255,255,.32)}
 .hdr-btn.syncing svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .clock-row{display:flex;gap:6px;justify-content:center;padding:0 18px 10px;flex-wrap:wrap}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
-
 #ann-strip{text-align:center;padding:0 18px 8px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.92);min-height:22px}
-
-/* ===================================================
-   MOBILE BOTTOM NAV
-=================================================== */
 .mob-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;z-index:300;
@@ -145,10 +116,6 @@ img{max-width:100%;display:block}
 .mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 3px;color:var(--t3);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;transition:color .18s;position:relative}
 .mn-item.on{color:var(--p1)}
 .mn-icon{font-size:1.25rem;line-height:1}
-
-/* ===================================================
-   MAIN LAYOUT — DESKTOP 3 cột
-=================================================== */
 .main-layout{
   display:grid;
   grid-template-columns:1fr;
@@ -160,7 +127,6 @@ img{max-width:100%;display:block}
   .col-panel{display:none}
   .col-panel.on{display:block}
 }
-
 @media(min-width:769px){
   .main-layout{
     display:grid;
@@ -181,10 +147,6 @@ img{max-width:100%;display:block}
   #col-right-desktop{order:3;display:block;position:static;max-height:none;overflow-y:visible}
   #col-right-desktop .gc{margin-bottom:14px}
 }
-
-/* ===================================================
-   GLASS CARD
-=================================================== */
 .gc{
   background:var(--glass);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
@@ -196,31 +158,24 @@ img{max-width:100%;display:block}
 .gc-hd{padding:13px 17px 11px;border-bottom:1px solid rgba(168,84,112,.09);display:flex;align-items:center;justify-content:space-between}
 .gc-ttl{font-family:var(--font-ttl);font-size:1.2rem;font-weight:700;color:var(--p1)}
 .gc-body{padding:13px 17px}
-
 @media(min-width:769px){
   #col-diary .gc-ttl{font-size:1.5rem}
   #col-diary .gc-body{padding:20px 26px}
   #col-diary .s-inp{font-size:.95rem;padding:10px 18px}
   #col-diary .f-sel{font-size:.86rem}
 }
-
-/* ===================================================
-   DIARY
-=================================================== */
 .search-row{display:flex;gap:7px;margin-bottom:13px}
 .s-inp{flex:1;background:rgba(255,255,255,.68);border:1.5px solid rgba(168,84,112,.2);border-radius:22px;padding:7px 14px;font-size:.83rem;color:var(--t1);outline:none;transition:border-color .2s}
 .s-inp:focus{border-color:var(--p1)}
 .s-inp::placeholder{color:var(--t3)}
 .f-sel{background:rgba(255,255,255,.68);border:1.5px solid rgba(168,84,112,.2);border-radius:22px;padding:7px 10px;font-size:.76rem;color:var(--t2);outline:none;cursor:pointer}
 .tl-wrap{display:flex;flex-direction:column;gap:4px}
-
 .tl-day-group{margin-bottom:14px}
 .tl-day-hdr{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:0 2px}
 .tl-day-hdr-dot{width:7px;height:7px;border-radius:50%;background:var(--p1);flex-shrink:0}
 .tl-day-hdr-lbl{font-size:.76rem;font-weight:700;color:var(--p1);text-transform:uppercase;letter-spacing:.03em}
 .tl-day-hdr-line{flex:1;height:1px;background:rgba(168,84,112,.15)}
 .tl-day-items{display:flex;flex-direction:column;gap:8px}
-
 .ti{background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.12);border-radius:var(--rr);padding:11px 13px;cursor:pointer;transition:all .17s;position:relative;overflow:hidden}
 .ti::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--p3),var(--p1));border-radius:3px 0 0 3px}
 .ti:hover{transform:translateX(3px);box-shadow:var(--sh-sm);background:rgba(255,255,255,.78)}
@@ -234,32 +189,24 @@ img{max-width:100%;display:block}
 .ti-pre{font-size:.74rem;color:var(--t2);line-height:1.44;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ti-thumb{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0}
 .ti-cmt-count{font-size:.64rem;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:3px}
-
 @media(min-width:769px){
   #col-diary .ti{padding:16px 19px}
   #col-diary .ti-ttl{font-size:1.02rem}
   #col-diary .ti-pre{font-size:.84rem}
   #col-diary .ti-thumb{width:58px;height:58px}
 }
-
 .load-more{width:100%;background:rgba(168,84,112,.07);border:1.5px dashed var(--p3);border-radius:var(--rr);padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);transition:all .18s;margin-top:6px}
 .load-more:hover{background:var(--p4)}
 .empty-hint{text-align:center;color:var(--t3);font-size:.83rem;padding:26px 0}
-
 .otd-card{background:linear-gradient(135deg,rgba(168,84,112,.09),rgba(201,125,150,.06));border:1.5px solid rgba(168,84,112,.18);border-radius:var(--rr);padding:13px 15px;margin-bottom:13px;cursor:pointer;transition:all .18s}
 .otd-card:hover{background:rgba(168,84,112,.14);transform:translateY(-1px)}
 .otd-lbl{font-size:.65rem;font-weight:700;color:var(--p2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
 .otd-ttl{font-weight:700;font-size:.86rem;color:var(--t1)}
 .otd-pre{font-size:.73rem;color:var(--t2);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
 .streak-bar{display:flex;align-items:center;gap:9px;background:rgba(255,195,80,.1);border:1.5px solid rgba(255,175,40,.22);border-radius:var(--rr);padding:9px 13px;margin-bottom:13px}
 .s-fire{font-size:1.3rem}
 .s-ttl{font-size:.78rem;font-weight:700;color:#b07a10}
 .s-sub{font-size:.68rem;color:var(--t3)}
-
-/* ===================================================
-   ANNIVERSARY
-=================================================== */
 .ann-item{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.52);border:1px solid rgba(168,84,112,.12);border-radius:11px;padding:10px 12px;margin-bottom:8px}
 .ann-dot{width:9px;height:9px;border-radius:50%;background:var(--p1);flex-shrink:0}
 .ann-info{flex:1;min-width:0}
@@ -273,10 +220,6 @@ img{max-width:100%;display:block}
 .ann-del:hover{color:#c04060}
 .add-ann-btn{width:100%;background:rgba(168,84,112,.07);border:1.5px dashed var(--p3);border-radius:11px;padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);transition:all .18s}
 .add-ann-btn:hover{background:var(--p4)}
-
-/* ===================================================
-   CALENDAR
-=================================================== */
 .cal-nav{display:flex;align-items:center;gap:5px}
 .cnav{background:rgba(168,84,112,.1);border:1px solid var(--p4);border-radius:8px;width:27px;height:27px;font-size:.84rem;color:var(--p1);display:flex;align-items:center;justify-content:center;transition:all .14s}
 .cnav:hover{background:var(--p4)}
@@ -292,14 +235,9 @@ img{max-width:100%;display:block}
 .cd-ic{font-size:.52rem;line-height:1}
 .cd-ann{width:5px;height:5px;border-radius:50%;background:var(--p1);margin-top:1px}
 .cd-multi{font-size:.48rem;font-weight:800;background:var(--p1);color:#fff;border-radius:6px;padding:0 3px;line-height:1.4;margin-top:1px}
-
 .mood-map-ttl{font-size:.68rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin:9px 0 5px}
 .mood-map-leg{display:flex;gap:7px;flex-wrap:wrap}
 .ml-i{display:flex;align-items:center;gap:3px;font-size:.64rem;color:var(--t2)}
-
-/* ===================================================
-   ALBUM
-=================================================== */
 .album-day-group{margin-bottom:22px}
 .album-day-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .album-day-dot{width:10px;height:10px;border-radius:50%;background:var(--p1);flex-shrink:0}
@@ -333,10 +271,6 @@ img{max-width:100%;display:block}
 .album-grid.g9 .a-img{height:130px}
 .album-grid.g10 .a-img{height:130px}
 .album-empty{text-align:center;color:var(--t3);padding:36px 0;font-size:.85rem}
-
-/* ===================================================
-   FAB
-=================================================== */
 #fab{
   position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));right:18px;
   z-index:250;width:52px;height:52px;border-radius:50%;
@@ -348,10 +282,6 @@ img{max-width:100%;display:block}
 }
 #fab:hover{transform:scale(1.1) rotate(7deg);box-shadow:0 10px 28px rgba(168,84,112,.55)}
 @media(min-width:769px){#fab{bottom:24px;right:26px;width:56px;height:56px;font-size:1.42rem}}
-
-/* ===================================================
-   MODAL
-=================================================== */
 .modal{position:fixed;inset:0;z-index:500;background:rgba(61,31,45,.36);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:14px}
 .modal.open{display:flex}
 .mbox{background:linear-gradient(158deg,#fff8fb,#fde8f0);border:1.5px solid rgba(255,255,255,.72);border-radius:24px;box-shadow:0 24px 64px rgba(120,40,70,.2);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;padding:24px 24px 20px;position:relative}
@@ -360,43 +290,34 @@ img{max-width:100%;display:block}
 .mc{position:absolute;top:13px;right:13px;background:rgba(168,84,112,.1);border:1px solid var(--p4);border-radius:50%;width:29px;height:29px;font-size:.86rem;color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .14s}
 .mc:hover{background:var(--p4);color:var(--p1)}
 .m-ttl{font-family:var(--font-ttl);font-size:1.5rem;font-weight:700;color:var(--p1);margin-bottom:15px}
-
 @media(min-width:769px){#modal-write .mbox{max-width:680px}}
-
 .fg{margin-bottom:13px}
 .fl{display:block;font-size:.71rem;font-weight:700;color:var(--t2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
 .fi,.fta,.fse{width:100%;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:10px;padding:8px 12px;font-size:.86rem;color:var(--t1);outline:none;transition:border-color .2s}
 .fi:focus,.fta:focus,.fse:focus{border-color:var(--p1)}
 .fta{resize:vertical;min-height:125px;line-height:1.65}
 .fse{cursor:pointer}
-
 .author-toggle{display:flex;gap:8px}
 .at-opt{flex:1;background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.18);border-radius:11px;padding:9px 10px;text-align:center;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--t2);transition:all .16s}
 .at-opt:hover{background:var(--p4)}
 .at-opt.sel{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;border-color:var(--p1);box-shadow:0 3px 10px rgba(168,84,112,.3)}
-
 .mood-pick{display:flex;gap:5px;flex-wrap:wrap}
 .mp-o{font-size:1.35rem;cursor:pointer;padding:4px 7px;border-radius:9px;border:2px solid transparent;transition:all .13s}
 .mp-o:hover{transform:scale(1.15)}
 .mp-o.sel{border-color:var(--p1);background:var(--p4);transform:scale(1.08)}
-
 .wp{background:rgba(168,84,112,.06);border:1.5px solid rgba(168,84,112,.14);border-radius:9px;padding:9px 12px;margin-bottom:9px;font-size:.78rem;color:var(--t2);display:flex;align-items:center;justify-content:space-between;gap:7px}
 .wp-r{background:none;border:none;color:var(--p2);font-size:.82rem;padding:2px;flex-shrink:0}
-
 .fs-row{display:flex;align-items:center;gap:7px;margin-bottom:8px}
 .fsb{background:rgba(168,84,112,.1);border:1px solid var(--p3);border-radius:7px;width:26px;height:26px;font-size:.86rem;color:var(--p1);display:flex;align-items:center;justify-content:center}
 .fs-lbl{font-size:.73rem;color:var(--t2);font-weight:600}
-
 .img-drop{border:2px dashed var(--p3);border-radius:10px;padding:13px;text-align:center;cursor:pointer;background:rgba(255,255,255,.42);transition:all .18s;font-size:.78rem;color:var(--t3)}
 .img-drop:hover{background:var(--p4);border-color:var(--p2)}
 .img-prev-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
 .img-prev-itm{position:relative;width:60px;height:60px}
 .img-prev-itm img{width:100%;height:100%;object-fit:cover;border-radius:8px}
 .img-rm{position:absolute;top:-5px;right:-5px;background:var(--p1);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:.58rem;display:flex;align-items:center;justify-content:center}
-
 .upload-prog{background:rgba(168,84,112,.07);border:1px solid rgba(168,84,112,.15);border-radius:8px;padding:7px 11px;margin-top:7px;font-size:.74rem;color:var(--t2);display:none}
 .upload-prog.show{display:block}
-
 .btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .btn-p{flex:1;background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:10px;padding:10px;color:#fff;font-size:.86rem;font-weight:700;transition:all .18s;min-width:90px}
 .btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(168,84,112,.36)}
@@ -405,19 +326,11 @@ img{max-width:100%;display:block}
 .btn-s:hover{background:var(--p4)}
 .btn-d{background:rgba(200,50,70,.07);border:1.5px solid rgba(200,50,70,.22);border-radius:10px;padding:10px 13px;color:#b03050;font-size:.86rem;font-weight:700;transition:all .18s}
 .btn-d:hover{background:rgba(200,50,70,.13)}
-
-/* ===================================================
-   VIEW MODAL
-=================================================== */
 .ve-date{font-size:.78rem;color:var(--t1);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ve-author-badge{font-size:.66rem;font-weight:700;color:var(--p2);background:rgba(168,84,112,.1);border-radius:8px;padding:2px 8px}
 .ve-edited-note{font-size:.68rem;color:var(--t3);font-style:italic;margin-bottom:6px}
 .ve-mood{font-size:1.1rem;margin-bottom:7px}
 .ve-content{background:rgba(255,255,255,.62);border-radius:9px;padding:13px;margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);white-space:pre-wrap;max-height:40vh;overflow-y:auto}
-
-/* ===================================================
-   GALLERY ẢNH TRONG BÀI
-=================================================== */
 .ve-gallery{display:grid;gap:4px;margin-top:10px;border-radius:14px;overflow:hidden}
 .ve-gallery.n1{grid-template-columns:1fr}
 .ve-gallery.n2{grid-template-columns:1fr 1fr}
@@ -443,19 +356,11 @@ img{max-width:100%;display:block}
 .ve-gallery.n8 .vg-img{height:150px}
 .ve-gallery.n9 .vg-img{height:150px}
 .ve-gallery.n10 .vg-img{height:150px}
-
-/* ===================================================
-   DAY LIST NAV
-=================================================== */
 .dl-nav-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px;background:rgba(168,84,112,.06);border:1px solid rgba(168,84,112,.14);border-radius:10px;padding:8px 10px}
 .dl-nav-btn{background:rgba(168,84,112,.1);border:1.5px solid var(--p3);border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;color:var(--p1);transition:all .15s}
 .dl-nav-btn:hover:not(:disabled){background:var(--p4)}
 .dl-nav-btn:disabled{opacity:.35;cursor:not-allowed}
 .dl-counter{font-size:.76rem;font-weight:700;color:var(--t2)}
-
-/* ===================================================
-   COMMENTS
-=================================================== */
 .cmt-section{margin-top:16px;border-top:1.5px solid rgba(168,84,112,.12);padding-top:14px}
 .cmt-hdr{font-size:.78rem;font-weight:700;color:var(--p1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .cmt-list{display:flex;flex-direction:column;gap:9px;margin-bottom:12px;max-height:240px;overflow-y:auto}
@@ -479,33 +384,20 @@ img{max-width:100%;display:block}
 .cmt-send-btn{background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:.95rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
 .cmt-send-btn:hover:not(:disabled){transform:scale(1.08)}
 .cmt-send-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-
-/* ===================================================
-   LIGHTBOX
-=================================================== */
 #lb{position:fixed;inset:0;z-index:800;background:rgba(20,5,15,.92);display:none;align-items:center;justify-content:center;cursor:pointer}
 #lb.open{display:flex}
 #lb img{max-width:94vw;max-height:90vh;border-radius:11px;object-fit:contain}
-
-/* ===================================================
-   TOAST
-=================================================== */
 #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);background:rgba(61,31,45,.88);backdrop-filter:blur(10px);color:#fff;padding:8px 18px;border-radius:20px;font-size:.8rem;font-weight:600;z-index:9999;opacity:0;pointer-events:none;transition:all .26s;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:769px){#toast{bottom:28px}}
-
-/* ===================================================
-   SAVING OVERLAY
-=================================================== */
 #saving-overlay{position:fixed;inset:0;z-index:9500;background:rgba(61,31,45,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center}
 #saving-overlay.show{display:flex}
 .saving-box{background:rgba(255,248,253,.92);border-radius:22px;padding:30px 38px;text-align:center;box-shadow:0 20px 50px rgba(120,40,70,.25)}
 .saving-heart{font-size:38px;display:block;margin-bottom:10px;animation:hb 1s ease-in-out infinite}
 .saving-txt{font-family:var(--font-ttl);font-size:1.05rem;font-weight:700;color:var(--p1)}
+.hidden{display:none!important}
 
-/* ===================================================
-   BACKUP MODAL với progress bar
-=================================================== */
+/* Thêm style cho modal backup */
 .backup-list{max-height:200px;overflow-y:auto;background:rgba(255,255,255,.5);border-radius:8px;padding:6px;margin-top:8px}
 .backup-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(168,84,112,.08)}
 .backup-item:last-child{border-bottom:none}
@@ -515,23 +407,14 @@ img{max-width:100%;display:block}
 .backup-item .restore-btn:hover{background:var(--p2)}
 .backup-empty{text-align:center;color:var(--t3);padding:16px 0;font-size:.8rem}
 .spinner{display:inline-block;width:18px;height:18px;border:3px solid rgba(168,84,112,.2);border-radius:50%;border-top-color:var(--p1);animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
 .progress-container{width:100%;height:6px;background:rgba(168,84,112,.15);border-radius:3px;margin:8px 0;overflow:hidden}
 .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--p3),var(--p1));border-radius:3px;transition:width .3s}
-
-/* ===================================================
-   UTILITY
-=================================================== */
-.hidden{display:none!important}
 </style>
 </head>
 <body>
 
 <canvas id="sakura-canvas"></canvas>
 
-<!-- ======================================================
-     LOCK SCREEN
-====================================================== -->
 <div id="lock-screen">
   <div class="lock-card">
     <div class="lock-quote" id="lock-quote"></div>
@@ -561,16 +444,13 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     APP
-====================================================== -->
 <div id="app">
 
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
       <div class="hdr-actions">
-        <button class="hdr-btn" id="sync-btn" onclick="syncData()" title="Đồng bộ dữ liệu mới nhất">
+        <button class="hdr-btn" id="sync-btn" onclick="syncData()" title="Đồng bộ">
           <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
             <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
@@ -589,10 +469,8 @@ img{max-width:100%;display:block}
     <div id="ann-strip"></div>
   </header>
 
-  <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
-    <!-- LỊCH -->
     <div class="col-panel" id="col-cal">
       <div class="gc">
         <div class="gc-hd">
@@ -615,7 +493,6 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
       <div id="streak-wrap"></div>
@@ -637,7 +514,6 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- KỶ NIỆM + ALBUM (sẽ được chuyển vào col-right-desktop trên desktop) -->
     <div class="col-panel" id="col-ann">
       <div class="gc">
         <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
@@ -655,16 +531,14 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- Vùng chứa cột phải cho desktop -->
     <div id="col-right-desktop" style="display:none"></div>
 
-  </div><!-- /main-layout -->
+  </div>
 
-</div><!-- /app -->
+</div>
 
 <button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
 
-<!-- MOBILE BOTTOM NAV -->
 <nav class="mob-nav">
   <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
     <div class="mn-icon">📖</div><div>Nhật ký</div>
@@ -680,9 +554,7 @@ img{max-width:100%;display:block}
   </div>
 </nav>
 
-<!-- ======================================================
-     MODAL: VIẾT / SỬA
-====================================================== -->
+<!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-write')">✕</button>
@@ -733,7 +605,7 @@ img{max-width:100%;display:block}
       <textarea class="fta" id="e-cnt" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:140px"></textarea>
     </div>
     <div class="fg">
-      <label class="fl">Ảnh (tối đa 10) — thêm, xóa, hoặc giữ ảnh cũ khi sửa bài</label>
+      <label class="fl">Ảnh (tối đa 10)</label>
       <div class="img-drop" onclick="document.getElementById('img-inp').click()">
         📷 Bấm để chọn ảnh từ máy
       </div>
@@ -748,9 +620,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: XEM BÀI
-====================================================== -->
+<!-- MODAL XEM BÀI -->
 <div class="modal" id="modal-view">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')">✕</button>
@@ -780,9 +650,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: DANH SÁCH BÀI CÙNG NGÀY
-====================================================== -->
+<!-- MODAL DANH SÁCH CÙNG NGÀY -->
 <div class="modal" id="modal-daylist">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-daylist')">✕</button>
@@ -817,9 +685,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: KỶ NIỆM
-====================================================== -->
+<!-- MODAL KỶ NIỆM -->
 <div class="modal" id="modal-ann">
   <div class="mbox" style="max-width:400px">
     <button class="mc" onclick="closeModal('modal-ann')">✕</button>
@@ -839,9 +705,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: BACKUP & RESTORE (có progress bar, đã sửa lỗi)
-====================================================== -->
+<!-- MODAL BACKUP (mới) -->
 <div class="modal" id="modal-backup">
   <div class="mbox" style="max-width:500px;">
     <button class="mc" onclick="closeModal('modal-backup')">✕</button>
@@ -859,7 +723,6 @@ img{max-width:100%;display:block}
       </button>
     </div>
 
-    <!-- Progress bar -->
     <div class="progress-container" id="backup-progress-container" style="display:none;">
       <div class="progress-bar" id="backup-progress-bar" style="width:0%;"></div>
     </div>
@@ -868,7 +731,7 @@ img{max-width:100%;display:block}
     <div class="fg">
       <label class="fl">📂 Các bản sao lưu gần đây</label>
       <div id="backup-list-container">
-        <div class="backup-empty">Đang tải danh sách...</div>
+        <div class="backup-empty">Đang tải...</div>
       </div>
     </div>
 
@@ -892,12 +755,9 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     JAVASCRIPT
-====================================================== -->
 <script>
 /* ==========================================================
-   ⚙️ CẤU HÌNH
+   PHẦN 1: CẤU HÌNH VÀ STATE
 ========================================================== */
 var CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
@@ -908,9 +768,6 @@ var CFG = {
 var AUTHORS = ['Ánh Ngọc 🌻', 'Anh 💖'];
 var DEFAULT_AUTHOR = 'Ánh Ngọc 🌻';
 
-/* ==========================================================
-   STATE
-========================================================== */
 var S = {
   data: { entries: [], anniversaries: [] },
   calY: new Date().getFullYear(),
@@ -958,11 +815,10 @@ var QUOTES = [
   '"Tình yêu là những điều nhỏ nhặt được lưu giữ mãi mãi."'
 ];
 
-document.getElementById('lock-quote').textContent =
-  QUOTES[Math.floor(Math.random() * QUOTES.length)];
+document.getElementById('lock-quote').textContent = QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
 /* ==========================================================
-   LOCK SCREEN
+   PHẦN 2: LOCK SCREEN
 ========================================================== */
 function kp(d) {
   if (S.pin.length >= 4) return;
@@ -1004,7 +860,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 /* ==========================================================
-   THIẾT LẬP LAYOUT DESKTOP
+   PHẦN 3: LAYOUT DESKTOP
 ========================================================== */
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -1029,9 +885,8 @@ function setupDesktopLayout() {
 var _lastIsDesktop = window.innerWidth >= 769;
 window.addEventListener('resize', function () {
   var nowDesktop = window.innerWidth >= 769;
-  if (nowDesktop && !_lastIsDesktop) {
-    setupDesktopLayout();
-  } else if (!nowDesktop && _lastIsDesktop) {
+  if (nowDesktop && !_lastIsDesktop) setupDesktopLayout();
+  else if (!nowDesktop && _lastIsDesktop) {
     var mainLayout = document.getElementById('main-layout');
     var rightCol = document.getElementById('col-right-desktop');
     var albumCol = document.getElementById('col-album');
@@ -1049,14 +904,13 @@ window.addEventListener('resize', function () {
   }
   _lastIsDesktop = nowDesktop;
 });
-
 function getCurrentMobileTab() {
   var active = document.querySelector('.mn-item.on');
   return active ? active.dataset.tab : 'diary';
 }
 
 /* ==========================================================
-   ĐỒNG HỒ TÌNH YÊU
+   PHẦN 4: ĐỒNG HỒ
 ========================================================== */
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -1073,7 +927,7 @@ function startClock() {
 }
 
 /* ==========================================================
-   SAKURA ANIMATION
+   PHẦN 5: SAKURA
 ========================================================== */
 (function () {
   var cv = document.getElementById('sakura-canvas');
@@ -1107,7 +961,7 @@ function startClock() {
 })();
 
 /* ==========================================================
-   TẢI DỮ LIỆU — JSONP (dùng script tag)
+   PHẦN 6: TẢI DỮ LIỆU
 ========================================================== */
 function loadData(cb) {
   setSyncing(true);
@@ -1144,7 +998,6 @@ function normalizeEntry(e) {
   if (!e.createdAt) e.createdAt = e.updatedAt;
   return e;
 }
-
 function sortEntries(arr) {
   arr.sort(function (a, b) {
     var da = a.date || '';
@@ -1159,16 +1012,15 @@ function sortEntries(arr) {
 }
 
 function syncData() {
-  toast('⏳ Đang đồng bộ dữ liệu mới nhất...');
+  toast('⏳ Đang đồng bộ...');
   loadData(function () { toast('✅ Đồng bộ thành công!'); });
 }
-
 function setSyncing(on) {
   document.getElementById('sync-btn').classList.toggle('syncing', on);
 }
 
 /* ==========================================================
-   GHI DỮ LIỆU — POST (dùng fetch)
+   PHẦN 7: GHI DỮ LIỆU (POST)
 ========================================================== */
 function postData(payload, msg, cb) {
   function doFetch(mode) {
@@ -1196,41 +1048,7 @@ function postData(payload, msg, cb) {
 }
 
 /* ==========================================================
-   GỌI API BÌNH LUẬN
-========================================================== */
-function callCommentAPI(payload, onSuccess, onError) {
-  function doFetch(mode) {
-    return fetch(CFG.URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
-      mode: mode || 'cors'
-    });
-  }
-  doFetch('cors')
-    .then(function (r) { return r.json(); })
-    .then(function (res) {
-      if (res && res.success) {
-        if (onSuccess) onSuccess(res);
-      } else {
-        if (onError) onError(res);
-      }
-    })
-    .catch(function () {
-      doFetch('no-cors')
-        .then(function () {
-          toast('💬 Đã gửi, đang đồng bộ lại để hiển thị...');
-          if (onError) onError(null);
-        })
-        .catch(function () {
-          toast('❌ Lỗi kết nối, thử lại nhé!');
-          if (onError) onError(null);
-        });
-    });
-}
-
-/* ==========================================================
-   RENDER TẤT CẢ
+   PHẦN 8: RENDER
 ========================================================== */
 function renderAll() {
   renderOTD();
@@ -1243,9 +1061,7 @@ function renderAll() {
   buildMonthFilter();
 }
 
-/* ==========================================================
-   CÁC HÀM RENDER (giữ nguyên từ bản cũ)
-========================================================== */
+/* ----- OTD ----- */
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
   var today = todayStr();
@@ -1265,7 +1081,7 @@ function renderOTD() {
     '<div class="otd-pre">' + escH((match.content || '').substring(0, 90)) + '...</div>' +
     '</div></div></div>';
 }
-
+/* ----- Streak ----- */
 function renderStreak() {
   var wrap = document.getElementById('streak-wrap');
   if (!S.data.entries.length) { wrap.innerHTML = ''; return; }
@@ -1286,13 +1102,14 @@ function renderStreak() {
     '<div class="s-sub">Đừng để chuỗi bị gián đoạn nhé 💪</div></div>' +
     '</div></div></div>';
 }
-
 function offsetDay(ds, delta) {
   var d = new Date(ds + 'T00:00:00');
   d.setDate(d.getDate() + delta);
   return fmtDate(d);
 }
-
+/* ----- Calendar ----- */
+var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+              'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 function renderCalendar() {
   document.getElementById('c-mlbl').textContent = MNAMES[S.calM] + ' ' + S.calY;
   var today = new Date();
@@ -1343,17 +1160,13 @@ function renderCalendar() {
   document.getElementById('mood-leg').innerHTML = lg ||
     '<span style="font-size:.68rem;color:var(--t3)">Chưa có bài nào tháng này</span>';
 }
-
 function cm(delta) {
   S.calM += delta;
   if (S.calM < 0) { S.calM = 11; S.calY--; }
   if (S.calM > 11) { S.calM = 0; S.calY++; }
   renderCalendar();
 }
-
-var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
-              'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
-
+/* ----- Day list ----- */
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
   if (!ents.length) return;
@@ -1368,7 +1181,6 @@ function openDayList(dateStr) {
   S.editingDlCommentId = null;
   showDayListModal();
 }
-
 function showDayListModal() {
   var ents = S.dayListEntries;
   var idx = S.dayListIdx;
@@ -1398,22 +1210,15 @@ function showDayListModal() {
 
   openModal('modal-daylist');
 }
-
 function dlNav(delta) {
   S.dayListIdx = Math.max(0, Math.min(S.dayListEntries.length - 1, S.dayListIdx + delta));
   S.editingDlCommentId = null;
   showDayListModal();
 }
+function editFromDayList() { closeModal('modal-daylist'); editEntry(); }
+function delFromDayList() { delEntry(); closeModal('modal-daylist'); }
 
-function editFromDayList() {
-  closeModal('modal-daylist');
-  editEntry();
-}
-function delFromDayList() {
-  delEntry();
-  closeModal('modal-daylist');
-}
-
+/* ----- Edited note ----- */
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
   if (!el) return;
@@ -1431,6 +1236,7 @@ function renderEditedNote(elId, e) {
   el.textContent = '✏️ Sửa lần cuối: ' + fmtFullDateTime(updated);
 }
 
+/* ----- Timeline ----- */
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
   var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
@@ -1442,7 +1248,6 @@ function buildMonthFilter() {
   });
   sel.innerHTML = opts;
 }
-
 function filteredEntries() {
   var q = (document.getElementById('s-inp').value || '').toLowerCase().trim();
   var fm = document.getElementById('f-sel').value;
@@ -1452,7 +1257,6 @@ function filteredEntries() {
     return mQ && mM;
   });
 }
-
 function groupByDate(entries) {
   var order = [];
   var map = {};
@@ -1463,7 +1267,6 @@ function groupByDate(entries) {
   });
   return order.map(function (key) { return { date: key, items: map[key] }; });
 }
-
 function renderTimeline() {
   S.page = 1;
   var entries = filteredEntries();
@@ -1477,7 +1280,6 @@ function renderTimeline() {
   wrap.innerHTML = renderGroupedHTML(show);
   lm.classList.toggle('hidden', show.length >= entries.length);
 }
-
 function loadMore() {
   S.page++;
   var entries = filteredEntries();
@@ -1485,7 +1287,6 @@ function loadMore() {
   document.getElementById('tl-wrap').innerHTML = renderGroupedHTML(show);
   document.getElementById('load-more').classList.toggle('hidden', show.length >= entries.length);
 }
-
 function renderGroupedHTML(entries) {
   var groups = groupByDate(entries);
   return groups.map(function (g) {
@@ -1501,7 +1302,6 @@ function renderGroupedHTML(entries) {
       '</div>';
   }).join('');
 }
-
 function tiHTML(e) {
   var pre = (e.content || '').replace(/\n/g, ' ').substring(0, 90);
   var thumb = '';
@@ -1527,6 +1327,7 @@ function tiHTML(e) {
     '</div></div>';
 }
 
+/* ----- Anniversary ----- */
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
   if (!S.data.anniversaries.length) {
@@ -1549,7 +1350,6 @@ function renderAnniversaries() {
       '</div>';
   }).join('');
 }
-
 function annCountdown(a, today) {
   if (!a.date) return { days: 999, text: '' };
   var p = a.date.split('-');
@@ -1563,7 +1363,6 @@ function annCountdown(a, today) {
   else text = '📅 Còn ' + days + ' ngày';
   return { days: days, text: text };
 }
-
 function renderAnnStrip() {
   var el = document.getElementById('ann-strip');
   if (!S.data.anniversaries.length) { el.textContent = ''; return; }
@@ -1578,7 +1377,6 @@ function renderAnnStrip() {
   else if (bestD === 1) el.textContent = '⏰ Ngày mai: ' + best.name;
   else el.textContent = '📅 Còn ' + bestD + ' ngày đến: ' + best.name;
 }
-
 function openAnnForm() {
   document.getElementById('ann-dt').value = '';
   document.getElementById('ann-nm').value = '';
@@ -1598,6 +1396,7 @@ function delAnn(id) {
   postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
 }
 
+/* ----- Album ----- */
 function renderAlbum() {
   var body = document.getElementById('album-body');
   var entriesWithImgs = S.data.entries.filter(function (e) {
@@ -1662,6 +1461,9 @@ function buildGalleryHTML(images) {
   return '<div class="' + cls + '">' + html + '</div>';
 }
 
+/* ==========================================================
+   PHẦN 9: VIẾT – SỬA – XÓA
+========================================================== */
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = []; S.author = DEFAULT_AUTHOR;
   document.getElementById('write-ttl').textContent = '✍️ Viết nhật ký';
@@ -1675,7 +1477,6 @@ function openWriteModal() {
   newPrompt();
   openModal('modal-write');
 }
-
 function openView(id) {
   var e = S.data.entries.find(function (x) { return x.id === id; });
   if (!e) return;
@@ -1701,7 +1502,6 @@ function openView(id) {
 
   openModal('modal-view');
 }
-
 function editEntry() {
   if (!S.curId) return;
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
@@ -1723,7 +1523,6 @@ function editEntry() {
   document.getElementById('upload-prog').classList.remove('show');
   openModal('modal-write');
 }
-
 function saveEntry() {
   var date = document.getElementById('e-date').value;
   var title = document.getElementById('e-ttl').value.trim();
@@ -1767,7 +1566,6 @@ function saveEntry() {
     setTimeout(function () { openView(savedId); }, 200);
   });
 }
-
 function showSavingOverlay(msg) {
   document.getElementById('saving-txt').textContent = msg || 'Đang lưu nhật ký...';
   document.getElementById('saving-overlay').classList.add('show');
@@ -1775,7 +1573,6 @@ function showSavingOverlay(msg) {
 function hideSavingOverlay() {
   document.getElementById('saving-overlay').classList.remove('show');
 }
-
 function delEntry() {
   if (!S.curId) return;
   if (!confirm('Xóa bài này? Không khôi phục được đâu!')) return;
@@ -1792,6 +1589,7 @@ function delEntry() {
   S.curId = null;
 }
 
+/* ----- Author & Mood ----- */
 function selAuthor(v) {
   S.author = v;
   updateAuthorToggleUI();
@@ -1801,25 +1599,23 @@ function updateAuthorToggleUI() {
     el.classList.toggle('sel', el.dataset.v === S.author);
   });
 }
-
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
   document.querySelectorAll('.mp-o').forEach(function (el) {
     el.classList.toggle('sel', el.dataset.v === S.mood);
   });
 }
-
 function newPrompt() {
   var el = document.getElementById('wp-txt');
   if (el) el.textContent = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
 }
-
 function chgFs(delta) {
   S.fontSize = Math.min(20, Math.max(11, S.fontSize + delta));
   document.getElementById('e-cnt').style.fontSize = S.fontSize + 'px';
   document.getElementById('fs-lbl').textContent = 'Cỡ chữ: ' + S.fontSize + 'px';
 }
 
+/* ----- Ảnh ----- */
 function onImgPick(input) {
   var files = Array.from(input.files);
   if (S.imgs.length + files.length > 10) {
@@ -1850,7 +1646,6 @@ function onImgPick(input) {
   });
   input.value = '';
 }
-
 function compressImg(file, cb) {
   var reader = new FileReader();
   reader.onload = function (ev) {
@@ -1871,7 +1666,6 @@ function compressImg(file, cb) {
   };
   reader.readAsDataURL(file);
 }
-
 function uploadImgToDrive(b64, filename, dateStr, cb) {
   var parts = b64.split(',');
   var base64Data = parts[1] || parts[0];
@@ -1895,7 +1689,6 @@ function uploadImgToDrive(b64, filename, dateStr, cb) {
   })
   .catch(function () { cb(null); });
 }
-
 function renderImgPrev() {
   document.getElementById('img-prev').innerHTML = S.imgs.map(function (img, i) {
     var src = img.url || img.data || img;
@@ -1905,7 +1698,6 @@ function renderImgPrev() {
       '</div>';
   }).join('');
 }
-
 function rmImg(i) {
   var img = S.imgs[i];
   if (img && img.driveId) {
@@ -1919,6 +1711,9 @@ function rmImg(i) {
   renderImgPrev();
 }
 
+/* ==========================================================
+   PHẦN 10: BÌNH LUẬN
+========================================================== */
 function toggleCmtAvatar() {
   var current = S.cmtAuthor;
   var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
@@ -1930,10 +1725,8 @@ function selCmtAuthor(v) {
 }
 function updateCmtToggleUI() {
   var icon = S.cmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
-  var el = document.getElementById('cmt-avatar-toggle');
-  if (el) el.textContent = icon;
+  document.getElementById('cmt-avatar-toggle').textContent = icon;
 }
-
 function renderComments() {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
   if (!e) return;
@@ -1948,7 +1741,6 @@ function renderComments() {
   listEl.innerHTML = e.comments.map(function (c) { return cmtHTML(c, 'view'); }).join('');
   listEl.scrollTop = listEl.scrollHeight;
 }
-
 function cmtHTML(c, scope) {
   var editedTag = c.editedAt ? '<span class="cmt-edited-tag">(đã sửa)</span>' : '';
   var editFn = scope === 'dl' ? 'startEditDlComment' : 'startEditComment';
@@ -1965,7 +1757,6 @@ function cmtHTML(c, scope) {
     '<button class="cmt-action-btn del" onclick="' + delFn + '(\'' + escH(c.id) + '\')">🗑 Xóa</button>' +
     '</div></div>';
 }
-
 function sendComment() {
   var inp = document.getElementById('cmt-inp');
   var text = inp.value.trim();
@@ -2013,7 +1804,6 @@ function sendComment() {
     loadData(function () { renderComments(); renderTimeline(); });
   });
 }
-
 function startEditComment(commentId) {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
   if (!e) return;
@@ -2026,7 +1816,6 @@ function startEditComment(commentId) {
   document.getElementById('cmt-send-btn').textContent = '✓';
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
-
 function delComment(commentId) {
   if (!confirm('Xóa bình luận này?')) return;
   if (!S.curId) return;
@@ -2044,7 +1833,38 @@ function delComment(commentId) {
     loadData(function () { renderComments(); renderTimeline(); });
   });
 }
+function callCommentAPI(payload, onSuccess, onError) {
+  function doFetch(mode) {
+    return fetch(CFG.URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      mode: mode || 'cors'
+    });
+  }
+  doFetch('cors')
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (res && res.success) {
+        if (onSuccess) onSuccess(res);
+      } else {
+        if (onError) onError(res);
+      }
+    })
+    .catch(function () {
+      doFetch('no-cors')
+        .then(function () {
+          toast('💬 Đã gửi, đang đồng bộ lại để hiển thị...');
+          if (onError) onError(null);
+        })
+        .catch(function () {
+          toast('❌ Lỗi kết nối, thử lại nhé!');
+          if (onError) onError(null);
+        });
+    });
+}
 
+/* ----- Bình luận daylist ----- */
 function toggleDlCmtAvatar() {
   var current = S.dlCmtAuthor;
   var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
@@ -2056,10 +1876,8 @@ function selDlCmtAuthor(v) {
 }
 function updateDlCmtToggleUI() {
   var icon = S.dlCmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
-  var el = document.getElementById('dl-cmt-avatar-toggle');
-  if (el) el.textContent = icon;
+  document.getElementById('dl-cmt-avatar-toggle').textContent = icon;
 }
-
 function renderDlComments() {
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -2075,7 +1893,6 @@ function renderDlComments() {
   listEl.scrollTop = listEl.scrollHeight;
   document.getElementById('dl-cmt-inp').value = '';
 }
-
 function sendDlComment() {
   var inp = document.getElementById('dl-cmt-inp');
   var text = inp.value.trim();
@@ -2127,7 +1944,6 @@ function sendDlComment() {
     loadData(function () { renderDlComments(); renderTimeline(); });
   });
 }
-
 function startEditDlComment(commentId) {
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -2140,7 +1956,6 @@ function startEditDlComment(commentId) {
   document.getElementById('dl-cmt-send-btn').textContent = '✓';
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
-
 function delDlComment(commentId) {
   if (!confirm('Xóa bình luận này?')) return;
   var e = S.dayListEntries[S.dayListIdx];
@@ -2161,6 +1976,9 @@ function delDlComment(commentId) {
   });
 }
 
+/* ==========================================================
+   PHẦN 11: UTILITIES
+========================================================== */
 function openLb(src) {
   document.getElementById('lb-img').src = src;
   document.getElementById('lb').classList.add('open');
@@ -2171,7 +1989,6 @@ var TABS = ['diary', 'ann', 'cal', 'album'];
 function switchTab(tab) {
   var isMobile = window.innerWidth < 769;
   if (!isMobile) return;
-
   TABS.forEach(function (t) {
     var el = document.getElementById('col-' + t);
     if (el) {
@@ -2252,9 +2069,8 @@ function escH(s) {
 }
 
 /* ==========================================================
-   BACKUP & RESTORE — SỬA LỖI (dùng fetch trực tiếp, không qua postData)
+   PHẦN 12: BACKUP & RESTORE (MỚI, ĐƠN GIẢN)
 ========================================================== */
-
 function openBackupModal() {
   openModal('modal-backup');
   refreshBackupList();
@@ -2264,7 +2080,6 @@ function refreshBackupList() {
   var container = document.getElementById('backup-list-container');
   container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang tải...</div>';
 
-  // Gọi GET với JSON (không cần callback)
   fetch(CFG.URL + '?action=get_backup_list&_=' + Date.now(), { mode: 'cors' })
     .then(function(r) { return r.json(); })
     .then(function(res) {
@@ -2274,9 +2089,8 @@ function refreshBackupList() {
         container.innerHTML = '<div class="backup-empty">Không có file backup nào.</div>';
       }
     })
-    .catch(function(err) {
-      console.error('Lỗi tải danh sách backup:', err);
-      container.innerHTML = '<div class="backup-empty">❌ Không thể tải danh sách backup.</div>';
+    .catch(function() {
+      container.innerHTML = '<div class="backup-empty">❌ Không tải được danh sách.</div>';
     });
 }
 
@@ -2305,7 +2119,6 @@ function manualBackup() {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Đang sao lưu...';
 
-  // Hiển thị progress bar
   var progContainer = document.getElementById('backup-progress-container');
   var progBar = document.getElementById('backup-progress-bar');
   var statusText = document.getElementById('backup-status-text');
@@ -2321,7 +2134,6 @@ function manualBackup() {
     statusText.textContent = 'Đang tạo bản sao lưu... ' + progress + '%';
   }, 100);
 
-  // Gửi POST trực tiếp bằng fetch
   fetch(CFG.URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -2344,7 +2156,7 @@ function manualBackup() {
       }, 1000);
     } else {
       progBar.style.width = '0%';
-      statusText.textContent = '❌ Lỗi sao lưu: ' + (res && res.error ? res.error : 'không xác định');
+      statusText.textContent = '❌ Lỗi: ' + (res && res.error ? res.error : 'không xác định');
       toast('⚠️ Lỗi sao lưu!');
       setTimeout(function() {
         progContainer.style.display = 'none';
@@ -2352,7 +2164,7 @@ function manualBackup() {
       }, 2000);
     }
   })
-  .catch(function(err) {
+  .catch(function() {
     clearInterval(interval);
     btn.disabled = false;
     btn.innerHTML = '💾 Sao lưu ngay';
@@ -2413,7 +2225,7 @@ function restoreFromBackup(fileId) {
       });
     } else {
       progBar.style.width = '0%';
-      statusText.textContent = '❌ Lỗi khôi phục: ' + (res && res.error ? res.error : 'không xác định');
+      statusText.textContent = '❌ Lỗi: ' + (res && res.error ? res.error : 'không xác định');
       toast('⚠️ Lỗi khôi phục!');
       setTimeout(function() {
         progContainer.style.display = 'none';
@@ -2423,7 +2235,7 @@ function restoreFromBackup(fileId) {
       }, 2000);
     }
   })
-  .catch(function(err) {
+  .catch(function() {
     clearInterval(interval);
     S.isBackupRestoring = false;
     progBar.style.width = '0%';
@@ -2437,7 +2249,7 @@ function restoreFromBackup(fileId) {
   });
 }
 
-// Đóng modal backup reset trạng thái
+// Override closeModal để reset trạng thái backup
 var origCloseModal = closeModal;
 closeModal = function(id) {
   origCloseModal(id);
@@ -2450,14 +2262,11 @@ closeModal = function(id) {
   }
 };
 
-// Khởi tạo cỡ chữ toàn cục (nếu có)
+// Khởi tạo
 (function() {
   var saved = localStorage.getItem('globalFontSize');
-  if (saved) {
-    document.body.style.fontSize = saved + 'px';
-  }
+  if (saved) document.body.style.fontSize = saved + 'px';
 })();
-
 </script>
 </body>
 </html>
