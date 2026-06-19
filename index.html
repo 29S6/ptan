@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.5.6 - Chỉ hiển thị Streak dưới đồng hồ, bỏ thông báo kỷ niệm -->
+<!-- V5.5.7 - Thiết kế lại streak dưới đồng hồ đẹp, gọn, không trùng icon -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -66,29 +66,84 @@ img{max-width:100%;display:block}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
-/* Status slider - chỉ hiển thị streak */
+/* ===== STATUS SLIDER MỚI – ĐẸP, GỌN, KHÔNG TRÙNG ICON ===== */
 .status-slider{
   display:flex;
   align-items:center;
-  justify-content:center;
   gap:12px;
-  padding:10px 20px;
+  padding:10px 18px;
   margin:4px 18px 10px;
   background:rgba(255,255,255,.12);
   backdrop-filter:blur(8px);
   -webkit-backdrop-filter:blur(8px);
-  border-radius:18px;
+  border-radius:20px;
   border:1px solid rgba(255,255,255,.2);
-  min-height:56px;
+  min-height:64px;
   color:#fff;
   text-shadow:0 1px 4px rgba(0,0,0,.15);
 }
-.status-slider .icon{font-size:1.8rem;line-height:1;flex-shrink:0}
-.status-slider .info{display:flex;flex-direction:column;align-items:flex-start;line-height:1.3}
-.status-slider .info .main{font-size:1.1rem;font-weight:700}
-.status-slider .info .main strong{font-weight:800;color:#fff}
-.status-slider .info .sub{font-size:.8rem;font-weight:400;opacity:.85}
-.status-slider .fire{color:#ff8c00;filter:drop-shadow(0 0 8px #ff8c0066)}
+.status-slider .icon-fire{
+  font-size:2rem;
+  line-height:1;
+  flex-shrink:0;
+  color:#ff8c00;
+  filter:drop-shadow(0 0 8px #ff8c0066);
+}
+.status-slider .info{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.status-slider .info .main{
+  font-size:1.05rem;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.status-slider .info .main strong{
+  font-size:1.2rem;
+  font-weight:800;
+  color:#fff;
+}
+.status-slider .info .sub{
+  font-size:.82rem;
+  font-weight:400;
+  opacity:.9;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.status-slider .progress-wrap{
+  width:100%;
+  height:4px;
+  background:rgba(255,255,255,.2);
+  border-radius:3px;
+  overflow:hidden;
+  margin-top:2px;
+}
+.status-slider .progress-wrap .fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg, #ffb347, #ff8c00);
+  border-radius:3px;
+  transition:width .6s ease;
+}
+.status-slider .empty-state{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.status-slider .empty-state .icon{
+  font-size:1.8rem;
+}
+.status-slider .empty-state .text{
+  font-size:.95rem;
+  font-weight:500;
+  opacity:.85;
+}
 .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:rgba(255,243,249,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1.5px solid rgba(168,84,112,.12);padding:5px 0 env(safe-area-inset-bottom,5px);box-shadow:0 -4px 18px rgba(168,84,112,.10)}
 @media(max-width:768px){.mob-nav{display:flex}}
 .mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 3px;color:var(--t3);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;transition:color .18s;position:relative}
@@ -381,7 +436,7 @@ img{max-width:100%;display:block}
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <!-- Status slider chỉ hiển thị streak -->
+    <!-- ===== STATUS SLIDER MỚI ===== -->
     <div class="status-slider" id="status-slider"></div>
   </header>
 
@@ -1163,21 +1218,12 @@ var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 // ============================================================
-// STATUS SLIDER – CHỈ HIỂN THỊ STREAK
+// STATUS SLIDER – CHỈ STREAK, THIẾT KẾ MỚI
 // ============================================================
 function updateStatusSlider() {
   var container = document.getElementById('status-slider');
   if (!container) return;
 
-  var streakHTML = getStreakBlock();
-  if (streakHTML) {
-    container.innerHTML = streakHTML;
-  } else {
-    container.innerHTML = '<div class="icon fire">🔥</div><div class="info"><span class="main">Hãy viết nhật ký hôm nay nhé!</span></div>';
-  }
-}
-
-function getStreakBlock() {
   var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
   var cur = 0;
   var today = todayStr();
@@ -1188,31 +1234,59 @@ function getStreakBlock() {
     while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
   }
 
+  // Xác định mốc tiếp theo
+  var nextMilestone = 0;
+  if (cur < 5) nextMilestone = 5;
+  else if (cur < 10) nextMilestone = 10;
+  else if (cur < 30) nextMilestone = 30;
+  else if (cur < 50) nextMilestone = 50;
+  else if (cur < 100) nextMilestone = 100;
+  else if (cur < 365) nextMilestone = 365;
+  else nextMilestone = 365;
+
+  var progress = nextMilestone > 0 ? Math.min(100, (cur / nextMilestone) * 100) : 0;
+
   var mainText = cur > 0 ? '<strong>' + cur + '</strong> ngày liên tiếp' : 'Chưa có streak';
   var subText = '';
+  var emoji = '';
   if (cur === 0) {
-    subText = '💪 Hãy bắt đầu viết hôm nay!';
+    subText = 'Hãy bắt đầu viết hôm nay nhé! 🌱';
+    emoji = '🌱';
   } else if (cur < 5) {
-    subText = '🔥 Tiếp tục giữ lửa nào!';
+    subText = 'Tiếp tục giữ lửa nào! 🔥';
+    emoji = '💪';
   } else if (cur < 10) {
-    subText = '🌟 Cố lên, sắp 10 ngày rồi!';
+    subText = 'Cố lên, sắp 10 ngày rồi! ⭐';
+    emoji = '⭐';
   } else if (cur < 30) {
-    subText = '🌈 Gần đến 30 ngày, cố gắng nhé!';
+    subText = 'Gần đến 30 ngày, cố gắng nhé! 🌈';
+    emoji = '🌈';
   } else if (cur < 50) {
-    subText = '🎯 Chỉ còn ' + (50 - cur) + ' ngày nữa là 50 ngày!';
+    subText = 'Chỉ còn ' + (50 - cur) + ' ngày nữa là 50 ngày! 🎯';
+    emoji = '🎯';
   } else if (cur < 100) {
-    subText = '🚀 Tiến tới 100 ngày nào!';
+    subText = 'Tiến tới 100 ngày nào! 🚀';
+    emoji = '🚀';
   } else if (cur < 365) {
-    subText = '🏆 ' + cur + ' ngày, sắp chạm 365 rồi!';
+    subText = cur + ' ngày, sắp chạm 365 rồi! 🏆';
+    emoji = '🏆';
   } else {
-    subText = '👑 365 ngày – Bạn là huyền thoại!';
+    subText = '365 ngày – Bạn là huyền thoại! 👑';
+    emoji = '👑';
   }
 
-  return '<span class="icon fire">🔥</span>' +
-    '<span class="info">' +
-      '<span class="main">' + mainText + '</span>' +
+  var progressHTML = '';
+  if (cur > 0 && nextMilestone > 0 && nextMilestone > cur) {
+    progressHTML = '<div class="progress-wrap"><div class="fill" style="width:' + progress + '%;"></div></div>';
+  }
+
+  container.innerHTML = 
+    '<span class="icon-fire">🔥</span>' +
+    '<div class="info">' +
+      '<span class="main">' + mainText + ' <span style="font-size:1rem;">' + emoji + '</span></span>' +
       '<span class="sub">' + subText + '</span>' +
-    '</span>';
+      progressHTML +
+    '</div>';
 }
 
 function offsetDay(ds, delta) {
