@@ -1,16 +1,5 @@
 <!DOCTYPE html>
-<!--
-╔══════════════════════════════════════════════════════════════╗
-║  NHẬT KÝ CỦA MÌNH – V5.5.1                                 ║
-║  Thay đổi:                                               ║
-║  - Thêm tính năng Backup & Restore (thủ công và tự động) ║
-║  - Nút backup (📦) trên header, mở modal quản lý backup  ║
-║  - Backup thủ công, hiển thị danh sách 10 bản gần nhất   ║
-║  - Khôi phục với xác nhận chi tiết                       ║
-║  - Tự động backup lúc 3h sáng (cần cài trigger)          ║
-║  - Giữ nguyên toàn bộ tính năng V5.5                     ║
-╚══════════════════════════════════════════════════════════════╝
--->
+<!-- V5.5.2 - Backup & Restore hoạt động, giao diện mới -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -22,9 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
-/* ===================================================
-   DESIGN TOKENS — ROSE SMOKE PALETTE
-=================================================== */
 :root{
   --p1:#a85470;
   --p2:#c97d96;
@@ -43,49 +29,17 @@
   --font-ttl:'Baloo 2',sans-serif;
   --font-body:'Itim','Baloo 2',sans-serif;
 }
-
-/* ===================================================
-   RESET & BASE
-=================================================== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{
-  font-family:var(--font-body);
-  background:linear-gradient(145deg,#fce8f0 0%,#f4e0ef 50%,#ece0f5 100%);
-  min-height:100vh;color:var(--t1);overflow-x:hidden;
-}
+body{font-family:var(--font-body);background:linear-gradient(145deg,#fce8f0 0%,#f4e0ef 50%,#ece0f5 100%);min-height:100vh;color:var(--t1);overflow-x:hidden}
 button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 input,textarea,select{font-family:inherit}
 img{max-width:100%;display:block}
-
-/* ===================================================
-   SAKURA CANVAS
-=================================================== */
 #sakura-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5}
-
-/* ===================================================
-   LOCK SCREEN
-=================================================== */
-#lock-screen{
-  position:fixed;inset:0;z-index:9000;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(155deg,#fce0ec,#f0d5f0,#dfd8f8);
-  transition:opacity .5s,transform .5s;
-}
+#lock-screen{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#fce0ec,#f0d5f0,#dfd8f8);transition:opacity .5s,transform .5s}
 #lock-screen.hiding{opacity:0;transform:scale(1.05);pointer-events:none}
-.lock-card{
-  background:rgba(255,248,253,.82);
-  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
-  border:1.5px solid rgba(255,255,255,.7);border-radius:28px;
-  padding:38px 34px 34px;text-align:center;
-  box-shadow:0 24px 64px rgba(168,84,112,.22);
-  max-width:310px;width:90%;
-}
-.lock-quote{
-  font-family:var(--font-ttl);
-  font-size:.95rem;color:var(--p2);min-height:40px;
-  line-height:1.5;font-weight:600;margin-bottom:18px;
-}
+.lock-card{background:rgba(255,248,253,.82);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1.5px solid rgba(255,255,255,.7);border-radius:28px;padding:38px 34px 34px;text-align:center;box-shadow:0 24px 64px rgba(168,84,112,.22);max-width:310px;width:90%}
+.lock-quote{font-family:var(--font-ttl);font-size:.95rem;color:var(--p2);min-height:40px;line-height:1.5;font-weight:600;margin-bottom:18px}
 .lock-heart{font-size:46px;display:block;margin-bottom:8px;animation:hb 1.9s ease-in-out infinite}
 @keyframes hb{0%,100%{transform:scale(1)}14%{transform:scale(1.22)}28%{transform:scale(1)}42%{transform:scale(1.13)}56%{transform:scale(1)}}
 .lock-ttl{font-family:var(--font-ttl);font-size:1.85rem;font-weight:800;color:var(--p1);margin-bottom:3px}
@@ -98,147 +52,50 @@ img{max-width:100%;display:block}
 .pk:active{transform:scale(.9);background:var(--p4)}
 .pk.del{color:var(--p1)}
 .lock-err{color:#c04060;font-size:.76rem;min-height:15px;margin-top:8px;font-weight:600}
-
-/* ===================================================
-   APP WRAPPER
-=================================================== */
 #app{display:none;position:relative;z-index:1;min-height:100vh;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
-@media(min-width:769px){
-  #app{padding-bottom:24px}
-}
-
-/* ===================================================
-   HEADER
-=================================================== */
-.app-hdr{
-  background:linear-gradient(135deg,rgba(168,84,112,.9),rgba(201,125,150,.82));
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1.5px solid rgba(255,255,255,.28);
-  position:sticky;top:0;z-index:200;
-  box-shadow:0 4px 20px rgba(168,84,112,.2);
-}
+@media(min-width:769px){#app{padding-bottom:24px}}
+.app-hdr{background:linear-gradient(135deg,rgba(168,84,112,.9),rgba(201,125,150,.82));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1.5px solid rgba(255,255,255,.28);position:sticky;top:0;z-index:200;box-shadow:0 4px 20px rgba(168,84,112,.2)}
 .hdr-top{display:flex;align-items:center;justify-content:space-between;padding:13px 18px 9px}
 .hdr-logo{font-family:var(--font-ttl);font-size:1.46rem;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(100,30,60,.28)}
 .hdr-actions{display:flex;gap:8px;align-items:center}
-.hdr-btn{
-  background:rgba(255,255,255,.22);
-  border:1px solid rgba(255,255,255,.32);
-  border-radius:20px;
-  padding:6px 10px;
-  font-size:.85rem;
-  color:#fff;
-  transition:all .15s;
-  display:flex;
-  align-items:center;
-  gap:4px;
-}
+.hdr-btn{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:6px 10px;font-size:.85rem;color:#fff;transition:all .15s;display:flex;align-items:center;gap:4px}
 .hdr-btn:hover{background:rgba(255,255,255,.32)}
 .hdr-btn.syncing svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .clock-row{display:flex;gap:6px;justify-content:center;padding:0 18px 10px;flex-wrap:wrap}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
-
-#ann-strip{text-align:center;padding:0 18px 8px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.92);min-height:22px}
-
-/* ===================================================
-   MOBILE BOTTOM NAV
-=================================================== */
-.mob-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;z-index:300;
-  background:rgba(255,243,249,.94);
-  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
-  border-top:1.5px solid rgba(168,84,112,.12);
-  padding:5px 0 env(safe-area-inset-bottom,5px);
-  box-shadow:0 -4px 18px rgba(168,84,112,.10);
-}
+.status-slider{text-align:center;padding:4px 18px 10px;font-size:.9rem;font-weight:600;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.15);min-height:40px;display:flex;align-items:center;justify-content:center;gap:8px}
+.status-slider .fire{color:#ff8c00;filter:drop-shadow(0 0 6px #ff8c0066)}
+.status-slider .ann-heart{color:#ff6b8a;filter:drop-shadow(0 0 6px #ff6b8a66)}
+.status-slider .ann-text{font-size:.8rem;font-weight:400;opacity:.9}
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:rgba(255,243,249,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1.5px solid rgba(168,84,112,.12);padding:5px 0 env(safe-area-inset-bottom,5px);box-shadow:0 -4px 18px rgba(168,84,112,.10)}
 @media(max-width:768px){.mob-nav{display:flex}}
 .mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 3px;color:var(--t3);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;transition:color .18s;position:relative}
 .mn-item.on{color:var(--p1)}
 .mn-icon{font-size:1.25rem;line-height:1}
-
-/* ===================================================
-   MAIN LAYOUT — DESKTOP 3 cột
-=================================================== */
-.main-layout{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:0;
-  max-width:1440px;margin:0 auto;
-  padding:12px 11px 16px;
-}
-@media(max-width:768px){
-  .col-panel{display:none}
-  .col-panel.on{display:block}
-}
-
-@media(min-width:769px){
-  .main-layout{
-    display:grid;
-    grid-template-columns: 280px 1fr 320px;
-    gap:20px;
-    padding:22px 26px 30px;
-  }
-  .col-panel{display:block!important}
-  #col-cal{order:1;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
-  #col-diary{order:2;min-width:0}
-  #col-right-desktop{order:3;display:flex;flex-direction:column;gap:20px;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
-  #col-ann, #col-album{display:none!important}
-}
-
-@media(min-width:769px) and (max-width:991px){
-  .main-layout{
-    grid-template-columns: 1fr;
-    gap:16px;
-  }
-  #col-cal{order:1;position:static;max-height:none;overflow-y:visible}
-  #col-diary{order:2}
-  #col-right-desktop{order:3;display:block;position:static;max-height:none;overflow-y:visible}
-  #col-right-desktop .gc{margin-bottom:14px}
-}
-
-/* ===================================================
-   GLASS CARD
-=================================================== */
-.gc{
-  background:var(--glass);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border:1.5px solid var(--glass-b);
-  border-radius:var(--rrb);
-  box-shadow:var(--sh);
-  overflow:hidden;margin-bottom:14px;
-}
+.main-layout{display:grid;grid-template-columns:1fr;gap:0;max-width:1440px;margin:0 auto;padding:12px 11px 16px}
+@media(max-width:768px){.col-panel{display:none}.col-panel.on{display:block}}
+@media(min-width:769px){.main-layout{display:grid;grid-template-columns:280px 1fr 320px;gap:20px;padding:22px 26px 30px}.col-panel{display:block!important}#col-cal{order:1;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}#col-diary{order:2;min-width:0}#col-right-desktop{order:3;display:flex;flex-direction:column;gap:20px;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}#col-ann,#col-album{display:none!important}}
+@media(min-width:769px) and (max-width:991px){.main-layout{grid-template-columns:1fr;gap:16px}#col-cal{order:1;position:static;max-height:none;overflow-y:visible}#col-diary{order:2}#col-right-desktop{order:3;display:block;position:static;max-height:none;overflow-y:visible}#col-right-desktop .gc{margin-bottom:14px}}
+.gc{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1.5px solid var(--glass-b);border-radius:var(--rrb);box-shadow:var(--sh);overflow:hidden;margin-bottom:14px}
 .gc-hd{padding:13px 17px 11px;border-bottom:1px solid rgba(168,84,112,.09);display:flex;align-items:center;justify-content:space-between}
 .gc-ttl{font-family:var(--font-ttl);font-size:1.2rem;font-weight:700;color:var(--p1)}
 .gc-body{padding:13px 17px}
-
-@media(min-width:769px){
-  #col-diary .gc-ttl{font-size:1.5rem}
-  #col-diary .gc-body{padding:20px 26px}
-  #col-diary .s-inp{font-size:.95rem;padding:10px 18px}
-  #col-diary .f-sel{font-size:.86rem}
-}
-
-/* ===================================================
-   DIARY
-=================================================== */
+@media(min-width:769px){#col-diary .gc-ttl{font-size:1.5rem}#col-diary .gc-body{padding:20px 26px}#col-diary .s-inp{font-size:.95rem;padding:10px 18px}#col-diary .f-sel{font-size:.86rem}}
 .search-row{display:flex;gap:7px;margin-bottom:13px}
 .s-inp{flex:1;background:rgba(255,255,255,.68);border:1.5px solid rgba(168,84,112,.2);border-radius:22px;padding:7px 14px;font-size:.83rem;color:var(--t1);outline:none;transition:border-color .2s}
 .s-inp:focus{border-color:var(--p1)}
 .s-inp::placeholder{color:var(--t3)}
 .f-sel{background:rgba(255,255,255,.68);border:1.5px solid rgba(168,84,112,.2);border-radius:22px;padding:7px 10px;font-size:.76rem;color:var(--t2);outline:none;cursor:pointer}
 .tl-wrap{display:flex;flex-direction:column;gap:4px}
-
 .tl-day-group{margin-bottom:14px}
 .tl-day-hdr{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:0 2px}
 .tl-day-hdr-dot{width:7px;height:7px;border-radius:50%;background:var(--p1);flex-shrink:0}
 .tl-day-hdr-lbl{font-size:.76rem;font-weight:700;color:var(--p1);text-transform:uppercase;letter-spacing:.03em}
 .tl-day-hdr-line{flex:1;height:1px;background:rgba(168,84,112,.15)}
 .tl-day-items{display:flex;flex-direction:column;gap:8px}
-
 .ti{background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.12);border-radius:var(--rr);padding:11px 13px;cursor:pointer;transition:all .17s;position:relative;overflow:hidden}
 .ti::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--p3),var(--p1));border-radius:3px 0 0 3px}
 .ti:hover{transform:translateX(3px);box-shadow:var(--sh-sm);background:rgba(255,255,255,.78)}
@@ -252,32 +109,19 @@ img{max-width:100%;display:block}
 .ti-pre{font-size:.74rem;color:var(--t2);line-height:1.44;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ti-thumb{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0}
 .ti-cmt-count{font-size:.64rem;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:3px}
-
-@media(min-width:769px){
-  #col-diary .ti{padding:16px 19px}
-  #col-diary .ti-ttl{font-size:1.02rem}
-  #col-diary .ti-pre{font-size:.84rem}
-  #col-diary .ti-thumb{width:58px;height:58px}
-}
-
+@media(min-width:769px){#col-diary .ti{padding:16px 19px}#col-diary .ti-ttl{font-size:1.02rem}#col-diary .ti-pre{font-size:.84rem}#col-diary .ti-thumb{width:58px;height:58px}}
 .load-more{width:100%;background:rgba(168,84,112,.07);border:1.5px dashed var(--p3);border-radius:var(--rr);padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);transition:all .18s;margin-top:6px}
 .load-more:hover{background:var(--p4)}
 .empty-hint{text-align:center;color:var(--t3);font-size:.83rem;padding:26px 0}
-
 .otd-card{background:linear-gradient(135deg,rgba(168,84,112,.09),rgba(201,125,150,.06));border:1.5px solid rgba(168,84,112,.18);border-radius:var(--rr);padding:13px 15px;margin-bottom:13px;cursor:pointer;transition:all .18s}
 .otd-card:hover{background:rgba(168,84,112,.14);transform:translateY(-1px)}
 .otd-lbl{font-size:.65rem;font-weight:700;color:var(--p2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
 .otd-ttl{font-weight:700;font-size:.86rem;color:var(--t1)}
 .otd-pre{font-size:.73rem;color:var(--t2);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
 .streak-bar{display:flex;align-items:center;gap:9px;background:rgba(255,195,80,.1);border:1.5px solid rgba(255,175,40,.22);border-radius:var(--rr);padding:9px 13px;margin-bottom:13px}
 .s-fire{font-size:1.3rem}
 .s-ttl{font-size:.78rem;font-weight:700;color:#b07a10}
 .s-sub{font-size:.68rem;color:var(--t3)}
-
-/* ===================================================
-   ANNIVERSARY
-=================================================== */
 .ann-item{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.52);border:1px solid rgba(168,84,112,.12);border-radius:11px;padding:10px 12px;margin-bottom:8px}
 .ann-dot{width:9px;height:9px;border-radius:50%;background:var(--p1);flex-shrink:0}
 .ann-info{flex:1;min-width:0}
@@ -291,10 +135,6 @@ img{max-width:100%;display:block}
 .ann-del:hover{color:#c04060}
 .add-ann-btn{width:100%;background:rgba(168,84,112,.07);border:1.5px dashed var(--p3);border-radius:11px;padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);transition:all .18s}
 .add-ann-btn:hover{background:var(--p4)}
-
-/* ===================================================
-   CALENDAR
-=================================================== */
 .cal-nav{display:flex;align-items:center;gap:5px}
 .cnav{background:rgba(168,84,112,.1);border:1px solid var(--p4);border-radius:8px;width:27px;height:27px;font-size:.84rem;color:var(--p1);display:flex;align-items:center;justify-content:center;transition:all .14s}
 .cnav:hover{background:var(--p4)}
@@ -310,26 +150,16 @@ img{max-width:100%;display:block}
 .cd-ic{font-size:.52rem;line-height:1}
 .cd-ann{width:5px;height:5px;border-radius:50%;background:var(--p1);margin-top:1px}
 .cd-multi{font-size:.48rem;font-weight:800;background:var(--p1);color:#fff;border-radius:6px;padding:0 3px;line-height:1.4;margin-top:1px}
-
 .mood-map-ttl{font-size:.68rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin:9px 0 5px}
 .mood-map-leg{display:flex;gap:7px;flex-wrap:wrap}
 .ml-i{display:flex;align-items:center;gap:3px;font-size:.64rem;color:var(--t2)}
-
-/* ===================================================
-   ALBUM
-=================================================== */
 .album-day-group{margin-bottom:22px}
 .album-day-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .album-day-dot{width:10px;height:10px;border-radius:50%;background:var(--p1);flex-shrink:0}
 .album-day-lbl{font-size:.78rem;font-weight:700;color:var(--p1)}
 .album-day-time{font-size:.68rem;color:var(--t3);font-weight:600;white-space:nowrap;margin-left:auto}
 .album-day-entry-ttl{font-size:.75rem;color:var(--t2);margin-bottom:8px;padding-left:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.album-grid{
-  display:grid;
-  gap:4px;
-  border-radius:12px;
-  overflow:hidden;
-}
+.album-grid{display:grid;gap:4px;border-radius:12px;overflow:hidden}
 .album-grid.g1{grid-template-columns:1fr}
 .album-grid.g2{grid-template-columns:1fr 1fr}
 .album-grid.g3{grid-template-columns:1fr 1fr}
@@ -355,27 +185,10 @@ img{max-width:100%;display:block}
 .album-grid.g8 .a-img{height:130px}
 .album-grid.g9 .a-img{height:130px}
 .album-grid.g10 .a-img{height:130px}
-
 .album-empty{text-align:center;color:var(--t3);padding:36px 0;font-size:.85rem}
-
-/* ===================================================
-   FAB
-=================================================== */
-#fab{
-  position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));right:18px;
-  z-index:250;width:52px;height:52px;border-radius:50%;
-  background:linear-gradient(135deg,var(--p3),var(--p1));
-  border:none;box-shadow:0 6px 22px rgba(168,84,112,.44);
-  font-size:1.3rem;color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .18s;
-}
+#fab{position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));right:18px;z-index:250;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--p3),var(--p1));border:none;box-shadow:0 6px 22px rgba(168,84,112,.44);font-size:1.3rem;color:#fff;display:flex;align-items:center;justify-content:center;transition:all .18s}
 #fab:hover{transform:scale(1.1) rotate(7deg);box-shadow:0 10px 28px rgba(168,84,112,.55)}
 @media(min-width:769px){#fab{bottom:24px;right:26px;width:56px;height:56px;font-size:1.42rem}}
-
-/* ===================================================
-   MODAL
-=================================================== */
 .modal{position:fixed;inset:0;z-index:500;background:rgba(61,31,45,.36);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:14px}
 .modal.open{display:flex}
 .mbox{background:linear-gradient(158deg,#fff8fb,#fde8f0);border:1.5px solid rgba(255,255,255,.72);border-radius:24px;box-shadow:0 24px 64px rgba(120,40,70,.2);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;padding:24px 24px 20px;position:relative}
@@ -384,48 +197,37 @@ img{max-width:100%;display:block}
 .mc{position:absolute;top:13px;right:13px;background:rgba(168,84,112,.1);border:1px solid var(--p4);border-radius:50%;width:29px;height:29px;font-size:.86rem;color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .14s}
 .mc:hover{background:var(--p4);color:var(--p1)}
 .m-ttl{font-family:var(--font-ttl);font-size:1.5rem;font-weight:700;color:var(--p1);margin-bottom:15px}
-
-@media(min-width:769px){
-  #modal-write .mbox{max-width:680px}
-}
-
+@media(min-width:769px){#modal-write .mbox{max-width:680px}}
 .fg{margin-bottom:13px}
 .fl{display:block;font-size:.71rem;font-weight:700;color:var(--t2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
 .fi,.fta,.fse{width:100%;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:10px;padding:8px 12px;font-size:.86rem;color:var(--t1);outline:none;transition:border-color .2s}
 .fi:focus,.fta:focus,.fse:focus{border-color:var(--p1)}
 .fta{resize:vertical;min-height:125px;line-height:1.65}
 .fse{cursor:pointer}
-
 .author-toggle{display:flex;gap:8px}
 .at-opt{flex:1;background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.18);border-radius:11px;padding:9px 10px;text-align:center;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--t2);transition:all .16s}
 .at-opt:hover{background:var(--p4)}
 .at-opt.sel{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;border-color:var(--p1);box-shadow:0 3px 10px rgba(168,84,112,.3)}
-
 .mood-pick{display:flex;gap:5px;flex-wrap:wrap}
 .mp-o{font-size:1.35rem;cursor:pointer;padding:4px 7px;border-radius:9px;border:2px solid transparent;transition:all .13s}
 .mp-o:hover{transform:scale(1.15)}
 .mp-o.sel{border-color:var(--p1);background:var(--p4);transform:scale(1.08)}
-
 .wp{background:rgba(168,84,112,.06);border:1.5px solid rgba(168,84,112,.14);border-radius:9px;padding:9px 12px;margin-bottom:9px;font-size:.78rem;color:var(--t2);display:flex;align-items:center;justify-content:space-between;gap:7px}
 .wp-r{background:none;border:none;color:var(--p2);font-size:.82rem;padding:2px;flex-shrink:0}
-
 .fs-row{display:flex;align-items:center;gap:7px;margin-bottom:8px}
 .fsb{background:rgba(168,84,112,.1);border:1px solid var(--p3);border-radius:7px;width:26px;height:26px;font-size:.86rem;color:var(--p1);display:flex;align-items:center;justify-content:center}
 .fs-lbl{font-size:.73rem;color:var(--t2);font-weight:600}
-
 .img-drop{border:2px dashed var(--p3);border-radius:10px;padding:13px;text-align:center;cursor:pointer;background:rgba(255,255,255,.42);transition:all .18s;font-size:.78rem;color:var(--t3)}
 .img-drop:hover{background:var(--p4);border-color:var(--p2)}
 .img-prev-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
 .img-prev-itm{position:relative;width:60px;height:60px}
 .img-prev-itm img{width:100%;height:100%;object-fit:cover;border-radius:8px}
 .img-rm{position:absolute;top:-5px;right:-5px;background:var(--p1);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:.58rem;display:flex;align-items:center;justify-content:center}
-
 .upload-prog{background:rgba(168,84,112,.07);border:1px solid rgba(168,84,112,.15);border-radius:8px;padding:7px 11px;margin-top:7px;font-size:.74rem;color:var(--t2);display:none}
 .upload-prog.show{display:block}
 .upload-prog-bar{width:100%;height:6px;background:rgba(168,84,112,.2);border-radius:3px;margin-top:5px;overflow:hidden;display:none}
 .upload-prog-bar.show{display:block}
 .upload-prog-bar .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--p3),var(--p1));border-radius:3px;transition:width .3s}
-
 .btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .btn-p{flex:1;background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:10px;padding:10px;color:#fff;font-size:.86rem;font-weight:700;transition:all .18s;min-width:90px}
 .btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(168,84,112,.36)}
@@ -434,26 +236,12 @@ img{max-width:100%;display:block}
 .btn-s:hover{background:var(--p4)}
 .btn-d{background:rgba(200,50,70,.07);border:1.5px solid rgba(200,50,70,.22);border-radius:10px;padding:10px 13px;color:#b03050;font-size:.86rem;font-weight:700;transition:all .18s}
 .btn-d:hover{background:rgba(200,50,70,.13)}
-
-/* ===================================================
-   VIEW MODAL
-=================================================== */
 .ve-date{font-size:.78rem;color:var(--t1);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ve-author-badge{font-size:.66rem;font-weight:700;color:var(--p2);background:rgba(168,84,112,.1);border-radius:8px;padding:2px 8px}
 .ve-edited-note{font-size:.68rem;color:var(--t3);font-style:italic;margin-bottom:6px}
 .ve-mood{font-size:1.1rem;margin-bottom:7px}
 .ve-content{background:rgba(255,255,255,.62);border-radius:9px;padding:13px;margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);white-space:pre-wrap;max-height:40vh;overflow-y:auto}
-
-/* ===================================================
-   GALLERY ẢNH TRONG BÀI
-=================================================== */
-.ve-gallery{
-  display:grid;
-  gap:4px;
-  margin-top:10px;
-  border-radius:14px;
-  overflow:hidden;
-}
+.ve-gallery{display:grid;gap:4px;margin-top:10px;border-radius:14px;overflow:hidden}
 .ve-gallery.n1{grid-template-columns:1fr}
 .ve-gallery.n2{grid-template-columns:1fr 1fr}
 .ve-gallery.n3{grid-template-columns:1fr 1fr}
@@ -478,19 +266,11 @@ img{max-width:100%;display:block}
 .ve-gallery.n8 .vg-img{height:150px}
 .ve-gallery.n9 .vg-img{height:150px}
 .ve-gallery.n10 .vg-img{height:150px}
-
-/* ===================================================
-   DAY LIST NAV
-=================================================== */
 .dl-nav-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px;background:rgba(168,84,112,.06);border:1px solid rgba(168,84,112,.14);border-radius:10px;padding:8px 10px}
 .dl-nav-btn{background:rgba(168,84,112,.1);border:1.5px solid var(--p3);border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;color:var(--p1);transition:all .15s}
 .dl-nav-btn:hover:not(:disabled){background:var(--p4)}
 .dl-nav-btn:disabled{opacity:.35;cursor:not-allowed}
 .dl-counter{font-size:.76rem;font-weight:700;color:var(--t2)}
-
-/* ===================================================
-   COMMENTS — avatar toggle icon đơn
-=================================================== */
 .cmt-section{margin-top:16px;border-top:1.5px solid rgba(168,84,112,.12);padding-top:14px}
 .cmt-hdr{font-size:.78rem;font-weight:700;color:var(--p1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .cmt-list{display:flex;flex-direction:column;gap:9px;margin-bottom:12px;max-height:240px;overflow-y:auto}
@@ -505,122 +285,46 @@ img{max-width:100%;display:block}
 .cmt-action-btn:hover{color:var(--p1)}
 .cmt-action-btn.del:hover{color:#c04060}
 .cmt-empty{text-align:center;font-size:.76rem;color:var(--t3);padding:10px 0}
-.cmt-input-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.cmt-avatar-toggle{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  background:rgba(168,84,112,.12);
-  border:2px solid var(--p1);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1rem;
-  cursor:pointer;
-  transition:all .15s;
-  flex-shrink:0;
-  user-select:none;
-}
-.cmt-avatar-toggle:hover{
-  background:var(--p4);
-  transform:scale(1.05);
-}
-.cmt-input-box{
-  flex:1;
-  display:flex;
-  gap:6px;
-}
-.cmt-inp{
-  flex:1;
-  background:rgba(255,255,255,.7);
-  border:1.5px solid rgba(168,84,112,.2);
-  border-radius:18px;
-  padding:8px 14px;
-  font-size:.82rem;
-  color:var(--t1);
-  outline:none;
-  transition:border-color .2s;
-}
+.cmt-input-row{display:flex;align-items:center;gap:8px}
+.cmt-avatar-toggle{width:32px;height:32px;border-radius:50%;background:rgba(168,84,112,.12);border:2px solid var(--p1);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none}
+.cmt-avatar-toggle:hover{background:var(--p4);transform:scale(1.05)}
+.cmt-input-box{flex:1;display:flex;gap:6px}
+.cmt-inp{flex:1;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:18px;padding:8px 14px;font-size:.82rem;color:var(--t1);outline:none;transition:border-color .2s}
 .cmt-inp:focus{border-color:var(--p1)}
-.cmt-send-btn{
-  background:linear-gradient(135deg,var(--p3),var(--p1));
-  border:none;
-  border-radius:50%;
-  width:36px;
-  height:36px;
-  color:#fff;
-  font-size:.95rem;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:all .18s;
-}
+.cmt-send-btn{background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:.95rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
 .cmt-send-btn:hover:not(:disabled){transform:scale(1.08)}
 .cmt-send-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-
-/* ===================================================
-   CONFIRM MODAL
-=================================================== */
-#confirm-modal .mbox{max-width:380px;text-align:center}
-#confirm-modal .m-ttl{font-size:1.2rem;margin-bottom:8px}
-#confirm-modal .confirm-msg{font-size:.9rem;color:var(--t2);margin-bottom:16px}
+.confirm-modal .mbox{max-width:380px;text-align:center}
+.confirm-modal .m-ttl{font-size:1.2rem;margin-bottom:8px}
+.confirm-modal .confirm-msg{font-size:.9rem;color:var(--t2);margin-bottom:16px}
 .confirm-actions{display:flex;gap:10px;justify-content:center}
 .confirm-actions .btn-p{flex:0 1 auto;padding:8px 20px}
 .confirm-actions .btn-s{flex:0 1 auto;padding:8px 20px}
-
-/* ===================================================
-   BACKUP MODAL
-=================================================== */
-#backup-modal .backup-list{max-height:200px;overflow-y:auto;background:rgba(255,255,255,.5);border-radius:8px;padding:6px;margin-top:8px}
-#backup-modal .backup-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(168,84,112,.08)}
-#backup-modal .backup-item:last-child{border-bottom:none}
-#backup-modal .backup-item .name{font-size:.82rem;color:var(--t1)}
-#backup-modal .backup-item .date{font-size:.68rem;color:var(--t3)}
-#backup-modal .backup-item .restore-btn{background:var(--p1);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .15s}
-#backup-modal .backup-item .restore-btn:hover{background:var(--p2)}
-#backup-modal .backup-empty{text-align:center;color:var(--t3);padding:16px 0;font-size:.8rem}
+.backup-modal .backup-list{max-height:260px;overflow-y:auto;background:rgba(255,255,255,.5);border-radius:12px;padding:6px;margin-top:8px}
+.backup-modal .backup-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(168,84,112,.08);transition:background .15s;border-radius:8px}
+.backup-modal .backup-item:last-child{border-bottom:none}
+.backup-modal .backup-item:hover{background:rgba(168,84,112,.06)}
+.backup-modal .backup-item .info{display:flex;flex-direction:column;gap:2px}
+.backup-modal .backup-item .name{font-size:.82rem;font-weight:600;color:var(--t1)}
+.backup-modal .backup-item .date{font-size:.68rem;color:var(--t3)}
+.backup-modal .backup-item .restore-btn{background:var(--p1);color:#fff;border:none;border-radius:8px;padding:4px 14px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .15s}
+.backup-modal .backup-item .restore-btn:hover{background:var(--p2);transform:scale(1.05)}
+.backup-modal .backup-empty{text-align:center;color:var(--t3);padding:20px 0;font-size:.85rem}
+.backup-modal .backup-actions{display:flex;gap:10px;margin-bottom:14px}
+.backup-modal .backup-actions .btn-p{flex:1}
+.backup-modal .backup-actions .btn-s{flex:0 0 auto;padding:10px 14px}
 .spinner{display:inline-block;width:18px;height:18px;border:3px solid rgba(168,84,112,.2);border-radius:50%;border-top-color:var(--p1);animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
-
-/* ===================================================
-   LIGHTBOX
-=================================================== */
 #lb{position:fixed;inset:0;z-index:800;background:rgba(20,5,15,.92);display:none;align-items:center;justify-content:center;cursor:pointer}
 #lb.open{display:flex}
 #lb img{max-width:94vw;max-height:90vh;border-radius:11px;object-fit:contain}
-
-/* ===================================================
-   TOAST
-=================================================== */
 #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);background:rgba(61,31,45,.88);backdrop-filter:blur(10px);color:#fff;padding:8px 18px;border-radius:20px;font-size:.8rem;font-weight:600;z-index:9999;opacity:0;pointer-events:none;transition:all .26s;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:769px){#toast{bottom:28px}}
-
-/* ===================================================
-   SAVING OVERLAY
-=================================================== */
-#saving-overlay{
-  position:fixed;inset:0;z-index:9500;
-  background:rgba(61,31,45,.42);
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  display:none;align-items:center;justify-content:center;
-}
+#saving-overlay{position:fixed;inset:0;z-index:9500;background:rgba(61,31,45,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center}
 #saving-overlay.show{display:flex}
-.saving-box{
-  background:rgba(255,248,253,.92);border-radius:22px;
-  padding:30px 38px;text-align:center;
-  box-shadow:0 20px 50px rgba(120,40,70,.25);
-}
+.saving-box{background:rgba(255,248,253,.92);border-radius:22px;padding:30px 38px;text-align:center;box-shadow:0 20px 50px rgba(120,40,70,.25)}
 .saving-heart{font-size:38px;display:block;margin-bottom:10px;animation:hb 1s ease-in-out infinite}
 .saving-txt{font-family:var(--font-ttl);font-size:1.05rem;font-weight:700;color:var(--p1)}
-
-/* ===================================================
-   UTILITY
-=================================================== */
 .hidden{display:none!important}
 </style>
 </head>
@@ -628,9 +332,6 @@ img{max-width:100%;display:block}
 
 <canvas id="sakura-canvas"></canvas>
 
-<!-- ======================================================
-     LOCK SCREEN
-====================================================== -->
 <div id="lock-screen">
   <div class="lock-card">
     <div class="lock-quote" id="lock-quote"></div>
@@ -660,9 +361,6 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     APP
-====================================================== -->
 <div id="app">
 
   <header class="app-hdr" id="app-hdr">
@@ -685,13 +383,11 @@ img{max-width:100%;display:block}
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <div id="ann-strip"></div>
+    <div class="status-slider" id="status-slider"></div>
   </header>
 
-  <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
-    <!-- LỊCH -->
     <div class="col-panel" id="col-cal">
       <div class="gc">
         <div class="gc-hd">
@@ -714,7 +410,6 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
       <div id="streak-wrap"></div>
@@ -736,7 +431,6 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- KỶ NIỆM + ALBUM (sẽ được chuyển vào col-right-desktop trên desktop) -->
     <div class="col-panel" id="col-ann">
       <div class="gc">
         <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
@@ -754,16 +448,14 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- Vùng chứa cột phải cho desktop -->
     <div id="col-right-desktop" style="display:none"></div>
 
-  </div><!-- /main-layout -->
+  </div>
 
-</div><!-- /app -->
+</div>
 
 <button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
 
-<!-- MOBILE BOTTOM NAV -->
 <nav class="mob-nav">
   <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
     <div class="mn-icon">📖</div><div>Nhật ký</div>
@@ -779,19 +471,15 @@ img{max-width:100%;display:block}
   </div>
 </nav>
 
-<!-- ======================================================
-     MODAL: VIẾT / SỬA
-====================================================== -->
+<!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-write')">✕</button>
     <div class="m-ttl" id="write-ttl">✍️ Viết nhật ký</div>
-
     <div class="wp" id="wp-box">
       <span id="wp-txt">💭 Hôm nay có điều gì đặc biệt không?</span>
       <button class="wp-r" onclick="newPrompt()">🔄</button>
     </div>
-
     <div class="fg">
       <label class="fl">Người viết</label>
       <div class="author-toggle" id="author-toggle">
@@ -799,7 +487,6 @@ img{max-width:100%;display:block}
         <div class="at-opt" data-v="Anh 💖" onclick="selAuthor('Anh 💖')">Anh 💖</div>
       </div>
     </div>
-
     <div class="fg">
       <label class="fl">Ngày viết</label>
       <input type="date" class="fi" id="e-date"/>
@@ -832,10 +519,8 @@ img{max-width:100%;display:block}
       <textarea class="fta" id="e-cnt" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:140px"></textarea>
     </div>
     <div class="fg">
-      <label class="fl">Ảnh (tối đa 10) — thêm, xóa, hoặc giữ ảnh cũ khi sửa bài</label>
-      <div class="img-drop" onclick="document.getElementById('img-inp').click()">
-        📷 Bấm để chọn ảnh từ máy
-      </div>
+      <label class="fl">Ảnh (tối đa 10)</label>
+      <div class="img-drop" onclick="document.getElementById('img-inp').click()">📷 Bấm để chọn ảnh từ máy</div>
       <input type="file" id="img-inp" accept="image/*" multiple style="display:none" onchange="onImgPick(this)"/>
       <div class="upload-prog" id="upload-prog">⏳ Đang xử lý ảnh...</div>
       <div class="upload-prog-bar" id="upload-prog-bar"><div class="fill" id="upload-prog-fill"></div></div>
@@ -848,9 +533,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: XEM BÀI
-====================================================== -->
+<!-- MODAL XEM BÀI -->
 <div class="modal" id="modal-view">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')">✕</button>
@@ -865,7 +548,6 @@ img{max-width:100%;display:block}
       <button class="btn-d" onclick="delEntry()">🗑 Xóa</button>
       <button class="btn-p" style="flex:0;padding:10px 16px" onclick="closeModal('modal-view')">Đóng</button>
     </div>
-
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
@@ -880,9 +562,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: DANH SÁCH BÀI CÙNG NGÀY
-====================================================== -->
+<!-- MODAL DANH SÁCH CÙNG NGÀY -->
 <div class="modal" id="modal-daylist">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-daylist')">✕</button>
@@ -902,7 +582,6 @@ img{max-width:100%;display:block}
       <button class="btn-d" onclick="delFromDayList()">🗑 Xóa</button>
       <button class="btn-p" style="flex:0;padding:10px 16px" onclick="closeModal('modal-daylist')">Đóng</button>
     </div>
-
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="dl-cmt-count-lbl"></span></div>
       <div class="cmt-list" id="dl-cmt-list"></div>
@@ -917,9 +596,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: KỶ NIỆM
-====================================================== -->
+<!-- MODAL KỶ NIỆM -->
 <div class="modal" id="modal-ann">
   <div class="mbox" style="max-width:400px">
     <button class="mc" onclick="closeModal('modal-ann')">✕</button>
@@ -939,10 +616,8 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: CONFIRM
-====================================================== -->
-<div class="modal" id="confirm-modal">
+<!-- MODAL CONFIRM -->
+<div class="modal confirm-modal" id="confirm-modal">
   <div class="mbox">
     <button class="mc" onclick="closeModal('confirm-modal')">✕</button>
     <div class="m-ttl" id="confirm-ttl">Xác nhận</div>
@@ -954,34 +629,27 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     MODAL: BACKUP & RESTORE
-====================================================== -->
-<div class="modal" id="backup-modal">
-  <div class="mbox" style="max-width:500px;">
+<!-- MODAL BACKUP -->
+<div class="modal backup-modal" id="backup-modal">
+  <div class="mbox" style="max-width:520px;">
     <button class="mc" onclick="closeModal('backup-modal')">✕</button>
     <div class="m-ttl">📦 Sao lưu & Khôi phục</div>
-    <div style="font-size:.78rem;color:var(--t3);margin-bottom:12px;">
-      Tự động backup lúc 3h sáng mỗi ngày. Giữ tối đa 10 bản gần nhất.
+    <div style="font-size:.78rem;color:var(--t3);margin-bottom:14px;">
+      Tự động backup lúc 3h sáng. Giữ tối đa 10 bản gần nhất.
     </div>
-
-    <div style="display:flex;gap:10px;margin-bottom:10px;">
-      <button class="btn-p" id="backup-now-btn" onclick="manualBackup()" style="flex:1;">
+    <div class="backup-actions">
+      <button class="btn-p" id="backup-now-btn" onclick="manualBackup()">
         💾 Sao lưu ngay
       </button>
-      <button class="btn-s" id="refresh-backup-list-btn" onclick="refreshBackupList()" style="flex:0 0 auto;padding:10px 14px;">
-        🔄
-      </button>
+      <button class="btn-s" id="refresh-backup-list-btn" onclick="refreshBackupList()" title="Làm mới danh sách">🔄</button>
     </div>
-
     <div class="fg">
       <label class="fl">📂 Các bản sao lưu gần đây</label>
       <div id="backup-list-container">
         <div class="backup-empty">Đang tải...</div>
       </div>
     </div>
-
-    <div class="btn-row" style="margin-top:12px;">
+    <div class="btn-row" style="margin-top:14px;">
       <button class="btn-p" onclick="closeModal('backup-modal')" style="flex:1;">Đóng</button>
     </div>
   </div>
@@ -1001,13 +669,10 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ======================================================
-     JAVASCRIPT
-====================================================== -->
 <script>
-/* ==========================================================
-   CẤU HÌNH
-========================================================== */
+// ============================================================
+// CẤU HÌNH
+// ============================================================
 var CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
   PIN: '2204',
@@ -1017,9 +682,6 @@ var CFG = {
 var AUTHORS = ['Ánh Ngọc 🌻', 'Anh 💖'];
 var DEFAULT_AUTHOR = 'Ánh Ngọc 🌻';
 
-/* ==========================================================
-   STATE
-========================================================== */
 var S = {
   data: { entries: [], anniversaries: [] },
   calY: new Date().getFullYear(),
@@ -1071,9 +733,9 @@ var QUOTES = [
 document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
-/* ==========================================================
-   LOCK SCREEN
-========================================================== */
+// ============================================================
+// LOCK SCREEN
+// ============================================================
 function kp(d) {
   if (S.pin.length >= 4) return;
   S.pin += d;
@@ -1100,6 +762,7 @@ function checkPin() {
       loadData();
       newPrompt();
       setupDesktopLayout();
+      initStatusSlider();
     }, 480);
   } else {
     document.getElementById('lock-err').textContent = 'Sai mật mã rồi iu ơi 🥺';
@@ -1113,9 +776,9 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Backspace') kd();
 });
 
-/* ==========================================================
-   DESKTOP LAYOUT SETUP
-========================================================== */
+// ============================================================
+// DESKTOP LAYOUT
+// ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
   var rightCol = document.getElementById('col-right-desktop');
@@ -1165,9 +828,9 @@ function getCurrentMobileTab() {
   return active ? active.dataset.tab : 'diary';
 }
 
-/* ==========================================================
-   CLOCK
-========================================================== */
+// ============================================================
+// CLOCK
+// ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
   function tick() {
@@ -1182,9 +845,9 @@ function startClock() {
   setInterval(tick, 1000);
 }
 
-/* ==========================================================
-   SAKURA
-========================================================== */
+// ============================================================
+// SAKURA
+// ============================================================
 (function () {
   var cv = document.getElementById('sakura-canvas');
   var ctx = cv.getContext('2d');
@@ -1216,41 +879,30 @@ function startClock() {
   draw();
 })();
 
-/* ==========================================================
-   LOCAL STORAGE HELPERS
-========================================================== */
+// ============================================================
+// LOCAL STORAGE HELPERS
+// ============================================================
 function saveToLocal(data) {
-  try {
-    localStorage.setItem('diary_backup', JSON.stringify(data));
-  } catch (e) {}
+  try { localStorage.setItem('diary_backup', JSON.stringify(data)); } catch (e) {}
 }
 function loadFromLocal() {
-  try {
-    var raw = localStorage.getItem('diary_backup');
-    if (raw) return JSON.parse(raw);
-  } catch (e) {}
+  try { var raw = localStorage.getItem('diary_backup'); if (raw) return JSON.parse(raw); } catch (e) {}
   return null;
 }
-
 function savePendingActions() {
-  try {
-    localStorage.setItem('pending_actions', JSON.stringify(S.pendingActions));
-  } catch (e) {}
+  try { localStorage.setItem('pending_actions', JSON.stringify(S.pendingActions)); } catch (e) {}
 }
 function loadPendingActions() {
-  try {
-    var raw = localStorage.getItem('pending_actions');
-    if (raw) S.pendingActions = JSON.parse(raw) || [];
-  } catch (e) { S.pendingActions = []; }
+  try { var raw = localStorage.getItem('pending_actions'); if (raw) S.pendingActions = JSON.parse(raw) || []; } catch (e) { S.pendingActions = []; }
 }
 function addPendingAction(action) {
   S.pendingActions.push(action);
   savePendingActions();
 }
 
-/* ==========================================================
-   LOAD DATA (có backup local)
-========================================================== */
+// ============================================================
+// LOAD DATA
+// ============================================================
 function loadData(cb) {
   setSyncing(true);
   var fn = 'jcb_' + Date.now(), tag;
@@ -1260,13 +912,8 @@ function loadData(cb) {
       saveToLocal(data);
     } else {
       var local = loadFromLocal();
-      if (local) {
-        S.data = local;
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)');
-      } else {
-        S.data = { entries: [], anniversaries: [] };
-        toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối');
-      }
+      if (local) { S.data = local; toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)'); }
+      else { S.data = { entries: [], anniversaries: [] }; toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối'); }
     }
     if (!S.data.entries) S.data.entries = [];
     if (!S.data.anniversaries) S.data.anniversaries = [];
@@ -1300,12 +947,11 @@ function loadData(cb) {
   document.head.appendChild(tag);
 }
 
-/* ==========================================================
-   PROCESS PENDING ACTIONS
-========================================================== */
+// ============================================================
+// PENDING ACTIONS
+// ============================================================
 function processPendingActions() {
-  if (S.pendingActions.length === 0) return;
-  if (!navigator.onLine) return;
+  if (S.pendingActions.length === 0 || !navigator.onLine) return;
   var actions = S.pendingActions.slice();
   S.pendingActions = [];
   savePendingActions();
@@ -1313,18 +959,12 @@ function processPendingActions() {
     if (action.type === 'save_entry') {
       postData(action.payload, '🔄 Đã gửi lại bài viết (retry)', function (res) {
         if (res && res.success) toast('✅ Đã đồng bộ bài viết');
-        else {
-          S.pendingActions.push(action);
-          savePendingActions();
-        }
+        else { S.pendingActions.push(action); savePendingActions(); }
       });
     } else if (action.type === 'add_comment' || action.type === 'edit_comment' || action.type === 'delete_comment') {
       callCommentAPI(action.payload, function (res) {
         if (res && res.success) toast('✅ Đã đồng bộ bình luận');
-        else {
-          S.pendingActions.push(action);
-          savePendingActions();
-        }
+        else { S.pendingActions.push(action); savePendingActions(); }
       }, function () {
         S.pendingActions.push(action);
         savePendingActions();
@@ -1344,9 +984,9 @@ window.addEventListener('offline', function () {
   toast('📶 Mất kết nối, dữ liệu sẽ được lưu tạm');
 });
 
-/* ==========================================================
-   POST DATA (có pending)
-========================================================== */
+// ============================================================
+// POST DATA
+// ============================================================
 function postData(payload, msg, cb) {
   function doFetch(mode) {
     return fetch(CFG.URL, {
@@ -1370,9 +1010,9 @@ function postData(payload, msg, cb) {
     });
 }
 
-/* ==========================================================
-   CALL COMMENT API (có pending)
-========================================================== */
+// ============================================================
+// CALL COMMENT API
+// ============================================================
 function callCommentAPI(payload, onSuccess, onError) {
   function doFetch(mode) {
     return fetch(CFG.URL, {
@@ -1385,11 +1025,8 @@ function callCommentAPI(payload, onSuccess, onError) {
   doFetch('cors')
     .then(function (r) { return r.json(); })
     .then(function (res) {
-      if (res && res.success) {
-        if (onSuccess) onSuccess(res);
-      } else {
-        if (onError) onError(res);
-      }
+      if (res && res.success) { if (onSuccess) onSuccess(res); }
+      else { if (onError) onError(res); }
     })
     .catch(function () {
       var action = { type: payload.action, payload: payload };
@@ -1399,9 +1036,9 @@ function callCommentAPI(payload, onSuccess, onError) {
     });
 }
 
-/* ==========================================================
-   CONFIRM MODAL
-========================================================== */
+// ============================================================
+// CONFIRM MODAL
+// ============================================================
 var confirmResolve = null;
 function showConfirm(title, msg) {
   return new Promise(function (resolve) {
@@ -1422,9 +1059,9 @@ function showConfirm(title, msg) {
   });
 }
 
-/* ==========================================================
-   NORMALIZE & SORT
-========================================================== */
+// ============================================================
+// NORMALIZE & SORT
+// ============================================================
 function normalizeEntry(e) {
   if (!e.author) e.author = DEFAULT_AUTHOR;
   if (!e.comments || !Array.isArray(e.comments)) e.comments = [];
@@ -1456,9 +1093,9 @@ function setSyncing(on) {
   document.getElementById('sync-btn').classList.toggle('syncing', on);
 }
 
-/* ==========================================================
-   RENDER ALL
-========================================================== */
+// ============================================================
+// RENDER ALL
+// ============================================================
 function renderAll() {
   renderOTD();
   renderStreak();
@@ -1466,13 +1103,13 @@ function renderAll() {
   renderTimeline();
   renderAnniversaries();
   renderAlbum();
-  renderAnnStrip();
   buildMonthFilter();
+  updateStatusSlider();
 }
 
-/* ==========================================================
-   OTD, STREAK, CALENDAR (giữ nguyên)
-========================================================== */
+// ============================================================
+// OTD, STREAK, CALENDAR
+// ============================================================
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
   var today = todayStr();
@@ -1581,9 +1218,99 @@ function cm(delta) {
   renderCalendar();
 }
 
-/* ==========================================================
-   DAY LIST
-========================================================== */
+// ============================================================
+// STATUS SLIDER (Streak + Anniversary Countdown)
+// ============================================================
+var statusTimer = null;
+var statusIndex = 0;
+var statusData = [];
+
+function updateStatusSlider() {
+  var container = document.getElementById('status-slider');
+  if (!container) return;
+  statusData = [];
+  // Streak
+  var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
+  var cur = 0;
+  var today = todayStr();
+  var yesterday = offsetDay(today, -1);
+  var checkFrom = dates.indexOf(today) >= 0 ? today : (dates.indexOf(yesterday) >= 0 ? yesterday : null);
+  if (checkFrom) {
+    var d = checkFrom;
+    while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
+  }
+  if (cur >= 1) {
+    statusData.push({
+      html: '<span class="fire">🔥</span> <strong>' + cur + '</strong> ngày viết liên tiếp!'
+    });
+  } else {
+    statusData.push({
+      html: '🌸 Hãy viết nhật ký hôm nay nhé!'
+    });
+  }
+
+  // Anniversary countdown
+  var now = new Date();
+  now.setHours(0,0,0,0);
+  var nearest = null;
+  var nearestDays = 999;
+  S.data.anniversaries.forEach(function (a) {
+    if (!a.date) return;
+    var p = a.date.split('-');
+    var next = new Date(now.getFullYear(), parseInt(p[1])-1, parseInt(p[2]));
+    if (next < now) next.setFullYear(next.getFullYear() + 1);
+    var days = Math.round((next - now) / 86400000);
+    if (days < nearestDays) {
+      nearestDays = days;
+      nearest = { name: a.name, days: days };
+    }
+  });
+  if (nearest) {
+    var annMsg = '';
+    if (nearest.days === 0) annMsg = '🎉 Hôm nay là ' + nearest.name + '!';
+    else if (nearest.days === 1) annMsg = '⏰ Ngày mai là ' + nearest.name + '!';
+    else if (nearest.days <= 7) annMsg = '🌸 Còn ' + nearest.days + ' ngày đến ' + nearest.name;
+    else annMsg = '📅 Còn ' + nearest.days + ' ngày đến ' + nearest.name;
+    statusData.push({
+      html: '<span class="ann-heart">❤️</span> ' + annMsg
+    });
+  }
+
+  if (statusData.length === 0) {
+    container.innerHTML = '🌸 Hãy viết nhật ký và thêm kỷ niệm nhé!';
+    return;
+  }
+
+  // Nếu chỉ có 1 item, hiển thị luôn
+  if (statusData.length === 1) {
+    container.innerHTML = statusData[0].html;
+    return;
+  }
+
+  // Nhiều hơn 1: chuyển đổi mỗi 15 giây
+  statusIndex = 0;
+  showStatusItem();
+  if (statusTimer) clearInterval(statusTimer);
+  statusTimer = setInterval(function () {
+    statusIndex = (statusIndex + 1) % statusData.length;
+    showStatusItem();
+  }, 15000);
+}
+
+function showStatusItem() {
+  var container = document.getElementById('status-slider');
+  if (!container) return;
+  if (statusData.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = statusData[statusIndex].html;
+}
+
+function initStatusSlider() {
+  updateStatusSlider();
+}
+
+// ============================================================
+// DAY LIST
+// ============================================================
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
   if (!ents.length) return;
@@ -1644,9 +1371,9 @@ function delFromDayList() {
   closeModal('modal-daylist');
 }
 
-/* ==========================================================
-   EDITED NOTE
-========================================================== */
+// ============================================================
+// EDITED NOTE
+// ============================================================
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
   if (!el) return;
@@ -1664,9 +1391,9 @@ function renderEditedNote(elId, e) {
   el.textContent = '✏️ Sửa lần cuối: ' + fmtFullDateTime(updated);
 }
 
-/* ==========================================================
-   TIMELINE
-========================================================== */
+// ============================================================
+// TIMELINE
+// ============================================================
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
   var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
@@ -1763,9 +1490,9 @@ function tiHTML(e) {
     '</div></div>';
 }
 
-/* ==========================================================
-   ANNIVERSARIES
-========================================================== */
+// ============================================================
+// ANNIVERSARIES
+// ============================================================
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
   if (!S.data.anniversaries.length) {
@@ -1803,21 +1530,6 @@ function annCountdown(a, today) {
   return { days: days, text: text };
 }
 
-function renderAnnStrip() {
-  var el = document.getElementById('ann-strip');
-  if (!S.data.anniversaries.length) { el.textContent = ''; return; }
-  var today = new Date(); today.setHours(0, 0, 0, 0);
-  var best = null, bestD = 9999;
-  S.data.anniversaries.forEach(function (a) {
-    var cd = annCountdown(a, today);
-    if (cd.days < bestD) { bestD = cd.days; best = a; }
-  });
-  if (!best) { el.textContent = ''; return; }
-  if (bestD === 0) el.textContent = '🎉 Hôm nay: ' + best.name + '!';
-  else if (bestD === 1) el.textContent = '⏰ Ngày mai: ' + best.name;
-  else el.textContent = '📅 Còn ' + bestD + ' ngày đến: ' + best.name;
-}
-
 function openAnnForm() {
   document.getElementById('ann-dt').value = '';
   document.getElementById('ann-nm').value = '';
@@ -1838,9 +1550,9 @@ async function delAnn(id) {
   postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
 }
 
-/* ==========================================================
-   ALBUM
-========================================================== */
+// ============================================================
+// ALBUM
+// ============================================================
 function renderAlbum() {
   var body = document.getElementById('album-body');
   var entriesWithImgs = S.data.entries.filter(function (e) {
@@ -1889,9 +1601,9 @@ function renderAlbum() {
   body.innerHTML = html;
 }
 
-/* ==========================================================
-   GALLERY HTML
-========================================================== */
+// ============================================================
+// GALLERY HTML
+// ============================================================
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
   var n = Math.min(images.length, 10);
@@ -1908,9 +1620,9 @@ function buildGalleryHTML(images) {
   return '<div class="' + cls + '">' + html + '</div>';
 }
 
-/* ==========================================================
-   WRITE / EDIT / VIEW / DELETE
-========================================================== */
+// ============================================================
+// WRITE / EDIT / VIEW / DELETE
+// ============================================================
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = []; S.author = DEFAULT_AUTHOR;
   document.getElementById('write-ttl').textContent = '✍️ Viết nhật ký';
@@ -1992,9 +1704,9 @@ async function delEntry() {
   S.curId = null;
 }
 
-/* ==========================================================
-   AUTHOR
-========================================================== */
+// ============================================================
+// AUTHOR
+// ============================================================
 function selAuthor(v) {
   S.author = v;
   updateAuthorToggleUI();
@@ -2005,9 +1717,9 @@ function updateAuthorToggleUI() {
   });
 }
 
-/* ==========================================================
-   MOOD
-========================================================== */
+// ============================================================
+// MOOD
+// ============================================================
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
   document.querySelectorAll('.mp-o').forEach(function (el) {
@@ -2026,9 +1738,9 @@ function chgFs(delta) {
   document.getElementById('fs-lbl').textContent = 'Cỡ chữ: ' + S.fontSize + 'px';
 }
 
-/* ==========================================================
-   UPLOAD IMAGES (có progress)
-========================================================== */
+// ============================================================
+// UPLOAD IMAGES
+// ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
   if (S.imgs.length + files.length > 10) {
@@ -2139,9 +1851,9 @@ function rmImg(i) {
   renderImgPrev();
 }
 
-/* ==========================================================
-   SAVE ENTRY
-========================================================== */
+// ============================================================
+// SAVE ENTRY
+// ============================================================
 function saveEntry() {
   var date = document.getElementById('e-date').value;
   var title = document.getElementById('e-ttl').value.trim();
@@ -2194,9 +1906,9 @@ function hideSavingOverlay() {
   document.getElementById('saving-overlay').classList.remove('show');
 }
 
-/* ==========================================================
-   COMMENTS (modal-view)
-========================================================== */
+// ============================================================
+// COMMENTS (modal-view)
+// ============================================================
 function toggleCmtAvatar() {
   var current = S.cmtAuthor;
   var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
@@ -2323,9 +2035,9 @@ async function delComment(commentId) {
   });
 }
 
-/* ==========================================================
-   COMMENTS (modal-daylist)
-========================================================== */
+// ============================================================
+// COMMENTS (modal-daylist)
+// ============================================================
 function toggleDlCmtAvatar() {
   var current = S.dlCmtAuthor;
   var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
@@ -2442,18 +2154,18 @@ async function delDlComment(commentId) {
   });
 }
 
-/* ==========================================================
-   LIGHTBOX
-========================================================== */
+// ============================================================
+// LIGHTBOX
+// ============================================================
 function openLb(src) {
   document.getElementById('lb-img').src = src;
   document.getElementById('lb').classList.add('open');
 }
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
-/* ==========================================================
-   TAB
-========================================================== */
+// ============================================================
+// TAB
+// ============================================================
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
@@ -2472,9 +2184,9 @@ function switchTab(tab) {
   });
 }
 
-/* ==========================================================
-   MODAL HELPERS
-========================================================== */
+// ============================================================
+// MODAL HELPERS
+// ============================================================
 function openModal(id) {
   document.getElementById(id).classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2493,9 +2205,9 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-/* ==========================================================
-   TOAST
-========================================================== */
+// ============================================================
+// TOAST
+// ============================================================
 var _tt;
 function toast(msg) {
   if (!msg) return;
@@ -2505,9 +2217,9 @@ function toast(msg) {
   _tt = setTimeout(function () { el.classList.remove('show'); }, 2800);
 }
 
-/* ==========================================================
-   UTILITY
-========================================================== */
+// ============================================================
+// UTILITY
+// ============================================================
 function p2(n) { return n < 10 ? '0' + n : '' + n; }
 function todayStr() {
   var t = new Date();
@@ -2548,16 +2260,15 @@ function escH(s) {
     .replace(/'/g, '&#39;');
 }
 
-/* ==========================================================
-   BACKUP & RESTORE — MỚI (dùng JSONP cho GET, no-cors cho POST)
-========================================================== */
+// ============================================================
+// BACKUP & RESTORE — V5.5.2
+// ============================================================
 
 function openBackupModal() {
   openModal('backup-modal');
   refreshBackupList();
 }
 
-// Lấy danh sách backup bằng JSONP (tránh CORS)
 function refreshBackupList() {
   var container = document.getElementById('backup-list-container');
   container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang tải...</div>';
@@ -2592,8 +2303,10 @@ function renderBackupList(files) {
   files.forEach(function(f) {
     var dateStr = f.date ? new Date(f.date).toLocaleString('vi-VN') : 'Không rõ';
     html += '<div class="backup-item">' +
-      '<div><div class="name">' + escH(f.name) + '</div>' +
-      '<div class="date">🕐 ' + escH(dateStr) + '</div></div>' +
+      '<div class="info">' +
+      '<div class="name">' + escH(f.name) + '</div>' +
+      '<div class="date">🕐 ' + escH(dateStr) + '</div>' +
+      '</div>' +
       '<button class="restore-btn" onclick="restoreFromBackup(\'' + escH(f.id) + '\', \'' + escH(f.name) + '\', \'' + escH(dateStr) + '\')">Khôi phục</button>' +
       '</div>';
   });
@@ -2601,9 +2314,7 @@ function renderBackupList(files) {
   container.innerHTML = html;
 }
 
-// Sao lưu ngay - dùng no-cors để tránh CORS
 function manualBackup() {
-  if (S.isBackupRestoring) return;
   var btn = document.getElementById('backup-now-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Đang sao lưu...';
@@ -2615,28 +2326,27 @@ function manualBackup() {
     mode: 'no-cors'
   })
   .then(function() {
-    btn.disabled = false;
     btn.innerHTML = '💾 Sao lưu ngay';
-    toast('✅ Đã gửi yêu cầu sao lưu, đang đồng bộ...');
+    btn.disabled = false;
+    toast('⏳ Đã gửi yêu cầu, đang kiểm tra...');
+    // Sau 2 giây, refresh list để kiểm tra file mới
     setTimeout(function() {
-      loadData(function() {
-        refreshBackupList();
-      });
-    }, 1500);
+      refreshBackupList();
+      // Kiểm tra xem có file mới không bằng cách so sánh với list cũ?
+      // Đơn giản là thông báo thành công vì request đã gửi đi
+      toast('✅ Đã gửi yêu cầu sao lưu!');
+    }, 2000);
   })
   .catch(function() {
-    btn.disabled = false;
     btn.innerHTML = '💾 Sao lưu ngay';
-    toast('⚠️ Không thể gửi yêu cầu sao lưu.');
+    btn.disabled = false;
+    toast('⚠️ Lỗi gửi yêu cầu sao lưu!');
   });
 }
 
-// Khôi phục từ backup - cũng dùng no-cors, có xác nhận
 function restoreFromBackup(fileId, fileName, dateStr) {
-  if (S.isBackupRestoring) return;
   if (!confirm('⚠️ Bạn có chắc muốn khôi phục dữ liệu từ bản backup:\n📂 ' + fileName + '\n🕐 ' + dateStr + '\n\nDữ liệu hiện tại sẽ bị ghi đè!')) return;
 
-  S.isBackupRestoring = true;
   var container = document.getElementById('backup-list-container');
   container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang khôi phục...</div>';
 
@@ -2647,8 +2357,7 @@ function restoreFromBackup(fileId, fileName, dateStr) {
     mode: 'no-cors'
   })
   .then(function() {
-    S.isBackupRestoring = false;
-    toast('✅ Đã gửi yêu cầu khôi phục, đang tải lại dữ liệu...');
+    toast('⏳ Đã gửi yêu cầu khôi phục, đang tải lại dữ liệu...');
     loadData(function() {
       refreshBackupList();
       closeModal('backup-modal');
@@ -2656,13 +2365,14 @@ function restoreFromBackup(fileId, fileName, dateStr) {
     });
   })
   .catch(function() {
-    S.isBackupRestoring = false;
     container.innerHTML = '<div class="backup-empty">❌ Lỗi khôi phục!</div>';
     toast('⚠️ Không thể gửi yêu cầu khôi phục.');
   });
 }
 
-// Khởi tạo
+// ============================================================
+// KHỞI TẠO
+// ============================================================
 loadPendingActions();
 if (!navigator.onLine) {
   toast('📶 Đang ở chế độ offline, dữ liệu sẽ được lưu tạm');
