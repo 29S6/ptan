@@ -8,26 +8,29 @@
 <title>💕 Nhật Ký Của Mình</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
+<!-- Font tiếng Việt dễ thương, phong cách manga/cute thay cho Dancing Script (chữ nghiêng khó đọc) -->
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 /* ===================================================
    DESIGN TOKENS — ROSE SMOKE PALETTE
 =================================================== */
 :root{
-  --p1:#a85470;   /* rose deep  – accent chính     */
-  --p2:#c97d96;   /* rose mid   – gradient          */
-  --p3:#e8afc3;   /* rose light – border/highlight  */
-  --p4:#f7dde8;   /* blush      – nền card          */
-  --p5:#fef2f7;   /* milk white – nền tổng          */
+  --p1:#a85470;
+  --p2:#c97d96;
+  --p3:#e8afc3;
+  --p4:#f7dde8;
+  --p5:#fef2f7;
   --glass:rgba(255,243,249,0.72);
   --glass-b:rgba(255,255,255,0.60);
   --sh:0 8px 32px rgba(168,84,112,0.13);
   --sh-sm:0 3px 12px rgba(168,84,112,0.09);
-  --t1:#3d1f2d;   /* text đậm  */
-  --t2:#7a4a5e;   /* text vừa  */
-  --t3:#b08090;   /* text nhạt */
+  --t1:#3d1f2d;
+  --t2:#7a4a5e;
+  --t3:#b08090;
   --rr:16px;
   --rrb:22px;
+  --font-ttl:'Baloo 2',sans-serif;   /* tiêu đề cute, manga-style, KHÔNG nghiêng */
+  --font-body:'Mali','Baloo 2',sans-serif; /* nội dung, tiếng Việt rõ nét */
 }
 
 /* ===================================================
@@ -36,7 +39,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
-  font-family:'Quicksand','Segoe UI',sans-serif;
+  font-family:var(--font-body);
   background:linear-gradient(145deg,#fce8f0 0%,#f4e0ef 50%,#ece0f5 100%);
   min-height:100vh;color:var(--t1);overflow-x:hidden;
 }
@@ -47,9 +50,7 @@ img{max-width:100%;display:block}
 /* ===================================================
    SAKURA CANVAS
 =================================================== */
-#sakura-canvas{
-  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5
-}
+#sakura-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5}
 
 /* ===================================================
    LOCK SCREEN
@@ -70,34 +71,19 @@ img{max-width:100%;display:block}
   max-width:310px;width:90%;
 }
 .lock-quote{
-  font-family:'Dancing Script',cursive;
-  font-size:.92rem;color:var(--p2);min-height:40px;
-  line-height:1.5;font-style:italic;margin-bottom:18px;
+  font-family:var(--font-ttl);
+  font-size:.95rem;color:var(--p2);min-height:40px;
+  line-height:1.5;font-weight:600;margin-bottom:18px;
 }
-.lock-heart{font-size:46px;display:block;margin-bottom:8px;
-  animation:hb 1.9s ease-in-out infinite}
-@keyframes hb{
-  0%,100%{transform:scale(1)}
-  14%{transform:scale(1.22)}
-  28%{transform:scale(1)}
-  42%{transform:scale(1.13)}
-  56%{transform:scale(1)}
-}
-.lock-ttl{font-family:'Dancing Script',cursive;font-size:1.85rem;font-weight:700;color:var(--p1);margin-bottom:3px}
+.lock-heart{font-size:46px;display:block;margin-bottom:8px;animation:hb 1.9s ease-in-out infinite}
+@keyframes hb{0%,100%{transform:scale(1)}14%{transform:scale(1.22)}28%{transform:scale(1)}42%{transform:scale(1.13)}56%{transform:scale(1)}}
+.lock-ttl{font-family:var(--font-ttl);font-size:1.85rem;font-weight:800;color:var(--p1);margin-bottom:3px}
 .lock-sub{font-size:.78rem;color:var(--t3);margin-bottom:20px}
 .pin-dots{display:flex;gap:11px;justify-content:center;margin-bottom:20px}
-.pin-dot{
-  width:15px;height:15px;border-radius:50%;
-  background:rgba(168,84,112,.14);border:2px solid var(--p3);
-  transition:all .2s;
-}
+.pin-dot{width:15px;height:15px;border-radius:50%;background:rgba(168,84,112,.14);border:2px solid var(--p3);transition:all .2s}
 .pin-dot.on{background:var(--p1);border-color:var(--p1);transform:scale(1.18)}
 .pin-kb{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pk{
-  background:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.75);
-  border-radius:11px;padding:12px;font-size:1.1rem;font-weight:700;
-  color:var(--t1);transition:all .13s;user-select:none;
-}
+.pk{background:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.75);border-radius:11px;padding:12px;font-size:1.1rem;font-weight:700;color:var(--t1);transition:all .13s;user-select:none}
 .pk:active{transform:scale(.9);background:var(--p4)}
 .pk.del{color:var(--p1)}
 .lock-err{color:#c04060;font-size:.76rem;min-height:15px;margin-top:8px;font-weight:600}
@@ -105,8 +91,10 @@ img{max-width:100%;display:block}
 /* ===================================================
    APP WRAPPER
 =================================================== */
-#app{display:none;position:relative;z-index:1;min-height:100vh;
-  padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+#app{display:none;position:relative;z-index:1;min-height:100vh;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+@media(min-width:769px){
+  #app{padding-bottom:24px}
+}
 
 /* ===================================================
    HEADER
@@ -118,68 +106,28 @@ img{max-width:100%;display:block}
   position:sticky;top:0;z-index:200;
   box-shadow:0 4px 20px rgba(168,84,112,.2);
 }
-.hdr-top{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 18px 9px;
-}
-.hdr-logo{
-  font-family:'Dancing Script',cursive;
-  font-size:1.42rem;font-weight:700;color:#fff;
-  text-shadow:0 2px 8px rgba(100,30,60,.28);
-}
-.hdr-sync{
-  background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.32);
-  border-radius:20px;padding:6px 13px;
-  font-size:.75rem;font-weight:700;color:#fff;
-  display:flex;align-items:center;gap:5px;transition:all .15s;
-}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:13px 18px 9px}
+.hdr-logo{font-family:var(--font-ttl);font-size:1.46rem;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(100,30,60,.28)}
+.hdr-sync{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:6px 13px;font-size:.75rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;transition:all .15s}
 .hdr-sync:hover{background:rgba(255,255,255,.32)}
 .hdr-sync svg{flex-shrink:0}
 .hdr-sync.syncing svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Clock */
-.clock-row{
-  display:flex;gap:6px;justify-content:center;
-  padding:0 18px 10px;flex-wrap:wrap;
-}
-.cu{
-  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);
-  border-radius:9px;padding:4px 9px;text-align:center;min-width:56px;
-}
+.clock-row{display:flex;gap:6px;justify-content:center;padding:0 18px 10px;flex-wrap:wrap}
+.cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
 
-/* Countdown strip */
-#ann-strip{
-  text-align:center;padding:0 18px 8px;
-  font-size:.74rem;font-weight:600;color:rgba(255,255,255,.92);min-height:22px;
-}
+#ann-strip{text-align:center;padding:0 18px 8px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.92);min-height:22px}
 
 /* ===================================================
-   DESKTOP TABS
+   DESKTOP TABS — chỉ hiện trên MOBILE từ giờ (desktop bỏ tab)
 =================================================== */
-.desk-tabs{
-  display:none;
-  background:rgba(255,242,248,.68);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-bottom:1.5px solid rgba(168,84,112,.1);
-  position:sticky;z-index:150;
-  padding:0 22px;gap:0;
-}
-@media(min-width:769px){.desk-tabs{display:flex;top:112px}}
-.dtab{
-  padding:10px 18px;cursor:pointer;
-  font-size:.83rem;font-weight:700;color:var(--t2);
-  border-bottom:2.5px solid transparent;
-  transition:all .18s;white-space:nowrap;
-  display:flex;align-items:center;gap:6px;
-}
-.dtab.on{color:var(--p1);border-bottom-color:var(--p1)}
-.dtab:hover{color:var(--p1)}
+.desk-tabs{display:none}
 
 /* ===================================================
-   MOBILE BOTTOM NAV
+   MOBILE BOTTOM NAV (giữ nguyên y như cũ, KHÔNG đổi)
 =================================================== */
 .mob-nav{
   display:none;
@@ -191,34 +139,46 @@ img{max-width:100%;display:block}
   box-shadow:0 -4px 18px rgba(168,84,112,.10);
 }
 @media(max-width:768px){.mob-nav{display:flex}}
-.mn-item{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:2px;padding:5px 3px;color:var(--t3);
-  font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
-  transition:color .18s;position:relative;
-}
+.mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 3px;color:var(--t3);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;transition:color .18s;position:relative}
 .mn-item.on{color:var(--p1)}
 .mn-icon{font-size:1.25rem;line-height:1}
 
 /* ===================================================
-   MAIN LAYOUT
+   MOBILE LAYOUT (≤768px) — giữ nguyên cấu trúc cũ y hệt V4
 =================================================== */
 .main-layout{
   display:grid;
   grid-template-columns:1fr;
-  gap:16px;
+  gap:0;
   max-width:1160px;margin:0 auto;
-  padding:18px 16px 20px;
-}
-@media(min-width:769px){
-  .main-layout{grid-template-columns:1fr 1fr 1fr 1fr}
-  .col-panel{display:block!important}
+  padding:12px 11px 16px;
 }
 @media(max-width:768px){
-  .main-layout{grid-template-columns:1fr;padding:12px 11px 16px;gap:0}
   .col-panel{display:none}
   .col-panel.on{display:block}
+}
+
+/* ===================================================
+   DESKTOP LAYOUT (≥769px) — MỚI: 3 vùng, không tab
+   Trái: Lịch | Giữa: Nhật ký (to, chiếm chỗ) | Phải: Kỷ niệm + Album
+=================================================== */
+@media(min-width:769px){
+  .main-layout{
+    display:grid;
+    grid-template-columns: 300px minmax(0,1fr) 340px;
+    gap:20px;
+    max-width:1440px;
+    padding:22px 26px 30px;
+  }
+  .col-panel{display:block!important}
+  /* Cột trái: Lịch, sticky để luôn nhìn thấy khi cuộn nhật ký */
+  #col-cal{order:1;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
+  /* Cột giữa: Nhật ký, chiếm trọn không gian giữa, to rõ */
+  #col-diary{order:2;min-width:0}
+  /* Cột phải: gộp Kỷ niệm + Album, sticky cùng kiểu cột trái */
+  #col-right-desktop{order:3;display:flex;flex-direction:column;gap:20px;position:sticky;top:128px;align-self:start;max-height:calc(100vh - 148px);overflow-y:auto}
+  /* Trên desktop, col-ann và col-album được di chuyển vào col-right-desktop bằng JS;
+     ẩn placeholder gốc để tránh hiển thị lặp ở vị trí cũ */
 }
 
 /* ===================================================
@@ -232,99 +192,67 @@ img{max-width:100%;display:block}
   box-shadow:var(--sh);
   overflow:hidden;margin-bottom:14px;
 }
-.gc-hd{
-  padding:13px 17px 11px;
-  border-bottom:1px solid rgba(168,84,112,.09);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.gc-ttl{font-family:'Dancing Script',cursive;font-size:1.18rem;font-weight:700;color:var(--p1)}
+.gc-hd{padding:13px 17px 11px;border-bottom:1px solid rgba(168,84,112,.09);display:flex;align-items:center;justify-content:space-between}
+.gc-ttl{font-family:var(--font-ttl);font-size:1.2rem;font-weight:700;color:var(--p1)}
 .gc-body{padding:13px 17px}
+
+@media(min-width:769px){
+  /* Desktop: card nhật ký to hơn, dễ đọc hơn */
+  #col-diary .gc-ttl{font-size:1.5rem}
+  #col-diary .gc-body{padding:20px 26px}
+  #col-diary .s-inp{font-size:.95rem;padding:10px 18px}
+  #col-diary .f-sel{font-size:.86rem}
+}
 
 /* ===================================================
    DIARY TAB — timeline
 =================================================== */
 .search-row{display:flex;gap:7px;margin-bottom:13px}
-.s-inp{
-  flex:1;background:rgba(255,255,255,.68);
-  border:1.5px solid rgba(168,84,112,.2);border-radius:22px;
-  padding:7px 14px;font-size:.83rem;color:var(--t1);outline:none;
-  transition:border-color .2s;
-}
+.s-inp{flex:1;background:rgba(255,255,255,.68);border:1.5px solid rgba(168,84,112,.2);border-radius:22px;padding:7px 14px;font-size:.83rem;color:var(--t1);outline:none;transition:border-color .2s}
 .s-inp:focus{border-color:var(--p1)}
 .s-inp::placeholder{color:var(--t3)}
-.f-sel{
-  background:rgba(255,255,255,.68);
-  border:1.5px solid rgba(168,84,112,.2);border-radius:22px;
-  padding:7px 10px;font-size:.76rem;color:var(--t2);outline:none;cursor:pointer;
-}
+.f-sel{background:rgba(255,255,255,.68);border:1.5px solid rgba(168,84,112,.2);border-radius:22px;padding:7px 10px;font-size:.76rem;color:var(--t2);outline:none;cursor:pointer}
 .tl-wrap{display:flex;flex-direction:column;gap:4px}
 
-/* Nhóm theo ngày */
 .tl-day-group{margin-bottom:14px}
-.tl-day-hdr{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:7px;padding:0 2px;
-}
+.tl-day-hdr{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:0 2px}
 .tl-day-hdr-dot{width:7px;height:7px;border-radius:50%;background:var(--p1);flex-shrink:0}
-.tl-day-hdr-lbl{
-  font-size:.74rem;font-weight:700;color:var(--p1);
-  text-transform:uppercase;letter-spacing:.03em;
-}
+.tl-day-hdr-lbl{font-size:.76rem;font-weight:700;color:var(--p1);text-transform:uppercase;letter-spacing:.03em}
 .tl-day-hdr-line{flex:1;height:1px;background:rgba(168,84,112,.15)}
 .tl-day-items{display:flex;flex-direction:column;gap:8px}
 
-.ti{
-  background:rgba(255,255,255,.55);
-  border:1.5px solid rgba(168,84,112,.12);border-radius:var(--rr);
-  padding:11px 13px;cursor:pointer;transition:all .17s;
-  position:relative;overflow:hidden;
-}
-.ti::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(to bottom,var(--p3),var(--p1));border-radius:3px 0 0 3px;
-}
+.ti{background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.12);border-radius:var(--rr);padding:11px 13px;cursor:pointer;transition:all .17s;position:relative;overflow:hidden}
+.ti::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--p3),var(--p1));border-radius:3px 0 0 3px}
 .ti:hover{transform:translateX(3px);box-shadow:var(--sh-sm);background:rgba(255,255,255,.78)}
 .ti-row1{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
-.ti-date{font-size:.66rem;color:var(--t3);font-weight:600}
 .ti-time{font-size:.64rem;color:var(--t3);font-weight:600}
 .ti-mood{font-size:.82rem}
-.ti-author{
-  font-size:.62rem;font-weight:700;color:var(--p2);
-  background:rgba(168,84,112,.09);border-radius:8px;
-  padding:1px 7px;margin-left:auto;
-}
+.ti-author{font-size:.62rem;font-weight:700;color:var(--p2);background:rgba(168,84,112,.09);border-radius:8px;padding:1px 7px;margin-left:auto}
 .ti-body{display:flex;align-items:flex-start;gap:8px}
 .ti-txt{flex:1;min-width:0}
 .ti-ttl{font-weight:700;font-size:.86rem;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
 .ti-pre{font-size:.74rem;color:var(--t2);line-height:1.44;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ti-thumb{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0}
 .ti-cmt-count{font-size:.64rem;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:3px}
-.load-more{
-  width:100%;background:rgba(168,84,112,.07);
-  border:1.5px dashed var(--p3);border-radius:var(--rr);
-  padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);
-  transition:all .18s;margin-top:6px;
+
+@media(min-width:769px){
+  #col-diary .ti{padding:16px 19px}
+  #col-diary .ti-ttl{font-size:1.02rem}
+  #col-diary .ti-pre{font-size:.84rem}
+  #col-diary .ti-thumb{width:58px;height:58px}
 }
+
+.load-more{width:100%;background:rgba(168,84,112,.07);border:1.5px dashed var(--p3);border-radius:var(--rr);padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);transition:all .18s;margin-top:6px}
 .load-more:hover{background:var(--p4)}
 .empty-hint{text-align:center;color:var(--t3);font-size:.83rem;padding:26px 0}
 
-/* OTD */
-.otd-card{
-  background:linear-gradient(135deg,rgba(168,84,112,.09),rgba(201,125,150,.06));
-  border:1.5px solid rgba(168,84,112,.18);border-radius:var(--rr);
-  padding:13px 15px;margin-bottom:13px;cursor:pointer;transition:all .18s;
-}
+.otd-card{background:linear-gradient(135deg,rgba(168,84,112,.09),rgba(201,125,150,.06));border:1.5px solid rgba(168,84,112,.18);border-radius:var(--rr);padding:13px 15px;margin-bottom:13px;cursor:pointer;transition:all .18s}
 .otd-card:hover{background:rgba(168,84,112,.14);transform:translateY(-1px)}
 .otd-lbl{font-size:.65rem;font-weight:700;color:var(--p2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
 .otd-ttl{font-weight:700;font-size:.86rem;color:var(--t1)}
 .otd-pre{font-size:.73rem;color:var(--t2);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-/* Streak */
-.streak-bar{
-  display:flex;align-items:center;gap:9px;
-  background:rgba(255,195,80,.1);border:1.5px solid rgba(255,175,40,.22);
-  border-radius:var(--rr);padding:9px 13px;margin-bottom:13px;
-}
+.streak-bar{display:flex;align-items:center;gap:9px;background:rgba(255,195,80,.1);border:1.5px solid rgba(255,175,40,.22);border-radius:var(--rr);padding:9px 13px;margin-bottom:13px}
 .s-fire{font-size:1.3rem}
 .s-ttl{font-size:.78rem;font-weight:700;color:#b07a10}
 .s-sub{font-size:.68rem;color:var(--t3)}
@@ -332,12 +260,7 @@ img{max-width:100%;display:block}
 /* ===================================================
    ANNIVERSARY TAB
 =================================================== */
-.ann-item{
-  display:flex;align-items:center;gap:9px;
-  background:rgba(255,255,255,.52);
-  border:1px solid rgba(168,84,112,.12);
-  border-radius:11px;padding:10px 12px;margin-bottom:8px;
-}
+.ann-item{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.52);border:1px solid rgba(168,84,112,.12);border-radius:11px;padding:10px 12px;margin-bottom:8px}
 .ann-dot{width:9px;height:9px;border-radius:50%;background:var(--p1);flex-shrink:0}
 .ann-info{flex:1;min-width:0}
 .ann-name{font-weight:700;font-size:.84rem;color:var(--t1);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -348,49 +271,28 @@ img{max-width:100%;display:block}
 .ann-cd.far-ann{color:var(--t2)}
 .ann-del{background:none;border:none;color:var(--p3);font-size:.84rem;padding:3px;transition:color .15s;flex-shrink:0}
 .ann-del:hover{color:#c04060}
-.add-ann-btn{
-  width:100%;background:rgba(168,84,112,.07);
-  border:1.5px dashed var(--p3);border-radius:11px;
-  padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);
-  transition:all .18s;
-}
+.add-ann-btn{width:100%;background:rgba(168,84,112,.07);border:1.5px dashed var(--p3);border-radius:11px;padding:9px;font-size:.78rem;font-weight:700;color:var(--p2);transition:all .18s}
 .add-ann-btn:hover{background:var(--p4)}
 
 /* ===================================================
    CALENDAR TAB
 =================================================== */
 .cal-nav{display:flex;align-items:center;gap:5px}
-.cnav{
-  background:rgba(168,84,112,.1);border:1px solid var(--p4);
-  border-radius:8px;width:27px;height:27px;
-  font-size:.84rem;color:var(--p1);
-  display:flex;align-items:center;justify-content:center;transition:all .14s;
-}
+.cnav{background:rgba(168,84,112,.1);border:1px solid var(--p4);border-radius:8px;width:27px;height:27px;font-size:.84rem;color:var(--p1);display:flex;align-items:center;justify-content:center;transition:all .14s}
 .cnav:hover{background:var(--p4)}
 .c-mlbl{font-weight:700;color:var(--t1);font-size:.83rem;min-width:90px;text-align:center}
 .c-grid{padding:9px 13px 13px}
 .c-wdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
 .c-wdays span{font-size:.6rem;font-weight:700;color:var(--t3);text-align:center;padding:2px 0;text-transform:uppercase}
 .c-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cd{
-  aspect-ratio:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  border-radius:9px;font-size:.76rem;font-weight:600;color:var(--t1);
-  min-height:33px;transition:all .13s;
-}
+.cd{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:9px;font-size:.76rem;font-weight:600;color:var(--t1);min-height:33px;transition:all .13s}
 .cd.today{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;box-shadow:0 3px 9px rgba(168,84,112,.32)}
 .cd.has-e{background:rgba(168,84,112,.09);cursor:pointer;border:1.5px solid rgba(168,84,112,.18)}
 .cd.has-e:hover{background:var(--p4);transform:scale(1.1)}
 .cd-ic{font-size:.52rem;line-height:1}
 .cd-ann{width:5px;height:5px;border-radius:50%;background:var(--p1);margin-top:1px}
-.cd-multi{
-  font-size:.48rem;font-weight:800;
-  background:var(--p1);color:#fff;
-  border-radius:6px;padding:0 3px;
-  line-height:1.4;margin-top:1px;
-}
+.cd-multi{font-size:.48rem;font-weight:800;background:var(--p1);color:#fff;border-radius:6px;padding:0 3px;line-height:1.4;margin-top:1px}
 
-/* mood map */
 .mood-map-ttl{font-size:.68rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin:9px 0 5px}
 .mood-map-leg{display:flex;gap:7px;flex-wrap:wrap}
 .ml-i{display:flex;align-items:center;gap:3px;font-size:.64rem;color:var(--t2)}
@@ -399,26 +301,12 @@ img{max-width:100%;display:block}
    ALBUM TAB — Zalo newsfeed style
 =================================================== */
 .album-day-group{margin-bottom:22px}
-.album-day-hdr{
-  display:flex;align-items:center;gap:10px;margin-bottom:6px;
-}
-.album-day-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--p1);flex-shrink:0;
-}
-.album-day-lbl{
-  font-size:.78rem;font-weight:700;color:var(--p1);
-}
+.album-day-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.album-day-dot{width:10px;height:10px;border-radius:50%;background:var(--p1);flex-shrink:0}
+.album-day-lbl{font-size:.78rem;font-weight:700;color:var(--p1)}
 .album-day-time{font-size:.68rem;color:var(--t3);font-weight:600;white-space:nowrap;margin-left:auto}
-.album-day-entry-ttl{
-  font-size:.75rem;color:var(--t2);font-style:italic;
-  margin-bottom:8px;padding-left:18px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.album-grid{
-  display:grid;gap:3px;
-  border-radius:12px;overflow:hidden;
-}
+.album-day-entry-ttl{font-size:.75rem;color:var(--t2);margin-bottom:8px;padding-left:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.album-grid{display:grid;gap:3px;border-radius:12px;overflow:hidden}
 .album-grid.g1{grid-template-columns:1fr}
 .album-grid.g1 .a-img{height:220px}
 .album-grid.g2{grid-template-columns:1fr 1fr}
@@ -428,22 +316,10 @@ img{max-width:100%;display:block}
 .album-grid.g3 .a-img:not(:first-child){height:130px}
 .album-grid.g4{grid-template-columns:1fr 1fr}
 .album-grid.g4 .a-img{height:130px}
-.a-img{
-  position:relative;overflow:hidden;cursor:pointer;
-  background:var(--p4);
-}
-.a-img img{
-  width:100%;height:100%;object-fit:cover;
-  transition:transform .22s;display:block;
-}
+.a-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4)}
+.a-img img{width:100%;height:100%;object-fit:cover;transition:transform .22s;display:block}
 .a-img:hover img{transform:scale(1.05)}
-.a-img-more{
-  position:absolute;inset:0;
-  background:rgba(60,20,40,.5);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.4rem;font-weight:700;color:#fff;
-  font-family:'Quicksand',sans-serif;
-}
+.a-img-more{position:absolute;inset:0;background:rgba(60,20,40,.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff}
 .album-empty{text-align:center;color:var(--t3);padding:36px 0;font-size:.85rem}
 
 /* ===================================================
@@ -459,174 +335,99 @@ img{max-width:100%;display:block}
   transition:all .18s;
 }
 #fab:hover{transform:scale(1.1) rotate(7deg);box-shadow:0 10px 28px rgba(168,84,112,.55)}
-@media(min-width:769px){
-  #fab{bottom:24px;right:26px;width:56px;height:56px;font-size:1.42rem}
-}
+@media(min-width:769px){#fab{bottom:24px;right:26px;width:56px;height:56px;font-size:1.42rem}}
 
 /* ===================================================
    MODAL
 =================================================== */
-.modal{
-  position:fixed;inset:0;z-index:500;
-  background:rgba(61,31,45,.36);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  display:none;align-items:center;justify-content:center;padding:14px;
-}
+.modal{position:fixed;inset:0;z-index:500;background:rgba(61,31,45,.36);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:14px}
 .modal.open{display:flex}
-.mbox{
-  background:linear-gradient(158deg,#fff8fb,#fde8f0);
-  border:1.5px solid rgba(255,255,255,.72);border-radius:24px;
-  box-shadow:0 24px 64px rgba(120,40,70,.2);
-  width:100%;max-width:560px;max-height:92vh;overflow-y:auto;
-  padding:24px 24px 20px;position:relative;
-}
+.mbox{background:linear-gradient(158deg,#fff8fb,#fde8f0);border:1.5px solid rgba(255,255,255,.72);border-radius:24px;box-shadow:0 24px 64px rgba(120,40,70,.2);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;padding:24px 24px 20px;position:relative}
 .mbox::-webkit-scrollbar{width:4px}
 .mbox::-webkit-scrollbar-thumb{background:var(--p4);border-radius:4px}
-.mc{
-  position:absolute;top:13px;right:13px;
-  background:rgba(168,84,112,.1);border:1px solid var(--p4);
-  border-radius:50%;width:29px;height:29px;font-size:.86rem;color:var(--t2);
-  display:flex;align-items:center;justify-content:center;transition:all .14s;
-}
+.mc{position:absolute;top:13px;right:13px;background:rgba(168,84,112,.1);border:1px solid var(--p4);border-radius:50%;width:29px;height:29px;font-size:.86rem;color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .14s}
 .mc:hover{background:var(--p4);color:var(--p1)}
-.m-ttl{font-family:'Dancing Script',cursive;font-size:1.5rem;font-weight:700;color:var(--p1);margin-bottom:15px}
+.m-ttl{font-family:var(--font-ttl);font-size:1.5rem;font-weight:700;color:var(--p1);margin-bottom:15px}
 
-/* FORM */
+/* Modal viết bài rộng hơn trên desktop để soạn dễ hơn */
+@media(min-width:769px){
+  #modal-write .mbox{max-width:680px}
+}
+
 .fg{margin-bottom:13px}
 .fl{display:block;font-size:.71rem;font-weight:700;color:var(--t2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
-.fi,.fta,.fse{
-  width:100%;background:rgba(255,255,255,.7);
-  border:1.5px solid rgba(168,84,112,.2);border-radius:10px;
-  padding:8px 12px;font-size:.86rem;color:var(--t1);
-  outline:none;transition:border-color .2s;
-}
+.fi,.fta,.fse{width:100%;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:10px;padding:8px 12px;font-size:.86rem;color:var(--t1);outline:none;transition:border-color .2s}
 .fi:focus,.fta:focus,.fse:focus{border-color:var(--p1)}
 .fta{resize:vertical;min-height:125px;line-height:1.65}
 .fse{cursor:pointer}
 
-/* Author toggle */
 .author-toggle{display:flex;gap:8px}
-.at-opt{
-  flex:1;background:rgba(255,255,255,.55);
-  border:1.5px solid rgba(168,84,112,.18);border-radius:11px;
-  padding:9px 10px;text-align:center;cursor:pointer;
-  font-size:.82rem;font-weight:700;color:var(--t2);
-  transition:all .16s;
-}
+.at-opt{flex:1;background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.18);border-radius:11px;padding:9px 10px;text-align:center;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--t2);transition:all .16s}
 .at-opt:hover{background:var(--p4)}
-.at-opt.sel{
-  background:linear-gradient(135deg,var(--p3),var(--p1));
-  color:#fff;border-color:var(--p1);
-  box-shadow:0 3px 10px rgba(168,84,112,.3);
-}
+.at-opt.sel{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;border-color:var(--p1);box-shadow:0 3px 10px rgba(168,84,112,.3)}
 
-/* Mood picker */
 .mood-pick{display:flex;gap:5px;flex-wrap:wrap}
-.mp-o{
-  font-size:1.35rem;cursor:pointer;padding:4px 7px;
-  border-radius:9px;border:2px solid transparent;transition:all .13s;
-}
+.mp-o{font-size:1.35rem;cursor:pointer;padding:4px 7px;border-radius:9px;border:2px solid transparent;transition:all .13s}
 .mp-o:hover{transform:scale(1.15)}
 .mp-o.sel{border-color:var(--p1);background:var(--p4);transform:scale(1.08)}
 
-/* Writing prompt */
-.wp{
-  background:rgba(168,84,112,.06);border:1.5px solid rgba(168,84,112,.14);
-  border-radius:9px;padding:9px 12px;margin-bottom:9px;
-  font-size:.78rem;color:var(--t2);font-style:italic;
-  display:flex;align-items:center;justify-content:space-between;gap:7px;
-}
+.wp{background:rgba(168,84,112,.06);border:1.5px solid rgba(168,84,112,.14);border-radius:9px;padding:9px 12px;margin-bottom:9px;font-size:.78rem;color:var(--t2);display:flex;align-items:center;justify-content:space-between;gap:7px}
 .wp-r{background:none;border:none;color:var(--p2);font-size:.82rem;padding:2px;flex-shrink:0}
 
-/* Font size */
 .fs-row{display:flex;align-items:center;gap:7px;margin-bottom:8px}
-.fsb{
-  background:rgba(168,84,112,.1);border:1px solid var(--p3);
-  border-radius:7px;width:26px;height:26px;
-  font-size:.86rem;color:var(--p1);
-  display:flex;align-items:center;justify-content:center;
-}
+.fsb{background:rgba(168,84,112,.1);border:1px solid var(--p3);border-radius:7px;width:26px;height:26px;font-size:.86rem;color:var(--p1);display:flex;align-items:center;justify-content:center}
 .fs-lbl{font-size:.73rem;color:var(--t2);font-weight:600}
 
-/* Image upload */
-.img-drop{
-  border:2px dashed var(--p3);border-radius:10px;padding:13px;
-  text-align:center;cursor:pointer;background:rgba(255,255,255,.42);
-  transition:all .18s;font-size:.78rem;color:var(--t3);
-}
+.img-drop{border:2px dashed var(--p3);border-radius:10px;padding:13px;text-align:center;cursor:pointer;background:rgba(255,255,255,.42);transition:all .18s;font-size:.78rem;color:var(--t3)}
 .img-drop:hover{background:var(--p4);border-color:var(--p2)}
 .img-prev-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
 .img-prev-itm{position:relative;width:60px;height:60px}
 .img-prev-itm img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-.img-rm{
-  position:absolute;top:-5px;right:-5px;
-  background:var(--p1);color:#fff;border:none;
-  border-radius:50%;width:16px;height:16px;font-size:.58rem;
-  display:flex;align-items:center;justify-content:center;
-}
+.img-rm{position:absolute;top:-5px;right:-5px;background:var(--p1);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:.58rem;display:flex;align-items:center;justify-content:center}
 
-/* Upload progress */
-.upload-prog{
-  background:rgba(168,84,112,.07);border:1px solid rgba(168,84,112,.15);
-  border-radius:8px;padding:7px 11px;margin-top:7px;
-  font-size:.74rem;color:var(--t2);display:none;
-}
+.upload-prog{background:rgba(168,84,112,.07);border:1px solid rgba(168,84,112,.15);border-radius:8px;padding:7px 11px;margin-top:7px;font-size:.74rem;color:var(--t2);display:none}
 .upload-prog.show{display:block}
 
-/* Buttons */
 .btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.btn-p{
-  flex:1;background:linear-gradient(135deg,var(--p3),var(--p1));
-  border:none;border-radius:10px;padding:10px;color:#fff;
-  font-size:.86rem;font-weight:700;transition:all .18s;min-width:90px;
-}
+.btn-p{flex:1;background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:10px;padding:10px;color:#fff;font-size:.86rem;font-weight:700;transition:all .18s;min-width:90px}
 .btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(168,84,112,.36)}
-.btn-s{
-  background:rgba(168,84,112,.09);border:1.5px solid var(--p4);
-  border-radius:10px;padding:10px 14px;color:var(--p1);
-  font-size:.86rem;font-weight:700;transition:all .18s;
-}
+.btn-p:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-s{background:rgba(168,84,112,.09);border:1.5px solid var(--p4);border-radius:10px;padding:10px 14px;color:var(--p1);font-size:.86rem;font-weight:700;transition:all .18s}
 .btn-s:hover{background:var(--p4)}
-.btn-d{
-  background:rgba(200,50,70,.07);border:1.5px solid rgba(200,50,70,.22);
-  border-radius:10px;padding:10px 13px;color:#b03050;
-  font-size:.86rem;font-weight:700;transition:all .18s;
-}
+.btn-d{background:rgba(200,50,70,.07);border:1.5px solid rgba(200,50,70,.22);border-radius:10px;padding:10px 13px;color:#b03050;font-size:.86rem;font-weight:700;transition:all .18s}
 .btn-d:hover{background:rgba(200,50,70,.13)}
 
-/* VIEW modal */
-.ve-date{font-size:.73rem;color:var(--t3);font-weight:600;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.ve-author-badge{
-  font-size:.66rem;font-weight:700;color:var(--p2);
-  background:rgba(168,84,112,.1);border-radius:8px;padding:2px 8px;
-}
-.ve-time{font-size:.68rem;color:var(--t3)}
+/* ===================================================
+   VIEW modal — thời gian viết / sửa lần cuối
+=================================================== */
+.ve-date{font-size:.78rem;color:var(--t1);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ve-author-badge{font-size:.66rem;font-weight:700;color:var(--p2);background:rgba(168,84,112,.1);border-radius:8px;padding:2px 8px}
+.ve-edited-note{font-size:.68rem;color:var(--t3);font-style:italic;margin-bottom:6px}
 .ve-mood{font-size:1.1rem;margin-bottom:7px}
-.ve-content{
-  background:rgba(255,255,255,.62);border-radius:9px;padding:13px;
-  margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);
-  white-space:pre-wrap;max-height:40vh;overflow-y:auto;
-}
-.ve-imgs{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
-.ve-imgs img{width:86px;height:86px;object-fit:cover;border-radius:9px;cursor:pointer;transition:transform .18s}
-.ve-imgs img:hover{transform:scale(1.06)}
+.ve-content{background:rgba(255,255,255,.62);border-radius:9px;padding:13px;margin:10px 0;font-size:.88rem;line-height:1.8;color:var(--t1);white-space:pre-wrap;max-height:40vh;overflow-y:auto}
+
+/* ===================================================
+   GALLERY ẢNH TRONG BÀI — bố cục đẹp tùy theo số ảnh
+=================================================== */
+.ve-gallery{margin-top:10px;border-radius:14px;overflow:hidden;display:grid;gap:4px}
+.ve-gallery.n1{grid-template-columns:1fr}
+.ve-gallery.n1 .vg-img{height:300px}
+.ve-gallery.n2{grid-template-columns:1fr 1fr}
+.ve-gallery.n2 .vg-img{height:200px}
+.ve-gallery.n3{grid-template-columns:1fr 1fr}
+.ve-gallery.n3 .vg-img:first-child{grid-column:1/3;height:220px}
+.ve-gallery.n3 .vg-img:not(:first-child){height:150px}
+.ve-gallery.n4{grid-template-columns:1fr 1fr}
+.ve-gallery.n4 .vg-img{height:160px}
+.vg-img{position:relative;overflow:hidden;cursor:pointer;background:var(--p4);border-radius:10px}
+.vg-img img{width:100%;height:100%;object-fit:cover;transition:transform .25s}
+.vg-img:hover img{transform:scale(1.06)}
 
 /* ===================================================
    DAY LIST NAV
 =================================================== */
-.dl-nav-row{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;margin:12px 0 4px;
-  background:rgba(168,84,112,.06);
-  border:1px solid rgba(168,84,112,.14);
-  border-radius:10px;padding:8px 10px;
-}
-.dl-nav-btn{
-  background:rgba(168,84,112,.1);border:1.5px solid var(--p3);
-  border-radius:8px;padding:6px 12px;
-  font-size:.78rem;font-weight:700;color:var(--p1);
-  transition:all .15s;
-}
+.dl-nav-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px;background:rgba(168,84,112,.06);border:1px solid rgba(168,84,112,.14);border-radius:10px;padding:8px 10px}
+.dl-nav-btn{background:rgba(168,84,112,.1);border:1.5px solid var(--p3);border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;color:var(--p1);transition:all .15s}
 .dl-nav-btn:hover:not(:disabled){background:var(--p4)}
 .dl-nav-btn:disabled{opacity:.35;cursor:not-allowed}
 .dl-counter{font-size:.76rem;font-weight:700;color:var(--t2)}
@@ -635,75 +436,62 @@ img{max-width:100%;display:block}
    COMMENTS
 =================================================== */
 .cmt-section{margin-top:16px;border-top:1.5px solid rgba(168,84,112,.12);padding-top:14px}
-.cmt-hdr{
-  font-size:.78rem;font-weight:700;color:var(--p1);
-  margin-bottom:10px;display:flex;align-items:center;gap:6px;
-}
-.cmt-list{display:flex;flex-direction:column;gap:9px;margin-bottom:12px;max-height:220px;overflow-y:auto}
-.cmt-item{
-  background:rgba(255,255,255,.55);border:1px solid rgba(168,84,112,.1);
-  border-radius:11px;padding:8px 12px;
-}
-.cmt-item-hdr{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.cmt-hdr{font-size:.78rem;font-weight:700;color:var(--p1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cmt-list{display:flex;flex-direction:column;gap:9px;margin-bottom:12px;max-height:240px;overflow-y:auto}
+.cmt-item{background:rgba(255,255,255,.55);border:1px solid rgba(168,84,112,.1);border-radius:11px;padding:8px 12px}
+.cmt-item-hdr{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
 .cmt-author{font-size:.74rem;font-weight:700;color:var(--p1)}
 .cmt-time{font-size:.63rem;color:var(--t3);margin-left:auto}
-.cmt-text{font-size:.8rem;color:var(--t1);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.cmt-edited-tag{font-size:.6rem;color:var(--t3);font-style:italic}
+.cmt-text{font-size:.8rem;color:var(--t1);line-height:1.5;white-space:pre-wrap;word-break:break-word;margin-bottom:5px}
+.cmt-actions{display:flex;gap:10px}
+.cmt-action-btn{background:none;border:none;font-size:.68rem;font-weight:700;color:var(--t3);padding:1px 2px;transition:color .15s}
+.cmt-action-btn:hover{color:var(--p1)}
+.cmt-action-btn.del:hover{color:#c04060}
 .cmt-empty{text-align:center;font-size:.76rem;color:var(--t3);padding:10px 0}
 .cmt-input-row{display:flex;flex-direction:column;gap:8px}
 .cmt-author-toggle{display:flex;gap:6px}
-.cmt-at-opt{
-  flex:1;background:rgba(255,255,255,.55);
-  border:1.5px solid rgba(168,84,112,.16);border-radius:9px;
-  padding:5px 8px;text-align:center;cursor:pointer;
-  font-size:.74rem;font-weight:700;color:var(--t2);
-  transition:all .15s;
-}
+.cmt-at-opt{flex:1;background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.16);border-radius:9px;padding:5px 8px;text-align:center;cursor:pointer;font-size:.74rem;font-weight:700;color:var(--t2);transition:all .15s}
 .cmt-at-opt:hover{background:var(--p4)}
-.cmt-at-opt.sel{
-  background:linear-gradient(135deg,var(--p3),var(--p1));
-  color:#fff;border-color:var(--p1);
-}
+.cmt-at-opt.sel{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;border-color:var(--p1)}
 .cmt-input-box{display:flex;gap:7px}
-.cmt-inp{
-  flex:1;background:rgba(255,255,255,.7);
-  border:1.5px solid rgba(168,84,112,.2);border-radius:18px;
-  padding:8px 14px;font-size:.82rem;color:var(--t1);outline:none;
-  transition:border-color .2s;
-}
+.cmt-inp{flex:1;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:18px;padding:8px 14px;font-size:.82rem;color:var(--t1);outline:none;transition:border-color .2s}
 .cmt-inp:focus{border-color:var(--p1)}
-.cmt-send-btn{
-  background:linear-gradient(135deg,var(--p3),var(--p1));
-  border:none;border-radius:50%;width:36px;height:36px;
-  color:#fff;font-size:.95rem;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .18s;
-}
+.cmt-send-btn{background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:.95rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
 .cmt-send-btn:hover{transform:scale(1.08)}
+.cmt-send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
 /* ===================================================
    LIGHTBOX
 =================================================== */
-#lb{
-  position:fixed;inset:0;z-index:800;
-  background:rgba(20,5,15,.92);
-  display:none;align-items:center;justify-content:center;cursor:pointer;
-}
+#lb{position:fixed;inset:0;z-index:800;background:rgba(20,5,15,.92);display:none;align-items:center;justify-content:center;cursor:pointer}
 #lb.open{display:flex}
 #lb img{max-width:94vw;max-height:90vh;border-radius:11px;object-fit:contain}
 
 /* ===================================================
    TOAST
 =================================================== */
-#toast{
-  position:fixed;bottom:80px;left:50%;
-  transform:translateX(-50%) translateY(14px);
-  background:rgba(61,31,45,.88);backdrop-filter:blur(10px);
-  color:#fff;padding:8px 18px;border-radius:20px;
-  font-size:.8rem;font-weight:600;z-index:9999;
-  opacity:0;pointer-events:none;transition:all .26s;white-space:nowrap;
-}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);background:rgba(61,31,45,.88);backdrop-filter:blur(10px);color:#fff;padding:8px 18px;border-radius:20px;font-size:.8rem;font-weight:600;z-index:9999;opacity:0;pointer-events:none;transition:all .26s;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:769px){#toast{bottom:28px}}
+
+/* ===================================================
+   SAVING OVERLAY — chờ khi viết nhật ký xong
+=================================================== */
+#saving-overlay{
+  position:fixed;inset:0;z-index:9500;
+  background:rgba(61,31,45,.42);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+}
+#saving-overlay.show{display:flex}
+.saving-box{
+  background:rgba(255,248,253,.92);border-radius:22px;
+  padding:30px 38px;text-align:center;
+  box-shadow:0 20px 50px rgba(120,40,70,.25);
+}
+.saving-heart{font-size:38px;display:block;margin-bottom:10px;animation:hb 1s ease-in-out infinite}
+.saving-txt{font-family:var(--font-ttl);font-size:1.05rem;font-weight:700;color:var(--p1)}
 
 /* ===================================================
    UTILITY
@@ -713,7 +501,6 @@ img{max-width:100%;display:block}
 </head>
 <body>
 
-<!-- SAKURA -->
 <canvas id="sakura-canvas"></canvas>
 
 <!-- ======================================================
@@ -753,7 +540,6 @@ img{max-width:100%;display:block}
 ====================================================== -->
 <div id="app">
 
-  <!-- HEADER -->
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
@@ -774,56 +560,10 @@ img{max-width:100%;display:block}
     <div id="ann-strip"></div>
   </header>
 
-  <!-- DESKTOP TABS -->
-  <nav class="desk-tabs" id="desk-tabs">
-    <div class="dtab on" data-tab="diary" onclick="switchTab('diary')">📖 Nhật ký</div>
-    <div class="dtab" data-tab="ann"   onclick="switchTab('ann')">🌸 Kỷ niệm</div>
-    <div class="dtab" data-tab="cal"   onclick="switchTab('cal')">🗓 Lịch</div>
-    <div class="dtab" data-tab="album" onclick="switchTab('album')">🖼 Album ảnh</div>
-  </nav>
-
   <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
-    <!-- CỘT 1: NHẬT KÝ -->
-    <div class="col-panel on" id="col-diary">
-
-      <!-- Ngày này năm ngoái -->
-      <div id="otd-wrap"></div>
-      <!-- Streak -->
-      <div id="streak-wrap"></div>
-
-      <div class="gc">
-        <div class="gc-hd">
-          <div class="gc-ttl">📖 Nhật Ký</div>
-        </div>
-        <div class="gc-body">
-          <div class="search-row">
-            <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm..." oninput="renderTimeline()"/>
-            <select class="f-sel" id="f-sel" onchange="renderTimeline()">
-              <option value="">Tất cả</option>
-            </select>
-          </div>
-          <div class="tl-wrap" id="tl-wrap"></div>
-          <button class="load-more hidden" id="load-more" onclick="loadMore()">Xem thêm ↓</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CỘT 2: KỶ NIỆM -->
-    <div class="col-panel" id="col-ann">
-      <div class="gc">
-        <div class="gc-hd">
-          <div class="gc-ttl">🌸 Kỷ Niệm</div>
-        </div>
-        <div class="gc-body">
-          <div id="ann-list"></div>
-          <button class="add-ann-btn" onclick="openAnnForm()">＋ Thêm ngày kỷ niệm</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CỘT 3: LỊCH -->
+    <!-- LỊCH (desktop: cột trái sticky | mobile: tab) -->
     <div class="col-panel" id="col-cal">
       <div class="gc">
         <div class="gc-hd">
@@ -846,24 +586,58 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <!-- CỘT 4: ALBUM -->
-    <div class="col-panel" id="col-album">
+    <!-- NHẬT KÝ (desktop: cột giữa to | mobile: tab mặc định) -->
+    <div class="col-panel on" id="col-diary">
+      <div id="otd-wrap"></div>
+      <div id="streak-wrap"></div>
+
       <div class="gc">
         <div class="gc-hd">
-          <div class="gc-ttl">🖼 Album Ảnh</div>
+          <div class="gc-ttl">📖 Nhật Ký</div>
         </div>
+        <div class="gc-body">
+          <div class="search-row">
+            <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm..." oninput="renderTimeline()"/>
+            <select class="f-sel" id="f-sel" onchange="renderTimeline()">
+              <option value="">Tất cả</option>
+            </select>
+          </div>
+          <div class="tl-wrap" id="tl-wrap"></div>
+          <button class="load-more hidden" id="load-more" onclick="loadMore()">Xem thêm ↓</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KỶ NIỆM (mobile: tab riêng | desktop: sẽ được JS chuyển vào col-right-desktop) -->
+    <div class="col-panel" id="col-ann">
+      <div class="gc">
+        <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
+        <div class="gc-body">
+          <div id="ann-list"></div>
+          <button class="add-ann-btn" onclick="openAnnForm()">＋ Thêm ngày kỷ niệm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALBUM (mobile: tab riêng | desktop: sẽ được JS chuyển vào col-right-desktop) -->
+    <div class="col-panel" id="col-album">
+      <div class="gc">
+        <div class="gc-hd"><div class="gc-ttl">🖼 Album Ảnh</div></div>
         <div class="gc-body" id="album-body"></div>
       </div>
     </div>
+
+    <!-- Vùng chứa CỘT PHẢI cho desktop — chỉ hiển thị & dùng trên desktop,
+         JS sẽ "move" (di chuyển DOM thật, không clone) #col-ann và #col-album vào đây -->
+    <div id="col-right-desktop" style="display:none"></div>
 
   </div><!-- /main-layout -->
 
 </div><!-- /app -->
 
-<!-- FAB -->
 <button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
 
-<!-- MOBILE BOTTOM NAV -->
+<!-- MOBILE BOTTOM NAV (giữ nguyên y hệt V4) -->
 <nav class="mob-nav">
   <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
     <div class="mn-icon">📖</div><div>Nhật ký</div>
@@ -932,7 +706,7 @@ img{max-width:100%;display:block}
       <textarea class="fta" id="e-cnt" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:140px"></textarea>
     </div>
     <div class="fg">
-      <label class="fl">Thêm ảnh (tối đa 4)</label>
+      <label class="fl">Ảnh (tối đa 4) — thêm, xóa, hoặc giữ ảnh cũ khi sửa bài</label>
       <div class="img-drop" onclick="document.getElementById('img-inp').click()">
         📷 Bấm để chọn ảnh từ máy
       </div>
@@ -942,7 +716,7 @@ img{max-width:100%;display:block}
     </div>
     <div class="btn-row">
       <button class="btn-s" onclick="closeModal('modal-write')">Hủy</button>
-      <button class="btn-p" onclick="saveEntry()">💾 Lưu nhật ký</button>
+      <button class="btn-p" id="save-entry-btn" onclick="saveEntry()">💾 Lưu nhật ký</button>
     </div>
   </div>
 </div>
@@ -954,17 +728,17 @@ img{max-width:100%;display:block}
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')">✕</button>
     <div class="ve-date" id="ve-date"></div>
+    <div class="ve-edited-note hidden" id="ve-edited-note"></div>
     <div class="ve-mood" id="ve-mood"></div>
     <div class="m-ttl" id="ve-ttl"></div>
     <div class="ve-content" id="ve-cnt"></div>
-    <div class="ve-imgs" id="ve-imgs"></div>
+    <div id="ve-imgs"></div>
     <div class="btn-row">
       <button class="btn-s" onclick="editEntry()">✏️ Sửa</button>
       <button class="btn-d" onclick="delEntry()">🗑 Xóa</button>
       <button class="btn-p" style="flex:0;padding:10px 16px" onclick="closeModal('modal-view')">Đóng</button>
     </div>
 
-    <!-- BÌNH LUẬN -->
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
@@ -975,7 +749,7 @@ img{max-width:100%;display:block}
         </div>
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
-          <button class="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
+          <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
         </div>
       </div>
     </div>
@@ -989,11 +763,11 @@ img{max-width:100%;display:block}
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-daylist')">✕</button>
     <div class="ve-date" id="dl-date"></div>
+    <div class="ve-edited-note hidden" id="dl-edited-note"></div>
     <div class="ve-mood" id="dl-mood"></div>
     <div class="m-ttl" id="dl-ttl"></div>
     <div class="ve-content" id="dl-cnt"></div>
-    <div class="ve-imgs" id="dl-imgs"></div>
-    <!-- Điều hướng bài trước/sau -->
+    <div id="dl-imgs"></div>
     <div class="dl-nav-row">
       <button class="dl-nav-btn" id="dl-prev" onclick="dlNav(-1)">‹ Bài trước</button>
       <span class="dl-counter" id="dl-counter"></span>
@@ -1005,7 +779,6 @@ img{max-width:100%;display:block}
       <button class="btn-p" style="flex:0;padding:10px 16px" onclick="closeModal('modal-daylist')">Đóng</button>
     </div>
 
-    <!-- BÌNH LUẬN (trong danh sách bài cùng ngày) -->
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="dl-cmt-count-lbl"></span></div>
       <div class="cmt-list" id="dl-cmt-list"></div>
@@ -1016,7 +789,7 @@ img{max-width:100%;display:block}
         </div>
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
-          <button class="cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
+          <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
         </div>
       </div>
     </div>
@@ -1051,25 +824,27 @@ img{max-width:100%;display:block}
 <!-- TOAST -->
 <div id="toast"></div>
 
+<!-- SAVING OVERLAY -->
+<div id="saving-overlay">
+  <div class="saving-box">
+    <span class="saving-heart">💌</span>
+    <div class="saving-txt" id="saving-txt">Đang lưu nhật ký...</div>
+  </div>
+</div>
+
 <!-- ======================================================
      JAVASCRIPT
 ====================================================== -->
 <script>
 /* ==========================================================
-   ⚙️ CẤU HÌNH — THAY ĐỔI TẠI ĐÂY
+   ⚙️ CẤU HÌNH
 ========================================================== */
 var CFG = {
-  // 🔗 Dán URL Web App của Google Apps Script vào đây
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
-  // 🔑 Mật mã 4 số
   PIN: '2204',
-  // 💕 Ngày bắt đầu tình yêu (YYYY-MM-DD)
   LOVE: '2026-04-22'
 };
 
-/* ==========================================================
-   DANH SÁCH NGƯỜI VIẾT / BÌNH LUẬN
-========================================================== */
 var AUTHORS = ['Ánh Ngọc 🌻', 'Anh 💖'];
 var DEFAULT_AUTHOR = 'Ánh Ngọc 🌻';
 
@@ -1081,22 +856,22 @@ var S = {
   calY: new Date().getFullYear(),
   calM: new Date().getMonth(),
   curId: null,
-  pin: '',
   mood: '',
-  author: DEFAULT_AUTHOR,     // người viết đang chọn trong form viết
-  cmtAuthor: DEFAULT_AUTHOR,  // người bình luận đang chọn (modal view)
-  dlCmtAuthor: DEFAULT_AUTHOR,// người bình luận đang chọn (modal daylist)
-  imgs: [],                   // [{url, driveId, data}]
+  author: DEFAULT_AUTHOR,
+  cmtAuthor: DEFAULT_AUTHOR,
+  dlCmtAuthor: DEFAULT_AUTHOR,
+  imgs: [],
   fontSize: 14,
   page: 1,
   pageSize: 8,
-  dayListEntries: [],          // danh sách bài cùng 1 ngày khi duyệt từ lịch
-  dayListIdx: 0
+  dayListEntries: [],
+  dayListIdx: 0,
+  pin: '',
+  isSaving: false,
+  editingCommentId: null,     // id comment đang sửa (modal-view)
+  editingDlCommentId: null    // id comment đang sửa (modal-daylist)
 };
 
-/* ==========================================================
-   WRITING PROMPTS
-========================================================== */
 var PROMPTS = [
   '💭 Hôm nay có điều gì đặc biệt không?',
   '🌸 Khoảnh khắc nào hôm nay khiến mình mỉm cười?',
@@ -1112,9 +887,6 @@ var PROMPTS = [
   '🌺 Sáng nay thức dậy, điều đầu tiên mình nghĩ đến là gì?'
 ];
 
-/* ==========================================================
-   QUOTES MÀN HÌNH KHÓA
-========================================================== */
 var QUOTES = [
   '"Mỗi ngày bên nhau là một trang sách đẹp..."',
   '"Tình yêu không cần lý do, chỉ cần hai trái tim..."',
@@ -1125,9 +897,6 @@ var QUOTES = [
   '"Tình yêu là những điều nhỏ nhặt được lưu giữ mãi mãi."'
 ];
 
-/* ==========================================================
-   KHỞI ĐỘNG
-========================================================== */
 document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
@@ -1159,7 +928,7 @@ function checkPin() {
       startClock();
       loadData();
       newPrompt();
-      setDesktopTabsTop();
+      setupDesktopLayout();
     }, 480);
   } else {
     document.getElementById('lock-err').textContent = 'Sai mật mã rồi iu ơi 🥺';
@@ -1173,26 +942,64 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Backspace') kd();
 });
 
-// Điều chỉnh top của desktop tabs theo chiều cao header
-function setDesktopTabsTop() {
-  var hdr = document.getElementById('app-hdr');
-  if (hdr) {
-    document.getElementById('desk-tabs').style.top = hdr.offsetHeight + 'px';
+/* ==========================================================
+   THIẾT LẬP LAYOUT DESKTOP — di chuyển #col-ann & #col-album
+   vào #col-right-desktop (chỉ DOM move, không đụng tab mobile)
+========================================================== */
+function setupDesktopLayout() {
+  if (window.innerWidth < 769) return;
+  var rightCol = document.getElementById('col-right-desktop');
+  var annCol = document.getElementById('col-ann');
+  var albumCol = document.getElementById('col-album');
+  if (rightCol && annCol && albumCol && annCol.parentElement !== rightCol) {
+    rightCol.appendChild(annCol);
+    rightCol.appendChild(albumCol);
+    rightCol.style.display = 'flex';
   }
+  // Đảm bảo mọi cột đều hiển thị (desktop không dùng khái niệm tab ẩn/hiện)
+  ['col-cal', 'col-diary', 'col-ann', 'col-album'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) { el.style.display = 'block'; el.classList.add('on'); }
+  });
 }
-window.addEventListener('resize', setDesktopTabsTop);
+
+// Khi resize qua lại giữa mobile/desktop, đảm bảo layout đúng
+var _lastIsDesktop = window.innerWidth >= 769;
+window.addEventListener('resize', function () {
+  var nowDesktop = window.innerWidth >= 769;
+  if (nowDesktop && !_lastIsDesktop) {
+    setupDesktopLayout();
+  } else if (!nowDesktop && _lastIsDesktop) {
+    // Quay lại mobile: đưa col-ann/col-album về main-layout theo đúng thứ tự ban đầu,
+    // rồi áp dụng lại trạng thái tab hiện tại
+    var mainLayout = document.getElementById('main-layout');
+    var rightCol = document.getElementById('col-right-desktop');
+    var albumCol = document.getElementById('col-album');
+    var annCol = document.getElementById('col-ann');
+    if (mainLayout && rightCol && rightCol.contains(annCol)) {
+      mainLayout.insertBefore(annCol, rightCol);
+      mainLayout.insertBefore(albumCol, rightCol);
+      rightCol.style.display = 'none';
+    }
+    switchTab(getCurrentMobileTab());
+  }
+  _lastIsDesktop = nowDesktop;
+});
+
+function getCurrentMobileTab() {
+  var active = document.querySelector('.mn-item.on');
+  return active ? active.dataset.tab : 'diary';
+}
 
 /* ==========================================================
    ĐỒNG HỒ TÌNH YÊU
-   — Không pad số 0 cho số ngày, hiển thị tự nhiên (1, 12, 123...)
-   — Giờ/phút/giây vẫn giữ 2 chữ số như đồng hồ thông thường
 ========================================================== */
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
   function tick() {
     var diff = Math.max(0, Date.now() - start);
     var days = Math.floor(diff / 86400000);
-    document.getElementById('ck-d').textContent = String(days); // không padStart
+    document.getElementById('ck-d').textContent = String(days);
     document.getElementById('ck-h').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
     document.getElementById('ck-m').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
     document.getElementById('ck-s').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
@@ -1236,7 +1043,7 @@ function startClock() {
 })();
 
 /* ==========================================================
-   TẢI DỮ LIỆU — JSONP (bypass CORS)
+   TẢI DỮ LIỆU — JSONP
 ========================================================== */
 function loadData(cb) {
   setSyncing(true);
@@ -1245,7 +1052,6 @@ function loadData(cb) {
     S.data = data || { entries: [], anniversaries: [] };
     if (!S.data.entries) S.data.entries = [];
     if (!S.data.anniversaries) S.data.anniversaries = [];
-    // Chuẩn hoá dữ liệu cũ: đảm bảo có author/comments để tương thích ngược
     S.data.entries.forEach(normalizeEntry);
     sortEntries(S.data.entries);
     renderAll();
@@ -1266,24 +1072,22 @@ function loadData(cb) {
   document.head.appendChild(tag);
 }
 
-// Đảm bảo entry cũ (chưa có author/comments) vẫn hoạt động bình thường
 function normalizeEntry(e) {
   if (!e.author) e.author = DEFAULT_AUTHOR;
   if (!e.comments || !Array.isArray(e.comments)) e.comments = [];
   if (!e.updatedAt) e.updatedAt = e.date ? (e.date + 'T00:00:00.000Z') : new Date().toISOString();
   if (!e.images) e.images = [];
+  // createdAt dùng để hiển thị "thời gian viết" gốc; nếu chưa có thì coi như = updatedAt lần đầu
+  if (!e.createdAt) e.createdAt = e.updatedAt;
   return e;
 }
 
-// Sắp xếp bài viết: ưu tiên updatedAt mới nhất, fallback date, fallback id
 function sortEntries(arr) {
   arr.sort(function (a, b) {
     var ta = a.updatedAt || (a.date ? a.date + 'T00:00:00.000Z' : '');
     var tb = b.updatedAt || (b.date ? b.date + 'T00:00:00.000Z' : '');
     if (tb !== ta) return tb.localeCompare(ta);
-    // cùng thời gian thì so theo date
     if (b.date !== a.date) return (b.date || '').localeCompare(a.date || '');
-    // cuối cùng so theo id để ổn định
     return (b.id || '').localeCompare(a.id || '');
   });
   return arr;
@@ -1299,11 +1103,9 @@ function setSyncing(on) {
 }
 
 /* ==========================================================
-   GHI DỮ LIỆU — POST
-   An toàn dữ liệu: luôn gửi toàn bộ object entry/anniversary
-   đầy đủ trường (giữ nguyên trường cũ không đổi).
+   GHI DỮ LIỆU — POST (dùng cho entry/anniversary, KHÔNG dùng cho comment)
 ========================================================== */
-function postData(payload, msg) {
+function postData(payload, msg, cb) {
   function doFetch(mode) {
     return fetch(CFG.URL, {
       method: 'POST',
@@ -1313,11 +1115,50 @@ function postData(payload, msg) {
     });
   }
   doFetch('cors')
-    .then(function () { if (msg) toast(msg); setTimeout(loadData, 900); })
+    .then(function (r) { return r.json().catch(function(){return null;}); })
+    .then(function (res) {
+      if (msg) toast(msg);
+      setTimeout(function () { loadData(function(){ if (typeof cb === 'function') cb(res); }); }, 700);
+    })
     .catch(function () {
       doFetch('no-cors')
-        .then(function () { if (msg) toast(msg); setTimeout(loadData, 1600); })
+        .then(function () {
+          if (msg) toast(msg);
+          setTimeout(function () { loadData(function(){ if (typeof cb === 'function') cb(null); }); }, 1500);
+        })
         .catch(function () { toast('❌ Lỗi kết nối! Thử lại.'); });
+    });
+}
+
+/* ==========================================================
+   GỌI API BÌNH LUẬN — atomic trên server (add/edit/delete)
+   Không tự merge mảng comments ở Frontend để tránh trùng lặp.
+========================================================== */
+function callCommentAPI(payload, onSuccess, onError) {
+  function doFetch(mode) {
+    return fetch(CFG.URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      mode: mode || 'cors'
+    });
+  }
+  doFetch('cors')
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (res && res.success) { if (onSuccess) onSuccess(res); }
+      else { if (onError) onError(res); }
+    })
+    .catch(function () {
+      // cors có thể fail do trình duyệt/mạng; thử no-cors (không đọc được response)
+      // -> báo người dùng đồng bộ lại để chắc chắn thấy comment mới
+      doFetch('no-cors').then(function () {
+        toast('💬 Đã gửi, đang đồng bộ lại để hiển thị...');
+        if (onError) onError(null);
+      }).catch(function () {
+        toast('❌ Lỗi kết nối, thử lại nhé!');
+        if (onError) onError(null);
+      });
     });
 }
 
@@ -1400,7 +1241,6 @@ function renderCalendar() {
   var first = new Date(S.calY, S.calM, 1).getDay();
   var dim = new Date(S.calY, S.calM + 1, 0).getDate();
 
-  // map ngày → mảng entries (hỗ trợ nhiều bài cùng ngày), đã sort mới nhất trước
   var eMap = {};
   S.data.entries.forEach(function (e) {
     if (e.date) {
@@ -1409,7 +1249,6 @@ function renderCalendar() {
     }
   });
 
-  // Set MM-DD của kỷ niệm
   var annSet = new Set(S.data.anniversaries.map(function (a) {
     return a.date ? a.date.substring(5) : '';
   }));
@@ -1421,21 +1260,17 @@ function renderCalendar() {
   for (var d = 1; d <= dim; d++) {
     var ds = S.calY + '-' + p2(S.calM + 1) + '-' + p2(d);
     var isToday = (d === today.getDate() && S.calM === today.getMonth() && S.calY === today.getFullYear());
-    var ents = eMap[ds] || []; // đã được sort theo updatedAt mới nhất trước (từ sortEntries global)
+    var ents = eMap[ds] || [];
     var hasAnn = annSet.has(p2(S.calM + 1) + '-' + p2(d));
     var cls = 'cd' + (isToday ? ' today' : '') + (ents.length ? ' has-e' : '');
     var inner = '<span>' + d + '</span>';
     if (ents.length) {
       inner += '<span class="cd-ic">' + (ents[0].mood || '❤️') + '</span>';
-      if (ents.length > 1) {
-        inner += '<span class="cd-multi">×' + ents.length + '</span>';
-      }
+      if (ents.length > 1) inner += '<span class="cd-multi">×' + ents.length + '</span>';
       ents.forEach(function (en) { if (en.mood) moodMap[en.mood] = (moodMap[en.mood] || 0) + 1; });
     } else if (hasAnn) {
       inner += '<span class="cd-ann"></span>';
     }
-    // Bấm vào ngày: nếu có nhiều bài → mở danh sách (bài mới nhất trước + nav);
-    // nếu chỉ có 1 bài → mở luôn modal xem bài đó
     var click = '';
     if (ents.length === 1) click = 'onclick="openView(\'' + ents[0].id + '\')"';
     else if (ents.length > 1) click = 'onclick="openDayList(\'' + ds + '\')"';
@@ -1443,7 +1278,6 @@ function renderCalendar() {
   }
   document.getElementById('c-days').innerHTML = html;
 
-  // mood legend
   var lg = '';
   Object.keys(moodMap).forEach(function (m) {
     lg += '<div class="ml-i"><span>' + m + '</span><span>×' + moodMap[m] + '</span></div>';
@@ -1460,21 +1294,20 @@ function cm(delta) {
 }
 
 /* ==========================================================
-   MỞ DANH SÁCH BÀI CÙNG NGÀY (từ lịch) — Bài mới nhất trước,
-   có nút Bài trước / Bài sau để duyệt các bài còn lại
+   DANH SÁCH BÀI CÙNG NGÀY
 ========================================================== */
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
   if (!ents.length) return;
   if (ents.length === 1) { openView(ents[0].id); return; }
 
-  // Sắp xếp: mới nhất (updatedAt) lên đầu
   ents = ents.slice();
   sortEntries(ents);
 
   S.dayListEntries = ents;
   S.dayListIdx = 0;
   S.dlCmtAuthor = DEFAULT_AUTHOR;
+  S.editingDlCommentId = null;
   showDayListModal();
 }
 
@@ -1485,28 +1318,22 @@ function showDayListModal() {
   var total = ents.length;
 
   document.getElementById('dl-date').innerHTML =
-    fmtDateVN(e.date) +
-    ' <span class="ve-author-badge">' + escH(e.author || DEFAULT_AUTHOR) + '</span>' +
-    ' <span class="ve-time">🕐 ' + fmtTimeShort(e.updatedAt) + '</span>';
+    '🕐 ' + fmtFullDateTime(e.createdAt || e.updatedAt) +
+    ' <span class="ve-author-badge">' + escH(e.author || DEFAULT_AUTHOR) + '</span>';
+
+  renderEditedNote('dl-edited-note', e);
+
   document.getElementById('dl-mood').textContent = e.mood || '';
   document.getElementById('dl-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('dl-cnt').textContent = e.content || '';
-
-  var imgHTML = '';
-  if (e.images && e.images.length) {
-    imgHTML = e.images.map(function (img) {
-      var src = img.url || img;
-      return '<img src="' + escH(src) + '" onclick="openLb(\'' + escH(src) + '\')" loading="lazy" alt="ảnh"/>';
-    }).join('');
-  }
-  document.getElementById('dl-imgs').innerHTML = imgHTML;
+  document.getElementById('dl-imgs').innerHTML = buildGalleryHTML(e.images);
 
   document.getElementById('dl-prev').disabled = (idx === 0);
   document.getElementById('dl-next').disabled = (idx === total - 1);
   document.getElementById('dl-counter').textContent = (idx + 1) + ' / ' + total + ' bài';
 
-  // lưu curId để sửa/xóa được dùng chung hàm editEntry/delEntry
   S.curId = e.id;
+  S.editingDlCommentId = null;
 
   renderDlComments();
   updateDlCmtToggleUI();
@@ -1516,6 +1343,7 @@ function showDayListModal() {
 
 function dlNav(delta) {
   S.dayListIdx = Math.max(0, Math.min(S.dayListEntries.length - 1, S.dayListIdx + delta));
+  S.editingDlCommentId = null;
   showDayListModal();
 }
 
@@ -1529,8 +1357,28 @@ function delFromDayList() {
 }
 
 /* ==========================================================
-   TIMELINE NHẬT KÝ — nhóm theo ngày, mỗi nhóm sort mới nhất trước,
-   các nhóm ngày hiển thị từ mới đến cũ
+   GHI CHÚ "SỬA LẦN CUỐI" — chỉ hiện khi updatedAt khác createdAt
+   rõ rệt (cách nhau hơn ~1 phút, tránh hiện ngay sau khi tạo mới)
+========================================================== */
+function renderEditedNote(elId, e) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  var created = e.createdAt || e.updatedAt;
+  var updated = e.updatedAt;
+  if (!created || !updated || created === updated) {
+    el.classList.add('hidden'); el.textContent = ''; return;
+  }
+  var tCreated = new Date(created).getTime();
+  var tUpdated = new Date(updated).getTime();
+  if (isNaN(tCreated) || isNaN(tUpdated) || Math.abs(tUpdated - tCreated) < 60000) {
+    el.classList.add('hidden'); el.textContent = ''; return;
+  }
+  el.classList.remove('hidden');
+  el.textContent = '✏️ Sửa lần cuối: ' + fmtFullDateTime(updated);
+}
+
+/* ==========================================================
+   TIMELINE NHẬT KÝ
 ========================================================== */
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
@@ -1554,8 +1402,6 @@ function filteredEntries() {
   });
 }
 
-// Nhóm danh sách bài (đã sort sẵn theo updatedAt) theo ngày,
-// giữ thứ tự ngày xuất hiện đầu tiên (đã là mới → cũ vì input đã sort)
 function groupByDate(entries) {
   var order = [];
   var map = {};
@@ -1576,7 +1422,6 @@ function renderTimeline() {
     wrap.innerHTML = '<div class="empty-hint">📝 Chưa có bài nhật ký nào~</div>';
     lm.classList.add('hidden'); return;
   }
-  // Phân trang dựa trên SỐ BÀI VIẾT (không phải số nhóm) để load-more dễ hiểu
   var show = entries.slice(0, S.page * S.pageSize);
   wrap.innerHTML = renderGroupedHTML(show);
   lm.classList.toggle('hidden', show.length >= entries.length);
@@ -1615,12 +1460,10 @@ function tiHTML(e) {
       'onclick="event.stopPropagation();openLb(\'' + escH(src) + '\')" loading="lazy"/>';
   }
   var cmtCount = (e.comments && e.comments.length) ? e.comments.length : 0;
-  var cmtHTML = cmtCount > 0
-    ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>'
-    : '';
+  var cmtHTML = cmtCount > 0 ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>' : '';
   return '<div class="ti" onclick="openView(\'' + e.id + '\')">' +
     '<div class="ti-row1">' +
-    '<span class="ti-time">🕐 ' + fmtTimeShort(e.updatedAt) + '</span>' +
+    '<span class="ti-time">🕐 ' + fmtTimeShort(e.createdAt || e.updatedAt) + '</span>' +
     '<span class="ti-mood">' + (e.mood || '') + '</span>' +
     '<span class="ti-author">' + escH(e.author || DEFAULT_AUTHOR) + '</span>' +
     '</div>' +
@@ -1708,9 +1551,7 @@ function delAnn(id) {
 }
 
 /* ==========================================================
-   ALBUM ẢNH — ZALO NEWSFEED STYLE
-   — Hiện ngày + giờ đăng (updatedAt, fallback date)
-   — Sort theo thời gian mới nhất lên trước (viết bù vẫn đúng thứ tự)
+   ALBUM ẢNH
 ========================================================== */
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1718,8 +1559,6 @@ function renderAlbum() {
     return e.images && e.images.length > 0;
   }).slice();
 
-  // Sort theo updatedAt (giờ đăng thực tế) mới nhất trước;
-  // nếu thiếu updatedAt thì dùng date làm fallback
   entriesWithImgs.sort(function (a, b) {
     var ta = a.updatedAt || (a.date ? a.date + 'T00:00:00.000Z' : '');
     var tb = b.updatedAt || (b.date ? b.date + 'T00:00:00.000Z' : '');
@@ -1745,8 +1584,6 @@ function renderAlbum() {
         (isLast ? '<div class="a-img-more">+' + (count - 4) + '</div>' : '') +
         '</div>';
     }
-    // Ngày hiển thị: dùng e.date (ngày viết, có thể là ngày viết bù)
-    // Giờ hiển thị: dùng e.updatedAt (giờ thực tế lưu lên hệ thống)
     var timeLabel = fmtTimeShort(e.updatedAt);
     html += '<div class="album-day-group">' +
       '<div class="album-day-hdr">' +
@@ -1759,6 +1596,25 @@ function renderAlbum() {
       '</div>';
   });
   body.innerHTML = html;
+}
+
+/* ==========================================================
+   GALLERY ẢNH TRONG MODAL XEM BÀI — bố cục đẹp theo số lượng ảnh
+========================================================== */
+function buildGalleryHTML(images) {
+  if (!images || !images.length) return '';
+  var n = Math.min(images.length, 4);
+  var cls = 've-gallery n' + n;
+  var html = '';
+  for (var i = 0; i < n; i++) {
+    var src = images[i].url || images[i];
+    var isLast = (i === n - 1 && images.length > 4);
+    html += '<div class="vg-img" onclick="openLb(\'' + escH(src) + '\')">' +
+      '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
+      (isLast ? '<div class="a-img-more">+' + (images.length - 4) + '</div>' : '') +
+      '</div>';
+  }
+  return '<div class="' + cls + '">' + html + '</div>';
 }
 
 /* ==========================================================
@@ -1784,21 +1640,18 @@ function openView(id) {
   normalizeEntry(e);
   S.curId = id;
   S.cmtAuthor = DEFAULT_AUTHOR;
+  S.editingCommentId = null;
+
   document.getElementById('ve-date').innerHTML =
-    fmtDateVN(e.date) +
-    ' <span class="ve-author-badge">' + escH(e.author || DEFAULT_AUTHOR) + '</span>' +
-    ' <span class="ve-time">🕐 ' + fmtTimeShort(e.updatedAt) + '</span>';
+    '🕐 ' + fmtFullDateTime(e.createdAt || e.updatedAt) +
+    ' <span class="ve-author-badge">' + escH(e.author || DEFAULT_AUTHOR) + '</span>';
+
+  renderEditedNote('ve-edited-note', e);
+
   document.getElementById('ve-mood').textContent = e.mood || '';
   document.getElementById('ve-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('ve-cnt').textContent = e.content || '';
-  var imgHTML = '';
-  if (e.images && e.images.length) {
-    imgHTML = e.images.map(function (img) {
-      var src = img.url || img;
-      return '<img src="' + escH(src) + '" onclick="openLb(\'' + escH(src) + '\')" loading="lazy" alt="ảnh"/>';
-    }).join('');
-  }
-  document.getElementById('ve-imgs').innerHTML = imgHTML;
+  document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images);
 
   renderComments();
   updateCmtToggleUI();
@@ -1814,7 +1667,7 @@ function editEntry() {
   normalizeEntry(e);
   closeModal('modal-view');
   S.mood = e.mood || '';
-  S.imgs = e.images ? e.images.slice() : [];
+  S.imgs = e.images ? e.images.slice() : [];   // giữ ảnh cũ để có thể thêm/xóa tiếp
   S.author = e.author || DEFAULT_AUTHOR;
   document.getElementById('write-ttl').textContent = '✏️ Chỉnh sửa nhật ký';
   document.getElementById('e-date').value = e.date;
@@ -1829,6 +1682,9 @@ function editEntry() {
   openModal('modal-write');
 }
 
+/* ==========================================================
+   LƯU BÀI — hiện overlay chờ, lưu xong tự mở bài ra xem
+========================================================== */
 function saveEntry() {
   var date = document.getElementById('e-date').value;
   var title = document.getElementById('e-ttl').value.trim();
@@ -1839,11 +1695,13 @@ function saveEntry() {
   if (document.getElementById('upload-prog').classList.contains('show')) {
     toast('⏳ Ảnh đang xử lý, chờ xíu nhé!'); return;
   }
+  if (S.isSaving) return;
 
-  // Nếu đang sửa bài cũ, lấy lại bài gốc để giữ nguyên các trường không đổi
-  // (ví dụ comments không được nhập lại trong form viết, nên phải giữ lại)
   var existing = S.curId ? S.data.entries.find(function (x) { return x.id === S.curId; }) : null;
   if (existing) normalizeEntry(existing);
+
+  var isNew = !S.curId;
+  var nowIso = new Date().toISOString();
 
   var entry = {
     id: S.curId || ('e_' + Date.now()),
@@ -1853,13 +1711,33 @@ function saveEntry() {
     mood: S.mood,
     author: S.author || DEFAULT_AUTHOR,
     images: S.imgs.slice(),
-    // Giữ nguyên bình luận cũ nếu đang sửa bài đã có comment
+    // comments: server tự giữ nguyên comments hiện có khi save_entry (xem Code.gs),
+    // ở đây gửi mảng rỗng/cũ chỉ để tương thích, server sẽ KHÔNG dùng field này để ghi đè.
     comments: existing && existing.comments ? existing.comments.slice() : [],
-    updatedAt: new Date().toISOString()
+    createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
+    updatedAt: nowIso
   };
+
   closeModal('modal-write');
-  toast('⏳ Đang lưu...');
-  postData({ action: 'save_entry', entry: entry }, '💾 Đã lưu nhật ký!');
+  showSavingOverlay(isNew ? 'Đang lưu nhật ký...' : 'Đang cập nhật...');
+  S.isSaving = true;
+
+  postData({ action: 'save_entry', entry: entry }, null, function (res) {
+    S.isSaving = false;
+    hideSavingOverlay();
+    toast(isNew ? '💾 Đã lưu nhật ký!' : '💾 Đã cập nhật!');
+    // Tự động mở bài vừa lưu ra xem
+    var savedId = (res && res.entry && res.entry.id) ? res.entry.id : entry.id;
+    setTimeout(function () { openView(savedId); }, 200);
+  });
+}
+
+function showSavingOverlay(msg) {
+  document.getElementById('saving-txt').textContent = msg || 'Đang lưu nhật ký...';
+  document.getElementById('saving-overlay').classList.add('show');
+}
+function hideSavingOverlay() {
+  document.getElementById('saving-overlay').classList.remove('show');
 }
 
 function delEntry() {
@@ -1879,7 +1757,7 @@ function delEntry() {
 }
 
 /* ==========================================================
-   NGƯỜI VIẾT — TOGGLE TRONG FORM VIẾT
+   NGƯỜI VIẾT
 ========================================================== */
 function selAuthor(v) {
   S.author = v;
@@ -1901,17 +1779,11 @@ function selMood(m) {
   });
 }
 
-/* ==========================================================
-   WRITING PROMPT
-========================================================== */
 function newPrompt() {
   var el = document.getElementById('wp-txt');
   if (el) el.textContent = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
 }
 
-/* ==========================================================
-   FONT SIZE
-========================================================== */
 function chgFs(delta) {
   S.fontSize = Math.min(20, Math.max(11, S.fontSize + delta));
   document.getElementById('e-cnt').style.fontSize = S.fontSize + 'px';
@@ -1919,7 +1791,7 @@ function chgFs(delta) {
 }
 
 /* ==========================================================
-   ẢNH — UPLOAD LÊN DRIVE QUA APPS SCRIPT (giữ nguyên cơ chế cũ)
+   ẢNH — UPLOAD LÊN DRIVE (lưu vào thư mục con theo ngày viết)
 ========================================================== */
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -1929,10 +1801,12 @@ function onImgPick(input) {
   }
   if (!files.length) return;
   document.getElementById('upload-prog').classList.add('show');
+  document.getElementById('save-entry-btn').disabled = true;
+  var dateForFolder = document.getElementById('e-date').value || todayStr();
   var done = 0;
   files.forEach(function (file) {
     compressImg(file, function (b64) {
-      uploadImgToDrive(b64, file.name, function (result) {
+      uploadImgToDrive(b64, file.name, dateForFolder, function (result) {
         if (result) {
           S.imgs.push({ url: result.url, driveId: result.driveId, data: b64 });
         } else {
@@ -1941,6 +1815,7 @@ function onImgPick(input) {
         done++;
         if (done === files.length) {
           document.getElementById('upload-prog').classList.remove('show');
+          document.getElementById('save-entry-btn').disabled = false;
           renderImgPrev();
         }
       });
@@ -1970,7 +1845,7 @@ function compressImg(file, cb) {
   reader.readAsDataURL(file);
 }
 
-function uploadImgToDrive(b64, filename, cb) {
+function uploadImgToDrive(b64, filename, dateStr, cb) {
   var parts = b64.split(',');
   var base64Data = parts[1] || parts[0];
   var mimeType = (b64.indexOf('png') > -1) ? 'image/png' : 'image/jpeg';
@@ -1982,7 +1857,8 @@ function uploadImgToDrive(b64, filename, cb) {
       action: 'upload_image',
       imageData: base64Data,
       mimeType: mimeType,
-      filename: filename || ('photo_' + Date.now() + '.jpg')
+      filename: filename || ('photo_' + Date.now() + '.jpg'),
+      dateStr: dateStr // server dùng để tạo/đặt vào thư mục con DDMMYYYY
     })
   })
   .then(function (r) { return r.json(); })
@@ -1990,9 +1866,7 @@ function uploadImgToDrive(b64, filename, cb) {
     if (res && res.url) cb(res);
     else cb(null);
   })
-  .catch(function () {
-    cb(null);
-  });
+  .catch(function () { cb(null); });
 }
 
 function renderImgPrev() {
@@ -2008,7 +1882,11 @@ function renderImgPrev() {
 function rmImg(i) {
   var img = S.imgs[i];
   if (img && img.driveId) {
-    postData({ action: 'delete_image', driveId: img.driveId }, null);
+    fetch(CFG.URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'delete_image', driveId: img.driveId })
+    }).catch(function(){});
   }
   S.imgs.splice(i, 1);
   renderImgPrev();
@@ -2016,9 +1894,8 @@ function rmImg(i) {
 
 /* ==========================================================
    BÌNH LUẬN — MODAL XEM BÀI (modal-view)
-   - Không đóng modal khi gửi
-   - Cập nhật danh sách ngay lập tức (optimistic update)
-   - Lưu cùng bài viết qua action save_entry, giữ nguyên field khác
+   Mỗi nút Gửi chỉ được bấm 1 lần cho tới khi server trả lời,
+   tránh double-submit gây hiển thị trùng bình luận.
 ========================================================== */
 function selCmtAuthor(v) {
   S.cmtAuthor = v;
@@ -2041,18 +1918,26 @@ function renderComments() {
     listEl.innerHTML = '<div class="cmt-empty">Chưa có bình luận nào, hãy là người đầu tiên~ 💌</div>';
     return;
   }
-  listEl.innerHTML = e.comments.map(cmtHTML).join('');
+  listEl.innerHTML = e.comments.map(function (c) { return cmtHTML(c, 'view'); }).join('');
   listEl.scrollTop = listEl.scrollHeight;
 }
 
-function cmtHTML(c) {
-  return '<div class="cmt-item">' +
+// scope: 'view' hoặc 'dl' — để biết gọi hàm sửa/xóa nào tương ứng đúng modal
+function cmtHTML(c, scope) {
+  var editedTag = c.editedAt ? '<span class="cmt-edited-tag">(đã sửa)</span>' : '';
+  var editFn = scope === 'dl' ? 'startEditDlComment' : 'startEditComment';
+  var delFn  = scope === 'dl' ? 'delDlComment' : 'delComment';
+  return '<div class="cmt-item" data-cid="' + escH(c.id) + '">' +
     '<div class="cmt-item-hdr">' +
     '<span class="cmt-author">' + escH(c.author || DEFAULT_AUTHOR) + '</span>' +
+    editedTag +
     '<span class="cmt-time">' + fmtTimeShort(c.time) + '</span>' +
     '</div>' +
     '<div class="cmt-text">' + escH(c.text) + '</div>' +
-    '</div>';
+    '<div class="cmt-actions">' +
+    '<button class="cmt-action-btn" onclick="' + editFn + '(\'' + escH(c.id) + '\')">✏️ Sửa</button>' +
+    '<button class="cmt-action-btn del" onclick="' + delFn + '(\'' + escH(c.id) + '\')">🗑 Xóa</button>' +
+    '</div></div>';
 }
 
 function sendComment() {
@@ -2061,44 +1946,73 @@ function sendComment() {
   if (!text) { toast('⚠️ Viết gì đó để bình luận nhé!'); return; }
   if (!S.curId) return;
 
-  var e = S.data.entries.find(function (x) { return x.id === S.curId; });
-  if (!e) return;
-  normalizeEntry(e);
+  var btn = document.getElementById('cmt-send-btn');
+  if (btn.disabled) return; // chặn double-click/double-submit
+  btn.disabled = true;
 
-  var comment = {
-    id: 'c_' + Date.now(),
-    author: S.cmtAuthor || DEFAULT_AUTHOR,
-    text: text,
-    time: new Date().toISOString()
-  };
+  // Nếu đang ở chế độ sửa comment, gọi luồng sửa thay vì thêm mới
+  if (S.editingCommentId) {
+    callCommentAPI({
+      action: 'edit_comment', entryId: S.curId, commentId: S.editingCommentId, text: text
+    }, function (res) {
+      var e = S.data.entries.find(function (x) { return x.id === S.curId; });
+      if (e) e.comments = res.comments;
+      S.editingCommentId = null;
+      inp.value = '';
+      btn.disabled = false;
+      btn.textContent = '➤';
+      renderComments();
+    }, function () {
+      btn.disabled = false;
+      // dù lỗi mạng tạm thời, đồng bộ lại để chắc chắn không lệch dữ liệu
+      loadData(function () { renderComments(); });
+    });
+    return;
+  }
 
-  // Optimistic update: thêm ngay vào local state để hiển thị tức thì
-  e.comments.push(comment);
-  inp.value = '';
-  renderComments();
-  renderTimeline(); // cập nhật số bình luận hiển thị ở timeline
-
-  // Gửi toàn bộ entry (giữ nguyên các trường khác) lên Apps Script.
-  // Không hiển thị toast để tránh làm phân tâm khi đang bình luận liên tục,
-  // không reload toàn bộ data ngay (tránh giật/đóng modal) — chỉ lưu nền.
-  saveEntrySilently(e);
+  callCommentAPI({
+    action: 'add_comment', entryId: S.curId, author: S.cmtAuthor || DEFAULT_AUTHOR, text: text
+  }, function (res) {
+    var e = S.data.entries.find(function (x) { return x.id === S.curId; });
+    if (e) e.comments = res.comments; // dùng đúng mảng comments server trả về — nguồn sự thật duy nhất
+    inp.value = '';
+    btn.disabled = false;
+    renderComments();
+    renderTimeline();
+  }, function () {
+    btn.disabled = false;
+    loadData(function () { renderComments(); renderTimeline(); });
+  });
 }
 
-function saveEntrySilently(entry) {
-  // Gửi POST nhưng KHÔNG reload lại toàn bộ dữ liệu ngay (giữ modal đang mở ổn định)
-  fetch(CFG.URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'save_entry', entry: entry }),
-    mode: 'cors'
-  }).catch(function () {
-    // Thử lại bằng no-cors nếu cors bị chặn — vẫn lưu được lên Drive
-    fetch(CFG.URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'save_entry', entry: entry }),
-      mode: 'no-cors'
-    }).catch(function () { toast('⚠️ Bình luận chưa đồng bộ được, thử Đồng bộ lại sau!'); });
+function startEditComment(commentId) {
+  var e = S.data.entries.find(function (x) { return x.id === S.curId; });
+  if (!e) return;
+  var c = e.comments.find(function (x) { return x.id === commentId; });
+  if (!c) return;
+  S.editingCommentId = commentId;
+  var inp = document.getElementById('cmt-inp');
+  inp.value = c.text;
+  inp.focus();
+  document.getElementById('cmt-send-btn').textContent = '✓';
+  toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
+}
+
+function delComment(commentId) {
+  if (!confirm('Xóa bình luận này?')) return;
+  if (!S.curId) return;
+  callCommentAPI({ action: 'delete_comment', entryId: S.curId, commentId: commentId }, function (res) {
+    var e = S.data.entries.find(function (x) { return x.id === S.curId; });
+    if (e) e.comments = res.comments;
+    if (S.editingCommentId === commentId) {
+      S.editingCommentId = null;
+      document.getElementById('cmt-inp').value = '';
+      document.getElementById('cmt-send-btn').textContent = '➤';
+    }
+    renderComments();
+    renderTimeline();
+  }, function () {
+    loadData(function () { renderComments(); renderTimeline(); });
   });
 }
 
@@ -2126,7 +2040,7 @@ function renderDlComments() {
     listEl.innerHTML = '<div class="cmt-empty">Chưa có bình luận nào, hãy là người đầu tiên~ 💌</div>';
     return;
   }
-  listEl.innerHTML = e.comments.map(cmtHTML).join('');
+  listEl.innerHTML = e.comments.map(function (c) { return cmtHTML(c, 'dl'); }).join('');
   listEl.scrollTop = listEl.scrollHeight;
   document.getElementById('dl-cmt-inp').value = '';
 }
@@ -2138,24 +2052,77 @@ function sendDlComment() {
 
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
-  normalizeEntry(e);
 
-  var comment = {
-    id: 'c_' + Date.now(),
-    author: S.dlCmtAuthor || DEFAULT_AUTHOR,
-    text: text,
-    time: new Date().toISOString()
-  };
-  e.comments.push(comment);
-  inp.value = '';
-  renderDlComments();
+  var btn = document.getElementById('dl-cmt-send-btn');
+  if (btn.disabled) return;
+  btn.disabled = true;
 
-  // Đồng bộ cùng bản trong S.data.entries (để timeline/album cũng thấy comment mới)
-  var master = S.data.entries.find(function (x) { return x.id === e.id; });
-  if (master) { normalizeEntry(master); master.comments = e.comments.slice(); }
-  renderTimeline();
+  if (S.editingDlCommentId) {
+    callCommentAPI({
+      action: 'edit_comment', entryId: e.id, commentId: S.editingDlCommentId, text: text
+    }, function (res) {
+      e.comments = res.comments;
+      var master = S.data.entries.find(function (x) { return x.id === e.id; });
+      if (master) master.comments = res.comments;
+      S.editingDlCommentId = null;
+      inp.value = '';
+      btn.disabled = false;
+      btn.textContent = '➤';
+      renderDlComments();
+    }, function () {
+      btn.disabled = false;
+      loadData(function () { renderDlComments(); });
+    });
+    return;
+  }
 
-  saveEntrySilently(e);
+  callCommentAPI({
+    action: 'add_comment', entryId: e.id, author: S.dlCmtAuthor || DEFAULT_AUTHOR, text: text
+  }, function (res) {
+    e.comments = res.comments;
+    var master = S.data.entries.find(function (x) { return x.id === e.id; });
+    if (master) master.comments = res.comments;
+    inp.value = '';
+    btn.disabled = false;
+    renderDlComments();
+    renderTimeline();
+  }, function () {
+    btn.disabled = false;
+    loadData(function () { renderDlComments(); renderTimeline(); });
+  });
+}
+
+function startEditDlComment(commentId) {
+  var e = S.dayListEntries[S.dayListIdx];
+  if (!e) return;
+  var c = e.comments.find(function (x) { return x.id === commentId; });
+  if (!c) return;
+  S.editingDlCommentId = commentId;
+  var inp = document.getElementById('dl-cmt-inp');
+  inp.value = c.text;
+  inp.focus();
+  document.getElementById('dl-cmt-send-btn').textContent = '✓';
+  toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
+}
+
+function delDlComment(commentId) {
+  if (!confirm('Xóa bình luận này?')) return;
+  var e = S.dayListEntries[S.dayListIdx];
+  if (!e) return;
+  callCommentAPI({ action: 'delete_comment', entryId: e.id, commentId: commentId }, function (res) {
+    e.comments = res.comments;
+    var master = S.data.entries.find(function (x) { return x.id === e.id; });
+    if (master) master.comments = res.comments;
+    if (S.editingDlCommentId === commentId) {
+      S.editingDlCommentId = null;
+      document.getElementById('dl-cmt-inp').value = '';
+      document.getElementById('dl-cmt-send-btn').textContent = '➤';
+    }
+    renderDlComments();
+    renderTimeline();
+  }, function () {
+    loadData(function () { renderDlComments(); renderTimeline(); });
+  });
 }
 
 /* ==========================================================
@@ -2168,56 +2135,25 @@ function openLb(src) {
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
 /* ==========================================================
-   TAB NAVIGATION
+   TAB NAVIGATION — CHỈ áp dụng cho MOBILE (giữ nguyên như V4)
 ========================================================== */
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
   var isMobile = window.innerWidth < 769;
+  if (!isMobile) return; // Desktop không dùng tab nữa — mọi cột luôn hiển thị
+
   TABS.forEach(function (t) {
     var el = document.getElementById('col-' + t);
     if (el) {
-      if (isMobile) {
-        el.classList.toggle('on', t === tab);
-        el.style.display = (t === tab) ? 'block' : 'none';
-      } else {
-        el.classList.add('on');
-        el.style.display = 'block';
-      }
+      el.classList.toggle('on', t === tab);
+      el.style.display = (t === tab) ? 'block' : 'none';
     }
-  });
-
-  document.querySelectorAll('.dtab').forEach(function (el) {
-    el.classList.toggle('on', el.dataset.tab === tab);
   });
   document.querySelectorAll('.mn-item').forEach(function (el) {
     el.classList.toggle('on', el.dataset.tab === tab);
   });
-
-  if (window.innerWidth >= 769) {
-    var colMap = { diary: 'col-diary', ann: 'col-ann', cal: 'col-cal', album: 'col-album' };
-    var target = document.getElementById(colMap[tab]);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
 }
-
-function initDesktopLayout() {
-  if (window.innerWidth >= 769) {
-    TABS.forEach(function (t) {
-      var el = document.getElementById('col-' + t);
-      if (el) {
-        el.classList.add('on');
-        el.style.display = 'block';
-      }
-    });
-  }
-}
-window.addEventListener('resize', function () {
-  if (window.innerWidth >= 769) initDesktopLayout();
-});
-// Gọi 1 lần khi script load để đảm bảo desktop hiện đủ 4 cột ngay cả khi
-// app đã hiển thị trước khi resize được kích hoạt
-window.addEventListener('load', initDesktopLayout);
 
 /* ==========================================================
    MODAL HELPERS
@@ -2269,13 +2205,22 @@ function fmtDateVN(ds) {
   if (p.length < 3) return ds;
   return 'ngày ' + parseInt(p[2]) + ' tháng ' + parseInt(p[1]) + ', ' + p[0];
 }
-// Định dạng giờ:phút ngắn từ chuỗi ISO (updatedAt hoặc comment.time)
 function fmtTimeShort(iso) {
   if (!iso) return '';
   try {
     var d = new Date(iso);
     if (isNaN(d.getTime())) return '';
     return p2(d.getHours()) + ':' + p2(d.getMinutes());
+  } catch (ex) { return ''; }
+}
+// Hiển thị đầy đủ: "ngày 19 tháng 6, 2026 lúc 20:15"
+function fmtFullDateTime(iso) {
+  if (!iso) return '';
+  try {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    var dateLabel = 'ngày ' + d.getDate() + ' tháng ' + (d.getMonth() + 1) + ', ' + d.getFullYear();
+    return dateLabel + ' lúc ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
   } catch (ex) { return ''; }
 }
 function escH(s) {
