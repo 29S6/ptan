@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.5.2 - Backup & Restore hoạt động, giao diện mới -->
+<!-- V5.5.3 - Không backup, giữ nguyên các tính năng còn lại -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -58,7 +58,7 @@ img{max-width:100%;display:block}
 .hdr-top{display:flex;align-items:center;justify-content:space-between;padding:13px 18px 9px}
 .hdr-logo{font-family:var(--font-ttl);font-size:1.46rem;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(100,30,60,.28)}
 .hdr-actions{display:flex;gap:8px;align-items:center}
-.hdr-btn{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:6px 10px;font-size:.85rem;color:#fff;transition:all .15s;display:flex;align-items:center;gap:4px}
+.hdr-btn{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:6px 13px;font-size:.75rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;transition:all .15s}
 .hdr-btn:hover{background:rgba(255,255,255,.32)}
 .hdr-btn.syncing svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -300,20 +300,6 @@ img{max-width:100%;display:block}
 .confirm-actions{display:flex;gap:10px;justify-content:center}
 .confirm-actions .btn-p{flex:0 1 auto;padding:8px 20px}
 .confirm-actions .btn-s{flex:0 1 auto;padding:8px 20px}
-.backup-modal .backup-list{max-height:260px;overflow-y:auto;background:rgba(255,255,255,.5);border-radius:12px;padding:6px;margin-top:8px}
-.backup-modal .backup-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(168,84,112,.08);transition:background .15s;border-radius:8px}
-.backup-modal .backup-item:last-child{border-bottom:none}
-.backup-modal .backup-item:hover{background:rgba(168,84,112,.06)}
-.backup-modal .backup-item .info{display:flex;flex-direction:column;gap:2px}
-.backup-modal .backup-item .name{font-size:.82rem;font-weight:600;color:var(--t1)}
-.backup-modal .backup-item .date{font-size:.68rem;color:var(--t3)}
-.backup-modal .backup-item .restore-btn{background:var(--p1);color:#fff;border:none;border-radius:8px;padding:4px 14px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .15s}
-.backup-modal .backup-item .restore-btn:hover{background:var(--p2);transform:scale(1.05)}
-.backup-modal .backup-empty{text-align:center;color:var(--t3);padding:20px 0;font-size:.85rem}
-.backup-modal .backup-actions{display:flex;gap:10px;margin-bottom:14px}
-.backup-modal .backup-actions .btn-p{flex:1}
-.backup-modal .backup-actions .btn-s{flex:0 0 auto;padding:10px 14px}
-.spinner{display:inline-block;width:18px;height:18px;border:3px solid rgba(168,84,112,.2);border-radius:50%;border-top-color:var(--p1);animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 #lb{position:fixed;inset:0;z-index:800;background:rgba(20,5,15,.92);display:none;align-items:center;justify-content:center;cursor:pointer}
 #lb.open{display:flex}
 #lb img{max-width:94vw;max-height:90vh;border-radius:11px;object-fit:contain}
@@ -366,16 +352,13 @@ img{max-width:100%;display:block}
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
-      <div class="hdr-actions">
-        <button class="hdr-btn" id="sync-btn" onclick="syncData()" title="Đồng bộ">
-          <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-          </svg>
-          Đồng bộ
-        </button>
-        <button class="hdr-btn" id="backup-btn" onclick="openBackupModal()" title="Sao lưu & Khôi phục">📦</button>
-      </div>
+      <button class="hdr-btn" id="sync-btn" onclick="syncData()">
+        <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+          <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+        </svg>
+        Đồng bộ
+      </button>
     </div>
     <div class="clock-row">
       <div class="cu"><div class="cn" id="ck-d">0</div><div class="cl">Ngày</div></div>
@@ -625,32 +608,6 @@ img{max-width:100%;display:block}
     <div class="confirm-actions">
       <button class="btn-s" id="confirm-cancel" onclick="closeModal('confirm-modal')">Hủy</button>
       <button class="btn-p" id="confirm-ok">Đồng ý</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL BACKUP -->
-<div class="modal backup-modal" id="backup-modal">
-  <div class="mbox" style="max-width:520px;">
-    <button class="mc" onclick="closeModal('backup-modal')">✕</button>
-    <div class="m-ttl">📦 Sao lưu & Khôi phục</div>
-    <div style="font-size:.78rem;color:var(--t3);margin-bottom:14px;">
-      Tự động backup lúc 3h sáng. Giữ tối đa 10 bản gần nhất.
-    </div>
-    <div class="backup-actions">
-      <button class="btn-p" id="backup-now-btn" onclick="manualBackup()">
-        💾 Sao lưu ngay
-      </button>
-      <button class="btn-s" id="refresh-backup-list-btn" onclick="refreshBackupList()" title="Làm mới danh sách">🔄</button>
-    </div>
-    <div class="fg">
-      <label class="fl">📂 Các bản sao lưu gần đây</label>
-      <div id="backup-list-container">
-        <div class="backup-empty">Đang tải...</div>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:14px;">
-      <button class="btn-p" onclick="closeModal('backup-modal')" style="flex:1;">Đóng</button>
     </div>
   </div>
 </div>
@@ -1281,13 +1238,11 @@ function updateStatusSlider() {
     return;
   }
 
-  // Nếu chỉ có 1 item, hiển thị luôn
   if (statusData.length === 1) {
     container.innerHTML = statusData[0].html;
     return;
   }
 
-  // Nhiều hơn 1: chuyển đổi mỗi 15 giây
   statusIndex = 0;
   showStatusItem();
   if (statusTimer) clearInterval(statusTimer);
@@ -2258,116 +2213,6 @@ function escH(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-}
-
-// ============================================================
-// BACKUP & RESTORE — V5.5.2
-// ============================================================
-
-function openBackupModal() {
-  openModal('backup-modal');
-  refreshBackupList();
-}
-
-function refreshBackupList() {
-  var container = document.getElementById('backup-list-container');
-  container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang tải...</div>';
-
-  var fn = 'jcb_backup_' + Date.now();
-  window[fn] = function(res) {
-    if (res && res.success && res.files) {
-      renderBackupList(res.files);
-    } else {
-      container.innerHTML = '<div class="backup-empty">Không có file backup nào.</div>';
-    }
-    delete window[fn];
-    if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-  };
-  var tag = document.createElement('script');
-  tag.src = CFG.URL + '?action=get_backup_list&callback=' + fn + '&_=' + Date.now();
-  tag.onerror = function() {
-    container.innerHTML = '<div class="backup-empty">❌ Không tải được danh sách.</div>';
-    delete window[fn];
-    if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-  };
-  document.head.appendChild(tag);
-}
-
-function renderBackupList(files) {
-  var container = document.getElementById('backup-list-container');
-  if (!files || files.length === 0) {
-    container.innerHTML = '<div class="backup-empty">📭 Chưa có bản sao lưu nào.</div>';
-    return;
-  }
-  var html = '<div class="backup-list">';
-  files.forEach(function(f) {
-    var dateStr = f.date ? new Date(f.date).toLocaleString('vi-VN') : 'Không rõ';
-    html += '<div class="backup-item">' +
-      '<div class="info">' +
-      '<div class="name">' + escH(f.name) + '</div>' +
-      '<div class="date">🕐 ' + escH(dateStr) + '</div>' +
-      '</div>' +
-      '<button class="restore-btn" onclick="restoreFromBackup(\'' + escH(f.id) + '\', \'' + escH(f.name) + '\', \'' + escH(dateStr) + '\')">Khôi phục</button>' +
-      '</div>';
-  });
-  html += '</div>';
-  container.innerHTML = html;
-}
-
-function manualBackup() {
-  var btn = document.getElementById('backup-now-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Đang sao lưu...';
-
-  fetch(CFG.URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'manual_backup' }),
-    mode: 'no-cors'
-  })
-  .then(function() {
-    btn.innerHTML = '💾 Sao lưu ngay';
-    btn.disabled = false;
-    toast('⏳ Đã gửi yêu cầu, đang kiểm tra...');
-    // Sau 2 giây, refresh list để kiểm tra file mới
-    setTimeout(function() {
-      refreshBackupList();
-      // Kiểm tra xem có file mới không bằng cách so sánh với list cũ?
-      // Đơn giản là thông báo thành công vì request đã gửi đi
-      toast('✅ Đã gửi yêu cầu sao lưu!');
-    }, 2000);
-  })
-  .catch(function() {
-    btn.innerHTML = '💾 Sao lưu ngay';
-    btn.disabled = false;
-    toast('⚠️ Lỗi gửi yêu cầu sao lưu!');
-  });
-}
-
-function restoreFromBackup(fileId, fileName, dateStr) {
-  if (!confirm('⚠️ Bạn có chắc muốn khôi phục dữ liệu từ bản backup:\n📂 ' + fileName + '\n🕐 ' + dateStr + '\n\nDữ liệu hiện tại sẽ bị ghi đè!')) return;
-
-  var container = document.getElementById('backup-list-container');
-  container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang khôi phục...</div>';
-
-  fetch(CFG.URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'restore_from_backup', fileId: fileId }),
-    mode: 'no-cors'
-  })
-  .then(function() {
-    toast('⏳ Đã gửi yêu cầu khôi phục, đang tải lại dữ liệu...');
-    loadData(function() {
-      refreshBackupList();
-      closeModal('backup-modal');
-      toast('✅ Dữ liệu đã được khôi phục!');
-    });
-  })
-  .catch(function() {
-    container.innerHTML = '<div class="backup-empty">❌ Lỗi khôi phục!</div>';
-    toast('⚠️ Không thể gửi yêu cầu khôi phục.');
-  });
 }
 
 // ============================================================
