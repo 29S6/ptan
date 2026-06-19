@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.5.3 - Không backup, giữ nguyên các tính năng còn lại -->
+<!-- V5.5.4 - Xóa streak trong nhật ký, nâng cấp status slider -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -66,10 +66,31 @@ img{max-width:100%;display:block}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
-.status-slider{text-align:center;padding:4px 18px 10px;font-size:.9rem;font-weight:600;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.15);min-height:40px;display:flex;align-items:center;justify-content:center;gap:8px}
+.status-slider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:10px 20px;
+  margin:4px 18px 10px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.25);
+  min-height:48px;
+  font-size:.95rem;
+  font-weight:600;
+  color:#fff;
+  text-shadow:0 1px 4px rgba(0,0,0,.15);
+  transition:all .3s;
+}
+.status-slider .icon{font-size:1.4rem;line-height:1}
+.status-slider .text{flex:1;text-align:center}
+.status-slider .text strong{color:#fff;font-weight:800}
 .status-slider .fire{color:#ff8c00;filter:drop-shadow(0 0 6px #ff8c0066)}
 .status-slider .ann-heart{color:#ff6b8a;filter:drop-shadow(0 0 6px #ff6b8a66)}
-.status-slider .ann-text{font-size:.8rem;font-weight:400;opacity:.9}
+.status-slider .sub{font-size:.75rem;font-weight:400;opacity:.85;margin-left:4px}
 .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:rgba(255,243,249,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1.5px solid rgba(168,84,112,.12);padding:5px 0 env(safe-area-inset-bottom,5px);box-shadow:0 -4px 18px rgba(168,84,112,.10)}
 @media(max-width:768px){.mob-nav{display:flex}}
 .mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 3px;color:var(--t3);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;transition:color .18s;position:relative}
@@ -118,10 +139,6 @@ img{max-width:100%;display:block}
 .otd-lbl{font-size:.65rem;font-weight:700;color:var(--p2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
 .otd-ttl{font-weight:700;font-size:.86rem;color:var(--t1)}
 .otd-pre{font-size:.73rem;color:var(--t2);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.streak-bar{display:flex;align-items:center;gap:9px;background:rgba(255,195,80,.1);border:1.5px solid rgba(255,175,40,.22);border-radius:var(--rr);padding:9px 13px;margin-bottom:13px}
-.s-fire{font-size:1.3rem}
-.s-ttl{font-size:.78rem;font-weight:700;color:#b07a10}
-.s-sub{font-size:.68rem;color:var(--t3)}
 .ann-item{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.52);border:1px solid rgba(168,84,112,.12);border-radius:11px;padding:10px 12px;margin-bottom:8px}
 .ann-dot{width:9px;height:9px;border-radius:50%;background:var(--p1);flex-shrink:0}
 .ann-info{flex:1;min-width:0}
@@ -366,7 +383,10 @@ img{max-width:100%;display:block}
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <div class="status-slider" id="status-slider"></div>
+    <div class="status-slider" id="status-slider">
+      <span class="icon">🌸</span>
+      <span class="text">Hãy viết nhật ký hôm nay nhé!</span>
+    </div>
   </header>
 
   <div class="main-layout" id="main-layout">
@@ -395,7 +415,6 @@ img{max-width:100%;display:block}
 
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
-      <div id="streak-wrap"></div>
 
       <div class="gc">
         <div class="gc-hd">
@@ -1055,7 +1074,6 @@ function setSyncing(on) {
 // ============================================================
 function renderAll() {
   renderOTD();
-  renderStreak();
   renderCalendar();
   renderTimeline();
   renderAnniversaries();
@@ -1065,7 +1083,7 @@ function renderAll() {
 }
 
 // ============================================================
-// OTD, STREAK, CALENDAR
+// OTD, CALENDAR
 // ============================================================
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
@@ -1086,36 +1104,6 @@ function renderOTD() {
     '<div class="otd-pre">' + escH((match.content || '').substring(0, 90)) + '...</div>' +
     '</div></div></div>';
 }
-
-function renderStreak() {
-  var wrap = document.getElementById('streak-wrap');
-  if (!S.data.entries.length) { wrap.innerHTML = ''; return; }
-  var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
-  var cur = 0;
-  var today = todayStr();
-  var yesterday = offsetDay(today, -1);
-  var checkFrom = dates.indexOf(today) >= 0 ? today : (dates.indexOf(yesterday) >= 0 ? yesterday : null);
-  if (checkFrom) {
-    var d = checkFrom;
-    while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
-  }
-  if (cur <= 1) { wrap.innerHTML = ''; return; }
-  wrap.innerHTML = '<div class="gc" style="margin-bottom:14px"><div class="gc-body" style="padding:10px 15px">' +
-    '<div class="streak-bar">' +
-    '<div class="s-fire">🔥</div>' +
-    '<div><div class="s-ttl">' + cur + ' ngày viết liên tiếp!</div>' +
-    '<div class="s-sub">Đừng để chuỗi bị gián đoạn nhé 💪</div></div>' +
-    '</div></div></div>';
-}
-
-function offsetDay(ds, delta) {
-  var d = new Date(ds + 'T00:00:00');
-  d.setDate(d.getDate() + delta);
-  return fmtDate(d);
-}
-
-var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
-              'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 function renderCalendar() {
   document.getElementById('c-mlbl').textContent = MNAMES[S.calM] + ' ' + S.calY;
@@ -1175,6 +1163,9 @@ function cm(delta) {
   renderCalendar();
 }
 
+var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+              'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+
 // ============================================================
 // STATUS SLIDER (Streak + Anniversary Countdown)
 // ============================================================
@@ -1198,11 +1189,15 @@ function updateStatusSlider() {
   }
   if (cur >= 1) {
     statusData.push({
-      html: '<span class="fire">🔥</span> <strong>' + cur + '</strong> ngày viết liên tiếp!'
+      icon: '🔥',
+      text: '<strong>' + cur + '</strong> ngày viết liên tiếp!',
+      cls: 'fire'
     });
   } else {
     statusData.push({
-      html: '🌸 Hãy viết nhật ký hôm nay nhé!'
+      icon: '🌸',
+      text: 'Hãy viết nhật ký hôm nay nhé!',
+      cls: ''
     });
   }
 
@@ -1229,38 +1224,48 @@ function updateStatusSlider() {
     else if (nearest.days <= 7) annMsg = '🌸 Còn ' + nearest.days + ' ngày đến ' + nearest.name;
     else annMsg = '📅 Còn ' + nearest.days + ' ngày đến ' + nearest.name;
     statusData.push({
-      html: '<span class="ann-heart">❤️</span> ' + annMsg
+      icon: '❤️',
+      text: annMsg,
+      cls: 'ann-heart'
     });
   }
 
   if (statusData.length === 0) {
-    container.innerHTML = '🌸 Hãy viết nhật ký và thêm kỷ niệm nhé!';
+    container.innerHTML = '<span class="icon">🌸</span><span class="text">Hãy viết nhật ký và thêm kỷ niệm nhé!</span>';
     return;
   }
 
   if (statusData.length === 1) {
-    container.innerHTML = statusData[0].html;
+    renderStatusItem(0);
     return;
   }
 
   statusIndex = 0;
-  showStatusItem();
+  renderStatusItem(0);
   if (statusTimer) clearInterval(statusTimer);
   statusTimer = setInterval(function () {
     statusIndex = (statusIndex + 1) % statusData.length;
-    showStatusItem();
+    renderStatusItem(statusIndex);
   }, 15000);
 }
 
-function showStatusItem() {
+function renderStatusItem(idx) {
   var container = document.getElementById('status-slider');
   if (!container) return;
-  if (statusData.length === 0) { container.innerHTML = ''; return; }
-  container.innerHTML = statusData[statusIndex].html;
+  if (idx >= statusData.length) return;
+  var item = statusData[idx];
+  container.innerHTML = '<span class="icon ' + item.cls + '">' + item.icon + '</span>' +
+    '<span class="text">' + item.text + '</span>';
 }
 
 function initStatusSlider() {
   updateStatusSlider();
+}
+
+function offsetDay(ds, delta) {
+  var d = new Date(ds + 'T00:00:00');
+  d.setDate(d.getDate() + delta);
+  return fmtDate(d);
 }
 
 // ============================================================
