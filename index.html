@@ -504,11 +504,10 @@ img{max-width:100%;display:block}
 .saving-txt{font-family:var(--font-ttl);font-size:1.05rem;font-weight:700;color:var(--p1)}
 
 /* ===================================================
-   BACKUP MODAL
+   BACKUP MODAL với progress bar
 =================================================== */
 .backup-list{max-height:200px;overflow-y:auto;background:rgba(255,255,255,.5);border-radius:8px;padding:6px;margin-top:8px}
-.backup-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(168,84,112,.08);cursor:pointer;transition:background .15s}
-.backup-item:hover{background:rgba(168,84,112,.08)}
+.backup-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(168,84,112,.08)}
 .backup-item:last-child{border-bottom:none}
 .backup-item .name{font-size:.82rem;color:var(--t1)}
 .backup-item .date{font-size:.68rem;color:var(--t3)}
@@ -517,6 +516,8 @@ img{max-width:100%;display:block}
 .backup-empty{text-align:center;color:var(--t3);padding:16px 0;font-size:.8rem}
 .spinner{display:inline-block;width:18px;height:18px;border:3px solid rgba(168,84,112,.2);border-radius:50%;border-top-color:var(--p1);animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.progress-container{width:100%;height:6px;background:rgba(168,84,112,.15);border-radius:3px;margin:8px 0;overflow:hidden}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--p3),var(--p1));border-radius:3px;transition:width .3s}
 
 /* ===================================================
    UTILITY
@@ -569,7 +570,7 @@ img{max-width:100%;display:block}
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
       <div class="hdr-actions">
-        <button class="hdr-btn" id="sync-btn" onclick="syncData()" title="Đồng bộ">
+        <button class="hdr-btn" id="sync-btn" onclick="syncData()" title="Đồng bộ dữ liệu mới nhất">
           <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
             <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
@@ -839,7 +840,7 @@ img{max-width:100%;display:block}
 </div>
 
 <!-- ======================================================
-     MODAL: BACKUP & RESTORE
+     MODAL: BACKUP & RESTORE (có progress bar)
 ====================================================== -->
 <div class="modal" id="modal-backup">
   <div class="mbox" style="max-width:500px;">
@@ -849,7 +850,7 @@ img{max-width:100%;display:block}
       Tự động backup lúc 3h sáng mỗi ngày. Giữ tối đa 10 bản gần nhất.
     </div>
 
-    <div style="display:flex;gap:10px;margin-bottom:14px;">
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
       <button class="btn-p" id="backup-now-btn" onclick="manualBackup()" style="flex:1;">
         💾 Sao lưu ngay
       </button>
@@ -857,6 +858,12 @@ img{max-width:100%;display:block}
         🔄
       </button>
     </div>
+
+    <!-- Progress bar -->
+    <div class="progress-container" id="backup-progress-container" style="display:none;">
+      <div class="progress-bar" id="backup-progress-bar" style="width:0%;"></div>
+    </div>
+    <div id="backup-status-text" style="font-size:.75rem;color:var(--t3);margin-bottom:8px;text-align:center;"></div>
 
     <div class="fg">
       <label class="fl">📂 Các bản sao lưu gần đây</label>
@@ -1100,7 +1107,7 @@ function startClock() {
 })();
 
 /* ==========================================================
-   TẢI DỮ LIỆU — JSONP
+   TẢI DỮ LIỆU — JSONP (dùng script tag)
 ========================================================== */
 function loadData(cb) {
   setSyncing(true);
@@ -1152,7 +1159,7 @@ function sortEntries(arr) {
 }
 
 function syncData() {
-  toast('⏳ Đang đồng bộ...');
+  toast('⏳ Đang đồng bộ dữ liệu mới nhất...');
   loadData(function () { toast('✅ Đồng bộ thành công!'); });
 }
 
@@ -1161,7 +1168,7 @@ function setSyncing(on) {
 }
 
 /* ==========================================================
-   GHI DỮ LIỆU — POST
+   GHI DỮ LIỆU — POST (dùng fetch)
 ========================================================== */
 function postData(payload, msg, cb) {
   function doFetch(mode) {
@@ -1237,7 +1244,7 @@ function renderAll() {
 }
 
 /* ==========================================================
-   "NGÀY NÀY NĂM NGOÁI"
+   CÁC HÀM RENDER (giữ nguyên từ bản cũ)
 ========================================================== */
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
@@ -1259,9 +1266,6 @@ function renderOTD() {
     '</div></div></div>';
 }
 
-/* ==========================================================
-   STREAK
-========================================================== */
 function renderStreak() {
   var wrap = document.getElementById('streak-wrap');
   if (!S.data.entries.length) { wrap.innerHTML = ''; return; }
@@ -1288,12 +1292,6 @@ function offsetDay(ds, delta) {
   d.setDate(d.getDate() + delta);
   return fmtDate(d);
 }
-
-/* ==========================================================
-   LỊCH
-========================================================== */
-var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
-              'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 function renderCalendar() {
   document.getElementById('c-mlbl').textContent = MNAMES[S.calM] + ' ' + S.calY;
@@ -1353,9 +1351,9 @@ function cm(delta) {
   renderCalendar();
 }
 
-/* ==========================================================
-   DANH SÁCH BÀI CÙNG NGÀY
-========================================================== */
+var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+              'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
   if (!ents.length) return;
@@ -1416,9 +1414,6 @@ function delFromDayList() {
   closeModal('modal-daylist');
 }
 
-/* ==========================================================
-   GHI CHÚ "SỬA LẦN CUỐI"
-========================================================== */
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
   if (!el) return;
@@ -1436,9 +1431,6 @@ function renderEditedNote(elId, e) {
   el.textContent = '✏️ Sửa lần cuối: ' + fmtFullDateTime(updated);
 }
 
-/* ==========================================================
-   TIMELINE NHẬT KÝ
-========================================================== */
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
   var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
@@ -1535,9 +1527,6 @@ function tiHTML(e) {
     '</div></div>';
 }
 
-/* ==========================================================
-   KỶ NIỆM + ĐẾM NGƯỢC
-========================================================== */
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
   if (!S.data.anniversaries.length) {
@@ -1609,9 +1598,6 @@ function delAnn(id) {
   postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
 }
 
-/* ==========================================================
-   ALBUM ẢNH — sắp xếp theo ngày
-========================================================== */
 function renderAlbum() {
   var body = document.getElementById('album-body');
   var entriesWithImgs = S.data.entries.filter(function (e) {
@@ -1660,9 +1646,6 @@ function renderAlbum() {
   body.innerHTML = html;
 }
 
-/* ==========================================================
-   GALLERY ẢNH TRONG MODAL XEM BÀI
-========================================================== */
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
   var n = Math.min(images.length, 10);
@@ -1679,9 +1662,6 @@ function buildGalleryHTML(images) {
   return '<div class="' + cls + '">' + html + '</div>';
 }
 
-/* ==========================================================
-   NHẬT KÝ — VIẾT / SỬA / XEM / XÓA
-========================================================== */
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = []; S.author = DEFAULT_AUTHOR;
   document.getElementById('write-ttl').textContent = '✍️ Viết nhật ký';
@@ -1744,9 +1724,6 @@ function editEntry() {
   openModal('modal-write');
 }
 
-/* ==========================================================
-   LƯU BÀI
-========================================================== */
 function saveEntry() {
   var date = document.getElementById('e-date').value;
   var title = document.getElementById('e-ttl').value.trim();
@@ -1815,9 +1792,6 @@ function delEntry() {
   S.curId = null;
 }
 
-/* ==========================================================
-   NGƯỜI VIẾT
-========================================================== */
 function selAuthor(v) {
   S.author = v;
   updateAuthorToggleUI();
@@ -1828,9 +1802,6 @@ function updateAuthorToggleUI() {
   });
 }
 
-/* ==========================================================
-   MOOD PICKER
-========================================================== */
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
   document.querySelectorAll('.mp-o').forEach(function (el) {
@@ -1849,9 +1820,6 @@ function chgFs(delta) {
   document.getElementById('fs-lbl').textContent = 'Cỡ chữ: ' + S.fontSize + 'px';
 }
 
-/* ==========================================================
-   ẢNH — UPLOAD LÊN DRIVE
-========================================================== */
 function onImgPick(input) {
   var files = Array.from(input.files);
   if (S.imgs.length + files.length > 10) {
@@ -1951,9 +1919,6 @@ function rmImg(i) {
   renderImgPrev();
 }
 
-/* ==========================================================
-   BÌNH LUẬN — MODAL XEM BÀI (modal-view)
-========================================================== */
 function toggleCmtAvatar() {
   var current = S.cmtAuthor;
   var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
@@ -1965,7 +1930,8 @@ function selCmtAuthor(v) {
 }
 function updateCmtToggleUI() {
   var icon = S.cmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
-  document.getElementById('cmt-avatar-toggle').textContent = icon;
+  var el = document.getElementById('cmt-avatar-toggle');
+  if (el) el.textContent = icon;
 }
 
 function renderComments() {
@@ -2079,9 +2045,6 @@ function delComment(commentId) {
   });
 }
 
-/* ==========================================================
-   BÌNH LUẬN — MODAL DANH SÁCH CÙNG NGÀY (modal-daylist)
-========================================================== */
 function toggleDlCmtAvatar() {
   var current = S.dlCmtAuthor;
   var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
@@ -2093,7 +2056,8 @@ function selDlCmtAuthor(v) {
 }
 function updateDlCmtToggleUI() {
   var icon = S.dlCmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
-  document.getElementById('dl-cmt-avatar-toggle').textContent = icon;
+  var el = document.getElementById('dl-cmt-avatar-toggle');
+  if (el) el.textContent = icon;
 }
 
 function renderDlComments() {
@@ -2197,20 +2161,13 @@ function delDlComment(commentId) {
   });
 }
 
-/* ==========================================================
-   LIGHTBOX
-========================================================== */
 function openLb(src) {
   document.getElementById('lb-img').src = src;
   document.getElementById('lb').classList.add('open');
 }
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
-/* ==========================================================
-   TAB NAVIGATION — chỉ cho MOBILE
-========================================================== */
 var TABS = ['diary', 'ann', 'cal', 'album'];
-
 function switchTab(tab) {
   var isMobile = window.innerWidth < 769;
   if (!isMobile) return;
@@ -2227,9 +2184,6 @@ function switchTab(tab) {
   });
 }
 
-/* ==========================================================
-   MODAL HELPERS
-========================================================== */
 function openModal(id) {
   document.getElementById(id).classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2248,9 +2202,6 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-/* ==========================================================
-   TOAST
-========================================================== */
 var _tt;
 function toast(msg) {
   if (!msg) return;
@@ -2260,9 +2211,6 @@ function toast(msg) {
   _tt = setTimeout(function () { el.classList.remove('show'); }, 2800);
 }
 
-/* ==========================================================
-   UTILITY
-========================================================== */
 function p2(n) { return n < 10 ? '0' + n : '' + n; }
 function todayStr() {
   var t = new Date();
@@ -2304,35 +2252,31 @@ function escH(s) {
 }
 
 /* ==========================================================
-   BACKUP & RESTORE — MỚI
+   BACKUP & RESTORE — MỚI (có progress bar)
 ========================================================== */
 
-// Mở modal backup
 function openBackupModal() {
   openModal('modal-backup');
   refreshBackupList();
 }
 
-// Làm mới danh sách backup
 function refreshBackupList() {
   var container = document.getElementById('backup-list-container');
   container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang tải...</div>';
 
-  fetch(CFG.URL + '?action=get_backup_list&_=' + Date.now(), {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(res) {
-    if (res && res.success && res.files) {
-      renderBackupList(res.files);
-    } else {
-      container.innerHTML = '<div class="backup-empty">Không có file backup nào.</div>';
-    }
-  })
-  .catch(function() {
-    container.innerHTML = '<div class="backup-empty">❌ Không thể tải danh sách backup.</div>';
-  });
+  // Gọi GET với callback để lấy danh sách backup (dùng fetch vì không cần JSONP)
+  fetch(CFG.URL + '?action=get_backup_list&_=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res && res.success && res.files) {
+        renderBackupList(res.files);
+      } else {
+        container.innerHTML = '<div class="backup-empty">Không có file backup nào.</div>';
+      }
+    })
+    .catch(function() {
+      container.innerHTML = '<div class="backup-empty">❌ Không thể tải danh sách backup.</div>';
+    });
 }
 
 function renderBackupList(files) {
@@ -2354,26 +2298,54 @@ function renderBackupList(files) {
   container.innerHTML = html;
 }
 
-// Sao lưu ngay
 function manualBackup() {
   if (S.isBackupRestoring) return;
   var btn = document.getElementById('backup-now-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Đang sao lưu...';
 
+  // Hiển thị progress bar
+  var progContainer = document.getElementById('backup-progress-container');
+  var progBar = document.getElementById('backup-progress-bar');
+  var statusText = document.getElementById('backup-status-text');
+  progContainer.style.display = 'block';
+  progBar.style.width = '0%';
+  statusText.textContent = 'Đang tạo bản sao lưu... 0%';
+
+  // Giả lập tiến trình (thực tế không biết được, chỉ để tạo hiệu ứng)
+  var progress = 0;
+  var interval = setInterval(function() {
+    progress += 2;
+    if (progress > 90) progress = 90;
+    progBar.style.width = progress + '%';
+    statusText.textContent = 'Đang tạo bản sao lưu... ' + progress + '%';
+  }, 100);
+
   postData({ action: 'manual_backup' }, null, function(res) {
+    clearInterval(interval);
     btn.disabled = false;
     btn.innerHTML = '💾 Sao lưu ngay';
     if (res && res.success) {
+      progBar.style.width = '100%';
+      statusText.textContent = '✅ Sao lưu thành công!';
       toast('✅ Đã tạo bản sao lưu!');
-      refreshBackupList();
+      setTimeout(function() {
+        progContainer.style.display = 'none';
+        statusText.textContent = '';
+        refreshBackupList();
+      }, 1000);
     } else {
+      progBar.style.width = '0%';
+      statusText.textContent = '❌ Lỗi sao lưu!';
       toast('⚠️ Lỗi sao lưu, thử lại!');
+      setTimeout(function() {
+        progContainer.style.display = 'none';
+        statusText.textContent = '';
+      }, 2000);
     }
   });
 }
 
-// Khôi phục từ backup
 function restoreFromBackup(fileId) {
   if (S.isBackupRestoring) return;
   if (!confirm('⚠️ Khôi phục sẽ ghi đè toàn bộ dữ liệu hiện tại.\nBạn có chắc chắn?')) return;
@@ -2382,6 +2354,22 @@ function restoreFromBackup(fileId) {
   var container = document.getElementById('backup-list-container');
   container.innerHTML = '<div class="backup-empty"><span class="spinner"></span> Đang khôi phục...</div>';
 
+  // Hiển thị progress bar
+  var progContainer = document.getElementById('backup-progress-container');
+  var progBar = document.getElementById('backup-progress-bar');
+  var statusText = document.getElementById('backup-status-text');
+  progContainer.style.display = 'block';
+  progBar.style.width = '0%';
+  statusText.textContent = 'Đang khôi phục dữ liệu... 0%';
+
+  var progress = 0;
+  var interval = setInterval(function() {
+    progress += 3;
+    if (progress > 90) progress = 90;
+    progBar.style.width = progress + '%';
+    statusText.textContent = 'Đang khôi phục dữ liệu... ' + progress + '%';
+  }, 100);
+
   fetch(CFG.URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -2389,22 +2377,42 @@ function restoreFromBackup(fileId) {
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
+    clearInterval(interval);
     S.isBackupRestoring = false;
     if (res && res.success) {
+      progBar.style.width = '100%';
+      statusText.textContent = '✅ Khôi phục thành công!';
       toast('✅ Đã khôi phục thành công!');
       loadData(function() {
-        refreshBackupList();
-        closeModal('modal-backup');
+        setTimeout(function() {
+          progContainer.style.display = 'none';
+          statusText.textContent = '';
+          refreshBackupList();
+          closeModal('modal-backup');
+        }, 1000);
       });
     } else {
-      toast('⚠️ Lỗi khôi phục: ' + (res.error || 'không xác định'));
-      refreshBackupList();
+      progBar.style.width = '0%';
+      statusText.textContent = '❌ Lỗi khôi phục: ' + (res.error || 'không xác định');
+      toast('⚠️ Lỗi khôi phục!');
+      setTimeout(function() {
+        progContainer.style.display = 'none';
+        statusText.textContent = '';
+        refreshBackupList();
+      }, 2000);
     }
   })
   .catch(function(err) {
+    clearInterval(interval);
     S.isBackupRestoring = false;
+    progBar.style.width = '0%';
+    statusText.textContent = '❌ Lỗi kết nối!';
     toast('❌ Lỗi kết nối khi khôi phục.');
-    refreshBackupList();
+    setTimeout(function() {
+      progContainer.style.display = 'none';
+      statusText.textContent = '';
+      refreshBackupList();
+    }, 2000);
   });
 }
 
@@ -2416,6 +2424,9 @@ closeModal = function(id) {
     var btn = document.getElementById('backup-now-btn');
     if (btn) { btn.disabled = false; btn.innerHTML = '💾 Sao lưu ngay'; }
     S.isBackupRestoring = false;
+    // Ẩn progress bar
+    document.getElementById('backup-progress-container').style.display = 'none';
+    document.getElementById('backup-status-text').textContent = '';
   }
 };
 
