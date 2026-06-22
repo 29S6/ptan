@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.0.2 - Tối ưu hiển thị ảnh, gallery chuyên biệt, pull to refresh, bottom nav Android style -->
+<!-- V6.0.3 - Cải tiến xem ảnh, bo modal view bài, fix timeline -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -142,7 +142,7 @@ img { max-width: 100%; display: block; }
 .cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
 
-/* ===== STATUS SLIDER ===== */
+/* ===== STATUS SLIDER (fix chiều cao) ===== */
 .status-slider {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 18px;
@@ -151,7 +151,8 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,.12);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border-radius: 20px; border: 1px solid rgba(255,255,255,.2);
-  min-height: 64px; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
+  min-height: 64px;
+  color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 .status-slider .icon-fire { font-size: 2rem; line-height: 1; flex-shrink: 0; color: #ff8c00; filter: drop-shadow(0 0 8px #ff8c0066); }
 .status-slider .info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
@@ -246,6 +247,8 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===== TIMELINE ===== */
+#otd-wrap { min-height: 10px; }
+
 .search-row {
   display: flex; gap: 7px; margin-bottom: 13px;
 }
@@ -406,7 +409,7 @@ img { max-width: 100%; display: block; }
 .mood-map-leg { display: flex; gap: 7px; flex-wrap: wrap; }
 .ml-i { display: flex; align-items: center; gap: 3px; font-size: .64rem; color: var(--t2); }
 
-/* ===== ALBUM (grid ảnh) ===== */
+/* ===== ALBUM ===== */
 .album-day-group { margin-bottom: 22px; }
 .album-day-hdr {
   display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
@@ -416,7 +419,6 @@ img { max-width: 100%; display: block; }
 .album-day-time { font-size: .68rem; color: var(--t3); font-weight: 600; white-space: nowrap; margin-left: auto; }
 .album-day-entry-ttl { font-size: .75rem; color: var(--t2); margin-bottom: 8px; padding-left: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .album-grid { display: grid; gap: 4px; border-radius: 12px; overflow: hidden; }
-/* Các class g1, g2,... sẽ do JS tạo ra dựa trên số ảnh */
 .album-grid .a-img {
   position: relative; overflow: hidden; cursor: pointer;
   background: var(--p4); border-radius: 6px;
@@ -431,7 +433,7 @@ img { max-width: 100%; display: block; }
 }
 .album-empty { text-align: center; color: var(--t3); padding: 36px 0; font-size: .85rem; }
 
-/* ===== FAB (desktop) ===== */
+/* ===== FAB (mobile) ===== */
 #fab {
   position: fixed; bottom: calc(58px + env(safe-area-inset-bottom,0px)); right: 18px;
   z-index: 250; width: 52px; height: 52px; border-radius: 50%;
@@ -442,9 +444,7 @@ img { max-width: 100%; display: block; }
   transition: all .18s;
 }
 #fab:hover { transform: scale(1.1) rotate(7deg); box-shadow: 0 10px 28px rgba(168,84,112,.55); }
-@media (min-width: 769px) {
-  #fab { display: none; }
-}
+@media (min-width: 769px) { #fab { display: none; } }
 
 /* ===== KHUNG VIẾT NHANH (Desktop) ===== */
 .quick-write {
@@ -493,22 +493,39 @@ img { max-width: 100%; display: block; }
 .mbox {
   background: linear-gradient(158deg, #fff8fb, #fde8f0);
   border: 1.5px solid rgba(255,255,255,.72);
-  border-radius: 24px; box-shadow: 0 24px 64px rgba(120,40,70,.2);
-  width: 100%; max-width: 560px; max-height: 92vh;
-  overflow-y: auto; padding: 24px 24px 20px;
+  border-radius: 24px;
+  box-shadow: 0 24px 64px rgba(120,40,70,.2);
+  width: 100%;
+  max-width: 560px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 24px 24px 20px;
   position: relative;
 }
 .mbox::-webkit-scrollbar { width: 4px; }
 .mbox::-webkit-scrollbar-thumb { background: var(--p4); border-radius: 4px; }
+
+/* Nút đóng modal được đặt cố định góc phải */
 .mc {
-  position: absolute; top: 13px; right: 13px;
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 2;
   background: rgba(168,84,112,.1);
-  border: 1px solid var(--p4); border-radius: 50%;
-  width: 29px; height: 29px; font-size: .86rem; color: var(--t2);
-  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--p4);
+  border-radius: 50%;
+  width: 29px;
+  height: 29px;
+  font-size: .86rem;
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all .14s;
+  margin: -6px -6px 0 0;
 }
 .mc:hover { background: var(--p4); color: var(--p1); }
+
 .m-ttl {
   font-family: var(--font-ttl);
   font-size: 1.5rem; font-weight: 700; color: var(--p1);
@@ -668,7 +685,7 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   color: #fff;
 }
-/* Các layout sẽ do JS tạo class */
+/* Các layout sẽ do JS tạo style inline */
 
 /* ===== PHOTO VIEWER (toàn màn hình) ===== */
 #photo-viewer {
@@ -706,6 +723,7 @@ img { max-width: 100%; display: block; }
   border-radius: 8px;
   overflow: hidden;
   background: #222;
+  cursor: pointer;
 }
 #photo-viewer .pv-item img {
   width: 100%;
@@ -714,6 +732,51 @@ img { max-width: 100%; display: block; }
   object-fit: contain;
   display: block;
 }
+
+/* ===== PHOTO VIEWER - CHẾ ĐỘ ĐƠN LẺ ===== */
+#photo-viewer .pv-single {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px 0;
+}
+#photo-viewer .pv-single.active { display: flex; }
+#photo-viewer .pv-single .pv-img {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+#photo-viewer .pv-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 0 10px;
+  width: 100%;
+}
+#photo-viewer .pv-nav button {
+  background: rgba(255,255,255,.2);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: all .2s;
+}
+#photo-viewer .pv-nav button:hover { background: rgba(255,255,255,.3); }
+#photo-viewer .pv-nav button:disabled { opacity: .3; pointer-events: none; }
+#photo-viewer .pv-back-list {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: .9rem;
+  padding: 6px 0;
+  text-align: left;
+  align-self: flex-start;
+}
+#photo-viewer .pv-back-list:hover { color: #fff; }
 
 /* ===== DL NAV, COMMENTS ===== */
 .dl-nav-row {
@@ -1130,7 +1193,20 @@ img { max-width: 100%; display: block; }
 <!-- PHOTO VIEWER (toàn màn hình) -->
 <div id="photo-viewer">
   <button class="pv-close" onclick="closePhotoViewer()">✕</button>
-  <div class="pv-list" id="pv-list"></div>
+  <div id="pv-list-container">
+    <!-- Danh sách ảnh (mặc định) -->
+    <div class="pv-list" id="pv-list"></div>
+    <!-- Chế độ xem đơn lẻ -->
+    <div class="pv-single" id="pv-single">
+      <button class="pv-back-list" onclick="switchToGallery()">‹ Quay lại danh sách</button>
+      <img class="pv-img" id="pv-single-img" src="" alt=""/>
+      <div class="pv-nav">
+        <button id="pv-prev" onclick="pvPrev()">‹</button>
+        <span id="pv-counter" style="color:#fff;font-size:.9rem;">1 / 1</span>
+        <button id="pv-next" onclick="pvNext()">›</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- TOAST -->
@@ -1146,7 +1222,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.0.2 - NHẬT KÝ ỨNG DỤNG CHÍNH
+// V6.0.3 - NHẬT KÝ ỨNG DỤNG CHÍNH
 // ============================================================
 
 // ============================================================
@@ -1185,7 +1261,11 @@ var S = {
   editingDlCommentId: null,
   pendingActions: [],
   isOnline: navigator.onLine,
-  hasWelcomed: false
+  hasWelcomed: false,
+  // Photo viewer state
+  pvImages: [],
+  pvCurrentIndex: 0,
+  pvMode: 'gallery' // 'gallery' hoặc 'single'
 };
 
 var PROMPTS = [
@@ -1843,7 +1923,7 @@ function showDayListModal() {
   document.getElementById('dl-mood').textContent = e.mood || '';
   document.getElementById('dl-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('dl-cnt').textContent = e.content || '';
-  document.getElementById('dl-imgs').innerHTML = buildGalleryHTML(e.images);
+  document.getElementById('dl-imgs').innerHTML = buildGalleryHTML(e.images, e.id);
 
   document.getElementById('dl-prev').disabled = (idx === 0);
   document.getElementById('dl-next').disabled = (idx === total - 1);
@@ -2103,11 +2183,6 @@ function buildGridImages(images, entryId) {
   var displayCount = total < maxDisplay ? total : maxDisplay;
   var extra = total - maxDisplay;
 
-  // Xác định layout dựa trên số ảnh hiển thị
-  var layout = displayCount; // 1,2,3,4
-
-  // Tạo grid với class tương ứng
-  var gridClass = 'g' + displayCount;
   var style = '';
   if (displayCount === 1) {
     style = 'grid-template-columns:1fr;';
@@ -2119,13 +2194,11 @@ function buildGridImages(images, entryId) {
     style = 'grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;';
   }
 
-  // Xây dựng các item
   for (var i = 0; i < displayCount; i++) {
     var img = images[i];
     var src = img.url || img;
     var isLast = (i === displayCount - 1 && extra > 0);
     var overlay = isLast ? '<div class="a-img-more">+' + extra + '</div>' : '';
-    // Với layout 3 ảnh: ảnh đầu tiên chiếm 2 hàng, bên phải 2 ảnh
     var gridPos = '';
     if (displayCount === 3 && i === 0) {
       gridPos = 'grid-row:1/3; grid-column:1/2;';
@@ -2148,7 +2221,6 @@ function buildGalleryHTML(images, entryId) {
   var displayCount = total < maxDisplay ? total : maxDisplay;
   var extra = total - maxDisplay;
 
-  var gridClass = 'g' + displayCount;
   var style = '';
   if (displayCount === 1) {
     style = 'grid-template-columns:1fr;';
@@ -2179,20 +2251,30 @@ function buildGalleryHTML(images, entryId) {
 }
 
 // ============================================================
-// PHOTO VIEWER (toàn màn hình)
+// PHOTO VIEWER (toàn màn hình) – hỗ trợ danh sách và xem đơn
 // ============================================================
 function openPhotoViewer(entryId, startIndex) {
   var entry = S.data.entries.find(function (e) { return e.id === entryId; });
   if (!entry || !entry.images || !entry.images.length) return;
-  var images = entry.images;
+  S.pvImages = entry.images;
+  S.pvCurrentIndex = startIndex || 0;
+  S.pvMode = 'gallery';
+
+  // Render danh sách
   var list = document.getElementById('pv-list');
-  list.innerHTML = images.map(function (img, idx) {
+  list.innerHTML = S.pvImages.map(function (img, idx) {
     var src = img.url || img;
-    return '<div class="pv-item"><img src="' + escH(src) + '" alt="ảnh" loading="lazy"/></div>';
+    return '<div class="pv-item" onclick="switchToSingle(' + idx + ')"><img src="' + escH(src) + '" alt="ảnh" loading="lazy"/></div>';
   }).join('');
+
+  // Ẩn chế độ đơn lẻ, hiện danh sách
+  document.getElementById('pv-single').classList.remove('active');
+  document.getElementById('pv-list').style.display = 'flex';
+
   document.getElementById('photo-viewer').classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Cuộn đến ảnh bắt đầu
+
+  // Cuộn đến ảnh bắt đầu nếu có
   if (startIndex && startIndex > 0) {
     setTimeout(function () {
       var items = list.querySelectorAll('.pv-item');
@@ -2201,9 +2283,47 @@ function openPhotoViewer(entryId, startIndex) {
   }
 }
 
+function switchToSingle(index) {
+  S.pvCurrentIndex = index;
+  S.pvMode = 'single';
+  updateSingleView();
+  document.getElementById('pv-list').style.display = 'none';
+  document.getElementById('pv-single').classList.add('active');
+}
+
+function updateSingleView() {
+  var img = S.pvImages[S.pvCurrentIndex];
+  if (!img) return;
+  document.getElementById('pv-single-img').src = img.url || img;
+  document.getElementById('pv-counter').textContent = (S.pvCurrentIndex + 1) + ' / ' + S.pvImages.length;
+  document.getElementById('pv-prev').disabled = (S.pvCurrentIndex === 0);
+  document.getElementById('pv-next').disabled = (S.pvCurrentIndex === S.pvImages.length - 1);
+}
+
+function switchToGallery() {
+  S.pvMode = 'gallery';
+  document.getElementById('pv-single').classList.remove('active');
+  document.getElementById('pv-list').style.display = 'flex';
+}
+
+function pvPrev() {
+  if (S.pvCurrentIndex > 0) {
+    S.pvCurrentIndex--;
+    updateSingleView();
+  }
+}
+function pvNext() {
+  if (S.pvCurrentIndex < S.pvImages.length - 1) {
+    S.pvCurrentIndex++;
+    updateSingleView();
+  }
+}
+
 function closePhotoViewer() {
   document.getElementById('photo-viewer').classList.remove('open');
   document.body.style.overflow = '';
+  S.pvImages = [];
+  S.pvCurrentIndex = 0;
 }
 
 // ============================================================
