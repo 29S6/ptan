@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.0.1 - Reactions hoạt động, popover giống Facebook -->
+<!-- V5.6 - Ổn định, sửa thư mục lưu ảnh: 1 thư mục/ngày chứa tất cả ảnh -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
-/* ===== TOÀN BỘ CSS CỦA BẢN TRƯỚC (giữ nguyên) ===== */
 :root{
   --p1:#a85470;
   --p2:#c97d96;
@@ -67,6 +66,7 @@ img{max-width:100%;display:block}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
+/* ===== STATUS SLIDER ===== */
 .status-slider{
   display:flex;
   align-items:center;
@@ -327,108 +327,6 @@ img{max-width:100%;display:block}
 .saving-heart{font-size:38px;display:block;margin-bottom:10px;animation:hb 1s ease-in-out infinite}
 .saving-txt{font-family:var(--font-ttl);font-size:1.05rem;font-weight:700;color:var(--p1)}
 .hidden{display:none!important}
-
-/* ===== REACTION POPOVER – Facebook Style ===== */
-.reaction-wrapper {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  position: relative;
-}
-.reaction-btn {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
-  padding: 2px 6px;
-  border-radius: 8px;
-  transition: all 0.15s;
-  cursor: pointer;
-  color: var(--t3);
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-.reaction-btn:hover {
-  background: rgba(168,84,112,.08);
-}
-.reaction-btn .count {
-  font-size: .7rem;
-  font-weight: 600;
-  color: var(--t3);
-  margin-left: 2px;
-}
-.reaction-btn .active-reaction {
-  font-size: 1.1rem;
-}
-
-.reaction-popover {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  background: #fff;
-  border-radius: 30px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.15);
-  padding: 6px 10px;
-  display: none;
-  white-space: nowrap;
-  z-index: 100;
-  border: 1px solid rgba(0,0,0,.05);
-  pointer-events: none;
-  opacity: 0;
-  transition: all 0.2s ease;
-}
-.reaction-popover.open {
-  display: flex;
-  pointer-events: auto;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-.reaction-popover .reaction-option {
-  font-size: 1.8rem;
-  padding: 4px 3px;
-  cursor: pointer;
-  transition: all 0.15s;
-  border-radius: 50%;
-  line-height: 1;
-  background: transparent;
-  border: none;
-}
-.reaction-popover .reaction-option:hover {
-  transform: scale(1.3);
-  background: rgba(168,84,112,.08);
-}
-.reaction-popover .reaction-option.selected {
-  transform: scale(1.2);
-  background: rgba(168,84,112,.15);
-  border-radius: 50%;
-}
-
-.reaction-summary {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: .75rem;
-  color: var(--t3);
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 8px;
-  transition: background .15s;
-}
-.reaction-summary:hover {
-  background: rgba(168,84,112,.08);
-}
-.reaction-summary .icons {
-  display: flex;
-  gap: 1px;
-}
-.reaction-summary .icons span {
-  font-size: 1rem;
-  margin-right: -3px;
-}
-.reaction-summary .count {
-  font-weight: 600;
-}
 </style>
 </head>
 <body>
@@ -647,8 +545,6 @@ img{max-width:100%;display:block}
       <button class="btn-d" onclick="delEntry()">🗑 Xóa</button>
       <button class="btn-p" style="flex:0;padding:10px 16px" onclick="closeModal('modal-view')">Đóng</button>
     </div>
-    <!-- REACTION CHO BÀI VIẾT -->
-    <div id="view-reaction" style="margin:8px 0;display:flex;align-items:center;gap:8px;"></div>
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
@@ -756,133 +652,7 @@ var CFG = {
 
 var AUTHORS = ['Ánh Ngọc 🌻', 'Anh 💖'];
 var DEFAULT_AUTHOR = 'Ánh Ngọc 🌻';
-var CURRENT_USER = DEFAULT_AUTHOR; // user hiện tại để reaction
 
-// ============================================================
-// REACTION HELPERS
-// ============================================================
-var REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '😡'];
-
-function getReactionSummary(reactions) {
-  if (!reactions || Object.keys(reactions).length === 0) return null;
-  var entries = Object.entries(reactions);
-  var total = entries.length;
-  // đếm số lượng mỗi loại
-  var counts = {};
-  entries.forEach(function (e) {
-    var type = e[1];
-    if (!counts[type]) counts[type] = 0;
-    counts[type]++;
-  });
-  // sắp xếp theo số lượng
-  var sorted = Object.entries(counts).sort(function (a, b) { return b[1] - a[1]; });
-  var topIcons = sorted.slice(0, 3).map(function (item) { return item[0]; });
-  return {
-    total: total,
-    topIcons: topIcons,
-    userReaction: reactions[CURRENT_USER] || null
-  };
-}
-
-function reactionHTML(targetId, targetType, reactions, onSelect) {
-  var summary = getReactionSummary(reactions);
-  var activeReaction = summary ? summary.userReaction : null;
-  var count = summary ? summary.total : 0;
-
-  var html = '<div class="reaction-wrapper" data-target="' + targetId + '" data-type="' + targetType + '">';
-  // Nút reaction
-  html += '<button class="reaction-btn" onclick="toggleReactionPopup(this)">';
-  if (activeReaction) {
-    html += '<span class="active-reaction">' + activeReaction + '</span>';
-  } else {
-    html += '❤️';
-  }
-  if (count > 0) {
-    html += '<span class="count">' + count + '</span>';
-  }
-  html += '</button>';
-
-  // Popover
-  html += '<div class="reaction-popover" onclick="event.stopPropagation();">';
-  REACTIONS.forEach(function (r) {
-    var sel = (activeReaction === r) ? ' selected' : '';
-    html += '<button class="reaction-option' + sel + '" onclick="selectReaction(this, \'' + targetId + '\', \'' + targetType + '\', \'' + r + '\'); event.stopPropagation();">' + r + '</button>';
-  });
-  html += '</div>';
-
-  // Summary (hiển thị tổng)
-  if (count > 0 && summary.topIcons.length > 0) {
-    html += '<div class="reaction-summary" onclick="toggleReactionPopup(this.previousElementSibling)">';
-    html += '<div class="icons">';
-    summary.topIcons.forEach(function (icon) {
-      html += '<span>' + icon + '</span>';
-    });
-    html += '</div>';
-    html += '<span class="count">' + count + '</span>';
-    html += '</div>';
-  }
-
-  html += '</div>';
-  return html;
-}
-
-function toggleReactionPopup(btn) {
-  var wrapper = btn.closest('.reaction-wrapper');
-  if (!wrapper) return;
-  var popover = wrapper.querySelector('.reaction-popover');
-  if (!popover) return;
-  var isOpen = popover.classList.contains('open');
-  // đóng tất cả popover khác
-  document.querySelectorAll('.reaction-popover.open').forEach(function (p) {
-    if (p !== popover) p.classList.remove('open');
-  });
-  if (isOpen) {
-    popover.classList.remove('open');
-  } else {
-    popover.classList.add('open');
-  }
-}
-
-function selectReaction(el, targetId, targetType, reaction) {
-  var wrapper = el.closest('.reaction-wrapper');
-  var popover = wrapper.querySelector('.reaction-popover');
-  // đóng popover
-  popover.classList.remove('open');
-
-  // gửi reaction lên server
-  var payload = {
-    action: 'toggle_reaction',
-    targetId: targetId,
-    targetType: targetType,
-    reaction: reaction,
-    user: CURRENT_USER
-  };
-
-  fetch(CFG.URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload),
-    mode: 'no-cors'
-  })
-  .then(function () {
-    // refresh dữ liệu
-    loadData(function () {
-      // refresh view nếu đang xem bài
-      if (S.curId) {
-        openView(S.curId);
-      }
-      renderTimeline();
-      renderAlbum();
-    });
-  })
-  .catch(function () {
-    toast('⚠️ Lỗi gửi reaction, thử lại!');
-  });
-}
-
-// ============================================================
-// CẤU HÌNH KHÁC
-// ============================================================
 var S = {
   data: { entries: [], anniversaries: [] },
   calY: new Date().getFullYear(),
@@ -935,7 +705,7 @@ document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
 // ============================================================
-// LOCK SCREEN (giữ nguyên)
+// LOCK SCREEN
 // ============================================================
 function kp(d) {
   if (S.pin.length >= 4) return;
@@ -978,7 +748,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// DESKTOP LAYOUT (giữ nguyên)
+// DESKTOP LAYOUT
 // ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -1030,7 +800,7 @@ function getCurrentMobileTab() {
 }
 
 // ============================================================
-// CLOCK (giữ nguyên)
+// CLOCK
 // ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -1047,7 +817,7 @@ function startClock() {
 }
 
 // ============================================================
-// SAKURA (giữ nguyên)
+// SAKURA
 // ============================================================
 (function () {
   var cv = document.getElementById('sakura-canvas');
@@ -1081,7 +851,7 @@ function startClock() {
 })();
 
 // ============================================================
-// LOCAL STORAGE HELPERS (giữ nguyên)
+// LOCAL STORAGE HELPERS
 // ============================================================
 function saveToLocal(data) {
   try { localStorage.setItem('diary_backup', JSON.stringify(data)); } catch (e) {}
@@ -1102,7 +872,7 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA (giữ nguyên)
+// LOAD DATA
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
@@ -1149,7 +919,7 @@ function loadData(cb) {
 }
 
 // ============================================================
-// PENDING ACTIONS (giữ nguyên)
+// PENDING ACTIONS
 // ============================================================
 function processPendingActions() {
   if (S.pendingActions.length === 0 || !navigator.onLine) return;
@@ -1186,7 +956,7 @@ window.addEventListener('offline', function () {
 });
 
 // ============================================================
-// POST DATA (giữ nguyên)
+// POST DATA
 // ============================================================
 function postData(payload, msg, cb) {
   function doFetch(mode) {
@@ -1212,7 +982,7 @@ function postData(payload, msg, cb) {
 }
 
 // ============================================================
-// CALL COMMENT API (giữ nguyên)
+// CALL COMMENT API
 // ============================================================
 function callCommentAPI(payload, onSuccess, onError) {
   function doFetch(mode) {
@@ -1238,7 +1008,7 @@ function callCommentAPI(payload, onSuccess, onError) {
 }
 
 // ============================================================
-// CONFIRM MODAL (giữ nguyên)
+// CONFIRM MODAL
 // ============================================================
 var confirmResolve = null;
 function showConfirm(title, msg) {
@@ -1269,12 +1039,6 @@ function normalizeEntry(e) {
   if (!e.updatedAt) e.updatedAt = e.date ? (e.date + 'T00:00:00.000Z') : new Date().toISOString();
   if (!e.images) e.images = [];
   if (!e.createdAt) e.createdAt = e.updatedAt;
-  if (!e.reactions) e.reactions = {};
-  if (!e.commentReactions) e.commentReactions = {};
-  // đảm bảo mỗi comment có reactions
-  e.comments.forEach(function (c) {
-    if (!c.reactions) c.reactions = {};
-  });
   return e;
 }
 
@@ -1314,7 +1078,7 @@ function renderAll() {
 }
 
 // ============================================================
-// OTD, CALENDAR (giữ nguyên)
+// OTD, CALENDAR
 // ============================================================
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
@@ -1398,7 +1162,7 @@ var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 // ============================================================
-// STATUS SLIDER (giữ nguyên)
+// STATUS SLIDER
 // ============================================================
 function updateStatusSlider() {
   var container = document.getElementById('status-slider');
@@ -1470,7 +1234,7 @@ function offsetDay(ds, delta) {
 }
 
 // ============================================================
-// DAY LIST (giữ nguyên)
+// DAY LIST
 // ============================================================
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
@@ -1533,7 +1297,7 @@ function delFromDayList() {
 }
 
 // ============================================================
-// EDITED NOTE (giữ nguyên)
+// EDITED NOTE
 // ============================================================
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
@@ -1553,7 +1317,7 @@ function renderEditedNote(elId, e) {
 }
 
 // ============================================================
-// TIMELINE (có reaction)
+// TIMELINE
 // ============================================================
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
@@ -1614,7 +1378,7 @@ function renderGroupedHTML(entries) {
   var groups = groupByDate(entries);
   return groups.map(function (g) {
     var dayLabel = g.date === '(không rõ ngày)' ? g.date : fmtDateVN(g.date);
-    var itemsHTML = g.items.map(function (e) { return tiHTML(e, false); }).join('');
+    var itemsHTML = g.items.map(tiHTML).join('');
     return '<div class="tl-day-group">' +
       '<div class="tl-day-hdr">' +
       '<span class="tl-day-hdr-dot"></span>' +
@@ -1626,7 +1390,7 @@ function renderGroupedHTML(entries) {
   }).join('');
 }
 
-function tiHTML(e, isView) {
+function tiHTML(e) {
   var pre = (e.content || '').replace(/\n/g, ' ').substring(0, 90);
   var thumb = '';
   if (e.images && e.images.length) {
@@ -1636,13 +1400,6 @@ function tiHTML(e, isView) {
   }
   var cmtCount = (e.comments && e.comments.length) ? e.comments.length : 0;
   var cmtHTML = cmtCount > 0 ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>' : '';
-
-  // Reaction
-  var reactHTML = '';
-  if (!isView) {
-    reactHTML = reactionHTML(e.id, 'entry', e.reactions || {}, function () {});
-  }
-
   return '<div class="ti" onclick="openView(\'' + e.id + '\')">' +
     '<div class="ti-row1">' +
     '<span class="ti-time">🕐 ' + fmtTimeShort(e.createdAt || e.updatedAt) + '</span>' +
@@ -1655,13 +1412,11 @@ function tiHTML(e, isView) {
     '<div class="ti-pre">' + escH(pre) + '</div>' +
     cmtHTML +
     '</div>' + thumb +
-    '</div>' +
-    '<div style="margin-top:4px;">' + reactHTML + '</div>' +
-    '</div>';
+    '</div></div>';
 }
 
 // ============================================================
-// ANNIVERSARIES (giữ nguyên)
+// ANNIVERSARIES
 // ============================================================
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
@@ -1721,7 +1476,7 @@ async function delAnn(id) {
 }
 
 // ============================================================
-// ALBUM (có reaction)
+// ALBUM
 // ============================================================
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1751,16 +1506,10 @@ function renderAlbum() {
     var max = Math.min(count, 10);
     for (var i = 0; i < max; i++) {
       var src = imgs[i].url || imgs[i];
-      var imgId = e.id + '_img_' + i;
-      // reaction cho ảnh
-      var imgReactions = e.imageReactions && e.imageReactions[i] ? e.imageReactions[i] : {};
-      var reactHTML = reactionHTML(imgId, 'image', imgReactions, function () {});
+      var isLast = (i === max - 1 && count > 10);
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-        (count > max ? '<div class="a-img-more">+' + (count - max) + '</div>' : '') +
-        '<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.4);border-radius:20px;padding:2px 8px;display:inline-flex;align-items:center;">' +
-          reactHTML +
-        '</div>' +
+        (isLast ? '<div class="a-img-more">+' + (count - 10) + '</div>' : '') +
         '</div>';
     }
     var timeLabel = fmtTimeShort(e.updatedAt);
@@ -1778,7 +1527,7 @@ function renderAlbum() {
 }
 
 // ============================================================
-// GALLERY HTML (giữ nguyên)
+// GALLERY HTML
 // ============================================================
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
@@ -1797,7 +1546,7 @@ function buildGalleryHTML(images) {
 }
 
 // ============================================================
-// WRITE / EDIT / VIEW / DELETE (có reaction cho view)
+// WRITE / EDIT / VIEW / DELETE
 // ============================================================
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = []; S.author = DEFAULT_AUTHOR;
@@ -1832,11 +1581,6 @@ function openView(id) {
   document.getElementById('ve-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('ve-cnt').textContent = e.content || '';
   document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images);
-
-  // Reaction cho entry
-  var reactContainer = document.getElementById('view-reaction');
-  var reactHTML = reactionHTML(e.id, 'entry', e.reactions || {}, function () {});
-  reactContainer.innerHTML = reactHTML;
 
   renderComments();
   updateCmtToggleUI();
@@ -1886,7 +1630,7 @@ async function delEntry() {
 }
 
 // ============================================================
-// AUTHOR (giữ nguyên)
+// AUTHOR
 // ============================================================
 function selAuthor(v) {
   S.author = v;
@@ -1899,7 +1643,7 @@ function updateAuthorToggleUI() {
 }
 
 // ============================================================
-// MOOD (giữ nguyên)
+// MOOD
 // ============================================================
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
@@ -1920,7 +1664,7 @@ function chgFs(delta) {
 }
 
 // ============================================================
-// UPLOAD IMAGES (giữ nguyên)
+// UPLOAD IMAGES (sửa để lưu vào 1 thư mục/ngày)
 // ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -2033,7 +1777,7 @@ function rmImg(i) {
 }
 
 // ============================================================
-// SAVE ENTRY (giữ nguyên)
+// SAVE ENTRY
 // ============================================================
 function saveEntry() {
   var date = document.getElementById('e-date').value;
@@ -2063,10 +1807,7 @@ function saveEntry() {
     images: S.imgs.slice(),
     comments: existing && existing.comments ? existing.comments.slice() : [],
     createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
-    updatedAt: nowIso,
-    reactions: existing && existing.reactions ? existing.reactions : {},
-    commentReactions: existing && existing.commentReactions ? existing.commentReactions : {},
-    imageReactions: existing && existing.imageReactions ? existing.imageReactions : {}
+    updatedAt: nowIso
   };
 
   closeModal('modal-write');
@@ -2091,7 +1832,7 @@ function hideSavingOverlay() {
 }
 
 // ============================================================
-// COMMENTS (có reaction)
+// COMMENTS (modal-view)
 // ============================================================
 function toggleCmtAvatar() {
   var current = S.cmtAuthor;
@@ -2126,7 +1867,6 @@ function cmtHTML(c, scope) {
   var editedTag = c.editedAt ? '<span class="cmt-edited-tag">(đã sửa)</span>' : '';
   var editFn = scope === 'dl' ? 'startEditDlComment' : 'startEditComment';
   var delFn  = scope === 'dl' ? 'delDlComment' : 'delComment';
-  var reactHTML = reactionHTML(c.id, 'comment', c.reactions || {}, function () {});
   return '<div class="cmt-item" data-cid="' + escH(c.id) + '">' +
     '<div class="cmt-item-hdr">' +
     '<span class="cmt-author">' + escH(c.author || DEFAULT_AUTHOR) + '</span>' +
@@ -2134,14 +1874,10 @@ function cmtHTML(c, scope) {
     '<span class="cmt-time">' + fmtTimeShort(c.time) + '</span>' +
     '</div>' +
     '<div class="cmt-text">' + escH(c.text) + '</div>' +
-    '<div style="display:flex;align-items:center;gap:8px;margin-top:4px;">' +
-      reactHTML +
-    '</div>' +
     '<div class="cmt-actions">' +
     '<button class="cmt-action-btn" onclick="' + editFn + '(\'' + escH(c.id) + '\')">✏️ Sửa</button>' +
     '<button class="cmt-action-btn del" onclick="' + delFn + '(\'' + escH(c.id) + '\')">🗑 Xóa</button>' +
-    '</div>' +
-    '</div>';
+    '</div></div>';
 }
 
 function sendComment() {
@@ -2225,7 +1961,7 @@ async function delComment(commentId) {
 }
 
 // ============================================================
-// COMMENTS (modal-daylist) – tương tự
+// COMMENTS (modal-daylist)
 // ============================================================
 function toggleDlCmtAvatar() {
   var current = S.dlCmtAuthor;
@@ -2344,7 +2080,7 @@ async function delDlComment(commentId) {
 }
 
 // ============================================================
-// LIGHTBOX (giữ nguyên)
+// LIGHTBOX
 // ============================================================
 function openLb(src) {
   document.getElementById('lb-img').src = src;
@@ -2353,7 +2089,7 @@ function openLb(src) {
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
 // ============================================================
-// TAB (giữ nguyên)
+// TAB
 // ============================================================
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
@@ -2374,7 +2110,7 @@ function switchTab(tab) {
 }
 
 // ============================================================
-// MODAL HELPERS (giữ nguyên)
+// MODAL HELPERS
 // ============================================================
 function openModal(id) {
   document.getElementById(id).classList.add('open');
@@ -2395,7 +2131,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// TOAST (giữ nguyên)
+// TOAST
 // ============================================================
 var _tt;
 function toast(msg) {
@@ -2407,7 +2143,7 @@ function toast(msg) {
 }
 
 // ============================================================
-// UTILITY (giữ nguyên)
+// UTILITY
 // ============================================================
 function p2(n) { return n < 10 ? '0' + n : '' + n; }
 function todayStr() {
@@ -2456,15 +2192,6 @@ loadPendingActions();
 if (!navigator.onLine) {
   toast('📶 Đang ở chế độ offline, dữ liệu sẽ được lưu tạm');
 }
-
-// Đóng popover khi click ra ngoài
-document.addEventListener('click', function (e) {
-  document.querySelectorAll('.reaction-popover.open').forEach(function (pop) {
-    if (!pop.closest('.reaction-wrapper').contains(e.target)) {
-      pop.classList.remove('open');
-    }
-  });
-});
 </script>
 </body>
 </html>
