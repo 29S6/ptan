@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.6 - Ổn định, sửa thư mục lưu ảnh: 1 thư mục/ngày chứa tất cả ảnh -->
+<!-- V5.7 - Login 2 người dùng, Like, Phân quyền -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -62,26 +62,12 @@ img{max-width:100%;display:block}
 .hdr-btn:hover{background:rgba(255,255,255,.32)}
 .hdr-btn.syncing svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.user-badge{font-size:.8rem;font-weight:700;color:#fff;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 12px;border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;gap:4px}
 .clock-row{display:flex;gap:6px;justify-content:center;padding:0 18px 10px;flex-wrap:wrap}
 .cu{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:4px 9px;text-align:center;min-width:56px}
 .cn{font-size:1.15rem;font-weight:700;color:#fff;line-height:1.1}
 .cl{font-size:.56rem;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
-/* ===== STATUS SLIDER ===== */
-.status-slider{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:10px 18px;
-  margin:4px 18px 10px;
-  background:rgba(255,255,255,.12);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.2);
-  min-height:64px;
-  color:#fff;
-  text-shadow:0 1px 4px rgba(0,0,0,.15);
-}
+.status-slider{display:flex;align-items:center;gap:12px;padding:10px 18px;margin:4px 18px 10px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:20px;border:1px solid rgba(255,255,255,.2);min-height:64px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.15)}
 .status-slider .icon-fire{font-size:2rem;line-height:1;flex-shrink:0;color:#ff8c00;filter:drop-shadow(0 0 8px #ff8c0066)}
 .status-slider .info{flex:1;display:flex;flex-direction:column;gap:2px}
 .status-slider .info .main{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
@@ -219,10 +205,6 @@ img{max-width:100%;display:block}
 .fi:focus,.fta:focus,.fse:focus{border-color:var(--p1)}
 .fta{resize:vertical;min-height:125px;line-height:1.65}
 .fse{cursor:pointer}
-.author-toggle{display:flex;gap:8px}
-.at-opt{flex:1;background:rgba(255,255,255,.55);border:1.5px solid rgba(168,84,112,.18);border-radius:11px;padding:9px 10px;text-align:center;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--t2);transition:all .16s}
-.at-opt:hover{background:var(--p4)}
-.at-opt.sel{background:linear-gradient(135deg,var(--p3),var(--p1));color:#fff;border-color:var(--p1);box-shadow:0 3px 10px rgba(168,84,112,.3)}
 .mood-pick{display:flex;gap:5px;flex-wrap:wrap}
 .mp-o{font-size:1.35rem;cursor:pointer;padding:4px 7px;border-radius:9px;border:2px solid transparent;transition:all .13s}
 .mp-o:hover{transform:scale(1.15)}
@@ -251,6 +233,13 @@ img{max-width:100%;display:block}
 .btn-s:hover{background:var(--p4)}
 .btn-d{background:rgba(200,50,70,.07);border:1.5px solid rgba(200,50,70,.22);border-radius:10px;padding:10px 13px;color:#b03050;font-size:.86rem;font-weight:700;transition:all .18s}
 .btn-d:hover{background:rgba(200,50,70,.13)}
+.btn-like{background:none;border:none;font-size:1.2rem;cursor:pointer;padding:2px 6px;border-radius:8px;transition:all .15s;display:flex;align-items:center;gap:4px;color:var(--t3)}
+.btn-like:hover{background:rgba(168,84,112,.08)}
+.btn-like.liked{color:#e74c3c}
+.btn-like .count{font-size:.7rem;font-weight:600;color:var(--t3)}
+.like-summary{font-size:.7rem;color:var(--t3);display:flex;align-items:center;gap:4px;padding:2px 6px;border-radius:8px;cursor:default}
+.like-summary .names{font-weight:500}
+.action-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;padding-top:6px;border-top:1px solid rgba(168,84,112,.08)}
 .ve-date{font-size:.78rem;color:var(--t1);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ve-author-badge{font-size:.66rem;font-weight:700;color:var(--p2);background:rgba(168,84,112,.1);border-radius:8px;padding:2px 8px}
 .ve-edited-note{font-size:.68rem;color:var(--t3);font-style:italic;margin-bottom:6px}
@@ -288,27 +277,28 @@ img{max-width:100%;display:block}
 .dl-counter{font-size:.76rem;font-weight:700;color:var(--t2)}
 .cmt-section{margin-top:16px;border-top:1.5px solid rgba(168,84,112,.12);padding-top:14px}
 .cmt-hdr{font-size:.78rem;font-weight:700;color:var(--p1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.cmt-list{display:flex;flex-direction:column;gap:9px;margin-bottom:12px;max-height:240px;overflow-y:auto}
-.cmt-item{background:rgba(255,255,255,.55);border:1px solid rgba(168,84,112,.1);border-radius:11px;padding:8px 12px}
-.cmt-item-hdr{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
-.cmt-author{font-size:.74rem;font-weight:700;color:var(--p1)}
+.cmt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;max-height:300px;overflow-y:auto}
+.cmt-item{background:rgba(255,255,255,.6);border:1px solid rgba(168,84,112,.08);border-radius:12px;padding:10px 14px;transition:all .15s}
+.cmt-item:hover{background:rgba(255,255,255,.8)}
+.cmt-item-hdr{display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap}
+.cmt-author{font-size:.78rem;font-weight:700;color:var(--p1)}
 .cmt-time{font-size:.63rem;color:var(--t3);margin-left:auto}
 .cmt-edited-tag{font-size:.6rem;color:var(--t3);font-style:italic}
-.cmt-text{font-size:.8rem;color:var(--t1);line-height:1.5;white-space:pre-wrap;word-break:break-word;margin-bottom:5px}
-.cmt-actions{display:flex;gap:10px}
-.cmt-action-btn{background:none;border:none;font-size:.68rem;font-weight:700;color:var(--t3);padding:1px 2px;transition:color .15s}
-.cmt-action-btn:hover{color:var(--p1)}
-.cmt-action-btn.del:hover{color:#c04060}
-.cmt-empty{text-align:center;font-size:.76rem;color:var(--t3);padding:10px 0}
-.cmt-input-row{display:flex;align-items:center;gap:8px}
-.cmt-avatar-toggle{width:32px;height:32px;border-radius:50%;background:rgba(168,84,112,.12);border:2px solid var(--p1);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none}
+.cmt-text{font-size:.85rem;color:var(--t1);line-height:1.5;white-space:pre-wrap;word-break:break-word;margin-bottom:6px}
+.cmt-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cmt-action-btn{background:none;border:none;font-size:.68rem;font-weight:700;color:var(--t3);padding:2px 4px;border-radius:6px;transition:all .15s}
+.cmt-action-btn:hover{background:rgba(168,84,112,.08);color:var(--p1)}
+.cmt-action-btn.del:hover{color:#c04060;background:rgba(192,64,96,.08)}
+.cmt-empty{text-align:center;font-size:.76rem;color:var(--t3);padding:12px 0}
+.cmt-input-row{display:flex;align-items:center;gap:10px;margin-top:6px;background:rgba(255,255,255,.4);border-radius:16px;padding:4px 4px 4px 12px;border:1px solid rgba(168,84,112,.1)}
+.cmt-avatar-toggle{width:28px;height:28px;border-radius:50%;background:rgba(168,84,112,.12);border:2px solid var(--p1);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none}
 .cmt-avatar-toggle:hover{background:var(--p4);transform:scale(1.05)}
-.cmt-input-box{flex:1;display:flex;gap:6px}
-.cmt-inp{flex:1;background:rgba(255,255,255,.7);border:1.5px solid rgba(168,84,112,.2);border-radius:18px;padding:8px 14px;font-size:.82rem;color:var(--t1);outline:none;transition:border-color .2s}
-.cmt-inp:focus{border-color:var(--p1)}
-.cmt-send-btn{background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:.95rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.cmt-input-box{flex:1;display:flex;align-items:center;gap:4px}
+.cmt-inp{flex:1;background:transparent;border:none;padding:8px 6px;font-size:.85rem;color:var(--t1);outline:none}
+.cmt-inp::placeholder{color:var(--t3)}
+.cmt-send-btn{background:linear-gradient(135deg,var(--p3),var(--p1));border:none;border-radius:50%;width:34px;height:34px;color:#fff;font-size:.9rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
 .cmt-send-btn:hover:not(:disabled){transform:scale(1.08)}
-.cmt-send-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.cmt-send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .confirm-modal .mbox{max-width:380px;text-align:center}
 .confirm-modal .m-ttl{font-size:1.2rem;margin-bottom:8px}
 .confirm-modal .confirm-msg{font-size:.9rem;color:var(--t2);margin-bottom:16px}
@@ -367,13 +357,16 @@ img{max-width:100%;display:block}
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
-      <button class="hdr-btn" id="sync-btn" onclick="syncData()">
-        <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-          <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-        </svg>
-        Đồng bộ
-      </button>
+      <div class="hdr-actions">
+        <span class="user-badge" id="user-badge">🌻 Ánh Ngọc</span>
+        <button class="hdr-btn" id="sync-btn" onclick="syncData()">
+          <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+          </svg>
+          Đồng bộ
+        </button>
+      </div>
     </div>
     <div class="clock-row">
       <div class="cu"><div class="cn" id="ck-d">0</div><div class="cl">Ngày</div></div>
@@ -472,18 +465,12 @@ img{max-width:100%;display:block}
 <div class="modal" id="modal-write">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-write')">✕</button>
-    <div class="m-ttl" id="write-ttl">✍️ Viết nhật ký</div>
+    <div class="m-ttl">✍️ Viết nhật ký</div>
     <div class="wp" id="wp-box">
       <span id="wp-txt">💭 Hôm nay có điều gì đặc biệt không?</span>
       <button class="wp-r" onclick="newPrompt()">🔄</button>
     </div>
-    <div class="fg">
-      <label class="fl">Người viết</label>
-      <div class="author-toggle" id="author-toggle">
-        <div class="at-opt" data-v="Ánh Ngọc 🌻" onclick="selAuthor('Ánh Ngọc 🌻')">Ánh Ngọc 🌻</div>
-        <div class="at-opt" data-v="Anh 💖" onclick="selAuthor('Anh 💖')">Anh 💖</div>
-      </div>
-    </div>
+    <!-- Đã bỏ phần chọn người viết -->
     <div class="fg">
       <label class="fl">Ngày viết</label>
       <input type="date" class="fi" id="e-date"/>
@@ -540,11 +527,14 @@ img{max-width:100%;display:block}
     <div class="m-ttl" id="ve-ttl"></div>
     <div class="ve-content" id="ve-cnt"></div>
     <div id="ve-imgs"></div>
-    <div class="btn-row">
-      <button class="btn-s" onclick="editEntry()">✏️ Sửa</button>
-      <button class="btn-d" onclick="delEntry()">🗑 Xóa</button>
-      <button class="btn-p" style="flex:0;padding:10px 16px" onclick="closeModal('modal-view')">Đóng</button>
+    <div class="action-group">
+      <button class="btn-s" id="view-edit-btn" onclick="editEntry()" style="padding:6px 14px;font-size:.8rem;">✏️ Sửa</button>
+      <button class="btn-d" id="view-del-btn" onclick="delEntry()" style="padding:6px 14px;font-size:.8rem;">🗑 Xóa</button>
+      <button class="btn-p" style="flex:0;padding:6px 16px;font-size:.8rem;" onclick="closeModal('modal-view')">Đóng</button>
+      <div style="flex:1;"></div>
+      <div id="view-like"></div>
     </div>
+
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
@@ -646,22 +636,76 @@ img{max-width:100%;display:block}
 // ============================================================
 var CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
-  PIN: '2204',
+  PIN_ANH_NGOC: '2204',
+  PIN_ANH: '2009',
   LOVE: '2026-04-22'
 };
 
-var AUTHORS = ['Ánh Ngọc 🌻', 'Anh 💖'];
-var DEFAULT_AUTHOR = 'Ánh Ngọc 🌻';
+var USER_ANH_NGOC = 'Ánh Ngọc 🌻';
+var USER_ANH = 'Anh 💖';
+var CURRENT_USER = USER_ANH_NGOC; // sẽ được gán khi login
+var DEFAULT_AUTHOR = USER_ANH_NGOC;
 
+// ============================================================
+// LIKE HELPERS
+// ============================================================
+function likeHTML(targetId, targetType, likes) {
+  if (!likes) likes = [];
+  var userLiked = likes.indexOf(CURRENT_USER) !== -1;
+  var count = likes.length;
+  var icon = userLiked ? '❤️' : '🤍';
+  var label = count > 0 ? '<span class="count">' + count + '</span>' : '';
+
+  var names = '';
+  if (count > 0) {
+    var nameStr = likes.join(' và ');
+    names = '<span class="names">' + nameStr + '</span>';
+  }
+
+  var html = '<div style="display:inline-flex;align-items:center;gap:4px;">';
+  html += '<button class="btn-like ' + (userLiked ? 'liked' : '') + '" onclick="toggleLike(\'' + targetId + '\',\'' + targetType + '\')">' + icon + label + '</button>';
+  if (count > 0) {
+    html += '<span class="like-summary">' + names + '</span>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function toggleLike(targetId, targetType) {
+  var payload = {
+    action: 'toggle_like',
+    targetId: targetId,
+    targetType: targetType,
+    user: CURRENT_USER
+  };
+
+  fetch(CFG.URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+    mode: 'no-cors'
+  })
+  .then(function () {
+    loadData(function () {
+      if (S.curId) openView(S.curId);
+      renderTimeline();
+      renderAlbum();
+    });
+  })
+  .catch(function () {
+    toast('⚠️ Lỗi gửi like, thử lại!');
+  });
+}
+
+// ============================================================
+// STATE
+// ============================================================
 var S = {
   data: { entries: [], anniversaries: [] },
   calY: new Date().getFullYear(),
   calM: new Date().getMonth(),
   curId: null,
   mood: '',
-  author: DEFAULT_AUTHOR,
-  cmtAuthor: DEFAULT_AUTHOR,
-  dlCmtAuthor: DEFAULT_AUTHOR,
   imgs: [],
   fontSize: 14,
   page: 1,
@@ -705,7 +749,7 @@ document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
 // ============================================================
-// LOCK SCREEN
+// LOCK SCREEN (2 mật khẩu)
 // ============================================================
 function kp(d) {
   if (S.pin.length >= 4) return;
@@ -723,23 +767,31 @@ function updDots() {
     document.getElementById('d' + i).classList.toggle('on', i < S.pin.length);
 }
 function checkPin() {
-  if (S.pin === CFG.PIN) {
-    var ls = document.getElementById('lock-screen');
-    ls.classList.add('hiding');
-    setTimeout(function () {
-      ls.style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      startClock();
-      loadData();
-      newPrompt();
-      setupDesktopLayout();
-      updateStatusSlider();
-    }, 480);
+  if (S.pin === CFG.PIN_ANH_NGOC) {
+    CURRENT_USER = USER_ANH_NGOC;
+    unlockApp();
+  } else if (S.pin === CFG.PIN_ANH) {
+    CURRENT_USER = USER_ANH;
+    unlockApp();
   } else {
     document.getElementById('lock-err').textContent = 'Sai mật mã rồi iu ơi 🥺';
     S.pin = '';
     updDots();
   }
+}
+function unlockApp() {
+  document.getElementById('user-badge').textContent = (CURRENT_USER === USER_ANH_NGOC ? '🌻' : '💖') + ' ' + CURRENT_USER;
+  var ls = document.getElementById('lock-screen');
+  ls.classList.add('hiding');
+  setTimeout(function () {
+    ls.style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    startClock();
+    loadData();
+    newPrompt();
+    setupDesktopLayout();
+    updateStatusSlider();
+  }, 480);
 }
 document.addEventListener('keydown', function (e) {
   if (document.getElementById('lock-screen').style.display === 'none') return;
@@ -748,7 +800,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// DESKTOP LAYOUT
+// DESKTOP LAYOUT (giữ nguyên)
 // ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -800,7 +852,7 @@ function getCurrentMobileTab() {
 }
 
 // ============================================================
-// CLOCK
+// CLOCK (giữ nguyên)
 // ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -817,7 +869,7 @@ function startClock() {
 }
 
 // ============================================================
-// SAKURA
+// SAKURA (giữ nguyên)
 // ============================================================
 (function () {
   var cv = document.getElementById('sakura-canvas');
@@ -851,7 +903,7 @@ function startClock() {
 })();
 
 // ============================================================
-// LOCAL STORAGE HELPERS
+// LOCAL STORAGE HELPERS (giữ nguyên)
 // ============================================================
 function saveToLocal(data) {
   try { localStorage.setItem('diary_backup', JSON.stringify(data)); } catch (e) {}
@@ -872,7 +924,7 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA
+// LOAD DATA (giữ nguyên)
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
@@ -919,7 +971,7 @@ function loadData(cb) {
 }
 
 // ============================================================
-// PENDING ACTIONS
+// PENDING ACTIONS (giữ nguyên)
 // ============================================================
 function processPendingActions() {
   if (S.pendingActions.length === 0 || !navigator.onLine) return;
@@ -956,7 +1008,7 @@ window.addEventListener('offline', function () {
 });
 
 // ============================================================
-// POST DATA
+// POST DATA (giữ nguyên)
 // ============================================================
 function postData(payload, msg, cb) {
   function doFetch(mode) {
@@ -982,7 +1034,7 @@ function postData(payload, msg, cb) {
 }
 
 // ============================================================
-// CALL COMMENT API
+// CALL COMMENT API (giữ nguyên)
 // ============================================================
 function callCommentAPI(payload, onSuccess, onError) {
   function doFetch(mode) {
@@ -1008,7 +1060,7 @@ function callCommentAPI(payload, onSuccess, onError) {
 }
 
 // ============================================================
-// CONFIRM MODAL
+// CONFIRM MODAL (giữ nguyên)
 // ============================================================
 var confirmResolve = null;
 function showConfirm(title, msg) {
@@ -1039,6 +1091,10 @@ function normalizeEntry(e) {
   if (!e.updatedAt) e.updatedAt = e.date ? (e.date + 'T00:00:00.000Z') : new Date().toISOString();
   if (!e.images) e.images = [];
   if (!e.createdAt) e.createdAt = e.updatedAt;
+  if (!e.likes) e.likes = [];
+  e.comments.forEach(function (c) {
+    if (!c.likes) c.likes = [];
+  });
   return e;
 }
 
@@ -1078,7 +1134,7 @@ function renderAll() {
 }
 
 // ============================================================
-// OTD, CALENDAR
+// OTD, CALENDAR (giữ nguyên)
 // ============================================================
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
@@ -1162,7 +1218,7 @@ var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 // ============================================================
-// STATUS SLIDER
+// STATUS SLIDER (giữ nguyên)
 // ============================================================
 function updateStatusSlider() {
   var container = document.getElementById('status-slider');
@@ -1234,7 +1290,7 @@ function offsetDay(ds, delta) {
 }
 
 // ============================================================
-// DAY LIST
+// DAY LIST (giữ nguyên)
 // ============================================================
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
@@ -1246,7 +1302,6 @@ function openDayList(dateStr) {
 
   S.dayListEntries = ents;
   S.dayListIdx = 0;
-  S.dlCmtAuthor = DEFAULT_AUTHOR;
   S.editingDlCommentId = null;
   showDayListModal();
 }
@@ -1276,7 +1331,6 @@ function showDayListModal() {
   S.editingDlCommentId = null;
 
   renderDlComments();
-  updateDlCmtToggleUI();
 
   openModal('modal-daylist');
 }
@@ -1297,7 +1351,7 @@ function delFromDayList() {
 }
 
 // ============================================================
-// EDITED NOTE
+// EDITED NOTE (giữ nguyên)
 // ============================================================
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
@@ -1317,7 +1371,7 @@ function renderEditedNote(elId, e) {
 }
 
 // ============================================================
-// TIMELINE
+// TIMELINE (có like)
 // ============================================================
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
@@ -1400,6 +1454,9 @@ function tiHTML(e) {
   }
   var cmtCount = (e.comments && e.comments.length) ? e.comments.length : 0;
   var cmtHTML = cmtCount > 0 ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>' : '';
+
+  var likeHTML = likeHTML(e.id, 'entry', e.likes || []);
+
   return '<div class="ti" onclick="openView(\'' + e.id + '\')">' +
     '<div class="ti-row1">' +
     '<span class="ti-time">🕐 ' + fmtTimeShort(e.createdAt || e.updatedAt) + '</span>' +
@@ -1412,11 +1469,13 @@ function tiHTML(e) {
     '<div class="ti-pre">' + escH(pre) + '</div>' +
     cmtHTML +
     '</div>' + thumb +
-    '</div></div>';
+    '</div>' +
+    '<div style="margin-top:4px;display:flex;align-items:center;gap:6px;">' + likeHTML + '</div>' +
+    '</div>';
 }
 
 // ============================================================
-// ANNIVERSARIES
+// ANNIVERSARIES (giữ nguyên)
 // ============================================================
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
@@ -1476,7 +1535,7 @@ async function delAnn(id) {
 }
 
 // ============================================================
-// ALBUM
+// ALBUM (có like)
 // ============================================================
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1506,10 +1565,15 @@ function renderAlbum() {
     var max = Math.min(count, 10);
     for (var i = 0; i < max; i++) {
       var src = imgs[i].url || imgs[i];
-      var isLast = (i === max - 1 && count > 10);
+      var imgId = e.id + '_img_' + i;
+      // Like cho ảnh (tạm thời chưa support nhưng để sẵn)
+      var likeHTML = likeHTML(imgId, 'image', e.imageLikes && e.imageLikes[i] ? e.imageLikes[i] : []);
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-        (isLast ? '<div class="a-img-more">+' + (count - 10) + '</div>' : '') +
+        (count > max ? '<div class="a-img-more">+' + (count - max) + '</div>' : '') +
+        '<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.4);border-radius:20px;padding:2px 8px;display:inline-flex;align-items:center;">' +
+          likeHTML +
+        '</div>' +
         '</div>';
     }
     var timeLabel = fmtTimeShort(e.updatedAt);
@@ -1527,7 +1591,7 @@ function renderAlbum() {
 }
 
 // ============================================================
-// GALLERY HTML
+// GALLERY HTML (giữ nguyên)
 // ============================================================
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
@@ -1546,10 +1610,10 @@ function buildGalleryHTML(images) {
 }
 
 // ============================================================
-// WRITE / EDIT / VIEW / DELETE
+// WRITE / EDIT / VIEW / DELETE (có phân quyền)
 // ============================================================
 function openWriteModal() {
-  S.curId = null; S.mood = ''; S.imgs = []; S.author = DEFAULT_AUTHOR;
+  S.curId = null; S.mood = ''; S.imgs = [];
   document.getElementById('write-ttl').textContent = '✍️ Viết nhật ký';
   document.getElementById('e-date').value = todayStr();
   document.getElementById('e-ttl').value = '';
@@ -1558,7 +1622,6 @@ function openWriteModal() {
   document.getElementById('upload-prog').classList.remove('show');
   document.getElementById('upload-prog-bar').classList.remove('show');
   document.querySelectorAll('.mp-o').forEach(function (el) { el.classList.remove('sel'); });
-  updateAuthorToggleUI();
   newPrompt();
   openModal('modal-write');
 }
@@ -1568,7 +1631,6 @@ function openView(id) {
   if (!e) return;
   normalizeEntry(e);
   S.curId = id;
-  S.cmtAuthor = DEFAULT_AUTHOR;
   S.editingCommentId = null;
 
   document.getElementById('ve-date').innerHTML =
@@ -1582,8 +1644,15 @@ function openView(id) {
   document.getElementById('ve-cnt').textContent = e.content || '';
   document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images);
 
+  // Like cho bài viết
+  document.getElementById('view-like').innerHTML = likeHTML(e.id, 'entry', e.likes || []);
+
+  // Phân quyền sửa/xóa
+  var isOwner = (e.author === CURRENT_USER);
+  document.getElementById('view-edit-btn').style.display = isOwner ? '' : 'none';
+  document.getElementById('view-del-btn').style.display = isOwner ? '' : 'none';
+
   renderComments();
-  updateCmtToggleUI();
   document.getElementById('cmt-inp').value = '';
 
   openModal('modal-view');
@@ -1593,11 +1662,14 @@ function editEntry() {
   if (!S.curId) return;
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
   if (!e) return;
+  if (e.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể sửa bài của mình!');
+    return;
+  }
   normalizeEntry(e);
   closeModal('modal-view');
   S.mood = e.mood || '';
   S.imgs = e.images ? e.images.slice() : [];
-  S.author = e.author || DEFAULT_AUTHOR;
   document.getElementById('write-ttl').textContent = '✏️ Chỉnh sửa nhật ký';
   document.getElementById('e-date').value = e.date;
   document.getElementById('e-ttl').value = e.title || '';
@@ -1605,7 +1677,6 @@ function editEntry() {
   document.querySelectorAll('.mp-o').forEach(function (el) {
     el.classList.toggle('sel', el.dataset.v === S.mood);
   });
-  updateAuthorToggleUI();
   renderImgPrev();
   document.getElementById('upload-prog').classList.remove('show');
   document.getElementById('upload-prog-bar').classList.remove('show');
@@ -1614,14 +1685,18 @@ function editEntry() {
 
 async function delEntry() {
   if (!S.curId) return;
+  var e = S.data.entries.find(function (x) { return x.id === S.curId; });
+  if (e.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể xóa bài của mình!');
+    return;
+  }
   var ok = await showConfirm('🗑 Xóa bài viết', 'Bạn có chắc muốn xóa bài này? Không thể khôi phục!');
   if (!ok) return;
-  var entry = S.data.entries.find(function (x) { return x.id === S.curId; });
   closeModal('modal-view');
   toast('⏳ Đang xóa...');
   var driveIds = [];
-  if (entry && entry.images) {
-    entry.images.forEach(function (img) {
+  if (e && e.images) {
+    e.images.forEach(function (img) {
       if (img.driveId) driveIds.push(img.driveId);
     });
   }
@@ -1630,20 +1705,7 @@ async function delEntry() {
 }
 
 // ============================================================
-// AUTHOR
-// ============================================================
-function selAuthor(v) {
-  S.author = v;
-  updateAuthorToggleUI();
-}
-function updateAuthorToggleUI() {
-  document.querySelectorAll('#author-toggle .at-opt').forEach(function (el) {
-    el.classList.toggle('sel', el.dataset.v === S.author);
-  });
-}
-
-// ============================================================
-// MOOD
+// MOOD (giữ nguyên)
 // ============================================================
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
@@ -1664,7 +1726,7 @@ function chgFs(delta) {
 }
 
 // ============================================================
-// UPLOAD IMAGES (sửa để lưu vào 1 thư mục/ngày)
+// UPLOAD IMAGES (giữ nguyên)
 // ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -1777,7 +1839,7 @@ function rmImg(i) {
 }
 
 // ============================================================
-// SAVE ENTRY
+// SAVE ENTRY (tự động gán author = CURRENT_USER)
 // ============================================================
 function saveEntry() {
   var date = document.getElementById('e-date').value;
@@ -1803,11 +1865,12 @@ function saveEntry() {
     title: title || ('Ngày ' + fmtDateVN(date)),
     content: content,
     mood: S.mood,
-    author: S.author || DEFAULT_AUTHOR,
+    author: CURRENT_USER, // TỰ ĐỘNG GÁN
     images: S.imgs.slice(),
     comments: existing && existing.comments ? existing.comments.slice() : [],
     createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
-    updatedAt: nowIso
+    updatedAt: nowIso,
+    likes: existing && existing.likes ? existing.likes.slice() : []
   };
 
   closeModal('modal-write');
@@ -1832,21 +1895,24 @@ function hideSavingOverlay() {
 }
 
 // ============================================================
-// COMMENTS (modal-view)
+// COMMENTS (có like, avatar toggle giữ nguyên)
 // ============================================================
 function toggleCmtAvatar() {
   var current = S.cmtAuthor;
-  var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
-  selCmtAuthor(next);
-}
-function selCmtAuthor(v) {
-  S.cmtAuthor = v;
+  var next = (current === USER_ANH_NGOC) ? USER_ANH : USER_ANH_NGOC;
+  S.cmtAuthor = next;
   updateCmtToggleUI();
 }
 function updateCmtToggleUI() {
-  var icon = S.cmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
+  var icon = S.cmtAuthor === USER_ANH_NGOC ? '🌻' : '💖';
   document.getElementById('cmt-avatar-toggle').textContent = icon;
 }
+// Khởi tạo cmtAuthor = CURRENT_USER
+var cmtAuthor = CURRENT_USER;
+Object.defineProperty(S, 'cmtAuthor', {
+  get: function() { return cmtAuthor; },
+  set: function(v) { cmtAuthor = v; }
+});
 
 function renderComments() {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
@@ -1867,6 +1933,9 @@ function cmtHTML(c, scope) {
   var editedTag = c.editedAt ? '<span class="cmt-edited-tag">(đã sửa)</span>' : '';
   var editFn = scope === 'dl' ? 'startEditDlComment' : 'startEditComment';
   var delFn  = scope === 'dl' ? 'delDlComment' : 'delComment';
+  var likeHTMLstr = likeHTML(c.id, 'comment', c.likes || []);
+  var isOwner = (c.author === CURRENT_USER);
+  var showActions = isOwner ? '' : 'style="display:none;"';
   return '<div class="cmt-item" data-cid="' + escH(c.id) + '">' +
     '<div class="cmt-item-hdr">' +
     '<span class="cmt-author">' + escH(c.author || DEFAULT_AUTHOR) + '</span>' +
@@ -1875,9 +1944,11 @@ function cmtHTML(c, scope) {
     '</div>' +
     '<div class="cmt-text">' + escH(c.text) + '</div>' +
     '<div class="cmt-actions">' +
-    '<button class="cmt-action-btn" onclick="' + editFn + '(\'' + escH(c.id) + '\')">✏️ Sửa</button>' +
-    '<button class="cmt-action-btn del" onclick="' + delFn + '(\'' + escH(c.id) + '\')">🗑 Xóa</button>' +
-    '</div></div>';
+    likeHTMLstr +
+    '<button class="cmt-action-btn" onclick="' + editFn + '(\'' + escH(c.id) + '\')" ' + showActions + '>✏️ Sửa</button>' +
+    '<button class="cmt-action-btn del" onclick="' + delFn + '(\'' + escH(c.id) + '\')" ' + showActions + '>🗑 Xóa</button>' +
+    '</div>' +
+    '</div>';
 }
 
 function sendComment() {
@@ -1912,7 +1983,7 @@ function sendComment() {
   }
 
   callCommentAPI({
-    action: 'add_comment', entryId: S.curId, author: S.cmtAuthor || DEFAULT_AUTHOR, text: text
+    action: 'add_comment', entryId: S.curId, author: CURRENT_USER, text: text
   }, function (res) {
     var e = S.data.entries.find(function (x) { return x.id === S.curId; });
     if (e) e.comments = res.comments;
@@ -1933,6 +2004,10 @@ function startEditComment(commentId) {
   if (!e) return;
   var c = e.comments.find(function (x) { return x.id === commentId; });
   if (!c) return;
+  if (c.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể sửa bình luận của mình!');
+    return;
+  }
   S.editingCommentId = commentId;
   var inp = document.getElementById('cmt-inp');
   inp.value = c.text;
@@ -1942,12 +2017,19 @@ function startEditComment(commentId) {
 }
 
 async function delComment(commentId) {
+  var e = S.data.entries.find(function (x) { return x.id === S.curId; });
+  if (!e) return;
+  var c = e.comments.find(function (x) { return x.id === commentId; });
+  if (!c) return;
+  if (c.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể xóa bình luận của mình!');
+    return;
+  }
   var ok = await showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?');
   if (!ok) return;
-  if (!S.curId) return;
   callCommentAPI({ action: 'delete_comment', entryId: S.curId, commentId: commentId }, function (res) {
-    var e = S.data.entries.find(function (x) { return x.id === S.curId; });
-    if (e) e.comments = res.comments;
+    var e2 = S.data.entries.find(function (x) { return x.id === S.curId; });
+    if (e2) e2.comments = res.comments;
     if (S.editingCommentId === commentId) {
       S.editingCommentId = null;
       document.getElementById('cmt-inp').value = '';
@@ -1961,21 +2043,23 @@ async function delComment(commentId) {
 }
 
 // ============================================================
-// COMMENTS (modal-daylist)
+// COMMENTS (modal-daylist) – tương tự
 // ============================================================
 function toggleDlCmtAvatar() {
   var current = S.dlCmtAuthor;
-  var next = (current === 'Ánh Ngọc 🌻') ? 'Anh 💖' : 'Ánh Ngọc 🌻';
-  selDlCmtAuthor(next);
-}
-function selDlCmtAuthor(v) {
-  S.dlCmtAuthor = v;
+  var next = (current === USER_ANH_NGOC) ? USER_ANH : USER_ANH_NGOC;
+  S.dlCmtAuthor = next;
   updateDlCmtToggleUI();
 }
 function updateDlCmtToggleUI() {
-  var icon = S.dlCmtAuthor === 'Ánh Ngọc 🌻' ? '🌻' : '💖';
+  var icon = S.dlCmtAuthor === USER_ANH_NGOC ? '🌻' : '💖';
   document.getElementById('dl-cmt-avatar-toggle').textContent = icon;
 }
+var dlCmtAuthor = CURRENT_USER;
+Object.defineProperty(S, 'dlCmtAuthor', {
+  get: function() { return dlCmtAuthor; },
+  set: function(v) { dlCmtAuthor = v; }
+});
 
 function renderDlComments() {
   var e = S.dayListEntries[S.dayListIdx];
@@ -2028,7 +2112,7 @@ function sendDlComment() {
   }
 
   callCommentAPI({
-    action: 'add_comment', entryId: e.id, author: S.dlCmtAuthor || DEFAULT_AUTHOR, text: text
+    action: 'add_comment', entryId: e.id, author: CURRENT_USER, text: text
   }, function (res) {
     e.comments = res.comments;
     var master = S.data.entries.find(function (x) { return x.id === e.id; });
@@ -2050,6 +2134,10 @@ function startEditDlComment(commentId) {
   if (!e) return;
   var c = e.comments.find(function (x) { return x.id === commentId; });
   if (!c) return;
+  if (c.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể sửa bình luận của mình!');
+    return;
+  }
   S.editingDlCommentId = commentId;
   var inp = document.getElementById('dl-cmt-inp');
   inp.value = c.text;
@@ -2059,10 +2147,16 @@ function startEditDlComment(commentId) {
 }
 
 async function delDlComment(commentId) {
-  var ok = await showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?');
-  if (!ok) return;
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
+  var c = e.comments.find(function (x) { return x.id === commentId; });
+  if (!c) return;
+  if (c.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể xóa bình luận của mình!');
+    return;
+  }
+  var ok = await showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?');
+  if (!ok) return;
   callCommentAPI({ action: 'delete_comment', entryId: e.id, commentId: commentId }, function (res) {
     e.comments = res.comments;
     var master = S.data.entries.find(function (x) { return x.id === e.id; });
@@ -2080,7 +2174,7 @@ async function delDlComment(commentId) {
 }
 
 // ============================================================
-// LIGHTBOX
+// LIGHTBOX (giữ nguyên)
 // ============================================================
 function openLb(src) {
   document.getElementById('lb-img').src = src;
@@ -2089,7 +2183,7 @@ function openLb(src) {
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
 // ============================================================
-// TAB
+// TAB (giữ nguyên)
 // ============================================================
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
@@ -2110,7 +2204,7 @@ function switchTab(tab) {
 }
 
 // ============================================================
-// MODAL HELPERS
+// MODAL HELPERS (giữ nguyên)
 // ============================================================
 function openModal(id) {
   document.getElementById(id).classList.add('open');
@@ -2131,7 +2225,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// TOAST
+// TOAST (giữ nguyên)
 // ============================================================
 var _tt;
 function toast(msg) {
@@ -2143,7 +2237,7 @@ function toast(msg) {
 }
 
 // ============================================================
-// UTILITY
+// UTILITY (giữ nguyên)
 // ============================================================
 function p2(n) { return n < 10 ? '0' + n : '' + n; }
 function todayStr() {
@@ -2192,6 +2286,8 @@ loadPendingActions();
 if (!navigator.onLine) {
   toast('📶 Đang ở chế độ offline, dữ liệu sẽ được lưu tạm');
 }
+S.cmtAuthor = CURRENT_USER;
+S.dlCmtAuthor = CURRENT_USER;
 </script>
 </body>
 </html>
