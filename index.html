@@ -150,12 +150,12 @@ img { max-width: 100%; display: block; }
 .cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
 
-/* SEARCH + FILTER - gọn gàng */
+/* SEARCH + FILTER - chiều rộng khớp với card bên dưới */
 .search-filter {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px 6px 18px;
+  padding: 6px 18px;
   margin: 2px auto 8px;
   max-width: 1400px;
   background: rgba(255,255,255,.18);
@@ -163,6 +163,19 @@ img { max-width: 100%; display: block; }
   -webkit-backdrop-filter: blur(10px);
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,.25);
+}
+@media (min-width: 769px) {
+  .search-filter {
+    max-width: calc(1400px - 48px);
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .search-filter {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
 }
 .search-filter .search-icon {
   font-size: 1rem;
@@ -202,18 +215,18 @@ img { max-width: 100%; display: block; }
 }
 .search-filter select option { color: #3d1f2d; background: #fff; }
 
-/* MAIN LAYOUT - thu nhỏ padding trên */
+/* MAIN LAYOUT - khoảng cách header→nội dung = 8px */
 .main-layout {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2px 14px 16px;
+  padding: 0 14px 16px;
 }
 @media (min-width: 769px) {
   .main-layout {
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     gap: 20px;
-    padding: 4px 24px 30px;
+    padding: 0 24px 30px;
   }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; }
@@ -225,7 +238,7 @@ img { max-width: 100%; display: block; }
   .col-panel.on { display: block; }
 }
 
-/* CARD */
+/* CARD - padding-top 8px cho tất cả tab */
 .gc {
   background: rgba(255,255,255,.80);
   backdrop-filter: blur(10px);
@@ -236,7 +249,7 @@ img { max-width: 100%; display: block; }
   margin-bottom: 14px;
 }
 .gc-hd {
-  padding: 12px 18px 8px;
+  padding: 10px 18px 8px;
   border-bottom: 1px solid rgba(168,84,112,.06);
   display: flex;
   align-items: center;
@@ -249,7 +262,7 @@ img { max-width: 100%; display: block; }
   color: #a85470;
 }
 .gc-body {
-  padding: 4px 18px 16px;
+  padding: 8px 18px 16px; /* tất cả tab đều 8px padding-top */
 }
 .gc-body > *:first-child { margin-top: 0; }
 
@@ -267,7 +280,7 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-lbl { font-size: .75rem; font-weight: 700; color: #a85470; text-transform: uppercase; letter-spacing: .05em; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 
-/* TIMELINE ITEM - margin 10px */
+/* TIMELINE ITEM */
 .ti {
   background: #fff;
   border: 1px solid rgba(168,84,112,.06);
@@ -489,7 +502,7 @@ img { max-width: 100%; display: block; }
 }
 .album-empty { text-align: center; color: #b08090; padding: 30px 0; font-size: .82rem; }
 
-/* QUICK WRITE - chỉ desktop */
+/* QUICK WRITE - chỉ desktop, không margin-top để giữ khoảng cách 8px */
 .quick-write {
   display: none;
   background: #fff;
@@ -532,7 +545,7 @@ img { max-width: 100%; display: block; }
 .quick-write .qw-icon { font-size: 1rem; color: #a85470; opacity: .6; transition: .2s; }
 .quick-write:hover .qw-icon { opacity: 1; }
 
-/* MOBILE NAVIBAR - BO TRÒN ĐỀU */
+/* MOBILE NAVIBAR */
 .mob-nav {
   display: none;
   position: fixed;
@@ -793,16 +806,40 @@ img { max-width: 100%; display: block; }
 }
 .btn-d:hover { background: rgba(200,50,70,.12); }
 
-/* VIEW ENTRY - gói gọn nội dung */
-.ve-date { font-size: .78rem; color: #3d1f2d; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.ve-author-badge { font-size: .66rem; font-weight: 700; color: #a85470; background: rgba(168,84,112,.08); border-radius: 12px; padding: 2px 12px; }
-.ve-edited-note { font-size: .66rem; color: #b08090; font-style: italic; margin-bottom: 6px; }
-.ve-mood { font-size: 1.2rem; margin-bottom: 6px; }
+/* VIEW ENTRY - fix bố cục tiêu đề và nội dung */
+.ve-date {
+  font-size: .78rem;
+  color: #3d1f2d;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.ve-author-badge {
+  font-size: .66rem;
+  font-weight: 700;
+  color: #a85470;
+  background: rgba(168,84,112,.08);
+  border-radius: 12px;
+  padding: 2px 12px;
+}
+.ve-edited-note {
+  font-size: .66rem;
+  color: #b08090;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+.ve-mood {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
 .ve-content {
   background: rgba(255,255,255,.5);
   border-radius: 14px;
   padding: 14px;
-  margin: 8px 0;
+  margin: 8px 0 10px 0;
   font-size: .88rem;
   line-height: 1.8;
   color: #3d1f2d;
@@ -810,12 +847,40 @@ img { max-width: 100%; display: block; }
   word-wrap: break-word;
   max-height: 40vh;
   overflow-y: auto;
+  clear: both;
 }
-.ve-gallery { display: grid; gap: 4px; margin-top: 10px; border-radius: 14px; overflow: hidden; }
-.ve-gallery .vg-img { position: relative; overflow: hidden; cursor: pointer; background: #f7dde8; border-radius: 8px; }
-.ve-gallery .vg-img img { width: 100%; height: 100%; object-fit: cover; transition: .2s; }
+.ve-gallery {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.ve-gallery .vg-img {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #f7dde8;
+  border-radius: 8px;
+}
+.ve-gallery .vg-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: .2s;
+}
 .ve-gallery .vg-img:hover img { transform: scale(1.03); }
-.ve-gallery .vg-img .vg-overlay { position: absolute; inset: 0; background: rgba(40,20,30,.5); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700; color: #fff; }
+.ve-gallery .vg-img .vg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(40,20,30,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+}
 
 /* PHOTO VIEWER */
 #photo-viewer {
@@ -884,7 +949,7 @@ img { max-width: 100%; display: block; }
 .dl-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
 .dl-counter { font-size: .76rem; font-weight: 700; color: #7a4a5e; }
 
-/* COMMENTS - redesign, nút gửi cùng hàng */
+/* COMMENTS */
 .cmt-section {
   margin-top: 16px;
   border-top: 1px solid rgba(168,84,112,.06);
@@ -974,7 +1039,6 @@ img { max-width: 100%; display: block; }
   color: #b08090;
   padding: 12px 0;
 }
-/* INPUT COMMENT - cùng hàng */
 .cmt-input-row {
   display: flex;
   align-items: center;
@@ -1134,7 +1198,7 @@ img { max-width: 100%; display: block; }
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <!-- SEARCH + FILTER - gọn gàng -->
+    <!-- SEARCH + FILTER -->
     <div class="search-filter">
       <span class="search-icon">🔍</span>
       <input type="text" id="search-input" placeholder="Tìm bài viết..." oninput="filterEntries()"/>
@@ -1293,14 +1357,14 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- MODAL XEM BÀI -->
+<!-- MODAL XEM BÀI - fix bố cục -->
 <div class="modal" id="modal-view">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')">✕</button>
     <div class="ve-date" id="ve-date"></div>
     <div class="ve-edited-note hidden" id="ve-edited-note"></div>
     <div class="ve-mood" id="ve-mood"></div>
-    <div class="m-ttl" id="ve-ttl"></div>
+    <div class="m-ttl" id="ve-ttl" style="margin-top:4px;margin-bottom:6px;"></div>
     <div class="ve-content" id="ve-cnt"></div>
     <div id="ve-imgs"></div>
     <div class="action-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid rgba(168,84,112,.06);">
@@ -2009,7 +2073,7 @@ function renderOTD() {
   });
   if (!match) { wrap.innerHTML = ''; return; }
   var yr = match.date.substring(0, 4);
-  wrap.innerHTML = '<div class="gc" style="margin-bottom:12px"><div class="gc-body" style="padding:4px 16px 12px;">' +
+  wrap.innerHTML = '<div class="gc" style="margin-bottom:12px"><div class="gc-body" style="padding:6px 16px 12px;">' +
     '<div class="otd-card" onclick="openView(\'' + match.id + '\')">' +
     '<div class="otd-lbl">⏳ Ngày này năm ' + yr + '</div>' +
     '<div class="otd-ttl">' + escH(match.title || '(Không tiêu đề)') + '</div>' +
