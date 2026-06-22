@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.5.0 - Xóa thanh tìm kiếm, navibar nổi iOS, gói gọn nội dung, animation mượt -->
+<!-- V6.6.0 - Navibar iOS 26, ẩn/hiện khi cuộn, khoảng cách header 10px -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -88,7 +88,7 @@ img { max-width: 100%; display: block; }
   display: none;
   position: relative; z-index: 1;
   min-height: 100vh;
-  padding-bottom: calc(80px + env(safe-area-inset-bottom,0px)); /* tăng để chứa navibar nổi */
+  padding-bottom: calc(64px + env(safe-area-inset-bottom,0px));
 }
 @media (min-width: 769px) { #app { padding-bottom: 24px; } }
 
@@ -219,9 +219,9 @@ img { max-width: 100%; display: block; }
   color: var(--p1);
 }
 
-/* ===== KHOẢNG CÁCH CHUẨN CHO TẤT CẢ CÁC TAB ===== */
+/* ===== KHOẢNG CÁCH HEADER -> NỘI DUNG CHỈ CÒN 10px ===== */
 .gc-body {
-  padding: 23px 17px 17px; /* padding-top chung 23px */
+  padding: 10px 17px 17px; /* padding-top = 10px */
 }
 .gc-body > *:first-child {
   margin-top: 0;
@@ -398,30 +398,6 @@ img { max-width: 100%; display: block; }
 }
 .album-empty { text-align: center; color: var(--t3); padding: 36px 0; font-size: .85rem; }
 
-/* ===== FAB (mobile) – nút viết bài mới ===== */
-#fab {
-  position: fixed;
-  bottom: calc(100px + env(safe-area-inset-bottom,0px));
-  right: 24px;
-  z-index: 300;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--p3), var(--p1));
-  border: none;
-  box-shadow: 0 6px 24px rgba(168,84,112,.5);
-  font-size: 2rem;
-  color: #fff;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-#fab:hover { transform: scale(1.08) rotate(7deg); box-shadow: 0 10px 32px rgba(168,84,112,.6); }
-#fab:active { transform: scale(0.92); }
-@media (min-width: 769px) { #fab { display: none; } }
-
 /* ===== KHUNG VIẾT NHANH (Desktop) ===== */
 .quick-write {
   display: none;
@@ -473,7 +449,7 @@ img { max-width: 100%; display: block; }
   .quick-write { display: flex; }
 }
 
-/* ===== MOBILE NAVIBAR – NỔI, BO TRÒN (iOS style) ===== */
+/* ===== MOBILE NAVIBAR – NỔI, BO TRÒN, CÙNG HÀNG VỚI NÚT VIẾT ===== */
 .mob-nav {
   display: none;
   position: fixed;
@@ -488,10 +464,22 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   padding: 6px 8px;
   border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.35s cubic-bezier(0.32, 0.94, 0.6, 1);
+  transform: translateY(0);
 }
-@media (max-width: 768px) { .mob-nav { display: flex; } }
-.mn-item {
+.mob-nav.hidden-nav {
+  transform: translateY(calc(100% + 20px));
+}
+.mn-tabs {
+  display: flex;
   flex: 1;
+  justify-content: space-around;
+  align-items: center;
+}
+.mn-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -503,17 +491,42 @@ img { max-width: 100%; display: block; }
   font-weight: 600;
   text-transform: none;
   transition: all .2s;
-  position: relative;
   border: none;
   background: transparent;
   border-radius: 24px;
   min-height: 48px;
+  flex: 1;
 }
 .mn-item.on {
   color: var(--p1);
   background: rgba(168,84,112,.10);
 }
 .mn-icon { font-size: 1.5rem; line-height: 1; }
+
+/* Nút viết bài mới – nằm bên phải navibar */
+.nav-fab {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--p3), var(--p1));
+  border: none;
+  box-shadow: 0 4px 16px rgba(168,84,112,.4);
+  font-size: 1.6rem;
+  color: #fff;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-left: 4px;
+}
+.nav-fab:hover { transform: scale(1.08) rotate(7deg); box-shadow: 0 6px 20px rgba(168,84,112,.5); }
+.nav-fab:active { transform: scale(0.92); }
+
+@media (max-width: 768px) {
+  .mob-nav { display: flex; }
+}
 
 /* ===== MODALS (animation iOS style) ===== */
 .modal {
@@ -551,7 +564,6 @@ img { max-width: 100%; display: block; }
 .mbox::-webkit-scrollbar { width: 4px; }
 .mbox::-webkit-scrollbar-thumb { background: var(--p4); border-radius: 4px; }
 
-/* Nút đóng iOS style */
 .mc {
   position: absolute;
   top: 16px;
@@ -945,6 +957,12 @@ img { max-width: 100%; display: block; }
 .saving-txt { font-family: var(--font-ttl); font-size: 1.05rem; font-weight: 700; color: var(--p1); }
 
 .hidden { display: none !important; }
+
+/* ===== Đảm bảo nội dung không bị trôi lên khi load ===== */
+#col-diary .gc-body {
+  padding-top: 10px;
+  scroll-margin-top: 10px;
+}
 </style>
 </head>
 <body>
@@ -1031,7 +1049,7 @@ img { max-width: 100%; display: block; }
       </div>
     </div>
 
-    <!-- COL 2: FEED NHẬT KÝ (đã xóa thanh tìm kiếm) -->
+    <!-- COL 2: FEED NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
       <!-- Khung viết nhanh Desktop -->
@@ -1045,7 +1063,6 @@ img { max-width: 100%; display: block; }
           <div class="gc-ttl">📖 Nhật Ký</div>
         </div>
         <div class="gc-body">
-          <!-- Đã xóa thanh tìm kiếm -->
           <div class="tl-wrap" id="tl-wrap"></div>
           <button class="load-more hidden" id="load-more" onclick="loadMore()">Xem thêm ↓</button>
         </div>
@@ -1076,27 +1093,27 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- ===== FAB (mobile) – nút viết bài mới ===== -->
-<button id="fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
-
-<!-- ===== MOBILE NAVIBAR – NỔI, BO TRÒN (iOS style) ===== -->
-<nav class="mob-nav">
-  <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
-    <span class="mn-icon">📖</span>
-    <span>Nhật ký</span>
-  </button>
-  <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
-    <span class="mn-icon">🌸</span>
-    <span>Kỷ niệm</span>
-  </button>
-  <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
-    <span class="mn-icon">🗓</span>
-    <span>Lịch</span>
-  </button>
-  <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
-    <span class="mn-icon">🖼</span>
-    <span>Album</span>
-  </button>
+<!-- ===== MOBILE NAVIBAR + NÚT VIẾT BÀI CÙNG HÀNG ===== -->
+<nav class="mob-nav" id="mob-nav">
+  <div class="mn-tabs">
+    <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
+      <span class="mn-icon">📖</span>
+      <span>Nhật ký</span>
+    </button>
+    <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
+      <span class="mn-icon">🌸</span>
+      <span>Kỷ niệm</span>
+    </button>
+    <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
+      <span class="mn-icon">🗓</span>
+      <span>Lịch</span>
+    </button>
+    <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
+      <span class="mn-icon">🖼</span>
+      <span>Album</span>
+    </button>
+  </div>
+  <button class="nav-fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
 </nav>
 
 <!-- ===== MODAL VIẾT ===== -->
@@ -1278,7 +1295,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.5.0 - NHẬT KÝ ỨNG DỤNG CHÍNH (GIỮ NGUYÊN JAVASCRIPT TỪ V6.4.0)
+// V6.6.0 - NHẬT KÝ ỨNG DỤNG CHÍNH
 // ============================================================
 
 // ===== CẤU HÌNH =====
@@ -1316,7 +1333,9 @@ var S = {
   hasWelcomed: false,
   pvImages: [],
   pvCurrentIndex: 0,
-  pvMode: 'gallery'
+  pvMode: 'gallery',
+  lastScrollY: 0,
+  isNavHidden: false
 };
 
 var PROMPTS = [
@@ -1389,6 +1408,7 @@ function unlockApp() {
     setupDesktopLayout();
     updateStatusSlider();
     initPullToRefresh();
+    initNavbarScrollHide();
   }, 480);
 }
 document.addEventListener('keydown', function (e) {
@@ -1418,6 +1438,29 @@ function initPullToRefresh() {
   }, { passive: true });
   container.addEventListener('touchend', function() {
     ptrDragging = false;
+  }, { passive: true });
+}
+
+// ===== ẨN/HIỆN NAVIBAR KHI CUỘN =====
+function initNavbarScrollHide() {
+  var nav = document.getElementById('mob-nav');
+  if (!nav) return;
+  window.addEventListener('scroll', function() {
+    var currentScroll = window.scrollY;
+    if (currentScroll > S.lastScrollY && currentScroll > 40) {
+      // Cuộn xuống – ẩn nav
+      if (!S.isNavHidden) {
+        nav.classList.add('hidden-nav');
+        S.isNavHidden = true;
+      }
+    } else {
+      // Cuộn lên – hiện nav
+      if (S.isNavHidden) {
+        nav.classList.remove('hidden-nav');
+        S.isNavHidden = false;
+      }
+    }
+    S.lastScrollY = currentScroll;
   }, { passive: true });
 }
 
@@ -1994,9 +2037,9 @@ function renderEditedNote(elId, e) {
   el.textContent = '✏️ Sửa lần cuối: ' + fmtFullDateTime(updated);
 }
 
-// ===== TIMELINE (đã xóa thanh tìm kiếm, nên hàm buildMonthFilter vẫn giữ để dùng cho select nhưng không hiển thị) =====
+// ===== TIMELINE =====
 function buildMonthFilter() {
-  // Vẫn giữ để các hàm khác có thể dùng, nhưng không hiển thị
+  // Giữ để tương thích nhưng không hiển thị
   var sel = document.getElementById('f-sel');
   if (sel) {
     var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
@@ -2011,7 +2054,6 @@ function buildMonthFilter() {
 }
 
 function filteredEntries() {
-  // Vì không còn select và search, trả về toàn bộ entries
   return S.data.entries;
 }
 
