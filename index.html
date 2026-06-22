@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.2.0 - Sticky search, comment image, timeout 30s, ưu tiên server -->
+<!-- V6.3.0 - Search trở lại vị trí cũ, comment ảnh có preview, animation toàn hệ thống -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -48,6 +48,30 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 input, textarea, select { font-family: inherit; }
 img { max-width: 100%; display: block; }
 
+/* ===== ANIMATIONS ===== */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes pulseHeart {
+  0%,100%{transform:scale(1)}
+  14%{transform:scale(1.22)}
+  28%{transform:scale(1)}
+  42%{transform:scale(1.13)}
+  56%{transform:scale(1)}
+}
+.anim-fade { animation: fadeIn .3s ease; }
+.anim-slide { animation: fadeSlideUp .35s ease; }
+.anim-scale { animation: scaleIn .25s ease; }
+
 /* ===== LOCK SCREEN ===== */
 #lock-screen {
   position: fixed; inset: 0; z-index: 9000;
@@ -63,10 +87,10 @@ img { max-width: 100%; display: block; }
   border-radius: 28px; padding: 38px 34px 34px;
   text-align: center; box-shadow: 0 24px 64px rgba(168,84,112,.22);
   max-width: 310px; width: 90%;
+  animation: scaleIn .4s ease;
 }
 .lock-quote { font-family: var(--font-ttl); font-size: .95rem; color: var(--p2); min-height: 40px; line-height: 1.5; font-weight: 600; margin-bottom: 18px; }
-.lock-heart { font-size: 46px; display: block; margin-bottom: 8px; animation: hb 1.9s ease-in-out infinite; }
-@keyframes hb { 0%,100%{transform:scale(1)} 14%{transform:scale(1.22)} 28%{transform:scale(1)} 42%{transform:scale(1.13)} 56%{transform:scale(1)} }
+.lock-heart { font-size: 46px; display: block; margin-bottom: 8px; animation: pulseHeart 1.9s ease-in-out infinite; }
 .lock-ttl { font-family: var(--font-ttl); font-size: 1.85rem; font-weight: 800; color: var(--p1); margin-bottom: 3px; }
 .lock-sub { font-size: .78rem; color: var(--t3); margin-bottom: 20px; }
 .pin-dots { display: flex; gap: 11px; justify-content: center; margin-bottom: 20px; }
@@ -164,47 +188,6 @@ img { max-width: 100%; display: block; }
 .status-slider .progress-wrap { width: 100%; height: 4px; background: rgba(255,255,255,.2); border-radius: 3px; overflow: hidden; margin-top: 2px; }
 .status-slider .progress-wrap .fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ffb347,#ff8c00); border-radius: 3px; transition: width .6s ease; }
 
-/* ===== SEARCH BAR (sticky, sát header) ===== */
-.search-bar-wrap {
-  position: sticky;
-  top: calc(var(--header-height) + 10px); /* vừa dưới header + status */
-  z-index: 150;
-  background: rgba(255,243,249,.92);
-  backdrop-filter: blur(10px);
-  padding: 8px 18px 12px;
-  margin: 0 auto 6px;
-  max-width: var(--max-width);
-  border-bottom: 1px solid rgba(168,84,112,.08);
-}
-.search-bar-wrap .search-row {
-  display: flex;
-  gap: 8px;
-  max-width: 100%;
-}
-.search-bar-wrap .s-inp {
-  flex: 1;
-  background: rgba(255,255,255,.75);
-  border: 1.5px solid rgba(168,84,112,.18);
-  border-radius: 30px;
-  padding: 10px 18px;
-  font-size: .9rem;
-  color: var(--t1);
-  outline: none;
-  transition: border-color .2s;
-}
-.search-bar-wrap .s-inp:focus { border-color: var(--p1); }
-.search-bar-wrap .s-inp::placeholder { color: var(--t3); }
-.search-bar-wrap .f-sel {
-  background: rgba(255,255,255,.75);
-  border: 1.5px solid rgba(168,84,112,.18);
-  border-radius: 30px;
-  padding: 10px 14px;
-  font-size: .85rem;
-  color: var(--t2);
-  outline: none;
-  cursor: pointer;
-}
-
 /* ===== MOBILE NAV ===== */
 .mob-nav {
   display: none;
@@ -252,8 +235,8 @@ img { max-width: 100%; display: block; }
   #col-diary { order: 2; min-width: 0; }
   #col-right-desktop { order: 3; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-ann, #col-album { display: none !important; }
-  /* Ẩn search-bar-wrap trên desktop, dùng search trong gc-body */
-  .search-bar-wrap { display: none; }
+  /* desktop search ẩn đi vì đã có trong gc-body */
+  #desktop-search { display: flex !important; }
 }
 @media (min-width: 769px) and (max-width: 991px) {
   .main-layout { grid-template-columns: 1fr; gap: 16px; }
@@ -272,7 +255,9 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--sh);
   overflow: hidden;
   margin-bottom: 14px;
+  transition: box-shadow .25s, transform .2s;
 }
+.gc:hover { box-shadow: 0 12px 40px rgba(168,84,112,.18); }
 .gc-hd {
   padding: 13px 17px 11px;
   border-bottom: 1px solid rgba(168,84,112,.09);
@@ -289,7 +274,6 @@ img { max-width: 100%; display: block; }
   #col-diary .gc-body { padding: 20px 26px; }
   #col-diary .s-inp { font-size: .95rem; padding: 10px 18px; }
   #col-diary .f-sel { font-size: .86rem; }
-  /* desktop search nằm trong gc-body */
   #col-diary .search-row { display: flex; }
 }
 
@@ -298,6 +282,29 @@ img { max-width: 100%; display: block; }
   min-height: 70px;
   flex-shrink: 0;
 }
+
+/* search row nằm trong gc-body */
+.search-row {
+  display: flex; gap: 7px; margin-bottom: 13px;
+}
+.s-inp {
+  flex: 1; background: rgba(255,255,255,.68);
+  border: 1.5px solid rgba(168,84,112,.2);
+  border-radius: 30px; padding: 7px 14px;
+  font-size: .83rem; color: var(--t1);
+  outline: none; transition: border-color .2s, box-shadow .2s;
+}
+.s-inp:focus { border-color: var(--p1); box-shadow: 0 0 0 3px rgba(168,84,112,.15); }
+.s-inp::placeholder { color: var(--t3); }
+.f-sel {
+  background: rgba(255,255,255,.68);
+  border: 1.5px solid rgba(168,84,112,.2);
+  border-radius: 30px; padding: 7px 10px;
+  font-size: .76rem; color: var(--t2);
+  outline: none; cursor: pointer;
+  transition: border-color .2s;
+}
+.f-sel:focus { border-color: var(--p1); }
 
 .tl-wrap { display: flex; flex-direction: column; gap: 4px; }
 .tl-day-group { margin-bottom: 14px; }
@@ -310,13 +317,14 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 .tl-day-items { display: flex; flex-direction: column; gap: 8px; }
 
+/* ===== TIMELINE ITEM ===== */
 .ti {
   background: rgba(255,255,255,.55);
   border: 1.5px solid rgba(168,84,112,.12);
   border-radius: var(--rr);
   padding: 11px 13px;
   cursor: pointer;
-  transition: all .17s;
+  transition: all .2s ease;
   position: relative;
   overflow: hidden;
 }
@@ -328,7 +336,7 @@ img { max-width: 100%; display: block; }
   border-radius: 3px 0 0 3px;
 }
 .ti:hover {
-  transform: translateX(3px);
+  transform: translateX(4px) scale(1.003);
   box-shadow: var(--sh-sm);
   background: rgba(255,255,255,.78);
 }
@@ -347,7 +355,8 @@ img { max-width: 100%; display: block; }
 .ti-txt { flex: 1; min-width: 0; }
 .ti-ttl { font-weight: 700; font-size: .86rem; color: var(--t1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
 .ti-pre { font-size: .74rem; color: var(--t2); line-height: 1.44; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.ti-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.ti-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; transition: transform .2s; }
+.ti-thumb:hover { transform: scale(1.05); }
 .ti-cmt-count { font-size: .64rem; color: var(--t3); margin-top: 3px; display: flex; align-items: center; gap: 3px; }
 @media (min-width: 769px) {
   #col-diary .ti { padding: 16px 19px; }
@@ -362,7 +371,7 @@ img { max-width: 100%; display: block; }
   font-size: .78rem; font-weight: 700; color: var(--p2);
   transition: all .18s; margin-top: 6px;
 }
-.load-more:hover { background: var(--p4); }
+.load-more:hover { background: var(--p4); transform: translateY(-2px); }
 .empty-hint { text-align: center; color: var(--t3); font-size: .83rem; padding: 26px 0; }
 
 /* ===== OTD ===== */
@@ -372,10 +381,7 @@ img { max-width: 100%; display: block; }
   border-radius: var(--rr); padding: 13px 15px;
   margin-bottom: 13px; cursor: pointer; transition: all .18s;
 }
-.otd-card:hover { background: rgba(168,84,112,.14); transform: translateY(-1px); }
-.otd-lbl { font-size: .65rem; font-weight: 700; color: var(--p2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
-.otd-ttl { font-weight: 700; font-size: .86rem; color: var(--t1); }
-.otd-pre { font-size: .73rem; color: var(--t2); margin-top: 2px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.otd-card:hover { background: rgba(168,84,112,.14); transform: translateY(-2px); box-shadow: var(--sh-sm); }
 
 /* ===== ANNIVERSARY ===== */
 .ann-item {
@@ -383,7 +389,9 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,.52);
   border: 1px solid rgba(168,84,112,.12);
   border-radius: 11px; padding: 10px 12px; margin-bottom: 8px;
+  transition: all .18s;
 }
+.ann-item:hover { background: rgba(255,255,255,.75); transform: translateX(2px); }
 .ann-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--p1); flex-shrink: 0; }
 .ann-info { flex: 1; min-width: 0; }
 .ann-name { font-weight: 700; font-size: .84rem; color: var(--t1); margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -393,7 +401,7 @@ img { max-width: 100%; display: block; }
 .ann-cd.soon-ann { color: var(--p1); }
 .ann-cd.far-ann { color: var(--t2); }
 .ann-del { background: none; border: none; color: var(--p3); font-size: .84rem; padding: 3px; transition: color .15s; flex-shrink: 0; }
-.ann-del:hover { color: #c04060; }
+.ann-del:hover { color: #c04060; transform: scale(1.1); }
 .add-ann-btn {
   width: 100%; background: rgba(168,84,112,.07);
   border: 1.5px dashed var(--p3);
@@ -401,7 +409,7 @@ img { max-width: 100%; display: block; }
   font-size: .78rem; font-weight: 700; color: var(--p2);
   transition: all .18s;
 }
-.add-ann-btn:hover { background: var(--p4); }
+.add-ann-btn:hover { background: var(--p4); transform: translateY(-2px); }
 
 /* ===== CALENDAR ===== */
 .cal-nav { display: flex; align-items: center; gap: 5px; }
@@ -413,7 +421,7 @@ img { max-width: 100%; display: block; }
   display: flex; align-items: center; justify-content: center;
   transition: all .14s;
 }
-.cnav:hover { background: var(--p4); }
+.cnav:hover { background: var(--p4); transform: scale(1.05); }
 .c-mlbl { font-weight: 700; color: var(--t1); font-size: .83rem; min-width: 90px; text-align: center; }
 .c-grid { padding: 9px 13px 13px; }
 .c-wdays { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 4px; }
@@ -423,14 +431,14 @@ img { max-width: 100%; display: block; }
   aspect-ratio: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   border-radius: 9px; font-size: .76rem; font-weight: 600;
-  color: var(--t1); min-height: 33px; transition: all .13s;
+  color: var(--t1); min-height: 33px; transition: all .15s;
 }
 .cd.today {
   background: linear-gradient(135deg, var(--p3), var(--p1));
   color: #fff; box-shadow: 0 3px 9px rgba(168,84,112,.32);
 }
 .cd.has-e { background: rgba(168,84,112,.09); cursor: pointer; border: 1.5px solid rgba(168,84,112,.18); }
-.cd.has-e:hover { background: var(--p4); transform: scale(1.1); }
+.cd.has-e:hover { background: var(--p4); transform: scale(1.08); }
 .cd-ic { font-size: .52rem; line-height: 1; }
 .cd-ann { width: 5px; height: 5px; border-radius: 50%; background: var(--p1); margin-top: 1px; }
 .cd-multi { font-size: .48rem; font-weight: 800; background: var(--p1); color: #fff; border-radius: 6px; padding: 0 3px; line-height: 1.4; margin-top: 1px; }
@@ -452,8 +460,8 @@ img { max-width: 100%; display: block; }
   position: relative; overflow: hidden; cursor: pointer;
   background: var(--p4); border-radius: 6px;
 }
-.album-grid .a-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .22s; display: block; }
-.album-grid .a-img:hover img { transform: scale(1.03); }
+.album-grid .a-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s; display: block; }
+.album-grid .a-img:hover img { transform: scale(1.05); }
 .album-grid .a-img-more {
   position: absolute; inset: 0;
   background: rgba(40,20,30,.6);
@@ -470,9 +478,10 @@ img { max-width: 100%; display: block; }
   border: none; box-shadow: 0 6px 22px rgba(168,84,112,.44);
   font-size: 1.6rem; color: #fff; line-height: 1;
   display: flex; align-items: center; justify-content: center;
-  transition: all .18s;
+  transition: all .2s;
 }
 #fab:hover { transform: scale(1.1) rotate(7deg); box-shadow: 0 10px 28px rgba(168,84,112,.55); }
+#fab:active { transform: scale(.9); }
 @media (min-width: 769px) { #fab { display: none; } }
 
 /* ===== KHUNG VIẾT NHANH (Desktop) ===== */
@@ -484,15 +493,14 @@ img { max-width: 100%; display: block; }
   padding: 14px 18px;
   margin-bottom: 16px;
   cursor: pointer;
-  transition: all .2s;
+  transition: all .25s;
   align-items: center;
   gap: 12px;
   border: 1px solid rgba(168,84,112,.08);
 }
 .quick-write:hover {
-  background: #fff;
-  box-shadow: 0 4px 20px rgba(168,84,112,.18);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(168,84,112,.2);
+  transform: translateY(-2px);
 }
 .quick-write .qw-avatar {
   width: 44px; height: 44px; border-radius: 50%;
@@ -533,6 +541,7 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   display: none; align-items: center; justify-content: center;
   padding: 14px;
+  animation: fadeIn .25s ease;
 }
 .modal.open { display: flex; }
 .mbox {
@@ -546,6 +555,7 @@ img { max-width: 100%; display: block; }
   overflow-y: auto;
   padding: 24px 24px 20px;
   position: relative;
+  animation: fadeSlideUp .3s ease;
 }
 .mbox::-webkit-scrollbar { width: 4px; }
 .mbox::-webkit-scrollbar-thumb { background: var(--p4); border-radius: 4px; }
@@ -565,7 +575,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all .14s;
+  transition: all .2s;
   padding: 0;
 }
 .mc:hover { background: var(--p4); color: var(--p1); transform: rotate(90deg); }
@@ -590,16 +600,16 @@ img { max-width: 100%; display: block; }
   border: 1.5px solid rgba(168,84,112,.2);
   border-radius: 10px; padding: 8px 12px;
   font-size: .86rem; color: var(--t1);
-  outline: none; transition: border-color .2s;
+  outline: none; transition: border-color .2s, box-shadow .2s;
 }
-.fi:focus, .fta:focus, .fse:focus { border-color: var(--p1); }
+.fi:focus, .fta:focus, .fse:focus { border-color: var(--p1); box-shadow: 0 0 0 3px rgba(168,84,112,.1); }
 .fta { resize: vertical; min-height: 125px; line-height: 1.65; }
 .fse { cursor: pointer; }
 .mood-pick { display: flex; gap: 5px; flex-wrap: wrap; }
 .mp-o {
   font-size: 1.35rem; cursor: pointer; padding: 4px 7px;
   border-radius: 9px; border: 2px solid transparent;
-  transition: all .13s;
+  transition: all .15s;
 }
 .mp-o:hover { transform: scale(1.15); }
 .mp-o.sel { border-color: var(--p1); background: var(--p4); transform: scale(1.08); }
@@ -625,7 +635,7 @@ img { max-width: 100%; display: block; }
   border-radius: 10px; padding: 13px;
   text-align: center; cursor: pointer;
   background: rgba(255,255,255,.42);
-  transition: all .18s; font-size: .78rem; color: var(--t3);
+  transition: all .2s; font-size: .78rem; color: var(--t3);
 }
 .img-drop:hover { background: var(--p4); border-color: var(--p2); }
 .img-prev-row {
@@ -663,26 +673,27 @@ img { max-width: 100%; display: block; }
   flex: 1; background: linear-gradient(135deg, var(--p3), var(--p1));
   border: none; border-radius: 10px; padding: 10px;
   color: #fff; font-size: .86rem; font-weight: 700;
-  transition: all .18s; min-width: 90px;
+  transition: all .2s; min-width: 90px;
 }
-.btn-p:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(168,84,112,.36); }
+.btn-p:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(168,84,112,.36); }
+.btn-p:active { transform: scale(.97); }
 .btn-p:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 .btn-s {
   background: rgba(168,84,112,.09);
   border: 1.5px solid var(--p4);
   border-radius: 10px; padding: 10px 14px;
   color: var(--p1); font-size: .86rem; font-weight: 700;
-  transition: all .18s;
+  transition: all .2s;
 }
-.btn-s:hover { background: var(--p4); }
+.btn-s:hover { background: var(--p4); transform: translateY(-2px); }
 .btn-d {
   background: rgba(200,50,70,.07);
   border: 1.5px solid rgba(200,50,70,.22);
   border-radius: 10px; padding: 10px 13px;
   color: #b03050; font-size: .86rem; font-weight: 700;
-  transition: all .18s;
+  transition: all .2s;
 }
-.btn-d:hover { background: rgba(200,50,70,.13); }
+.btn-d:hover { background: rgba(200,50,70,.13); transform: translateY(-2px); }
 
 /* ===== VIEW ENTRY ===== */
 .ve-date { font-size: .78rem; color: var(--t1); font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -718,7 +729,7 @@ img { max-width: 100%; display: block; }
   object-fit: cover;
   transition: transform .25s;
 }
-.ve-gallery .vg-img:hover img { transform: scale(1.03); }
+.ve-gallery .vg-img:hover img { transform: scale(1.05); }
 .ve-gallery .vg-img .vg-overlay {
   position: absolute;
   inset: 0;
@@ -741,6 +752,7 @@ img { max-width: 100%; display: block; }
   flex-direction: column;
   padding: 16px 10px env(safe-area-inset-bottom,10px);
   overflow-y: auto;
+  animation: fadeIn .25s ease;
 }
 #photo-viewer.open { display: flex; }
 #photo-viewer .pv-close {
@@ -809,7 +821,7 @@ img { max-width: 100%; display: block; }
   transition: all .2s;
   cursor: pointer;
 }
-#photo-viewer .pv-nav button:hover { background: rgba(255,255,255,.3); }
+#photo-viewer .pv-nav button:hover { background: rgba(255,255,255,.3); transform: scale(1.05); }
 #photo-viewer .pv-nav button:disabled { opacity: .3; pointer-events: none; }
 #photo-viewer .pv-back-list {
   background: none;
@@ -838,7 +850,7 @@ img { max-width: 100%; display: block; }
   font-size: .78rem; font-weight: 700; color: var(--p1);
   transition: all .15s;
 }
-.dl-nav-btn:hover:not(:disabled) { background: var(--p4); }
+.dl-nav-btn:hover:not(:disabled) { background: var(--p4); transform: scale(1.03); }
 .dl-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
 .dl-counter { font-size: .76rem; font-weight: 700; color: var(--t2); }
 
@@ -852,7 +864,7 @@ img { max-width: 100%; display: block; }
   border-radius: 12px; padding: 10px 14px;
   transition: all .15s;
 }
-.cmt-item:hover { background: rgba(255,255,255,.8); }
+.cmt-item:hover { background: rgba(255,255,255,.8); transform: translateX(2px); }
 .cmt-item-hdr { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
 .cmt-author { font-size: .78rem; font-weight: 700; color: var(--p1); }
 .cmt-time { font-size: .63rem; color: var(--t3); margin-left: auto; }
@@ -878,18 +890,29 @@ img { max-width: 100%; display: block; }
 .cmt-action-btn.del:hover { color: #c04060; background: rgba(192,64,96,.08); }
 .cmt-empty { text-align: center; font-size: .76rem; color: var(--t3); padding: 12px 0; }
 
+/* --- COMMENT INPUT ROW với preview ảnh --- */
 .cmt-input-row {
-  display: flex; align-items: center; gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   margin-top: 6px;
   background: rgba(255,255,255,.4);
   border-radius: 16px;
-  padding: 4px 4px 4px 12px;
+  padding: 8px 10px;
   border: 1px solid rgba(168,84,112,.1);
+  transition: border-color .2s;
+}
+.cmt-input-row:focus-within { border-color: var(--p1); }
+
+.cmt-input-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .cmt-input-box { flex: 1; display: flex; align-items: center; gap: 4px; }
 .cmt-inp {
   flex: 1; background: transparent; border: none;
-  padding: 8px 6px; font-size: .85rem; color: var(--t1);
+  padding: 6px 4px; font-size: .85rem; color: var(--t1);
   outline: none;
 }
 .cmt-inp::placeholder { color: var(--t3); }
@@ -905,10 +928,43 @@ img { max-width: 100%; display: block; }
   border: none; border-radius: 50%; width: 34px; height: 34px;
   color: #fff; font-size: .9rem; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  transition: all .18s;
+  transition: all .2s;
 }
 .cmt-send-btn:hover:not(:disabled) { transform: scale(1.08); }
 .cmt-send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* Preview ảnh đính kèm */
+.cmt-image-preview {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 4px 4px;
+  background: rgba(255,255,255,.6);
+  border-radius: 10px;
+  border: 1px solid rgba(168,84,112,.15);
+}
+.cmt-image-preview.show { display: flex; }
+.cmt-image-preview img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.cmt-image-preview .cmt-img-remove {
+  background: none;
+  border: none;
+  color: var(--p1);
+  font-size: .9rem;
+  padding: 2px 4px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.cmt-image-preview .cmt-img-remove:hover { transform: scale(1.2); color: #c04060; }
+.cmt-image-preview .cmt-img-label {
+  font-size: .75rem;
+  color: var(--t2);
+  flex: 1;
+}
 
 .confirm-modal .mbox { max-width: 380px; text-align: center; }
 .confirm-modal .m-ttl { font-size: 1.2rem; margin-bottom: 8px; }
@@ -926,7 +982,8 @@ img { max-width: 100%; display: block; }
   color: #fff; padding: 8px 18px; border-radius: 20px;
   font-size: .8rem; font-weight: 600;
   z-index: 9999; opacity: 0; pointer-events: none;
-  transition: all .26s; white-space: nowrap;
+  transition: all .3s ease;
+  white-space: nowrap;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (min-width: 769px) { #toast { bottom: 28px; } }
@@ -937,14 +994,16 @@ img { max-width: 100%; display: block; }
   background: rgba(61,31,45,.42);
   backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   display: none; align-items: center; justify-content: center;
+  animation: fadeIn .2s ease;
 }
 #saving-overlay.show { display: flex; }
 .saving-box {
   background: rgba(255,248,253,.92);
   border-radius: 22px; padding: 30px 38px;
   text-align: center; box-shadow: 0 20px 50px rgba(120,40,70,.25);
+  animation: scaleIn .25s ease;
 }
-.saving-heart { font-size: 38px; display: block; margin-bottom: 10px; animation: hb 1s ease-in-out infinite; }
+.saving-heart { font-size: 38px; display: block; margin-bottom: 10px; animation: pulseHeart 1s ease-in-out infinite; }
 .saving-txt { font-family: var(--font-ttl); font-size: 1.05rem; font-weight: 700; color: var(--p1); }
 
 .hidden { display: none !important; }
@@ -1008,16 +1067,6 @@ img { max-width: 100%; display: block; }
     <div class="status-slider" id="status-slider"></div>
   </header>
 
-  <!-- SEARCH BAR STICKY (mobile) -->
-  <div class="search-bar-wrap" id="search-bar-wrap">
-    <div class="search-row">
-      <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm nhật ký..." oninput="renderTimeline()"/>
-      <select class="f-sel" id="f-sel" onchange="renderTimeline()">
-        <option value="">Tất cả</option>
-      </select>
-    </div>
-  </div>
-
   <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
@@ -1058,10 +1107,10 @@ img { max-width: 100%; display: block; }
           <div class="gc-ttl">📖 Nhật Ký</div>
         </div>
         <div class="gc-body">
-          <!-- Desktop search (ẩn trên mobile) -->
-          <div class="search-row" id="desktop-search" style="display:none;">
-            <input class="s-inp" id="s-inp-desktop" placeholder="🔍 Tìm kiếm..." oninput="syncSearch()"/>
-            <select class="f-sel" id="f-sel-desktop" onchange="syncSearch()">
+          <!-- Thanh tìm kiếm (cả mobile & desktop) -->
+          <div class="search-row">
+            <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm nhật ký..." oninput="renderTimeline()"/>
+            <select class="f-sel" id="f-sel" onchange="renderTimeline()">
               <option value="">Tất cả</option>
             </select>
           </div>
@@ -1192,13 +1241,21 @@ img { max-width: 100%; display: block; }
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
-      <div class="cmt-input-row">
-        <div class="cmt-input-box">
-          <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
-          <button class="cmt-upload-btn" id="cmt-upload-btn" onclick="document.getElementById('cmt-img-inp').click()" title="Thêm ảnh">📷</button>
-          <input type="file" id="cmt-img-inp" accept="image/*" style="display:none" onchange="onCmtImgPick(this)"/>
+      <div class="cmt-input-row" id="cmt-input-row">
+        <div class="cmt-input-main">
+          <div class="cmt-input-box">
+            <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
+            <button class="cmt-upload-btn" id="cmt-upload-btn" onclick="document.getElementById('cmt-img-inp').click()" title="Thêm ảnh">📷</button>
+            <input type="file" id="cmt-img-inp" accept="image/*" style="display:none" onchange="onCmtImgPick(this)"/>
+          </div>
+          <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
         </div>
-        <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
+        <!-- Preview ảnh đính kèm -->
+        <div class="cmt-image-preview" id="cmt-preview">
+          <img id="cmt-preview-img" src="" alt="Ảnh đính kèm"/>
+          <span class="cmt-img-label" id="cmt-preview-label">1 ảnh đính kèm</span>
+          <button class="cmt-img-remove" onclick="removeCmtImage()">✕</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1227,13 +1284,20 @@ img { max-width: 100%; display: block; }
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="dl-cmt-count-lbl"></span></div>
       <div class="cmt-list" id="dl-cmt-list"></div>
-      <div class="cmt-input-row">
-        <div class="cmt-input-box">
-          <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
-          <button class="cmt-upload-btn" id="dl-cmt-upload-btn" onclick="document.getElementById('dl-cmt-img-inp').click()" title="Thêm ảnh">📷</button>
-          <input type="file" id="dl-cmt-img-inp" accept="image/*" style="display:none" onchange="onDlCmtImgPick(this)"/>
+      <div class="cmt-input-row" id="dl-cmt-input-row">
+        <div class="cmt-input-main">
+          <div class="cmt-input-box">
+            <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
+            <button class="cmt-upload-btn" id="dl-cmt-upload-btn" onclick="document.getElementById('dl-cmt-img-inp').click()" title="Thêm ảnh">📷</button>
+            <input type="file" id="dl-cmt-img-inp" accept="image/*" style="display:none" onchange="onDlCmtImgPick(this)"/>
+          </div>
+          <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
         </div>
-        <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
+        <div class="cmt-image-preview" id="dl-cmt-preview">
+          <img id="dl-cmt-preview-img" src="" alt="Ảnh đính kèm"/>
+          <span class="cmt-img-label" id="dl-cmt-preview-label">1 ảnh đính kèm</span>
+          <button class="cmt-img-remove" onclick="removeDlCmtImage()">✕</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1302,7 +1366,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.2.0 - NHẬT KÝ ỨNG DỤNG
+// V6.3.0 - NHẬT KÝ ỨNG DỤNG (search cũ, comment ảnh preview, animation)
 // ============================================================
 
 // ============================================================
@@ -1345,8 +1409,8 @@ var S = {
   pvImages: [],
   pvCurrentIndex: 0,
   pvMode: 'gallery',
-  // comment image temp
-  cmtImage: null,    // { url, driveId }
+  // comment image
+  cmtImage: null,      // { url, driveId }
   dlCmtImage: null
 };
 
@@ -1422,7 +1486,6 @@ function unlockApp() {
     setupDesktopLayout();
     updateStatusSlider();
     initPullToRefresh();
-    setupSearchBar();
   }, 480);
 }
 document.addEventListener('keydown', function (e) {
@@ -1430,50 +1493,6 @@ document.addEventListener('keydown', function (e) {
   if (e.key >= '0' && e.key <= '9') kp(e.key);
   if (e.key === 'Backspace') kd();
 });
-
-// ============================================================
-// SETUP SEARCH BAR (mobile sticky)
-// ============================================================
-function setupSearchBar() {
-  // di chuyển desktop search đồng bộ
-  var inp = document.getElementById('s-inp');
-  var sel = document.getElementById('f-sel');
-  var inpD = document.getElementById('s-inp-desktop');
-  var selD = document.getElementById('f-sel-desktop');
-  if (inpD) {
-    inpD.value = inp.value;
-    inpD.oninput = function() { inp.value = inpD.value; renderTimeline(); };
-    selD.onchange = function() { sel.value = selD.value; renderTimeline(); };
-  }
-  // desktop search hiện trên màn hình rộng
-  var ds = document.getElementById('desktop-search');
-  if (window.innerWidth >= 769) {
-    ds.style.display = 'flex';
-  } else {
-    ds.style.display = 'none';
-  }
-  // đồng bộ dữ liệu từ desktop search
-  if (inpD) {
-    inpD.value = inp.value;
-    selD.value = sel.value;
-  }
-}
-window.addEventListener('resize', function() {
-  var ds = document.getElementById('desktop-search');
-  if (ds) {
-    ds.style.display = (window.innerWidth >= 769) ? 'flex' : 'none';
-  }
-});
-
-function syncSearch() {
-  var inp = document.getElementById('s-inp');
-  var sel = document.getElementById('f-sel');
-  var inpD = document.getElementById('s-inp-desktop');
-  var selD = document.getElementById('f-sel-desktop');
-  if (inpD) inpD.value = inp.value;
-  if (selD) selD.value = sel.value;
-  renderTimeline();
-}
 
 // ============================================================
 // PULL TO REFRESH
@@ -1544,7 +1563,6 @@ window.addEventListener('resize', function () {
     switchTab(getCurrentMobileTab());
   }
   _lastIsDesktop = nowDesktop;
-  setupSearchBar();
 });
 
 function getCurrentMobileTab() {
@@ -1654,7 +1672,7 @@ function loadData(cb) {
       if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
       delete window[fn];
     }
-  }, 30000); // 30 giây
+  }, 30000);
 
   window[fn] = function (data) {
     handleServerData(data);
@@ -1825,7 +1843,6 @@ function normalizeEntry(e) {
   if (!e.updatedAt) e.updatedAt = e.date ? (e.date + 'T00:00:00.000Z') : new Date().toISOString();
   if (!e.images) e.images = [];
   if (!e.createdAt) e.createdAt = e.updatedAt;
-  // chuẩn hóa comment image
   e.comments.forEach(function (c) {
     if (c.image && typeof c.image === 'string') {
       c.image = { url: c.image, driveId: '' };
@@ -2112,7 +2129,6 @@ function renderEditedNote(elId, e) {
 // ============================================================
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
-  var selD = document.getElementById('f-sel-desktop');
   var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
   var arr = Array.from(ms).filter(Boolean).sort().reverse();
   var opts = '<option value="">Tất cả</option>';
@@ -2121,7 +2137,6 @@ function buildMonthFilter() {
     opts += '<option value="' + m + '">T' + parseInt(p[1]) + '/' + p[0] + '</option>';
   });
   sel.innerHTML = opts;
-  if (selD) selD.innerHTML = opts;
 }
 
 function filteredEntries() {
@@ -2483,6 +2498,8 @@ function openView(id) {
   S.curId = id;
   S.editingCommentId = null;
   S.cmtImage = null;
+  // ẩn preview
+  document.getElementById('cmt-preview').classList.remove('show');
 
   document.getElementById('ve-date').innerHTML =
     '🕐 ' + fmtFullDateTime(e.createdAt || e.updatedAt) +
@@ -2706,42 +2723,57 @@ function rmImg(i) {
 }
 
 // ============================================================
-// COMMENT IMAGE UPLOAD
+// COMMENT IMAGE UPLOAD (có preview)
 // ============================================================
+function showCmtPreview(imgData) {
+  var preview = document.getElementById('cmt-preview');
+  var img = document.getElementById('cmt-preview-img');
+  var label = document.getElementById('cmt-preview-label');
+  if (imgData && imgData.url) {
+    img.src = imgData.url;
+    label.textContent = '1 ảnh đính kèm';
+    preview.classList.add('show');
+  } else {
+    preview.classList.remove('show');
+  }
+}
+
+function removeCmtImage() {
+  S.cmtImage = null;
+  showCmtPreview(null);
+  document.getElementById('cmt-img-inp').value = '';
+  toast('🗑 Đã xóa ảnh đính kèm');
+}
+
 function onCmtImgPick(input) {
   var file = input.files[0];
   if (!file) return;
-  toast('⏳ Đang xử lý ảnh bình luận...');
+  if (S.cmtImage) {
+    toast('⚠️ Chỉ được đính kèm 1 ảnh mỗi bình luận!');
+    input.value = '';
+    return;
+  }
+  toast('⏳ Đang xử lý ảnh...');
+  var entry = S.data.entries.find(function (e) { return e.id === S.curId; });
+  var dateStr = entry ? entry.date : todayStr();
+  // hiển thị preview tạm thời với file URL
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var tempUrl = ev.target.result;
+    showCmtPreview({ url: tempUrl });
+  };
+  reader.readAsDataURL(file);
+  
   compressImg(file, function (b64) {
-    var entry = S.data.entries.find(function (e) { return e.id === S.curId; });
-    var dateStr = entry ? entry.date : todayStr();
     uploadImgToDrive(b64, 'cmt_' + Date.now() + '.jpg', dateStr, function (result) {
       if (result) {
         S.cmtImage = { url: result.url, driveId: result.driveId };
+        showCmtPreview(S.cmtImage);
         toast('✅ Ảnh đã sẵn sàng');
       } else {
-        toast('⚠️ Không thể upload ảnh bình luận');
+        toast('⚠️ Không thể upload ảnh, hãy thử lại');
+        showCmtPreview(null);
         S.cmtImage = null;
-      }
-      input.value = '';
-    });
-  });
-}
-
-function onDlCmtImgPick(input) {
-  var file = input.files[0];
-  if (!file) return;
-  toast('⏳ Đang xử lý ảnh bình luận...');
-  compressImg(file, function (b64) {
-    var entry = S.dayListEntries[S.dayListIdx];
-    var dateStr = entry ? entry.date : todayStr();
-    uploadImgToDrive(b64, 'cmt_' + Date.now() + '.jpg', dateStr, function (result) {
-      if (result) {
-        S.dlCmtImage = { url: result.url, driveId: result.driveId };
-        toast('✅ Ảnh đã sẵn sàng');
-      } else {
-        toast('⚠️ Không thể upload ảnh bình luận');
-        S.dlCmtImage = null;
       }
       input.value = '';
     });
@@ -2872,13 +2904,13 @@ function sendComment() {
   if (S.editingCommentId) {
     payload.action = 'edit_comment';
     payload.commentId = S.editingCommentId;
-    // edit không hỗ trợ đổi ảnh, giữ nguyên
     delete payload.image;
     callCommentAPI(payload, function (res) {
       var e = S.data.entries.find(function (x) { return x.id === S.curId; });
       if (e) e.comments = res.comments;
       S.editingCommentId = null;
       S.cmtImage = null;
+      showCmtPreview(null);
       inp.value = '';
       btn.disabled = false;
       btn.textContent = '➤';
@@ -2896,6 +2928,7 @@ function sendComment() {
     var e = S.data.entries.find(function (x) { return x.id === S.curId; });
     if (e) e.comments = res.comments;
     S.cmtImage = null;
+    showCmtPreview(null);
     inp.value = '';
     btn.disabled = false;
     btn.textContent = '➤';
@@ -2922,6 +2955,7 @@ function startEditComment(commentId) {
   inp.value = c.text;
   inp.focus();
   S.cmtImage = null;
+  showCmtPreview(null);
   document.getElementById('cmt-send-btn').textContent = '✓';
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
@@ -2953,8 +2987,60 @@ async function delComment(commentId) {
 }
 
 // ============================================================
-// COMMENTS (modal-daylist)
+// COMMENTS (modal-daylist) - tương tự, chỉ khác biến dl
 // ============================================================
+function showDlCmtPreview(imgData) {
+  var preview = document.getElementById('dl-cmt-preview');
+  var img = document.getElementById('dl-cmt-preview-img');
+  var label = document.getElementById('dl-cmt-preview-label');
+  if (imgData && imgData.url) {
+    img.src = imgData.url;
+    label.textContent = '1 ảnh đính kèm';
+    preview.classList.add('show');
+  } else {
+    preview.classList.remove('show');
+  }
+}
+
+function removeDlCmtImage() {
+  S.dlCmtImage = null;
+  showDlCmtPreview(null);
+  document.getElementById('dl-cmt-img-inp').value = '';
+  toast('🗑 Đã xóa ảnh đính kèm');
+}
+
+function onDlCmtImgPick(input) {
+  var file = input.files[0];
+  if (!file) return;
+  if (S.dlCmtImage) {
+    toast('⚠️ Chỉ được đính kèm 1 ảnh mỗi bình luận!');
+    input.value = '';
+    return;
+  }
+  toast('⏳ Đang xử lý ảnh...');
+  var entry = S.dayListEntries[S.dayListIdx];
+  var dateStr = entry ? entry.date : todayStr();
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    showDlCmtPreview({ url: ev.target.result });
+  };
+  reader.readAsDataURL(file);
+  compressImg(file, function (b64) {
+    uploadImgToDrive(b64, 'cmt_' + Date.now() + '.jpg', dateStr, function (result) {
+      if (result) {
+        S.dlCmtImage = { url: result.url, driveId: result.driveId };
+        showDlCmtPreview(S.dlCmtImage);
+        toast('✅ Ảnh đã sẵn sàng');
+      } else {
+        toast('⚠️ Không thể upload ảnh, hãy thử lại');
+        showDlCmtPreview(null);
+        S.dlCmtImage = null;
+      }
+      input.value = '';
+    });
+  });
+}
+
 function renderDlComments() {
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -3004,6 +3090,7 @@ function sendDlComment() {
       if (master) master.comments = res.comments;
       S.editingDlCommentId = null;
       S.dlCmtImage = null;
+      showDlCmtPreview(null);
       inp.value = '';
       btn.disabled = false;
       btn.textContent = '➤';
@@ -3022,6 +3109,7 @@ function sendDlComment() {
     var master = S.data.entries.find(function (x) { return x.id === e.id; });
     if (master) master.comments = res.comments;
     S.dlCmtImage = null;
+    showDlCmtPreview(null);
     inp.value = '';
     btn.disabled = false;
     btn.textContent = '➤';
@@ -3048,6 +3136,7 @@ function startEditDlComment(commentId) {
   inp.value = c.text;
   inp.focus();
   S.dlCmtImage = null;
+  showDlCmtPreview(null);
   document.getElementById('dl-cmt-send-btn').textContent = '✓';
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
@@ -3083,14 +3172,13 @@ async function delDlComment(commentId) {
 // LIGHTBOX (cho ảnh comment)
 // ============================================================
 function openLb(src) {
-  // sử dụng photo viewer tạm để xem ảnh đơn
   var viewer = document.getElementById('photo-viewer');
   var list = document.getElementById('pv-list');
   list.innerHTML = '<div class="pv-item"><img src="' + escH(src) + '" alt="ảnh"/></div>';
   viewer.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-// Ghi đè closePhotoViewer để hỗ trợ close
+// Ghi đè closePhotoViewer
 var origClosePhotoViewer = closePhotoViewer;
 closePhotoViewer = function() {
   document.getElementById('photo-viewer').classList.remove('open');
