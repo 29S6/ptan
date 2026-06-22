@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.7.4 - Xóa like, xóa avatar toggle, ưu tiên server -->
+<!-- V5.7.4 - Ổn định, 2 mật khẩu, xóa like/avatar, có chào mừng -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -314,6 +314,7 @@ img{max-width:100%;display:block}
 
 <canvas id="sakura-canvas"></canvas>
 
+<!-- LOCK SCREEN -->
 <div id="lock-screen">
   <div class="lock-card">
     <div class="lock-quote" id="lock-quote"></div>
@@ -343,6 +344,7 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
 
   <header class="app-hdr" id="app-hdr">
@@ -368,6 +370,7 @@ img{max-width:100%;display:block}
     <div class="status-slider" id="status-slider"></div>
   </header>
 
+  <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
     <div class="col-panel" id="col-cal">
@@ -394,7 +397,6 @@ img{max-width:100%;display:block}
 
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
-
       <div class="gc">
         <div class="gc-hd">
           <div class="gc-ttl">📖 Nhật Ký</div>
@@ -437,6 +439,7 @@ img{max-width:100%;display:block}
 
 <button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
 
+<!-- MOBILE BOTTOM NAV -->
 <nav class="mob-nav">
   <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
     <div class="mn-icon">📖</div><div>Nhật ký</div>
@@ -517,12 +520,11 @@ img{max-width:100%;display:block}
     <div class="m-ttl" id="ve-ttl"></div>
     <div class="ve-content" id="ve-cnt"></div>
     <div id="ve-imgs"></div>
-    <div class="action-group" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;padding-top:6px;border-top:1px solid rgba(168,84,112,.08)">
+    <div class="action-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid rgba(168,84,112,.08);">
       <button class="btn-s" id="view-edit-btn" onclick="editEntry()" style="padding:6px 14px;font-size:.8rem;">✏️ Sửa</button>
       <button class="btn-d" id="view-del-btn" onclick="delEntry()" style="padding:6px 14px;font-size:.8rem;">🗑 Xóa</button>
       <button class="btn-p" style="flex:0;padding:6px 16px;font-size:.8rem;" onclick="closeModal('modal-view')">Đóng</button>
     </div>
-
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
@@ -652,7 +654,8 @@ var S = {
   editingCommentId: null,
   editingDlCommentId: null,
   pendingActions: [],
-  isOnline: navigator.onLine
+  isOnline: navigator.onLine,
+  hasWelcomed: false
 };
 
 var PROMPTS = [
@@ -684,7 +687,7 @@ document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
 // ============================================================
-// LOCK SCREEN (2 mật khẩu)
+// LOCK SCREEN
 // ============================================================
 function kp(d) {
   if (S.pin.length >= 4) return;
@@ -787,7 +790,7 @@ function getCurrentMobileTab() {
 }
 
 // ============================================================
-// CLOCK
+// CLOCK & SAKURA
 // ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -803,9 +806,6 @@ function startClock() {
   setInterval(tick, 1000);
 }
 
-// ============================================================
-// SAKURA
-// ============================================================
 (function () {
   var cv = document.getElementById('sakura-canvas');
   var ctx = cv.getContext('2d');
@@ -859,7 +859,7 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA (ưu tiên server, fallback localStorage chỉ khi lỗi)
+// LOAD DATA
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
@@ -867,7 +867,7 @@ function loadData(cb) {
   var tag;
   var callbackCalled = false;
 
-  function handleData(data) {
+  function handleServerData(data) {
     if (callbackCalled) return;
     callbackCalled = true;
     clearTimeout(timeout);
@@ -876,13 +876,16 @@ function loadData(cb) {
     if (data && data.entries && data.anniversaries) {
       S.data = data;
       saveToLocal(data);
-      toast('✅ Đã tải dữ liệu thành công!');
+      S.isDataLoaded = true;
+      if (!S.hasWelcomed) {
+        S.hasWelcomed = true;
+        toast('🌸 Chào mừng ' + CURRENT_USER + '!');
+      }
     } else {
-      // Nếu server trả về dữ liệu rỗng hoặc lỗi, thử lấy từ localStorage
       var local = loadFromLocal();
       if (local) {
         S.data = local;
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (server lỗi)');
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm');
       } else {
         S.data = { entries: [], anniversaries: [] };
         toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối');
@@ -909,20 +912,20 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        toast('📶 Quá thời gian chờ, đã tải dữ liệu từ bộ nhớ tạm');
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian chờ)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
-        toast('⚠️ Không thể kết nối server, kiểm tra URL!');
+        toast('⚠️ Không thể kết nối server, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
       if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
       delete window[fn];
     }
-  }, 8000);
+  }, 10000);
 
   window[fn] = function (data) {
-    handleData(data);
+    handleServerData(data);
   };
 
   tag = document.createElement('script');
@@ -938,11 +941,11 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        toast('📶 Lỗi tải server, đã dùng dữ liệu lưu tạm');
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (lỗi tải)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
-        toast('⚠️ Không thể tải dữ liệu, kiểm tra URL!');
+        toast('⚠️ Lỗi kết nối, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
       delete window[fn];
@@ -990,7 +993,7 @@ window.addEventListener('offline', function () {
 });
 
 // ============================================================
-// POST DATA
+// POST DATA & COMMENT API
 // ============================================================
 function postData(payload, msg, cb) {
   function doFetch(mode) {
@@ -1015,9 +1018,6 @@ function postData(payload, msg, cb) {
     });
 }
 
-// ============================================================
-// CALL COMMENT API
-// ============================================================
 function callCommentAPI(payload, onSuccess, onError) {
   function doFetch(mode) {
     return fetch(CFG.URL, {
@@ -1444,8 +1444,7 @@ function tiHTML(e) {
     '<div class="ti-pre">' + escH(pre) + '</div>' +
     cmtHTML +
     '</div>' + thumb +
-    '</div>' +
-    '</div>';
+    '</div></div>';
 }
 
 // ============================================================
@@ -1541,7 +1540,7 @@ function renderAlbum() {
       var src = imgs[i].url || imgs[i];
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-        (count > max ? '<div class="a-img-more">+' + (count - max) + '</div>' : '') +
+        (i === max - 1 && count > 10 ? '<div class="a-img-more">+' + (count - 10) + '</div>' : '') +
         '</div>';
     }
     var timeLabel = fmtTimeShort(e.updatedAt);
@@ -1568,10 +1567,9 @@ function buildGalleryHTML(images) {
   var html = '';
   for (var i = 0; i < n; i++) {
     var src = images[i].url || images[i];
-    var isLast = (i === n - 1 && images.length > 10);
     html += '<div class="vg-img" onclick="openLb(\'' + escH(src) + '\')">' +
       '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-      (isLast ? '<div class="a-img-more">+' + (images.length - 10) + '</div>' : '') +
+      (i === n - 1 && images.length > 10 ? '<div class="a-img-more">+' + (images.length - 10) + '</div>' : '') +
       '</div>';
   }
   return '<div class="' + cls + '">' + html + '</div>';
@@ -1858,7 +1856,7 @@ function hideSavingOverlay() {
 }
 
 // ============================================================
-// COMMENTS (đã xóa avatar toggle)
+// COMMENTS (đã bỏ avatar toggle)
 // ============================================================
 function renderComments() {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
@@ -2102,7 +2100,7 @@ async function delDlComment(commentId) {
 }
 
 // ============================================================
-// LIGHTBOX, TAB, MODAL HELPERS, TOAST, UTILITY (giữ nguyên)
+// LIGHTBOX, TAB, MODAL HELPERS, TOAST, UTILITY
 // ============================================================
 function openLb(src) {
   document.getElementById('lb-img').src = src;
