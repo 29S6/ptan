@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.7.2 - Sửa lỗi đồng bộ, fallback localStorage -->
+<!-- V5.7.4 - Xóa like, xóa avatar toggle, ưu tiên server -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -233,13 +233,6 @@ img{max-width:100%;display:block}
 .btn-s:hover{background:var(--p4)}
 .btn-d{background:rgba(200,50,70,.07);border:1.5px solid rgba(200,50,70,.22);border-radius:10px;padding:10px 13px;color:#b03050;font-size:.86rem;font-weight:700;transition:all .18s}
 .btn-d:hover{background:rgba(200,50,70,.13)}
-.btn-like{background:none;border:none;font-size:1.2rem;cursor:pointer;padding:2px 6px;border-radius:8px;transition:all .15s;display:flex;align-items:center;gap:4px;color:var(--t3)}
-.btn-like:hover{background:rgba(168,84,112,.08)}
-.btn-like.liked{color:#e74c3c}
-.btn-like .count{font-size:.7rem;font-weight:600;color:var(--t3)}
-.like-summary{font-size:.7rem;color:var(--t3);display:flex;align-items:center;gap:4px;padding:2px 6px;border-radius:8px;cursor:default}
-.like-summary .names{font-weight:500}
-.action-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;padding-top:6px;border-top:1px solid rgba(168,84,112,.08)}
 .ve-date{font-size:.78rem;color:var(--t1);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ve-author-badge{font-size:.66rem;font-weight:700;color:var(--p2);background:rgba(168,84,112,.1);border-radius:8px;padding:2px 8px}
 .ve-edited-note{font-size:.68rem;color:var(--t3);font-style:italic;margin-bottom:6px}
@@ -291,8 +284,6 @@ img{max-width:100%;display:block}
 .cmt-action-btn.del:hover{color:#c04060;background:rgba(192,64,96,.08)}
 .cmt-empty{text-align:center;font-size:.76rem;color:var(--t3);padding:12px 0}
 .cmt-input-row{display:flex;align-items:center;gap:10px;margin-top:6px;background:rgba(255,255,255,.4);border-radius:16px;padding:4px 4px 4px 12px;border:1px solid rgba(168,84,112,.1)}
-.cmt-avatar-toggle{width:28px;height:28px;border-radius:50%;background:rgba(168,84,112,.12);border:2px solid var(--p1);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;transition:all .15s;flex-shrink:0;user-select:none}
-.cmt-avatar-toggle:hover{background:var(--p4);transform:scale(1.05)}
 .cmt-input-box{flex:1;display:flex;align-items:center;gap:4px}
 .cmt-inp{flex:1;background:transparent;border:none;padding:8px 6px;font-size:.85rem;color:var(--t1);outline:none}
 .cmt-inp::placeholder{color:var(--t3)}
@@ -526,19 +517,16 @@ img{max-width:100%;display:block}
     <div class="m-ttl" id="ve-ttl"></div>
     <div class="ve-content" id="ve-cnt"></div>
     <div id="ve-imgs"></div>
-    <div class="action-group">
+    <div class="action-group" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;padding-top:6px;border-top:1px solid rgba(168,84,112,.08)">
       <button class="btn-s" id="view-edit-btn" onclick="editEntry()" style="padding:6px 14px;font-size:.8rem;">✏️ Sửa</button>
       <button class="btn-d" id="view-del-btn" onclick="delEntry()" style="padding:6px 14px;font-size:.8rem;">🗑 Xóa</button>
       <button class="btn-p" style="flex:0;padding:6px 16px;font-size:.8rem;" onclick="closeModal('modal-view')">Đóng</button>
-      <div style="flex:1;"></div>
-      <div id="view-like"></div>
     </div>
 
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
       <div class="cmt-input-row">
-        <div class="cmt-avatar-toggle" id="cmt-avatar-toggle" onclick="toggleCmtAvatar()" title="Chọn người bình luận"></div>
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
           <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
@@ -572,7 +560,6 @@ img{max-width:100%;display:block}
       <div class="cmt-hdr">💬 Bình luận <span id="dl-cmt-count-lbl"></span></div>
       <div class="cmt-list" id="dl-cmt-list"></div>
       <div class="cmt-input-row">
-        <div class="cmt-avatar-toggle" id="dl-cmt-avatar-toggle" onclick="toggleDlCmtAvatar()" title="Chọn người bình luận"></div>
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
           <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
@@ -646,57 +633,6 @@ var CURRENT_USER = USER_ANH_NGOC;
 var DEFAULT_AUTHOR = USER_ANH_NGOC;
 
 // ============================================================
-// LIKE HELPERS
-// ============================================================
-function likeHTML(targetId, targetType, likes) {
-  if (!likes) likes = [];
-  var userLiked = likes.indexOf(CURRENT_USER) !== -1;
-  var count = likes.length;
-  var icon = userLiked ? '❤️' : '🤍';
-  var label = count > 0 ? '<span class="count">' + count + '</span>' : '';
-
-  var names = '';
-  if (count > 0) {
-    var nameStr = likes.join(' và ');
-    names = '<span class="names">' + nameStr + '</span>';
-  }
-
-  var html = '<div style="display:inline-flex;align-items:center;gap:4px;">';
-  html += '<button class="btn-like ' + (userLiked ? 'liked' : '') + '" onclick="toggleLike(\'' + targetId + '\',\'' + targetType + '\')">' + icon + label + '</button>';
-  if (count > 0) {
-    html += '<span class="like-summary">' + names + '</span>';
-  }
-  html += '</div>';
-  return html;
-}
-
-function toggleLike(targetId, targetType) {
-  var payload = {
-    action: 'toggle_like',
-    targetId: targetId,
-    targetType: targetType,
-    user: CURRENT_USER
-  };
-
-  fetch(CFG.URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload),
-    mode: 'no-cors'
-  })
-  .then(function () {
-    loadData(function () {
-      if (S.curId) openView(S.curId);
-      renderTimeline();
-      renderAlbum();
-    });
-  })
-  .catch(function () {
-    toast('⚠️ Lỗi gửi like, thử lại!');
-  });
-}
-
-// ============================================================
 // STATE
 // ============================================================
 var S = {
@@ -716,8 +652,7 @@ var S = {
   editingCommentId: null,
   editingDlCommentId: null,
   pendingActions: [],
-  isOnline: navigator.onLine,
-  isDataLoaded: false
+  isOnline: navigator.onLine
 };
 
 var PROMPTS = [
@@ -924,7 +859,7 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA (có fallback localStorage + timeout)
+// LOAD DATA (ưu tiên server, fallback localStorage chỉ khi lỗi)
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
@@ -932,7 +867,6 @@ function loadData(cb) {
   var tag;
   var callbackCalled = false;
 
-  // Hàm xử lý dữ liệu nhận được
   function handleData(data) {
     if (callbackCalled) return;
     callbackCalled = true;
@@ -942,11 +876,13 @@ function loadData(cb) {
     if (data && data.entries && data.anniversaries) {
       S.data = data;
       saveToLocal(data);
+      toast('✅ Đã tải dữ liệu thành công!');
     } else {
+      // Nếu server trả về dữ liệu rỗng hoặc lỗi, thử lấy từ localStorage
       var local = loadFromLocal();
       if (local) {
         S.data = local;
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)');
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (server lỗi)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối');
@@ -957,71 +893,44 @@ function loadData(cb) {
     S.data.entries.forEach(normalizeEntry);
     sortEntries(S.data.entries);
     renderAll();
-    S.isDataLoaded = true;
     if (typeof cb === 'function') cb(S.data);
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
     processPendingActions();
   }
 
-  // Fallback: sau 3 giây nếu chưa có dữ liệu từ server, hiển thị từ localStorage
-  var fallbackTimeout = setTimeout(function () {
+  var timeout = setTimeout(function () {
     if (!callbackCalled) {
+      callbackCalled = true;
+      setSyncing(false);
       var local = loadFromLocal();
       if (local) {
         S.data = local;
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        S.isDataLoaded = true;
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (fallback)');
-        if (typeof cb === 'function') cb(S.data);
+        toast('📶 Quá thời gian chờ, đã tải dữ liệu từ bộ nhớ tạm');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
-        toast('⚠️ Đang chờ dữ liệu từ server...');
-      }
-      setSyncing(false); // Tắt trạng thái đồng bộ để khỏi xoay
-    }
-  }, 3000);
-
-  // Timeout chính: sau 10 giây nếu không có callback, báo lỗi
-  var timeout = setTimeout(function () {
-    if (!callbackCalled) {
-      callbackCalled = true;
-      clearTimeout(fallbackTimeout);
-      setSyncing(false);
-      if (!S.isDataLoaded) {
-        var local = loadFromLocal();
-        if (local) {
-          S.data = local;
-          S.data.entries.forEach(normalizeEntry);
-          sortEntries(S.data.entries);
-          renderAll();
-          toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (timeout)');
-        } else {
-          toast('⚠️ Quá thời gian chờ, kiểm tra URL Script!');
-        }
+        toast('⚠️ Không thể kết nối server, kiểm tra URL!');
       }
       if (typeof cb === 'function') cb(S.data);
       if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
       delete window[fn];
     }
-  }, 10000);
+  }, 8000);
 
-  // Định nghĩa callback JSONP
   window[fn] = function (data) {
     handleData(data);
   };
 
-  // Tạo script tag
   tag = document.createElement('script');
   tag.src = CFG.URL + '?callback=' + fn + '&_=' + Date.now();
   tag.onerror = function () {
     if (!callbackCalled) {
       callbackCalled = true;
       clearTimeout(timeout);
-      clearTimeout(fallbackTimeout);
       setSyncing(false);
       var local = loadFromLocal();
       if (local) {
@@ -1029,8 +938,10 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (lỗi tải)');
+        toast('📶 Lỗi tải server, đã dùng dữ liệu lưu tạm');
       } else {
+        S.data = { entries: [], anniversaries: [] };
+        renderAll();
         toast('⚠️ Không thể tải dữ liệu, kiểm tra URL!');
       }
       if (typeof cb === 'function') cb(S.data);
@@ -1162,10 +1073,6 @@ function normalizeEntry(e) {
   if (!e.updatedAt) e.updatedAt = e.date ? (e.date + 'T00:00:00.000Z') : new Date().toISOString();
   if (!e.images) e.images = [];
   if (!e.createdAt) e.createdAt = e.updatedAt;
-  if (!e.likes) e.likes = [];
-  e.comments.forEach(function (c) {
-    if (!c.likes) c.likes = [];
-  });
   return e;
 }
 
@@ -1525,9 +1432,6 @@ function tiHTML(e) {
   }
   var cmtCount = (e.comments && e.comments.length) ? e.comments.length : 0;
   var cmtHTML = cmtCount > 0 ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>' : '';
-
-  var likeHTMLstr = likeHTML(e.id, 'entry', e.likes || []);
-
   return '<div class="ti" onclick="openView(\'' + e.id + '\')">' +
     '<div class="ti-row1">' +
     '<span class="ti-time">🕐 ' + fmtTimeShort(e.createdAt || e.updatedAt) + '</span>' +
@@ -1541,7 +1445,6 @@ function tiHTML(e) {
     cmtHTML +
     '</div>' + thumb +
     '</div>' +
-    '<div style="margin-top:4px;display:flex;align-items:center;gap:6px;">' + likeHTMLstr + '</div>' +
     '</div>';
 }
 
@@ -1636,14 +1539,9 @@ function renderAlbum() {
     var max = Math.min(count, 10);
     for (var i = 0; i < max; i++) {
       var src = imgs[i].url || imgs[i];
-      var imgId = e.id + '_img_' + i;
-      var likeHTMLstr = likeHTML(imgId, 'image', e.imageLikes && e.imageLikes[i] ? e.imageLikes[i] : []);
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
         (count > max ? '<div class="a-img-more">+' + (count - max) + '</div>' : '') +
-        '<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.4);border-radius:20px;padding:2px 8px;display:inline-flex;align-items:center;">' +
-          likeHTMLstr +
-        '</div>' +
         '</div>';
     }
     var timeLabel = fmtTimeShort(e.updatedAt);
@@ -1713,8 +1611,6 @@ function openView(id) {
   document.getElementById('ve-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('ve-cnt').textContent = e.content || '';
   document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images);
-
-  document.getElementById('view-like').innerHTML = likeHTML(e.id, 'entry', e.likes || []);
 
   var isOwner = (e.author === CURRENT_USER);
   document.getElementById('view-edit-btn').style.display = isOwner ? '' : 'none';
@@ -1937,8 +1833,7 @@ function saveEntry() {
     images: S.imgs.slice(),
     comments: existing && existing.comments ? existing.comments.slice() : [],
     createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
-    updatedAt: nowIso,
-    likes: existing && existing.likes ? existing.likes.slice() : []
+    updatedAt: nowIso
   };
 
   closeModal('modal-write');
@@ -1963,24 +1858,8 @@ function hideSavingOverlay() {
 }
 
 // ============================================================
-// COMMENTS
+// COMMENTS (đã xóa avatar toggle)
 // ============================================================
-function toggleCmtAvatar() {
-  var current = S.cmtAuthor;
-  var next = (current === USER_ANH_NGOC) ? USER_ANH : USER_ANH_NGOC;
-  S.cmtAuthor = next;
-  updateCmtToggleUI();
-}
-function updateCmtToggleUI() {
-  var icon = S.cmtAuthor === USER_ANH_NGOC ? '🌻' : '💖';
-  document.getElementById('cmt-avatar-toggle').textContent = icon;
-}
-var cmtAuthor = CURRENT_USER;
-Object.defineProperty(S, 'cmtAuthor', {
-  get: function() { return cmtAuthor; },
-  set: function(v) { cmtAuthor = v; }
-});
-
 function renderComments() {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
   if (!e) return;
@@ -2000,7 +1879,6 @@ function cmtHTML(c, scope) {
   var editedTag = c.editedAt ? '<span class="cmt-edited-tag">(đã sửa)</span>' : '';
   var editFn = scope === 'dl' ? 'startEditDlComment' : 'startEditComment';
   var delFn  = scope === 'dl' ? 'delDlComment' : 'delComment';
-  var likeHTMLstr = likeHTML(c.id, 'comment', c.likes || []);
   var isOwner = (c.author === CURRENT_USER);
   var showActions = isOwner ? '' : 'style="display:none;"';
   return '<div class="cmt-item" data-cid="' + escH(c.id) + '">' +
@@ -2011,7 +1889,6 @@ function cmtHTML(c, scope) {
     '</div>' +
     '<div class="cmt-text">' + escH(c.text) + '</div>' +
     '<div class="cmt-actions">' +
-    likeHTMLstr +
     '<button class="cmt-action-btn" onclick="' + editFn + '(\'' + escH(c.id) + '\')" ' + showActions + '>✏️ Sửa</button>' +
     '<button class="cmt-action-btn del" onclick="' + delFn + '(\'' + escH(c.id) + '\')" ' + showActions + '>🗑 Xóa</button>' +
     '</div>' +
@@ -2112,22 +1989,6 @@ async function delComment(commentId) {
 // ============================================================
 // COMMENTS (modal-daylist) – tương tự
 // ============================================================
-function toggleDlCmtAvatar() {
-  var current = S.dlCmtAuthor;
-  var next = (current === USER_ANH_NGOC) ? USER_ANH : USER_ANH_NGOC;
-  S.dlCmtAuthor = next;
-  updateDlCmtToggleUI();
-}
-function updateDlCmtToggleUI() {
-  var icon = S.dlCmtAuthor === USER_ANH_NGOC ? '🌻' : '💖';
-  document.getElementById('dl-cmt-avatar-toggle').textContent = icon;
-}
-var dlCmtAuthor = CURRENT_USER;
-Object.defineProperty(S, 'dlCmtAuthor', {
-  get: function() { return dlCmtAuthor; },
-  set: function(v) { dlCmtAuthor = v; }
-});
-
 function renderDlComments() {
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -2341,8 +2202,6 @@ loadPendingActions();
 if (!navigator.onLine) {
   toast('📶 Đang ở chế độ offline, dữ liệu sẽ được lưu tạm');
 }
-S.cmtAuthor = CURRENT_USER;
-S.dlCmtAuthor = CURRENT_USER;
 </script>
 </body>
 </html>
