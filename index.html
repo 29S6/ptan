@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.3.1 - Fix khoảng cách header-search, layout OTD, sửa bình luận ảnh -->
+<!-- V6.0.1 - Sửa lỗi hiển thị kỷ niệm & album -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -48,29 +48,8 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 input, textarea, select { font-family: inherit; }
 img { max-width: 100%; display: block; }
 
-/* ===== ANIMATIONS ===== */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-@keyframes pulseHeart {
-  0%,100%{transform:scale(1)}
-  14%{transform:scale(1.22)}
-  28%{transform:scale(1)}
-  42%{transform:scale(1.13)}
-  56%{transform:scale(1)}
-}
-.anim-fade { animation: fadeIn .3s ease; }
-.anim-slide { animation: fadeSlideUp .35s ease; }
-.anim-scale { animation: scaleIn .25s ease; }
+/* ===== SAKURA CANVAS ===== */
+#sakura-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .45; }
 
 /* ===== LOCK SCREEN ===== */
 #lock-screen {
@@ -87,10 +66,10 @@ img { max-width: 100%; display: block; }
   border-radius: 28px; padding: 38px 34px 34px;
   text-align: center; box-shadow: 0 24px 64px rgba(168,84,112,.22);
   max-width: 310px; width: 90%;
-  animation: scaleIn .4s ease;
 }
 .lock-quote { font-family: var(--font-ttl); font-size: .95rem; color: var(--p2); min-height: 40px; line-height: 1.5; font-weight: 600; margin-bottom: 18px; }
-.lock-heart { font-size: 46px; display: block; margin-bottom: 8px; animation: pulseHeart 1.9s ease-in-out infinite; }
+.lock-heart { font-size: 46px; display: block; margin-bottom: 8px; animation: hb 1.9s ease-in-out infinite; }
+@keyframes hb { 0%,100%{transform:scale(1)} 14%{transform:scale(1.22)} 28%{transform:scale(1)} 42%{transform:scale(1.13)} 56%{transform:scale(1)} }
 .lock-ttl { font-family: var(--font-ttl); font-size: 1.85rem; font-weight: 800; color: var(--p1); margin-bottom: 3px; }
 .lock-sub { font-size: .78rem; color: var(--t3); margin-bottom: 20px; }
 .pin-dots { display: flex; gap: 11px; justify-content: center; margin-bottom: 20px; }
@@ -176,9 +155,7 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,.12);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border-radius: 20px; border: 1px solid rgba(255,255,255,.2);
-  min-height: 64px;
-  flex-shrink: 0;
-  color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
+  min-height: 64px; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 .status-slider .icon-fire { font-size: 2rem; line-height: 1; flex-shrink: 0; color: #ff8c00; filter: drop-shadow(0 0 8px #ff8c0066); }
 .status-slider .info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
@@ -192,32 +169,30 @@ img { max-width: 100%; display: block; }
 .mob-nav {
   display: none;
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
-  background: #fff;
+  background: rgba(255,243,249,.94);
   backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
-  border-top: 1px solid rgba(0,0,0,.06);
-  padding: 4px 0 env(safe-area-inset-bottom,4px);
-  box-shadow: 0 -2px 12px rgba(0,0,0,.04);
+  border-top: 1.5px solid rgba(168,84,112,.12);
+  padding: 5px 0 env(safe-area-inset-bottom,5px);
+  box-shadow: 0 -4px 18px rgba(168,84,112,.10);
 }
 @media (max-width: 768px) { .mob-nav { display: flex; } }
 .mn-item {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 1px; padding: 6px 3px;
-  color: #888; font-size: .68rem; font-weight: 600; text-transform: none;
-  transition: color .18s; position: relative;
-  border: none; background: transparent;
-  min-height: 48px;
+  gap: 2px; padding: 5px 3px;
+  color: var(--t3); font-size: .6rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .03em; transition: color .18s; position: relative;
 }
 .mn-item.on { color: var(--p1); }
-.mn-icon { font-size: 1.55rem; line-height: 1; }
+.mn-icon { font-size: 1.25rem; line-height: 1; }
 
-/* ===== MAIN LAYOUT ===== */
+/* ===== MAIN LAYOUT (DESKTOP 3 CỘT) ===== */
 .main-layout {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 6px 11px 16px; /* giảm padding-top xuống 6px (mobile) */
+  padding: 12px 11px 16px;
 }
 @media (max-width: 768px) {
   .col-panel { display: none; }
@@ -228,23 +203,24 @@ img { max-width: 100%; display: block; }
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     gap: 20px;
-    padding: 4px 26px 30px; /* giảm padding-top xuống 4px (desktop) */
+    padding: 22px 26px 30px;
   }
   .col-panel { display: block !important; }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; min-width: 0; }
   #col-right-desktop { order: 3; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
+  /* Ẩn các panel gốc trên desktop để tránh trùng lặp, sẽ được di chuyển vào right sidebar */
   #col-ann, #col-album { display: none !important; }
 }
 @media (min-width: 769px) and (max-width: 991px) {
-  .main-layout { grid-template-columns: 1fr; gap: 16px; padding-top: 6px; }
+  .main-layout { grid-template-columns: 1fr; gap: 16px; }
   #col-cal { order: 1; position: static; max-height: none; overflow-y: visible; }
   #col-diary { order: 2; }
   #col-right-desktop { order: 3; display: block; position: static; max-height: none; overflow-y: visible; }
   #col-right-desktop .gc { margin-bottom: 14px; }
 }
 
-/* ===== CARD ===== */
+/* ===== CARD CHUNG ===== */
 .gc {
   background: var(--glass);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
@@ -253,9 +229,7 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--sh);
   overflow: hidden;
   margin-bottom: 14px;
-  transition: box-shadow .25s, transform .2s;
 }
-.gc:hover { box-shadow: 0 12px 40px rgba(168,84,112,.18); }
 .gc-hd {
   padding: 13px 17px 11px;
   border-bottom: 1px solid rgba(168,84,112,.09);
@@ -272,46 +246,28 @@ img { max-width: 100%; display: block; }
   #col-diary .gc-body { padding: 20px 26px; }
   #col-diary .s-inp { font-size: .95rem; padding: 10px 18px; }
   #col-diary .f-sel { font-size: .86rem; }
-  #col-diary .search-row { display: flex; }
 }
 
 /* ===== TIMELINE ===== */
-/* OTD nằm bên trong gc-body, sau search row */
-.otd-wrap {
-  margin-bottom: 10px;
-}
-.otd-card {
-  background: linear-gradient(135deg, rgba(168,84,112,.09), rgba(201,125,150,.06));
-  border: 1.5px solid rgba(168,84,112,.18);
-  border-radius: var(--rr); padding: 13px 15px;
-  cursor: pointer; transition: all .18s;
-}
-.otd-card:hover { background: rgba(168,84,112,.14); transform: translateY(-2px); box-shadow: var(--sh-sm); }
-.otd-lbl { font-size: .65rem; font-weight: 700; color: var(--p2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
-.otd-ttl { font-weight: 700; font-size: .86rem; color: var(--t1); }
-.otd-pre { font-size: .73rem; color: var(--t2); margin-top: 2px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
 .search-row {
-  display: flex; gap: 7px; margin-bottom: 10px;
+  display: flex; gap: 7px; margin-bottom: 13px;
 }
 .s-inp {
   flex: 1; background: rgba(255,255,255,.68);
   border: 1.5px solid rgba(168,84,112,.2);
-  border-radius: 30px; padding: 7px 14px;
+  border-radius: 22px; padding: 7px 14px;
   font-size: .83rem; color: var(--t1);
-  outline: none; transition: border-color .2s, box-shadow .2s;
+  outline: none; transition: border-color .2s;
 }
-.s-inp:focus { border-color: var(--p1); box-shadow: 0 0 0 3px rgba(168,84,112,.15); }
+.s-inp:focus { border-color: var(--p1); }
 .s-inp::placeholder { color: var(--t3); }
 .f-sel {
   background: rgba(255,255,255,.68);
   border: 1.5px solid rgba(168,84,112,.2);
-  border-radius: 30px; padding: 7px 10px;
+  border-radius: 22px; padding: 7px 10px;
   font-size: .76rem; color: var(--t2);
   outline: none; cursor: pointer;
-  transition: border-color .2s;
 }
-.f-sel:focus { border-color: var(--p1); }
 
 .tl-wrap { display: flex; flex-direction: column; gap: 4px; }
 .tl-day-group { margin-bottom: 14px; }
@@ -324,13 +280,14 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 .tl-day-items { display: flex; flex-direction: column; gap: 8px; }
 
+/* ===== TIMELINE ITEM (CARD STYLE) ===== */
 .ti {
   background: rgba(255,255,255,.55);
   border: 1.5px solid rgba(168,84,112,.12);
   border-radius: var(--rr);
   padding: 11px 13px;
   cursor: pointer;
-  transition: all .2s ease;
+  transition: all .17s;
   position: relative;
   overflow: hidden;
 }
@@ -342,7 +299,7 @@ img { max-width: 100%; display: block; }
   border-radius: 3px 0 0 3px;
 }
 .ti:hover {
-  transform: translateX(4px) scale(1.003);
+  transform: translateX(3px);
   box-shadow: var(--sh-sm);
   background: rgba(255,255,255,.78);
 }
@@ -361,8 +318,7 @@ img { max-width: 100%; display: block; }
 .ti-txt { flex: 1; min-width: 0; }
 .ti-ttl { font-weight: 700; font-size: .86rem; color: var(--t1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
 .ti-pre { font-size: .74rem; color: var(--t2); line-height: 1.44; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.ti-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; transition: transform .2s; }
-.ti-thumb:hover { transform: scale(1.05); }
+.ti-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
 .ti-cmt-count { font-size: .64rem; color: var(--t3); margin-top: 3px; display: flex; align-items: center; gap: 3px; }
 @media (min-width: 769px) {
   #col-diary .ti { padding: 16px 19px; }
@@ -377,8 +333,20 @@ img { max-width: 100%; display: block; }
   font-size: .78rem; font-weight: 700; color: var(--p2);
   transition: all .18s; margin-top: 6px;
 }
-.load-more:hover { background: var(--p4); transform: translateY(-2px); }
+.load-more:hover { background: var(--p4); }
 .empty-hint { text-align: center; color: var(--t3); font-size: .83rem; padding: 26px 0; }
+
+/* ===== OTD ===== */
+.otd-card {
+  background: linear-gradient(135deg, rgba(168,84,112,.09), rgba(201,125,150,.06));
+  border: 1.5px solid rgba(168,84,112,.18);
+  border-radius: var(--rr); padding: 13px 15px;
+  margin-bottom: 13px; cursor: pointer; transition: all .18s;
+}
+.otd-card:hover { background: rgba(168,84,112,.14); transform: translateY(-1px); }
+.otd-lbl { font-size: .65rem; font-weight: 700; color: var(--p2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+.otd-ttl { font-weight: 700; font-size: .86rem; color: var(--t1); }
+.otd-pre { font-size: .73rem; color: var(--t2); margin-top: 2px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* ===== ANNIVERSARY ===== */
 .ann-item {
@@ -386,9 +354,7 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,.52);
   border: 1px solid rgba(168,84,112,.12);
   border-radius: 11px; padding: 10px 12px; margin-bottom: 8px;
-  transition: all .18s;
 }
-.ann-item:hover { background: rgba(255,255,255,.75); transform: translateX(2px); }
 .ann-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--p1); flex-shrink: 0; }
 .ann-info { flex: 1; min-width: 0; }
 .ann-name { font-weight: 700; font-size: .84rem; color: var(--t1); margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -398,7 +364,7 @@ img { max-width: 100%; display: block; }
 .ann-cd.soon-ann { color: var(--p1); }
 .ann-cd.far-ann { color: var(--t2); }
 .ann-del { background: none; border: none; color: var(--p3); font-size: .84rem; padding: 3px; transition: color .15s; flex-shrink: 0; }
-.ann-del:hover { color: #c04060; transform: scale(1.1); }
+.ann-del:hover { color: #c04060; }
 .add-ann-btn {
   width: 100%; background: rgba(168,84,112,.07);
   border: 1.5px dashed var(--p3);
@@ -406,7 +372,7 @@ img { max-width: 100%; display: block; }
   font-size: .78rem; font-weight: 700; color: var(--p2);
   transition: all .18s;
 }
-.add-ann-btn:hover { background: var(--p4); transform: translateY(-2px); }
+.add-ann-btn:hover { background: var(--p4); }
 
 /* ===== CALENDAR ===== */
 .cal-nav { display: flex; align-items: center; gap: 5px; }
@@ -418,7 +384,7 @@ img { max-width: 100%; display: block; }
   display: flex; align-items: center; justify-content: center;
   transition: all .14s;
 }
-.cnav:hover { background: var(--p4); transform: scale(1.05); }
+.cnav:hover { background: var(--p4); }
 .c-mlbl { font-weight: 700; color: var(--t1); font-size: .83rem; min-width: 90px; text-align: center; }
 .c-grid { padding: 9px 13px 13px; }
 .c-wdays { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 4px; }
@@ -428,14 +394,14 @@ img { max-width: 100%; display: block; }
   aspect-ratio: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   border-radius: 9px; font-size: .76rem; font-weight: 600;
-  color: var(--t1); min-height: 33px; transition: all .15s;
+  color: var(--t1); min-height: 33px; transition: all .13s;
 }
 .cd.today {
   background: linear-gradient(135deg, var(--p3), var(--p1));
   color: #fff; box-shadow: 0 3px 9px rgba(168,84,112,.32);
 }
 .cd.has-e { background: rgba(168,84,112,.09); cursor: pointer; border: 1.5px solid rgba(168,84,112,.18); }
-.cd.has-e:hover { background: var(--p4); transform: scale(1.08); }
+.cd.has-e:hover { background: var(--p4); transform: scale(1.1); }
 .cd-ic { font-size: .52rem; line-height: 1; }
 .cd-ann { width: 5px; height: 5px; border-radius: 50%; background: var(--p1); margin-top: 1px; }
 .cd-multi { font-size: .48rem; font-weight: 800; background: var(--p1); color: #fff; border-radius: 6px; padding: 0 3px; line-height: 1.4; margin-top: 1px; }
@@ -453,82 +419,54 @@ img { max-width: 100%; display: block; }
 .album-day-time { font-size: .68rem; color: var(--t3); font-weight: 600; white-space: nowrap; margin-left: auto; }
 .album-day-entry-ttl { font-size: .75rem; color: var(--t2); margin-bottom: 8px; padding-left: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .album-grid { display: grid; gap: 4px; border-radius: 12px; overflow: hidden; }
+.album-grid.g1 { grid-template-columns: 1fr; }
+.album-grid.g2 { grid-template-columns: 1fr 1fr; }
+.album-grid.g3 { grid-template-columns: 1fr 1fr; }
+.album-grid.g4 { grid-template-columns: 1fr 1fr 1fr; }
+.album-grid.g5 { grid-template-columns: 1fr 1fr 1fr; }
+.album-grid.g6 { grid-template-columns: 1fr 1fr 1fr; }
+.album-grid.g7 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.album-grid.g8 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.album-grid.g9 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.album-grid.g10 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 .album-grid .a-img {
   position: relative; overflow: hidden; cursor: pointer;
   background: var(--p4); border-radius: 6px;
 }
-.album-grid .a-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s; display: block; }
+.album-grid .a-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .22s; display: block; }
 .album-grid .a-img:hover img { transform: scale(1.05); }
 .album-grid .a-img-more {
   position: absolute; inset: 0;
-  background: rgba(40,20,30,.6);
+  background: rgba(60,20,40,.5);
   display: flex; align-items: center; justify-content: center;
   font-size: 1.4rem; font-weight: 700; color: #fff;
 }
+.album-grid.g1 .a-img { height: 240px; }
+.album-grid.g2 .a-img { height: 180px; }
+.album-grid.g3 .a-img:first-child { grid-column: 1/3; height: 200px; }
+.album-grid.g3 .a-img:not(:first-child) { height: 150px; }
+.album-grid.g4 .a-img { height: 150px; }
+.album-grid.g5 .a-img { height: 140px; }
+.album-grid.g6 .a-img { height: 140px; }
+.album-grid.g7 .a-img { height: 130px; }
+.album-grid.g8 .a-img { height: 130px; }
+.album-grid.g9 .a-img { height: 130px; }
+.album-grid.g10 .a-img { height: 130px; }
 .album-empty { text-align: center; color: var(--t3); padding: 36px 0; font-size: .85rem; }
 
-/* ===== FAB (mobile) ===== */
+/* ===== FAB ===== */
 #fab {
   position: fixed; bottom: calc(58px + env(safe-area-inset-bottom,0px)); right: 18px;
   z-index: 250; width: 52px; height: 52px; border-radius: 50%;
   background: linear-gradient(135deg, var(--p3), var(--p1));
   border: none; box-shadow: 0 6px 22px rgba(168,84,112,.44);
-  font-size: 1.6rem; color: #fff; line-height: 1;
+  font-size: 1.3rem; color: #fff;
   display: flex; align-items: center; justify-content: center;
-  transition: all .2s;
+  transition: all .18s;
 }
 #fab:hover { transform: scale(1.1) rotate(7deg); box-shadow: 0 10px 28px rgba(168,84,112,.55); }
-#fab:active { transform: scale(.9); }
-@media (min-width: 769px) { #fab { display: none; } }
-
-/* ===== KHUNG VIẾT NHANH (Desktop) ===== */
-.quick-write {
-  display: none;
-  background: #fff;
-  border-radius: var(--rrb);
-  box-shadow: 0 2px 12px rgba(168,84,112,.12);
-  padding: 14px 18px;
-  margin-bottom: 16px;
-  cursor: pointer;
-  transition: all .25s;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid rgba(168,84,112,.08);
-}
-.quick-write:hover {
-  box-shadow: 0 6px 24px rgba(168,84,112,.2);
-  transform: translateY(-2px);
-}
-.quick-write .qw-avatar {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--p3), var(--p1));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; color: #fff;
-  flex-shrink: 0;
-}
-.quick-write .qw-input {
-  flex: 1;
-  background: #f5f0f2;
-  border-radius: 30px;
-  padding: 12px 20px;
-  font-size: .92rem;
-  color: var(--t2);
-  border: 1px solid transparent;
-  transition: all .2s;
-}
-.quick-write .qw-input:hover {
-  background: #ede7ea;
-  border-color: rgba(168,84,112,.2);
-}
-.quick-write .qw-icon {
-  font-size: 1.2rem;
-  color: var(--p2);
-  opacity: .7;
-  transition: opacity .2s;
-}
-.quick-write:hover .qw-icon { opacity: 1; }
 @media (min-width: 769px) {
-  .quick-write { display: flex; }
+  #fab { bottom: 24px; right: 26px; width: 56px; height: 56px; font-size: 1.42rem; }
 }
 
 /* ===== MODALS ===== */
@@ -538,49 +476,31 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   display: none; align-items: center; justify-content: center;
   padding: 14px;
-  animation: fadeIn .25s ease;
 }
 .modal.open { display: flex; }
 .mbox {
   background: linear-gradient(158deg, #fff8fb, #fde8f0);
   border: 1.5px solid rgba(255,255,255,.72);
-  border-radius: 24px;
-  box-shadow: 0 24px 64px rgba(120,40,70,.2);
-  width: 100%;
-  max-width: 560px;
-  max-height: 92vh;
-  overflow-y: auto;
-  padding: 24px 24px 20px;
+  border-radius: 24px; box-shadow: 0 24px 64px rgba(120,40,70,.2);
+  width: 100%; max-width: 560px; max-height: 92vh;
+  overflow-y: auto; padding: 24px 24px 20px;
   position: relative;
-  animation: fadeSlideUp .3s ease;
 }
 .mbox::-webkit-scrollbar { width: 4px; }
 .mbox::-webkit-scrollbar-thumb { background: var(--p4); border-radius: 4px; }
-
 .mc {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 2;
-  background: rgba(168,84,112,.12);
-  border: 1px solid rgba(168,84,112,.2);
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  font-size: 1rem;
-  color: var(--t2);
-  display: flex;
-  align-items: center; justify-content: center;
-  transition: all .2s;
-  padding: 0;
+  position: absolute; top: 13px; right: 13px;
+  background: rgba(168,84,112,.1);
+  border: 1px solid var(--p4); border-radius: 50%;
+  width: 29px; height: 29px; font-size: .86rem; color: var(--t2);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .14s;
 }
-.mc:hover { background: var(--p4); color: var(--p1); transform: rotate(90deg); }
-
+.mc:hover { background: var(--p4); color: var(--p1); }
 .m-ttl {
   font-family: var(--font-ttl);
   font-size: 1.5rem; font-weight: 700; color: var(--p1);
   margin-bottom: 15px;
-  padding-right: 36px;
 }
 @media (min-width: 769px) { #modal-write .mbox { max-width: 680px; } }
 
@@ -596,16 +516,16 @@ img { max-width: 100%; display: block; }
   border: 1.5px solid rgba(168,84,112,.2);
   border-radius: 10px; padding: 8px 12px;
   font-size: .86rem; color: var(--t1);
-  outline: none; transition: border-color .2s, box-shadow .2s;
+  outline: none; transition: border-color .2s;
 }
-.fi:focus, .fta:focus, .fse:focus { border-color: var(--p1); box-shadow: 0 0 0 3px rgba(168,84,112,.1); }
+.fi:focus, .fta:focus, .fse:focus { border-color: var(--p1); }
 .fta { resize: vertical; min-height: 125px; line-height: 1.65; }
 .fse { cursor: pointer; }
 .mood-pick { display: flex; gap: 5px; flex-wrap: wrap; }
 .mp-o {
   font-size: 1.35rem; cursor: pointer; padding: 4px 7px;
   border-radius: 9px; border: 2px solid transparent;
-  transition: all .15s;
+  transition: all .13s;
 }
 .mp-o:hover { transform: scale(1.15); }
 .mp-o.sel { border-color: var(--p1); background: var(--p4); transform: scale(1.08); }
@@ -631,7 +551,7 @@ img { max-width: 100%; display: block; }
   border-radius: 10px; padding: 13px;
   text-align: center; cursor: pointer;
   background: rgba(255,255,255,.42);
-  transition: all .2s; font-size: .78rem; color: var(--t3);
+  transition: all .18s; font-size: .78rem; color: var(--t3);
 }
 .img-drop:hover { background: var(--p4); border-color: var(--p2); }
 .img-prev-row {
@@ -669,27 +589,26 @@ img { max-width: 100%; display: block; }
   flex: 1; background: linear-gradient(135deg, var(--p3), var(--p1));
   border: none; border-radius: 10px; padding: 10px;
   color: #fff; font-size: .86rem; font-weight: 700;
-  transition: all .2s; min-width: 90px;
+  transition: all .18s; min-width: 90px;
 }
-.btn-p:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(168,84,112,.36); }
-.btn-p:active { transform: scale(.97); }
+.btn-p:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(168,84,112,.36); }
 .btn-p:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 .btn-s {
   background: rgba(168,84,112,.09);
   border: 1.5px solid var(--p4);
   border-radius: 10px; padding: 10px 14px;
   color: var(--p1); font-size: .86rem; font-weight: 700;
-  transition: all .2s;
+  transition: all .18s;
 }
-.btn-s:hover { background: var(--p4); transform: translateY(-2px); }
+.btn-s:hover { background: var(--p4); }
 .btn-d {
   background: rgba(200,50,70,.07);
   border: 1.5px solid rgba(200,50,70,.22);
   border-radius: 10px; padding: 10px 13px;
   color: #b03050; font-size: .86rem; font-weight: 700;
-  transition: all .2s;
+  transition: all .18s;
 }
-.btn-d:hover { background: rgba(200,50,70,.13); transform: translateY(-2px); }
+.btn-d:hover { background: rgba(200,50,70,.13); }
 
 /* ===== VIEW ENTRY ===== */
 .ve-date { font-size: .78rem; color: var(--t1); font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -704,134 +623,34 @@ img { max-width: 100%; display: block; }
   color: var(--t1); white-space: pre-wrap;
   max-height: 40vh; overflow-y: auto;
 }
-
-/* ===== GALLERY ===== */
-.ve-gallery {
-  display: grid;
-  gap: 3px;
-  margin-top: 10px;
-  border-radius: 12px;
-  overflow: hidden;
-}
+.ve-gallery { display: grid; gap: 4px; margin-top: 10px; border-radius: 14px; overflow: hidden; }
+.ve-gallery.n1 { grid-template-columns: 1fr; }
+.ve-gallery.n2 { grid-template-columns: 1fr 1fr; }
+.ve-gallery.n3 { grid-template-columns: 1fr 1fr; }
+.ve-gallery.n4 { grid-template-columns: 1fr 1fr 1fr; }
+.ve-gallery.n5 { grid-template-columns: 1fr 1fr 1fr; }
+.ve-gallery.n6 { grid-template-columns: 1fr 1fr 1fr; }
+.ve-gallery.n7 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.ve-gallery.n8 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.ve-gallery.n9 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.ve-gallery.n10 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 .ve-gallery .vg-img {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  background: var(--p4);
+  position: relative; overflow: hidden; cursor: pointer;
+  background: var(--p4); border-radius: 10px;
 }
-.ve-gallery .vg-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform .25s;
-}
-.ve-gallery .vg-img:hover img { transform: scale(1.05); }
-.ve-gallery .vg-img .vg-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(40,20,30,.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-/* ===== PHOTO VIEWER ===== */
-#photo-viewer {
-  position: fixed;
-  inset: 0;
-  z-index: 700;
-  background: rgba(0,0,0,.92);
-  display: none;
-  flex-direction: column;
-  padding: 16px 10px env(safe-area-inset-bottom,10px);
-  overflow-y: auto;
-  animation: fadeIn .25s ease;
-}
-#photo-viewer.open { display: flex; }
-#photo-viewer .pv-close {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.6rem;
-  padding: 8px 4px;
-  margin-bottom: 12px;
-  text-align: left;
-  align-self: flex-start;
-  cursor: pointer;
-}
-#photo-viewer .pv-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-bottom: 30px;
-}
-#photo-viewer .pv-item {
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #222;
-  cursor: pointer;
-}
-#photo-viewer .pv-item img {
-  width: 100%;
-  height: auto;
-  max-height: 90vh;
-  object-fit: contain;
-  display: block;
-}
-#photo-viewer .pv-single {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding: 20px 0;
-}
-#photo-viewer .pv-single.active { display: flex; }
-#photo-viewer .pv-single .pv-img {
-  width: 100%;
-  max-height: 80vh;
-  object-fit: contain;
-  border-radius: 8px;
-}
-#photo-viewer .pv-nav {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 16px 0 10px;
-  width: 100%;
-}
-#photo-viewer .pv-nav button {
-  background: rgba(255,255,255,.2);
-  border: none;
-  color: #fff;
-  font-size: 1.2rem;
-  padding: 8px 20px;
-  border-radius: 30px;
-  transition: all .2s;
-  cursor: pointer;
-}
-#photo-viewer .pv-nav button:hover { background: rgba(255,255,255,.3); transform: scale(1.05); }
-#photo-viewer .pv-nav button:disabled { opacity: .3; pointer-events: none; }
-#photo-viewer .pv-back-list {
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: .9rem;
-  padding: 6px 0;
-  text-align: left;
-  align-self: flex-start;
-  cursor: pointer;
-}
-#photo-viewer .pv-back-list:hover { color: #fff; }
-
-/* ===== DL NAV, COMMENTS ===== */
+.ve-gallery .vg-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s; }
+.ve-gallery .vg-img:hover img { transform: scale(1.06); }
+.ve-gallery.n1 .vg-img { height: 320px; }
+.ve-gallery.n2 .vg-img { height: 220px; }
+.ve-gallery.n3 .vg-img:first-child { grid-column: 1/3; height: 240px; }
+.ve-gallery.n3 .vg-img:not(:first-child) { height: 160px; }
+.ve-gallery.n4 .vg-img { height: 170px; }
+.ve-gallery.n5 .vg-img { height: 160px; }
+.ve-gallery.n6 .vg-img { height: 160px; }
+.ve-gallery.n7 .vg-img { height: 150px; }
+.ve-gallery.n8 .vg-img { height: 150px; }
+.ve-gallery.n9 .vg-img { height: 150px; }
+.ve-gallery.n10 .vg-img { height: 150px; }
 .dl-nav-row {
   display: flex; align-items: center; justify-content: space-between;
   gap: 8px; margin: 12px 0 4px;
@@ -846,7 +665,7 @@ img { max-width: 100%; display: block; }
   font-size: .78rem; font-weight: 700; color: var(--p1);
   transition: all .15s;
 }
-.dl-nav-btn:hover:not(:disabled) { background: var(--p4); transform: scale(1.03); }
+.dl-nav-btn:hover:not(:disabled) { background: var(--p4); }
 .dl-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
 .dl-counter { font-size: .76rem; font-weight: 700; color: var(--t2); }
 
@@ -860,22 +679,12 @@ img { max-width: 100%; display: block; }
   border-radius: 12px; padding: 10px 14px;
   transition: all .15s;
 }
-.cmt-item:hover { background: rgba(255,255,255,.8); transform: translateX(2px); }
+.cmt-item:hover { background: rgba(255,255,255,.8); }
 .cmt-item-hdr { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
 .cmt-author { font-size: .78rem; font-weight: 700; color: var(--p1); }
 .cmt-time { font-size: .63rem; color: var(--t3); margin-left: auto; }
 .cmt-edited-tag { font-size: .6rem; color: var(--t3); font-style: italic; }
 .cmt-text { font-size: .85rem; color: var(--t1); line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin-bottom: 6px; }
-.cmt-image-thumb {
-  margin: 4px 0 2px;
-  max-width: 120px;
-  max-height: 120px;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid rgba(168,84,112,.1);
-}
-.cmt-image-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .cmt-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cmt-action-btn {
   background: none; border: none; font-size: .68rem; font-weight: 700;
@@ -885,89 +694,46 @@ img { max-width: 100%; display: block; }
 .cmt-action-btn:hover { background: rgba(168,84,112,.08); color: var(--p1); }
 .cmt-action-btn.del:hover { color: #c04060; background: rgba(192,64,96,.08); }
 .cmt-empty { text-align: center; font-size: .76rem; color: var(--t3); padding: 12px 0; }
-
-/* ---- COMMENT INPUT ---- */
 .cmt-input-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 6px;
-  background: rgba(255,255,255,.4);
-  border-radius: 16px;
-  padding: 8px 10px;
+  display: flex; align-items: center; gap: 10px; margin-top: 6px;
+  background: rgba(255,255,255,.4); border-radius: 16px;
+  padding: 4px 4px 4px 12px;
   border: 1px solid rgba(168,84,112,.1);
-  transition: border-color .2s;
-}
-.cmt-input-row:focus-within { border-color: var(--p1); }
-
-.cmt-input-main {
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 .cmt-input-box { flex: 1; display: flex; align-items: center; gap: 4px; }
 .cmt-inp {
   flex: 1; background: transparent; border: none;
-  padding: 6px 4px; font-size: .85rem; color: var(--t1);
+  padding: 8px 6px; font-size: .85rem; color: var(--t1);
   outline: none;
 }
 .cmt-inp::placeholder { color: var(--t3); }
-.cmt-upload-btn {
-  background: none; border: none;
-  font-size: 1.2rem; color: var(--p2);
-  padding: 4px 6px; cursor: pointer;
-  transition: all .15s;
-}
-.cmt-upload-btn:hover { color: var(--p1); transform: scale(1.1); }
 .cmt-send-btn {
   background: linear-gradient(135deg, var(--p3), var(--p1));
   border: none; border-radius: 50%; width: 34px; height: 34px;
   color: #fff; font-size: .9rem; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  transition: all .2s;
+  transition: all .18s;
 }
 .cmt-send-btn:hover:not(:disabled) { transform: scale(1.08); }
 .cmt-send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-/* Preview ảnh đính kèm */
-.cmt-image-preview {
-  display: none;
-  align-items: center;
-  gap: 10px;
-  padding: 4px 8px 4px 4px;
-  background: rgba(255,255,255,.6);
-  border-radius: 10px;
-  border: 1px solid rgba(168,84,112,.15);
-}
-.cmt-image-preview.show { display: flex; }
-.cmt-image-preview img {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-.cmt-image-preview .cmt-img-remove {
-  background: none;
-  border: none;
-  color: var(--p1);
-  font-size: .9rem;
-  padding: 2px 4px;
-  cursor: pointer;
-  transition: all .15s;
-}
-.cmt-image-preview .cmt-img-remove:hover { transform: scale(1.2); color: #c04060; }
-.cmt-image-preview .cmt-img-label {
-  font-size: .75rem;
-  color: var(--t2);
-  flex: 1;
-}
-
+/* ===== CONFIRM ===== */
 .confirm-modal .mbox { max-width: 380px; text-align: center; }
 .confirm-modal .m-ttl { font-size: 1.2rem; margin-bottom: 8px; }
 .confirm-modal .confirm-msg { font-size: .9rem; color: var(--t2); margin-bottom: 16px; }
 .confirm-actions { display: flex; gap: 10px; justify-content: center; }
 .confirm-actions .btn-p { flex: 0 1 auto; padding: 8px 20px; }
 .confirm-actions .btn-s { flex: 0 1 auto; padding: 8px 20px; }
+
+/* ===== LIGHTBOX ===== */
+#lb {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(20,5,15,.92);
+  display: none; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+#lb.open { display: flex; }
+#lb img { max-width: 94vw; max-height: 90vh; border-radius: 11px; object-fit: contain; }
 
 /* ===== TOAST ===== */
 #toast {
@@ -978,8 +744,7 @@ img { max-width: 100%; display: block; }
   color: #fff; padding: 8px 18px; border-radius: 20px;
   font-size: .8rem; font-weight: 600;
   z-index: 9999; opacity: 0; pointer-events: none;
-  transition: all .3s ease;
-  white-space: nowrap;
+  transition: all .26s; white-space: nowrap;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (min-width: 769px) { #toast { bottom: 28px; } }
@@ -990,22 +755,22 @@ img { max-width: 100%; display: block; }
   background: rgba(61,31,45,.42);
   backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   display: none; align-items: center; justify-content: center;
-  animation: fadeIn .2s ease;
 }
 #saving-overlay.show { display: flex; }
 .saving-box {
   background: rgba(255,248,253,.92);
   border-radius: 22px; padding: 30px 38px;
   text-align: center; box-shadow: 0 20px 50px rgba(120,40,70,.25);
-  animation: scaleIn .25s ease;
 }
-.saving-heart { font-size: 38px; display: block; margin-bottom: 10px; animation: pulseHeart 1s ease-in-out infinite; }
+.saving-heart { font-size: 38px; display: block; margin-bottom: 10px; animation: hb 1s ease-in-out infinite; }
 .saving-txt { font-family: var(--font-ttl); font-size: 1.05rem; font-weight: 700; color: var(--p1); }
 
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
+
+<canvas id="sakura-canvas"></canvas>
 
 <!-- LOCK SCREEN -->
 <div id="lock-screen">
@@ -1091,37 +856,28 @@ img { max-width: 100%; display: block; }
 
     <!-- COL 2: FEED NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
-      <!-- Khung viết nhanh (Desktop) -->
-      <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0" aria-label="Viết nhật ký mới">
-        <div class="qw-avatar">🌻</div>
-        <div class="qw-input">Hôm nay bạn thế nào? ✨</div>
-        <span class="qw-icon">📝</span>
-      </div>
+      <div id="otd-wrap"></div>
       <div class="gc">
         <div class="gc-hd">
           <div class="gc-ttl">📖 Nhật Ký</div>
         </div>
         <div class="gc-body">
-          <!-- Thanh tìm kiếm -->
           <div class="search-row">
-            <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm nhật ký..." oninput="renderTimeline()"/>
+            <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm..." oninput="renderTimeline()"/>
             <select class="f-sel" id="f-sel" onchange="renderTimeline()">
               <option value="">Tất cả</option>
             </select>
           </div>
-          <!-- OTD nằm ngay sau search -->
-          <div id="otd-wrap" class="otd-wrap"></div>
-          <!-- Feed -->
           <div class="tl-wrap" id="tl-wrap"></div>
           <button class="load-more hidden" id="load-more" onclick="loadMore()">Xem thêm ↓</button>
         </div>
       </div>
     </div>
 
-    <!-- COL 3: RIGHT SIDEBAR (desktop) -->
+    <!-- COL 3: RIGHT SIDEBAR (desktop) – ban đầu rỗng, sẽ được JavaScript đổ nội dung vào -->
     <div id="col-right-desktop" style="display:none"></div>
 
-    <!-- Các panel cho kỷ niệm và album (sẽ di chuyển vào right sidebar) -->
+    <!-- Các panel cho kỷ niệm và album (sẽ được di chuyển vào right sidebar trên desktop) -->
     <div class="col-panel" id="col-ann">
       <div class="gc">
         <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
@@ -1143,33 +899,28 @@ img { max-width: 100%; display: block; }
 
 </div>
 
-<!-- FAB (mobile) -->
-<button id="fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
+<button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
 
 <!-- MOBILE BOTTOM NAV -->
 <nav class="mob-nav">
-  <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
-    <span class="mn-icon">📖</span>
-    <span>Nhật ký</span>
-  </button>
-  <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
-    <span class="mn-icon">🌸</span>
-    <span>Kỷ niệm</span>
-  </button>
-  <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
-    <span class="mn-icon">🗓</span>
-    <span>Lịch</span>
-  </button>
-  <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
-    <span class="mn-icon">🖼</span>
-    <span>Album</span>
-  </button>
+  <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
+    <div class="mn-icon">📖</div><div>Nhật ký</div>
+  </div>
+  <div class="mn-item" data-tab="ann" onclick="switchTab('ann')">
+    <div class="mn-icon">🌸</div><div>Kỷ niệm</div>
+  </div>
+  <div class="mn-item" data-tab="cal" onclick="switchTab('cal')">
+    <div class="mn-icon">🗓</div><div>Lịch</div>
+  </div>
+  <div class="mn-item" data-tab="album" onclick="switchTab('album')">
+    <div class="mn-icon">🖼</div><div>Album</div>
+  </div>
 </nav>
 
 <!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-write')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-write')">✕</button>
     <div class="m-ttl" id="write-ttl">✍️ Viết nhật ký</div>
     <div class="wp" id="wp-box">
       <span id="wp-txt">💭 Hôm nay có điều gì đặc biệt không?</span>
@@ -1224,7 +975,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL XEM BÀI -->
 <div class="modal" id="modal-view">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-view')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-view')">✕</button>
     <div class="ve-date" id="ve-date"></div>
     <div class="ve-edited-note hidden" id="ve-edited-note"></div>
     <div class="ve-mood" id="ve-mood"></div>
@@ -1239,19 +990,10 @@ img { max-width: 100%; display: block; }
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
       <div class="cmt-list" id="cmt-list"></div>
-      <div class="cmt-input-row" id="cmt-input-row">
-        <div class="cmt-input-main">
-          <div class="cmt-input-box">
-            <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
-            <button class="cmt-upload-btn" id="cmt-upload-btn" onclick="document.getElementById('cmt-img-inp').click()" title="Thêm ảnh">📷</button>
-            <input type="file" id="cmt-img-inp" accept="image/*" style="display:none" onchange="onCmtImgPick(this)"/>
-          </div>
+      <div class="cmt-input-row">
+        <div class="cmt-input-box">
+          <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
           <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
-        </div>
-        <div class="cmt-image-preview" id="cmt-preview">
-          <img id="cmt-preview-img" src="" alt="Ảnh đính kèm"/>
-          <span class="cmt-img-label" id="cmt-preview-label">1 ảnh đính kèm</span>
-          <button class="cmt-img-remove" onclick="removeCmtImage()">✕</button>
         </div>
       </div>
     </div>
@@ -1261,7 +1003,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL DANH SÁCH CÙNG NGÀY -->
 <div class="modal" id="modal-daylist">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-daylist')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-daylist')">✕</button>
     <div class="ve-date" id="dl-date"></div>
     <div class="ve-edited-note hidden" id="dl-edited-note"></div>
     <div class="ve-mood" id="dl-mood"></div>
@@ -1281,19 +1023,10 @@ img { max-width: 100%; display: block; }
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="dl-cmt-count-lbl"></span></div>
       <div class="cmt-list" id="dl-cmt-list"></div>
-      <div class="cmt-input-row" id="dl-cmt-input-row">
-        <div class="cmt-input-main">
-          <div class="cmt-input-box">
-            <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
-            <button class="cmt-upload-btn" id="dl-cmt-upload-btn" onclick="document.getElementById('dl-cmt-img-inp').click()" title="Thêm ảnh">📷</button>
-            <input type="file" id="dl-cmt-img-inp" accept="image/*" style="display:none" onchange="onDlCmtImgPick(this)"/>
-          </div>
+      <div class="cmt-input-row">
+        <div class="cmt-input-box">
+          <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
           <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
-        </div>
-        <div class="cmt-image-preview" id="dl-cmt-preview">
-          <img id="dl-cmt-preview-img" src="" alt="Ảnh đính kèm"/>
-          <span class="cmt-img-label" id="dl-cmt-preview-label">1 ảnh đính kèm</span>
-          <button class="cmt-img-remove" onclick="removeDlCmtImage()">✕</button>
         </div>
       </div>
     </div>
@@ -1303,7 +1036,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL KỶ NIỆM -->
 <div class="modal" id="modal-ann">
   <div class="mbox" style="max-width:400px">
-    <button class="mc" onclick="closeModal('modal-ann')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-ann')">✕</button>
     <div class="m-ttl">🌸 Thêm Kỷ Niệm</div>
     <div class="fg">
       <label class="fl">Ngày</label>
@@ -1323,7 +1056,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL CONFIRM -->
 <div class="modal confirm-modal" id="confirm-modal">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('confirm-modal')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('confirm-modal')">✕</button>
     <div class="m-ttl" id="confirm-ttl">Xác nhận</div>
     <div class="confirm-msg" id="confirm-msg">Bạn có chắc chắn?</div>
     <div class="confirm-actions">
@@ -1333,22 +1066,8 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- PHOTO VIEWER -->
-<div id="photo-viewer">
-  <button class="pv-close" onclick="closePhotoViewer()" aria-label="Đóng photo viewer">✕</button>
-  <div id="pv-list-container">
-    <div class="pv-list" id="pv-list"></div>
-    <div class="pv-single" id="pv-single">
-      <button class="pv-back-list" onclick="switchToGallery()" aria-label="Quay lại danh sách">‹ Quay lại danh sách</button>
-      <img class="pv-img" id="pv-single-img" src="" alt=""/>
-      <div class="pv-nav">
-        <button id="pv-prev" onclick="pvPrev()" aria-label="Ảnh trước">‹</button>
-        <span id="pv-counter" style="color:#fff;font-size:.9rem;">1 / 1</span>
-        <button id="pv-next" onclick="pvNext()" aria-label="Ảnh sau">›</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- LIGHTBOX -->
+<div id="lb" onclick="closeLb()"><img id="lb-img" src="" alt=""/></div>
 
 <!-- TOAST -->
 <div id="toast"></div>
@@ -1363,7 +1082,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.3.1 - NHẬT KÝ ỨNG DỤNG (fix khoảng cách, layout OTD, bình luận ảnh)
+// V6.0.1 - NHẬT KÝ ỨNG DỤNG CHÍNH (đã sửa lỗi hiển thị kỷ niệm & album)
 // ============================================================
 
 // ============================================================
@@ -1390,7 +1109,7 @@ var S = {
   calM: new Date().getMonth(),
   curId: null,
   mood: '',
-  imgs: [],
+  imgs: [],         // [{ url, driveId }]  KHÔNG LƯU BASE64
   fontSize: 14,
   page: 1,
   pageSize: 8,
@@ -1402,13 +1121,7 @@ var S = {
   editingDlCommentId: null,
   pendingActions: [],
   isOnline: navigator.onLine,
-  hasWelcomed: false,
-  pvImages: [],
-  pvCurrentIndex: 0,
-  pvMode: 'gallery',
-  // comment image
-  cmtImage: null,      // { url, driveId }
-  dlCmtImage: null
+  hasWelcomed: false
 };
 
 var PROMPTS = [
@@ -1482,7 +1195,6 @@ function unlockApp() {
     newPrompt();
     setupDesktopLayout();
     updateStatusSlider();
-    initPullToRefresh();
   }, 480);
 }
 document.addEventListener('keydown', function (e) {
@@ -1492,33 +1204,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// PULL TO REFRESH
-// ============================================================
-var ptrStartY = 0, ptrDragging = false;
-function initPullToRefresh() {
-  var container = document.getElementById('app');
-  container.addEventListener('touchstart', function(e) {
-    if (window.scrollY === 0) {
-      ptrStartY = e.touches[0].clientY;
-      ptrDragging = true;
-    }
-  }, { passive: true });
-  container.addEventListener('touchmove', function(e) {
-    if (!ptrDragging) return;
-    var delta = e.touches[0].clientY - ptrStartY;
-    if (delta > 60) {
-      ptrDragging = false;
-      toast('🔄 Đang làm mới...');
-      loadData();
-    }
-  }, { passive: true });
-  container.addEventListener('touchend', function() {
-    ptrDragging = false;
-  }, { passive: true });
-}
-
-// ============================================================
-// DESKTOP LAYOUT
+// DESKTOP LAYOUT (di chuyển col-ann và col-album vào right sidebar)
 // ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -1530,8 +1216,10 @@ function setupDesktopLayout() {
     rightCol.appendChild(albumCol);
     rightCol.style.display = 'flex';
   }
-  if (annCol) { annCol.style.display = 'block'; annCol.classList.add('on'); }
-  if (albumCol) { albumCol.style.display = 'block'; albumCol.classList.add('on'); }
+  // Ẩn các panel gốc trên desktop (đã được di chuyển)
+  if (annCol) annCol.style.display = 'block';
+  if (albumCol) albumCol.style.display = 'block';
+  // Đảm bảo các panel khác hiển thị
   ['col-cal', 'col-diary'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) { el.style.display = 'block'; el.classList.add('on'); }
@@ -1544,6 +1232,7 @@ window.addEventListener('resize', function () {
   if (nowDesktop && !_lastIsDesktop) {
     setupDesktopLayout();
   } else if (!nowDesktop && _lastIsDesktop) {
+    // Trả lại col-ann và col-album về vị trí cũ trong main-layout
     var mainLayout = document.getElementById('main-layout');
     var rightCol = document.getElementById('col-right-desktop');
     var albumCol = document.getElementById('col-album');
@@ -1568,7 +1257,7 @@ function getCurrentMobileTab() {
 }
 
 // ============================================================
-// CLOCK
+// CLOCK & SAKURA
 // ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -1583,6 +1272,37 @@ function startClock() {
   tick();
   setInterval(tick, 1000);
 }
+
+(function () {
+  var cv = document.getElementById('sakura-canvas');
+  var ctx = cv.getContext('2d');
+  var petals = [];
+  var W, H;
+  function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  function r(a, b) { return a + Math.random() * (b - a); }
+  function Petal() {
+    this.x = r(0, W); this.y = r(-120, 0);
+    this.sz = r(5, 9); this.vy = r(0.55, 1.35); this.vx = r(-0.35, 0.35);
+    this.ang = r(0, Math.PI * 2); this.rs = r(-0.022, 0.022);
+    this.op = r(0.38, 0.80);
+    this.c = 'rgba(' + (238 + ~~r(0, 12)) + ',' + (140 + ~~r(0, 65)) + ',' + (165 + ~~r(0, 45)) + ',';
+  }
+  for (var i = 0; i < 26; i++) { var p = new Petal(); p.y = r(0, H); petals.push(p); }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    petals.forEach(function (p) {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.ang);
+      ctx.beginPath(); ctx.ellipse(0, 0, p.sz, p.sz * 0.52, 0, 0, Math.PI * 2);
+      ctx.fillStyle = p.c + p.op + ')'; ctx.fill(); ctx.restore();
+      p.x += p.vx; p.y += p.vy; p.ang += p.rs;
+      if (p.y > H + 18) { p.y = -18; p.x = r(0, W); }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
 // ============================================================
 // LOCAL STORAGE HELPERS
@@ -1606,7 +1326,7 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA – TIMEOUT 30s, ƯU TIÊN SERVER
+// LOAD DATA
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
@@ -1632,7 +1352,7 @@ function loadData(cb) {
       var local = loadFromLocal();
       if (local) {
         S.data = local;
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (server trả về rỗng)');
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm');
       } else {
         S.data = { entries: [], anniversaries: [] };
         toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối');
@@ -1659,7 +1379,7 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (server timeout 30s)');
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian chờ)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
@@ -1669,7 +1389,7 @@ function loadData(cb) {
       if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
       delete window[fn];
     }
-  }, 30000);
+  }, 10000);
 
   window[fn] = function (data) {
     handleServerData(data);
@@ -1840,12 +1560,6 @@ function normalizeEntry(e) {
   if (!e.updatedAt) e.updatedAt = e.date ? (e.date + 'T00:00:00.000Z') : new Date().toISOString();
   if (!e.images) e.images = [];
   if (!e.createdAt) e.createdAt = e.updatedAt;
-  e.comments.forEach(function (c) {
-    if (c.image && typeof c.image === 'string') {
-      c.image = { url: c.image, driveId: '' };
-    }
-    if (c.image && !c.image.url) c.image = { url: c.image, driveId: '' };
-  });
   return e;
 }
 
@@ -1899,11 +1613,12 @@ function renderOTD() {
   });
   if (!match) { wrap.innerHTML = ''; return; }
   var yr = match.date.substring(0, 4);
-  wrap.innerHTML = '<div class="otd-card" onclick="openView(\'' + match.id + '\')">' +
+  wrap.innerHTML = '<div class="gc" style="margin-bottom:14px"><div class="gc-body" style="padding:11px 15px">' +
+    '<div class="otd-card" onclick="openView(\'' + match.id + '\')">' +
     '<div class="otd-lbl">⏳ Ngày này năm ' + yr + '</div>' +
     '<div class="otd-ttl">' + escH(match.title || '(Không tiêu đề)') + '</div>' +
     '<div class="otd-pre">' + escH((match.content || '').substring(0, 90)) + '...</div>' +
-    '</div>';
+    '</div></div></div>';
 }
 
 function renderCalendar() {
@@ -2071,7 +1786,7 @@ function showDayListModal() {
   document.getElementById('dl-mood').textContent = e.mood || '';
   document.getElementById('dl-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('dl-cnt').textContent = e.content || '';
-  document.getElementById('dl-imgs').innerHTML = buildGalleryHTML(e.images, e.id);
+  document.getElementById('dl-imgs').innerHTML = buildGalleryHTML(e.images);
 
   document.getElementById('dl-prev').disabled = (idx === 0);
   document.getElementById('dl-next').disabled = (idx === total - 1);
@@ -2136,10 +1851,8 @@ function buildMonthFilter() {
 }
 
 function filteredEntries() {
-  var inp = document.getElementById('s-inp');
-  var sel = document.getElementById('f-sel');
-  var q = (inp.value || '').toLowerCase().trim();
-  var fm = sel.value;
+  var q = (document.getElementById('s-inp').value || '').toLowerCase().trim();
+  var fm = document.getElementById('f-sel').value;
   return S.data.entries.filter(function (e) {
     var mQ = !q || (e.title || '').toLowerCase().includes(q) || (e.content || '').toLowerCase().includes(q);
     var mM = !fm || (e.date || '').startsWith(fm);
@@ -2202,7 +1915,7 @@ function tiHTML(e) {
   if (e.images && e.images.length) {
     var src = e.images[0].url || e.images[0];
     thumb = '<img class="ti-thumb" src="' + escH(src) + '" alt="ảnh" ' +
-      'onclick="event.stopPropagation();openPhotoViewer(\'' + e.id + '\', 0)" loading="lazy"/>';
+      'onclick="event.stopPropagation();openLb(\'' + escH(src) + '\')" loading="lazy"/>';
   }
   var cmtCount = (e.comments && e.comments.length) ? e.comments.length : 0;
   var cmtHTML = cmtCount > 0 ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>' : '';
@@ -2307,7 +2020,16 @@ function renderAlbum() {
   entriesWithImgs.forEach(function (e) {
     var imgs = e.images;
     var count = imgs.length;
-    var gridHTML = buildGridImages(imgs, e.id);
+    var cls = 'album-grid g' + Math.min(count, 10);
+    var gridHTML = '';
+    var max = Math.min(count, 10);
+    for (var i = 0; i < max; i++) {
+      var src = imgs[i].url || imgs[i];
+      gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
+        '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
+        (i === max - 1 && count > 10 ? '<div class="a-img-more">+' + (count - 10) + '</div>' : '') +
+        '</div>';
+    }
     var timeLabel = fmtTimeShort(e.updatedAt);
     html += '<div class="album-day-group">' +
       '<div class="album-day-hdr">' +
@@ -2316,158 +2038,28 @@ function renderAlbum() {
       (timeLabel ? '<div class="album-day-time">🕐 ' + timeLabel + '</div>' : '') +
       '</div>' +
       '<div class="album-day-entry-ttl">' + escH(e.title || '(Không tiêu đề)') + '</div>' +
-      '<div class="album-grid">' + gridHTML + '</div>' +
+      '<div class="' + cls + '">' + gridHTML + '</div>' +
       '</div>';
   });
   body.innerHTML = html;
 }
 
 // ============================================================
-// GALLERY ẢNH
+// GALLERY HTML
 // ============================================================
-function buildGridImages(images, entryId) {
+function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
-  var total = images.length;
+  var n = Math.min(images.length, 10);
+  var cls = 've-gallery n' + n;
   var html = '';
-  var maxDisplay = 4;
-  var displayCount = total < maxDisplay ? total : maxDisplay;
-  var extra = total - maxDisplay;
-
-  var style = '';
-  if (displayCount === 1) {
-    style = 'grid-template-columns:1fr;';
-  } else if (displayCount === 2) {
-    style = 'grid-template-columns:1fr 1fr;';
-  } else if (displayCount === 3) {
-    style = 'grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr;';
-  } else if (displayCount === 4) {
-    style = 'grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;';
-  }
-
-  for (var i = 0; i < displayCount; i++) {
-    var img = images[i];
-    var src = img.url || img;
-    var isLast = (i === displayCount - 1 && extra > 0);
-    var overlay = isLast ? '<div class="a-img-more">+' + extra + '</div>' : '';
-    var gridPos = '';
-    if (displayCount === 3 && i === 0) {
-      gridPos = 'grid-row:1/3; grid-column:1/2;';
-    }
-    html += '<div class="a-img" style="' + gridPos + '" onclick="openPhotoViewer(\'' + entryId + '\', ' + i + ')">' +
+  for (var i = 0; i < n; i++) {
+    var src = images[i].url || images[i];
+    html += '<div class="vg-img" onclick="openLb(\'' + escH(src) + '\')">' +
       '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-      overlay +
+      (i === n - 1 && images.length > 10 ? '<div class="a-img-more">+' + (images.length - 10) + '</div>' : '') +
       '</div>';
   }
-  return '<div class="album-grid" style="' + style + '">' + html + '</div>';
-}
-
-function buildGalleryHTML(images, entryId) {
-  if (!images || !images.length) return '';
-  var total = images.length;
-  var maxDisplay = 4;
-  var displayCount = total < maxDisplay ? total : maxDisplay;
-  var extra = total - maxDisplay;
-
-  var style = '';
-  if (displayCount === 1) {
-    style = 'grid-template-columns:1fr;';
-  } else if (displayCount === 2) {
-    style = 'grid-template-columns:1fr 1fr;';
-  } else if (displayCount === 3) {
-    style = 'grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr;';
-  } else if (displayCount === 4) {
-    style = 'grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;';
-  }
-
-  var html = '';
-  for (var i = 0; i < displayCount; i++) {
-    var img = images[i];
-    var src = img.url || img;
-    var isLast = (i === displayCount - 1 && extra > 0);
-    var overlay = isLast ? '<div class="vg-overlay">+' + extra + '</div>' : '';
-    var gridPos = '';
-    if (displayCount === 3 && i === 0) {
-      gridPos = 'grid-row:1/3; grid-column:1/2;';
-    }
-    html += '<div class="vg-img" style="' + gridPos + '" onclick="openPhotoViewer(\'' + entryId + '\', ' + i + ')">' +
-      '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-      overlay +
-      '</div>';
-  }
-  return '<div class="ve-gallery" style="' + style + '">' + html + '</div>';
-}
-
-// ============================================================
-// PHOTO VIEWER
-// ============================================================
-function openPhotoViewer(entryId, startIndex) {
-  var entry = S.data.entries.find(function (e) { return e.id === entryId; });
-  if (!entry || !entry.images || !entry.images.length) return;
-  S.pvImages = entry.images;
-  S.pvCurrentIndex = startIndex || 0;
-  S.pvMode = 'gallery';
-
-  var list = document.getElementById('pv-list');
-  list.innerHTML = S.pvImages.map(function (img, idx) {
-    var src = img.url || img;
-    return '<div class="pv-item" onclick="switchToSingle(' + idx + ')"><img src="' + escH(src) + '" alt="ảnh" loading="lazy"/></div>';
-  }).join('');
-
-  document.getElementById('pv-single').classList.remove('active');
-  document.getElementById('pv-list').style.display = 'flex';
-
-  document.getElementById('photo-viewer').classList.add('open');
-  document.body.style.overflow = 'hidden';
-
-  if (startIndex && startIndex > 0) {
-    setTimeout(function () {
-      var items = list.querySelectorAll('.pv-item');
-      if (items[startIndex]) items[startIndex].scrollIntoView({ block: 'center' });
-    }, 100);
-  }
-}
-
-function switchToSingle(index) {
-  S.pvCurrentIndex = index;
-  S.pvMode = 'single';
-  updateSingleView();
-  document.getElementById('pv-list').style.display = 'none';
-  document.getElementById('pv-single').classList.add('active');
-}
-
-function updateSingleView() {
-  var img = S.pvImages[S.pvCurrentIndex];
-  if (!img) return;
-  document.getElementById('pv-single-img').src = img.url || img;
-  document.getElementById('pv-counter').textContent = (S.pvCurrentIndex + 1) + ' / ' + S.pvImages.length;
-  document.getElementById('pv-prev').disabled = (S.pvCurrentIndex === 0);
-  document.getElementById('pv-next').disabled = (S.pvCurrentIndex === S.pvImages.length - 1);
-}
-
-function switchToGallery() {
-  S.pvMode = 'gallery';
-  document.getElementById('pv-single').classList.remove('active');
-  document.getElementById('pv-list').style.display = 'flex';
-}
-
-function pvPrev() {
-  if (S.pvCurrentIndex > 0) {
-    S.pvCurrentIndex--;
-    updateSingleView();
-  }
-}
-function pvNext() {
-  if (S.pvCurrentIndex < S.pvImages.length - 1) {
-    S.pvCurrentIndex++;
-    updateSingleView();
-  }
-}
-
-function closePhotoViewer() {
-  document.getElementById('photo-viewer').classList.remove('open');
-  document.body.style.overflow = '';
-  S.pvImages = [];
-  S.pvCurrentIndex = 0;
+  return '<div class="' + cls + '">' + html + '</div>';
 }
 
 // ============================================================
@@ -2493,8 +2085,6 @@ function openView(id) {
   normalizeEntry(e);
   S.curId = id;
   S.editingCommentId = null;
-  S.cmtImage = null;
-  document.getElementById('cmt-preview').classList.remove('show');
 
   document.getElementById('ve-date').innerHTML =
     '🕐 ' + fmtFullDateTime(e.createdAt || e.updatedAt) +
@@ -2505,7 +2095,7 @@ function openView(id) {
   document.getElementById('ve-mood').textContent = e.mood || '';
   document.getElementById('ve-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('ve-cnt').textContent = e.content || '';
-  document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images, e.id);
+  document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images);
 
   var isOwner = (e.author === CURRENT_USER);
   document.getElementById('view-edit-btn').style.display = isOwner ? '' : 'none';
@@ -2513,7 +2103,6 @@ function openView(id) {
 
   renderComments();
   document.getElementById('cmt-inp').value = '';
-  document.getElementById('cmt-img-inp').value = '';
 
   openModal('modal-view');
 }
@@ -2603,43 +2192,30 @@ function onImgPick(input) {
   fillBar.style.width = '0%';
   document.getElementById('save-entry-btn').disabled = true;
   var dateForFolder = document.getElementById('e-date').value || todayStr();
-
+  var done = 0;
   var total = files.length;
-  var completed = 0;
-  var processing = 0;
-  var maxConcurrent = 3;
-  var queue = files.slice();
-
-  function processNext() {
-    if (queue.length === 0 && processing === 0) {
-      setTimeout(function () {
-        progEl.classList.remove('show');
-        progBar.classList.remove('show');
-        document.getElementById('save-entry-btn').disabled = false;
-        renderImgPrev();
-      }, 300);
-      return;
-    }
-    while (processing < maxConcurrent && queue.length > 0) {
-      var file = queue.shift();
-      processing++;
-      compressImg(file, function (b64) {
-        uploadImgToDrive(b64, file.name, dateForFolder, function (result) {
-          if (result) {
-            S.imgs.push({ url: result.url, driveId: result.driveId });
-          } else {
-            toast('⚠️ Không thể upload ảnh: ' + file.name);
-          }
-          completed++;
-          processing--;
-          var percent = Math.round((completed / total) * 100);
-          fillBar.style.width = percent + '%';
-          processNext();
-        });
+  files.forEach(function (file) {
+    compressImg(file, function (b64) {
+      uploadImgToDrive(b64, file.name, dateForFolder, function (result) {
+        if (result) {
+          S.imgs.push({ url: result.url, driveId: result.driveId });
+        } else {
+          toast('⚠️ Không thể upload ảnh: ' + file.name);
+        }
+        done++;
+        var percent = Math.round((done / total) * 100);
+        fillBar.style.width = percent + '%';
+        if (done === total) {
+          setTimeout(function () {
+            progEl.classList.remove('show');
+            progBar.classList.remove('show');
+            document.getElementById('save-entry-btn').disabled = false;
+            renderImgPrev();
+          }, 300);
+        }
       });
-    }
-  }
-  processNext();
+    });
+  });
   input.value = '';
 }
 
@@ -2718,64 +2294,6 @@ function rmImg(i) {
 }
 
 // ============================================================
-// COMMENT IMAGE UPLOAD (có preview)
-// ============================================================
-function showCmtPreview(imgData) {
-  var preview = document.getElementById('cmt-preview');
-  var img = document.getElementById('cmt-preview-img');
-  var label = document.getElementById('cmt-preview-label');
-  if (imgData && imgData.url) {
-    img.src = imgData.url;
-    label.textContent = '1 ảnh đính kèm';
-    preview.classList.add('show');
-  } else {
-    preview.classList.remove('show');
-  }
-}
-
-function removeCmtImage() {
-  S.cmtImage = null;
-  showCmtPreview(null);
-  document.getElementById('cmt-img-inp').value = '';
-  toast('🗑 Đã xóa ảnh đính kèm');
-}
-
-function onCmtImgPick(input) {
-  var file = input.files[0];
-  if (!file) return;
-  if (S.cmtImage) {
-    toast('⚠️ Chỉ được đính kèm 1 ảnh mỗi bình luận!');
-    input.value = '';
-    return;
-  }
-  toast('⏳ Đang xử lý ảnh...');
-  var entry = S.data.entries.find(function (e) { return e.id === S.curId; });
-  var dateStr = entry ? entry.date : todayStr();
-  // hiển thị preview tạm thời với file URL
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    var tempUrl = ev.target.result;
-    showCmtPreview({ url: tempUrl });
-  };
-  reader.readAsDataURL(file);
-  
-  compressImg(file, function (b64) {
-    uploadImgToDrive(b64, 'cmt_' + Date.now() + '.jpg', dateStr, function (result) {
-      if (result) {
-        S.cmtImage = { url: result.url, driveId: result.driveId };
-        showCmtPreview(S.cmtImage);
-        toast('✅ Ảnh đã sẵn sàng');
-      } else {
-        toast('⚠️ Không thể upload ảnh, hãy thử lại');
-        showCmtPreview(null);
-        S.cmtImage = null;
-      }
-      input.value = '';
-    });
-  });
-}
-
-// ============================================================
 // SAVE ENTRY
 // ============================================================
 function saveEntry() {
@@ -2831,7 +2349,7 @@ function hideSavingOverlay() {
 }
 
 // ============================================================
-// COMMENTS
+// COMMENTS (giữ nguyên)
 // ============================================================
 function renderComments() {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
@@ -2854,12 +2372,6 @@ function cmtHTML(c, scope) {
   var delFn  = scope === 'dl' ? 'delDlComment' : 'delComment';
   var isOwner = (c.author === CURRENT_USER);
   var showActions = isOwner ? '' : 'style="display:none;"';
-  var imageHTML = '';
-  if (c.image && c.image.url) {
-    imageHTML = '<div class="cmt-image-thumb" onclick="openLb(\'' + escH(c.image.url) + '\')">' +
-      '<img src="' + escH(c.image.url) + '" alt="ảnh bình luận"/>' +
-      '</div>';
-  }
   return '<div class="cmt-item" data-cid="' + escH(c.id) + '">' +
     '<div class="cmt-item-hdr">' +
     '<span class="cmt-author">' + escH(c.author || DEFAULT_AUTHOR) + '</span>' +
@@ -2867,7 +2379,6 @@ function cmtHTML(c, scope) {
     '<span class="cmt-time">' + fmtTimeShort(c.time) + '</span>' +
     '</div>' +
     '<div class="cmt-text">' + escH(c.text) + '</div>' +
-    imageHTML +
     '<div class="cmt-actions">' +
     '<button class="cmt-action-btn" onclick="' + editFn + '(\'' + escH(c.id) + '\')" ' + showActions + '>✏️ Sửa</button>' +
     '<button class="cmt-action-btn del" onclick="' + delFn + '(\'' + escH(c.id) + '\')" ' + showActions + '>🗑 Xóa</button>' +
@@ -2878,7 +2389,7 @@ function cmtHTML(c, scope) {
 function sendComment() {
   var inp = document.getElementById('cmt-inp');
   var text = inp.value.trim();
-  if (!text && !S.cmtImage) { toast('⚠️ Viết gì đó hoặc thêm ảnh để bình luận nhé!'); return; }
+  if (!text) { toast('⚠️ Viết gì đó để bình luận nhé!'); return; }
   if (!S.curId) return;
 
   var btn = document.getElementById('cmt-send-btn');
@@ -2886,27 +2397,13 @@ function sendComment() {
   btn.disabled = true;
   btn.textContent = '⏳';
 
-  var payload = {
-    action: 'add_comment',
-    entryId: S.curId,
-    author: CURRENT_USER,
-    text: text || ''
-  };
-  if (S.cmtImage) {
-    payload.image = S.cmtImage;
-  }
-
   if (S.editingCommentId) {
-    payload.action = 'edit_comment';
-    payload.commentId = S.editingCommentId;
-    // edit không hỗ trợ đổi ảnh, bỏ image
-    delete payload.image;
-    callCommentAPI(payload, function (res) {
+    callCommentAPI({
+      action: 'edit_comment', entryId: S.curId, commentId: S.editingCommentId, text: text
+    }, function (res) {
       var e = S.data.entries.find(function (x) { return x.id === S.curId; });
       if (e) e.comments = res.comments;
       S.editingCommentId = null;
-      S.cmtImage = null;
-      showCmtPreview(null);
       inp.value = '';
       btn.disabled = false;
       btn.textContent = '➤';
@@ -2920,12 +2417,11 @@ function sendComment() {
     return;
   }
 
-  // Gửi bình luận mới (có thể kèm ảnh)
-  callCommentAPI(payload, function (res) {
+  callCommentAPI({
+    action: 'add_comment', entryId: S.curId, author: CURRENT_USER, text: text
+  }, function (res) {
     var e = S.data.entries.find(function (x) { return x.id === S.curId; });
     if (e) e.comments = res.comments;
-    S.cmtImage = null;
-    showCmtPreview(null);
     inp.value = '';
     btn.disabled = false;
     btn.textContent = '➤';
@@ -2951,8 +2447,6 @@ function startEditComment(commentId) {
   var inp = document.getElementById('cmt-inp');
   inp.value = c.text;
   inp.focus();
-  S.cmtImage = null;
-  showCmtPreview(null);
   document.getElementById('cmt-send-btn').textContent = '✓';
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
@@ -2984,60 +2478,8 @@ async function delComment(commentId) {
 }
 
 // ============================================================
-// COMMENTS (modal-daylist) - tương tự, chỉ khác biến dl
+// COMMENTS (modal-daylist)
 // ============================================================
-function showDlCmtPreview(imgData) {
-  var preview = document.getElementById('dl-cmt-preview');
-  var img = document.getElementById('dl-cmt-preview-img');
-  var label = document.getElementById('dl-cmt-preview-label');
-  if (imgData && imgData.url) {
-    img.src = imgData.url;
-    label.textContent = '1 ảnh đính kèm';
-    preview.classList.add('show');
-  } else {
-    preview.classList.remove('show');
-  }
-}
-
-function removeDlCmtImage() {
-  S.dlCmtImage = null;
-  showDlCmtPreview(null);
-  document.getElementById('dl-cmt-img-inp').value = '';
-  toast('🗑 Đã xóa ảnh đính kèm');
-}
-
-function onDlCmtImgPick(input) {
-  var file = input.files[0];
-  if (!file) return;
-  if (S.dlCmtImage) {
-    toast('⚠️ Chỉ được đính kèm 1 ảnh mỗi bình luận!');
-    input.value = '';
-    return;
-  }
-  toast('⏳ Đang xử lý ảnh...');
-  var entry = S.dayListEntries[S.dayListIdx];
-  var dateStr = entry ? entry.date : todayStr();
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    showDlCmtPreview({ url: ev.target.result });
-  };
-  reader.readAsDataURL(file);
-  compressImg(file, function (b64) {
-    uploadImgToDrive(b64, 'cmt_' + Date.now() + '.jpg', dateStr, function (result) {
-      if (result) {
-        S.dlCmtImage = { url: result.url, driveId: result.driveId };
-        showDlCmtPreview(S.dlCmtImage);
-        toast('✅ Ảnh đã sẵn sàng');
-      } else {
-        toast('⚠️ Không thể upload ảnh, hãy thử lại');
-        showDlCmtPreview(null);
-        S.dlCmtImage = null;
-      }
-      input.value = '';
-    });
-  });
-}
-
 function renderDlComments() {
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -3057,7 +2499,7 @@ function renderDlComments() {
 function sendDlComment() {
   var inp = document.getElementById('dl-cmt-inp');
   var text = inp.value.trim();
-  if (!text && !S.dlCmtImage) { toast('⚠️ Viết gì đó hoặc thêm ảnh để bình luận nhé!'); return; }
+  if (!text) { toast('⚠️ Viết gì đó để bình luận nhé!'); return; }
 
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -3067,27 +2509,14 @@ function sendDlComment() {
   btn.disabled = true;
   btn.textContent = '⏳';
 
-  var payload = {
-    action: 'add_comment',
-    entryId: e.id,
-    author: CURRENT_USER,
-    text: text || ''
-  };
-  if (S.dlCmtImage) {
-    payload.image = S.dlCmtImage;
-  }
-
   if (S.editingDlCommentId) {
-    payload.action = 'edit_comment';
-    payload.commentId = S.editingDlCommentId;
-    delete payload.image;
-    callCommentAPI(payload, function (res) {
+    callCommentAPI({
+      action: 'edit_comment', entryId: e.id, commentId: S.editingDlCommentId, text: text
+    }, function (res) {
       e.comments = res.comments;
       var master = S.data.entries.find(function (x) { return x.id === e.id; });
       if (master) master.comments = res.comments;
       S.editingDlCommentId = null;
-      S.dlCmtImage = null;
-      showDlCmtPreview(null);
       inp.value = '';
       btn.disabled = false;
       btn.textContent = '➤';
@@ -3101,12 +2530,12 @@ function sendDlComment() {
     return;
   }
 
-  callCommentAPI(payload, function (res) {
+  callCommentAPI({
+    action: 'add_comment', entryId: e.id, author: CURRENT_USER, text: text
+  }, function (res) {
     e.comments = res.comments;
     var master = S.data.entries.find(function (x) { return x.id === e.id; });
     if (master) master.comments = res.comments;
-    S.dlCmtImage = null;
-    showDlCmtPreview(null);
     inp.value = '';
     btn.disabled = false;
     btn.textContent = '➤';
@@ -3132,8 +2561,6 @@ function startEditDlComment(commentId) {
   var inp = document.getElementById('dl-cmt-inp');
   inp.value = c.text;
   inp.focus();
-  S.dlCmtImage = null;
-  showDlCmtPreview(null);
   document.getElementById('dl-cmt-send-btn').textContent = '✓';
   toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
 }
@@ -3166,27 +2593,14 @@ async function delDlComment(commentId) {
 }
 
 // ============================================================
-// LIGHTBOX (cho ảnh comment)
+// LIGHTBOX, TAB, MODAL HELPERS, TOAST, UTILITY
 // ============================================================
 function openLb(src) {
-  var viewer = document.getElementById('photo-viewer');
-  var list = document.getElementById('pv-list');
-  list.innerHTML = '<div class="pv-item"><img src="' + escH(src) + '" alt="ảnh"/></div>';
-  viewer.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb').classList.add('open');
 }
-// Ghi đè closePhotoViewer
-var origClosePhotoViewer = closePhotoViewer;
-closePhotoViewer = function() {
-  document.getElementById('photo-viewer').classList.remove('open');
-  document.body.style.overflow = '';
-  S.pvImages = [];
-  S.pvCurrentIndex = 0;
-};
+function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
-// ============================================================
-// TAB, MODAL HELPERS
-// ============================================================
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
@@ -3219,7 +2633,7 @@ document.querySelectorAll('.modal').forEach(function (o) {
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal.open').forEach(function (m) { closeModal(m.id); });
-    closePhotoViewer();
+    closeLb();
   }
 });
 
