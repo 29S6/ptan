@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V7.1.0 - Redesign giao diện đẹp, nữ tính, chuẩn chỉ -->
+<!-- V7.2.0 - Header chuẩn V6, giao diện nữ tính, navibar bo tròn -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -75,88 +75,107 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #app { padding-bottom: 24px; } }
 
-/* ===== HEADER ===== */
+/* ===== HEADER (GIỐNG V6) ===== */
 .app-hdr {
-  background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(255,240,245,.88));
+  background: linear-gradient(135deg, rgba(168,84,112,.92), rgba(201,125,150,.85));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(168,84,112,.08);
+  border-bottom: 1.5px solid rgba(255,255,255,.28);
   position: sticky;
   top: 0;
   z-index: 200;
-  padding: 12px 18px;
-  box-shadow: 0 2px 16px rgba(168,84,112,.06);
+  box-shadow: 0 4px 20px rgba(168,84,112,.2);
 }
 .hdr-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 13px 18px 9px;
   max-width: 1400px;
   margin: 0 auto;
 }
-.hdr-left {
+.hdr-logo {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.46rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(100,30,60,.28);
+}
+.hdr-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.hdr-btn {
+  background: rgba(255,255,255,.22);
+  border: 1px solid rgba(255,255,255,.32);
+  border-radius: 20px;
+  padding: 6px 13px;
+  font-size: .75rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all .15s;
+}
+.hdr-btn:hover { background: rgba(255,255,255,.32); }
+.hdr-btn.syncing svg { animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.user-badge {
+  font-size: .8rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,.2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  border: 1px solid rgba(255,255,255,.3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.clock-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 0 18px 10px;
+  flex-wrap: wrap;
+}
+.cu {
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 9px;
+  padding: 4px 9px;
+  text-align: center;
+  min-width: 56px;
+}
+.cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
+.cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
+
+/* ===== STATUS SLIDER (streak) ===== */
+.status-slider {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-.hdr-logo {
-  font-family: 'Baloo 2', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #a85470;
-  text-shadow: 0 1px 4px rgba(168,84,112,.1);
-}
-.hdr-clock {
-  font-size: .78rem;
-  color: #7a4a5e;
-  font-weight: 600;
-  background: rgba(168,84,112,.08);
-  padding: 4px 14px;
+  padding: 10px 18px;
+  margin: 4px auto 10px;
+  max-width: 1400px;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 20px;
-  border: 1px solid rgba(168,84,112,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  min-height: 64px;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
-.hdr-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.hdr-streak {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(255,140,0,.10);
-  padding: 4px 12px 4px 8px;
-  border-radius: 20px;
-  font-size: .78rem;
-  font-weight: 700;
-  color: #e67e22;
-}
-.hdr-streak .fire { font-size: 1rem; }
-.user-badge {
-  font-size: .78rem;
-  font-weight: 600;
-  color: #a85470;
-  background: rgba(168,84,112,.10);
-  padding: 4px 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(168,84,112,.1);
-}
-.hdr-btn {
-  background: rgba(168,84,112,.10);
-  border: 1px solid rgba(168,84,112,.1);
-  border-radius: 20px;
-  padding: 4px 14px;
-  font-size: .72rem;
-  font-weight: 600;
-  color: #a85470;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: .15s;
-}
-.hdr-btn:hover { background: rgba(168,84,112,.18); }
-.hdr-btn.syncing svg { animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.status-slider .icon-fire { font-size: 2rem; line-height: 1; flex-shrink: 0; color: #ff8c00; filter: drop-shadow(0 0 8px #ff8c0066); }
+.status-slider .info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.status-slider .info .main { font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.status-slider .info .main strong { font-size: 1.2rem; font-weight: 800; color: #fff; }
+.status-slider .info .sub { font-size: .82rem; font-weight: 400; opacity: .9; display: flex; align-items: center; gap: 6px; }
+.status-slider .progress-wrap { width: 100%; height: 4px; background: rgba(255,255,255,.2); border-radius: 3px; overflow: hidden; margin-top: 2px; }
+.status-slider .progress-wrap .fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ffb347,#ff8c00); border-radius: 3px; transition: width .6s ease; }
 
 /* ===== MAIN LAYOUT ===== */
 .main-layout {
@@ -850,7 +869,7 @@ img { max-width: 100%; display: block; }
 .dl-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
 .dl-counter { font-size: .78rem; font-weight: 700; color: #7a4a5e; }
 
-.cmt-section { margin-top: 16px; border-top: 1px solid rgba(168,84,112,.08); padding-top: 14px; }
+.cmt-section { margin-top: 16px; border-top: 1px solid rgba(168,84,112,.06); padding-top: 14px; }
 .cmt-hdr { font-size: .8rem; font-weight: 700; color: #a85470; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 .cmt-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; max-height: 300px; overflow-y: auto; }
 .cmt-item { background: rgba(255,255,255,.5); border: 1px solid rgba(168,84,112,.06); border-radius: 14px; padding: 10px 14px; transition: .15s; }
@@ -983,21 +1002,14 @@ img { max-width: 100%; display: block; }
 <!-- ===== APP ===== -->
 <div id="app">
 
-  <!-- HEADER -->
+  <!-- HEADER (GIỐNG V6) -->
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
-      <div class="hdr-left">
-        <div class="hdr-logo">💕 Nhật Ký</div>
-        <div class="hdr-clock" id="hdr-clock">0 ngày</div>
-      </div>
-      <div class="hdr-right">
-        <div class="hdr-streak" id="hdr-streak">
-          <span class="fire">🔥</span>
-          <span id="streak-count">0</span>
-        </div>
+      <div class="hdr-logo">💕 Nhật Ký</div>
+      <div class="hdr-actions">
         <span class="user-badge" id="user-badge">🌻 Ánh Ngọc</span>
         <button class="hdr-btn" id="sync-btn" onclick="syncData()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
             <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
           </svg>
@@ -1005,6 +1017,13 @@ img { max-width: 100%; display: block; }
         </button>
       </div>
     </div>
+    <div class="clock-row">
+      <div class="cu"><div class="cn" id="ck-d">0</div><div class="cl">Ngày</div></div>
+      <div class="cu"><div class="cn" id="ck-h">00</div><div class="cl">Giờ</div></div>
+      <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
+      <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
+    </div>
+    <div class="status-slider" id="status-slider"></div>
   </header>
 
   <!-- ===== MAIN LAYOUT ===== -->
@@ -1100,7 +1119,7 @@ img { max-width: 100%; display: block; }
   <button class="nav-fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
 </nav>
 
-<!-- ===== MODALS (giữ nguyên cấu trúc, chỉ thay đổi CSS) ===== -->
+<!-- ===== MODALS (giữ nguyên) ===== -->
 <!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
@@ -1280,7 +1299,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V7.1.0 - GIỮ NGUYÊN TOÀN BỘ JAVASCRIPT TỪ V6.7.0
+// V7.2.0 - GIỮ NGUYÊN TOÀN BỘ JAVASCRIPT TỪ V6.7.0
 // (CHỈ THAY ĐỔI GIAO DIỆN, KHÔNG THAY ĐỔI LOGIC)
 // ============================================================
 
@@ -1392,7 +1411,7 @@ function unlockApp() {
     loadData();
     newPrompt();
     setupDesktopLayout();
-    updateHeaderInfo();
+    updateStatusSlider();
     initPullToRefresh();
     initNavbarScrollHide();
   }, 480);
@@ -1496,29 +1515,19 @@ function getCurrentMobileTab() {
   return active ? active.dataset.tab : 'diary';
 }
 
-// === CLOCK & HEADER ===
+// === CLOCK ===
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
   function tick() {
     var diff = Math.max(0, Date.now() - start);
     var days = Math.floor(diff / 86400000);
-    document.getElementById('hdr-clock').textContent = days + ' ngày';
+    document.getElementById('ck-d').textContent = String(days);
+    document.getElementById('ck-h').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+    document.getElementById('ck-m').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+    document.getElementById('ck-s').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
   }
   tick();
   setInterval(tick, 1000);
-}
-
-function updateHeaderInfo() {
-  var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
-  var today = todayStr();
-  var yesterday = offsetDay(today, -1);
-  var checkFrom = dates.indexOf(today) >= 0 ? today : (dates.indexOf(yesterday) >= 0 ? yesterday : null);
-  var cur = 0;
-  if (checkFrom) {
-    var d = checkFrom;
-    while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
-  }
-  document.getElementById('streak-count').textContent = cur;
 }
 
 // === LOCAL STORAGE ===
@@ -1576,7 +1585,6 @@ function loadData(cb) {
     S.data.entries.forEach(normalizeEntry);
     sortEntries(S.data.entries);
     renderAll();
-    updateHeaderInfo();
     if (typeof cb === 'function') cb(S.data);
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
@@ -1593,12 +1601,10 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        updateHeaderInfo();
         toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian chờ)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
-        updateHeaderInfo();
         toast('⚠️ Không thể kết nối server, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
@@ -1624,12 +1630,10 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        updateHeaderInfo();
         toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (lỗi tải)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
-        updateHeaderInfo();
         toast('⚠️ Lỗi kết nối, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
@@ -1803,7 +1807,7 @@ function renderAll() {
   renderAnniversaries();
   renderAlbum();
   buildMonthFilter();
-  updateHeaderInfo();
+  updateStatusSlider();
 }
 
 // === OTD ===
