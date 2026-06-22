@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- V7.0.0 - Redesign giao diện theo mockup, gọn nhẹ, tập trung vào nội dung -->
+<!-- V7.1.0 - Redesign giao diện theo mockup, iOS 26, dễ thương -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="theme-color" content="#d4849c"/>
+<meta name="theme-color" content="#f7dde8"/>
 <title>💕 Nhật Ký Của Mình</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -92,7 +92,7 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #app { padding-bottom: 24px; } }
 
-/* ===== HEADER (đơn giản) ===== */
+/* ===== HEADER – thiết kế lại ===== */
 .app-hdr {
   background: linear-gradient(135deg, rgba(168,84,112,.92), rgba(201,125,150,.85));
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -101,61 +101,80 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 4px 20px rgba(168,84,112,.2);
 }
 .hdr-top {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 18px 9px;
-  max-width: var(--max-width); margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px 8px;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 .hdr-left {
-  display: flex; align-items: center; gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 .hdr-logo {
   font-family: var(--font-ttl);
-  font-size: 1.46rem; font-weight: 800;
-  color: #fff; text-shadow: 0 2px 8px rgba(100,30,60,.28);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(100,30,60,.28);
 }
 .hdr-clock {
-  font-size: .85rem;
+  font-size: .8rem;
   color: rgba(255,255,255,.9);
   font-weight: 600;
   background: rgba(255,255,255,.18);
-  padding: 3px 12px;
+  padding: 2px 12px;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.25);
 }
 .hdr-right {
-  display: flex; align-items: center; gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .hdr-streak {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   background: rgba(255,255,255,.18);
-  padding: 3px 12px 3px 8px;
+  padding: 2px 12px 2px 8px;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.25);
-  font-size: .82rem;
+  font-size: .78rem;
   color: #fff;
   font-weight: 600;
 }
-.hdr-streak .fire { font-size: 1.1rem; }
+.hdr-streak .fire { font-size: 1rem; }
+.user-badge {
+  font-size: .78rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,.2);
+  border-radius: 20px;
+  padding: 3px 12px;
+  border: 1px solid rgba(255,255,255,.3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .hdr-btn {
   background: rgba(255,255,255,.22);
   border: 1px solid rgba(255,255,255,.32);
-  border-radius: 20px; padding: 6px 13px;
-  font-size: .75rem; font-weight: 700; color: #fff;
-  display: flex; align-items: center; gap: 5px;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: .7rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   transition: all .15s;
 }
 .hdr-btn:hover { background: rgba(255,255,255,.32); }
 .hdr-btn.syncing svg { animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.user-badge {
-  font-size: .78rem; font-weight: 700; color: #fff;
-  background: rgba(255,255,255,.2);
-  border-radius: 20px; padding: 3px 12px;
-  border: 1px solid rgba(255,255,255,.3);
-  display: flex; align-items: center; gap: 4px;
-}
 
 /* ===== MAIN LAYOUT ===== */
 .main-layout {
@@ -202,23 +221,26 @@ img { max-width: 100%; display: block; }
 .gc-hd {
   padding: 13px 17px 11px;
   border-bottom: 1px solid rgba(168,84,112,.08);
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .gc-ttl {
   font-family: var(--font-ttl);
-  font-size: 1.2rem; font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: var(--p1);
 }
 
-/* ===== KHOẢNG CÁCH HEADER -> NỘI DUNG = 5px ===== */
+/* ===== KHOẢNG CÁCH HEADER -> NỘI DUNG ĐỒNG ĐỀU = 8px ===== */
 .gc-body {
-  padding: 5px 17px 17px;
+  padding: 8px 17px 17px;
 }
 .gc-body > *:first-child {
   margin-top: 0;
 }
 
-/* ===== TIMELINE (đã xóa thanh tìm kiếm) ===== */
+/* ===== TIMELINE ===== */
 #otd-wrap { min-height: 10px; }
 
 .tl-wrap { display: flex; flex-direction: column; gap: 4px; }
@@ -232,7 +254,7 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 .tl-day-items { display: flex; flex-direction: column; gap: 8px; }
 
-/* ===== TIMELINE ITEM – card đơn giản ===== */
+/* ===== TIMELINE ITEM ===== */
 .ti {
   background: rgba(255,255,255,.65);
   border: 1px solid rgba(168,84,112,.08);
@@ -435,28 +457,35 @@ img { max-width: 100%; display: block; }
   .quick-write { display: flex; }
 }
 
-/* ===== MOBILE NAVIBAR – ĐƠN GIẢN, CÓ NÚT VIẾT ===== */
+/* ===== MOBILE NAVIBAR – iOS 26 BO TRÒN 4 TAB + NÚT VIẾT RIÊNG ===== */
 .mob-nav {
   display: none;
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
   z-index: 300;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 6px 8px env(safe-area-inset-bottom, 6px);
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 32px;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 6px 8px 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   transition: transform 0.35s cubic-bezier(0.32, 0.94, 0.6, 1);
   transform: translateY(0);
 }
 .mob-nav.hidden-nav {
-  transform: translateY(100%);
+  transform: translateY(calc(100% + 20px));
+}
+.mn-tabs {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  align-items: center;
 }
 .mn-item {
   display: flex;
@@ -464,42 +493,43 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   gap: 1px;
-  padding: 6px 4px;
+  padding: 8px 4px;
   color: #999;
   font-size: .6rem;
   font-weight: 600;
-  transition: color .2s;
+  text-transform: none;
+  transition: all .2s;
   border: none;
   background: transparent;
-  border-radius: 16px;
+  border-radius: 24px;
   min-height: 44px;
   flex: 1;
-  max-width: 70px;
 }
 .mn-item.on {
   color: var(--p1);
+  background: rgba(168,84,112,.08);
 }
 .mn-icon { font-size: 1.4rem; line-height: 1; }
 
-/* Nút viết bài mới – nổi bật */
+/* Nút viết bài – nổi bật, tách biệt */
 .nav-fab {
   flex-shrink: 0;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--p3), var(--p1));
   border: none;
-  box-shadow: 0 4px 16px rgba(168,84,112,.4);
-  font-size: 1.6rem;
+  box-shadow: 0 4px 16px rgba(168,84,112,.35);
+  font-size: 1.5rem;
   color: #fff;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  margin: -10px 0;
+  margin-left: 6px;
 }
-.nav-fab:hover { transform: scale(1.08) rotate(7deg); box-shadow: 0 6px 20px rgba(168,84,112,.5); }
+.nav-fab:hover { transform: scale(1.08) rotate(7deg); box-shadow: 0 6px 20px rgba(168,84,112,.45); }
 .nav-fab:active { transform: scale(0.92); }
 
 @media (max-width: 768px) {
@@ -968,7 +998,7 @@ img { max-width: 100%; display: block; }
 <!-- ===== APP ===== -->
 <div id="app">
 
-  <!-- HEADER MỚI – ĐƠN GIẢN: Logo + Clock + Streak -->
+  <!-- HEADER – BỐ CỤC GIỐNG MOCKUP -->
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-left">
@@ -1062,24 +1092,26 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- ===== MOBILE NAVIBAR (đơn giản) ===== -->
+<!-- ===== MOBILE NAVIBAR – iOS 26 BO TRÒN ===== -->
 <nav class="mob-nav" id="mob-nav">
-  <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
-    <span class="mn-icon">📖</span>
-    <span>Nhật ký</span>
-  </button>
-  <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
-    <span class="mn-icon">🌸</span>
-    <span>Kỷ niệm</span>
-  </button>
-  <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
-    <span class="mn-icon">🗓</span>
-    <span>Lịch</span>
-  </button>
-  <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
-    <span class="mn-icon">🖼</span>
-    <span>Album</span>
-  </button>
+  <div class="mn-tabs">
+    <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
+      <span class="mn-icon">📖</span>
+      <span>Nhật ký</span>
+    </button>
+    <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
+      <span class="mn-icon">🌸</span>
+      <span>Kỷ niệm</span>
+    </button>
+    <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
+      <span class="mn-icon">🗓</span>
+      <span>Lịch</span>
+    </button>
+    <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
+      <span class="mn-icon">🖼</span>
+      <span>Album</span>
+    </button>
+  </div>
   <button class="nav-fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
 </nav>
 
@@ -1262,8 +1294,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V7.0.0 - REDESIGN GIAO DIỆN THEO MOCKUP
-// GIỮ NGUYÊN JAVASCRIPT TỪ V6.7.0 (chỉ điều chỉnh header)
+// V7.1.0 - GIỮ NGUYÊN JAVASCRIPT TỪ V6 (CHỈ CẬP NHẬT HEADER)
 // ============================================================
 
 // ===== CẤU HÌNH =====
