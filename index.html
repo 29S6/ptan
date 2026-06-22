@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.0.0 - Sửa lỗi viết bài, cải thiện desktop theo phong cách Facebook -->
+<!-- V6.0.1 - Sửa lỗi hiển thị kỷ niệm & album -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -209,6 +209,7 @@ img { max-width: 100%; display: block; }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; min-width: 0; }
   #col-right-desktop { order: 3; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
+  /* Ẩn các panel gốc trên desktop để tránh trùng lặp, sẽ được di chuyển vào right sidebar */
   #col-ann, #col-album { display: none !important; }
 }
 @media (min-width: 769px) and (max-width: 991px) {
@@ -873,22 +874,24 @@ img { max-width: 100%; display: block; }
       </div>
     </div>
 
-    <!-- COL 3: RIGHT SIDEBAR (chứa kỷ niệm và album) -->
-    <div id="col-right-desktop" style="display:none">
-      <div id="col-ann">
-        <div class="gc">
-          <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
-          <div class="gc-body">
-            <div id="ann-list"></div>
-            <button class="add-ann-btn" onclick="openAnnForm()">＋ Thêm ngày kỷ niệm</button>
-          </div>
+    <!-- COL 3: RIGHT SIDEBAR (desktop) – ban đầu rỗng, sẽ được JavaScript đổ nội dung vào -->
+    <div id="col-right-desktop" style="display:none"></div>
+
+    <!-- Các panel cho kỷ niệm và album (sẽ được di chuyển vào right sidebar trên desktop) -->
+    <div class="col-panel" id="col-ann">
+      <div class="gc">
+        <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
+        <div class="gc-body">
+          <div id="ann-list"></div>
+          <button class="add-ann-btn" onclick="openAnnForm()">＋ Thêm ngày kỷ niệm</button>
         </div>
       </div>
-      <div id="col-album">
-        <div class="gc">
-          <div class="gc-hd"><div class="gc-ttl">🖼 Album Ảnh</div></div>
-          <div class="gc-body" id="album-body"></div>
-        </div>
+    </div>
+
+    <div class="col-panel" id="col-album">
+      <div class="gc">
+        <div class="gc-hd"><div class="gc-ttl">🖼 Album Ảnh</div></div>
+        <div class="gc-body" id="album-body"></div>
       </div>
     </div>
 
@@ -1079,7 +1082,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.0.0 - NHẬT KÝ ỨNG DỤNG CHÍNH
+// V6.0.1 - NHẬT KÝ ỨNG DỤNG CHÍNH (đã sửa lỗi hiển thị kỷ niệm & album)
 // ============================================================
 
 // ============================================================
@@ -1201,7 +1204,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// DESKTOP LAYOUT
+// DESKTOP LAYOUT (di chuyển col-ann và col-album vào right sidebar)
 // ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -1213,14 +1216,14 @@ function setupDesktopLayout() {
     rightCol.appendChild(albumCol);
     rightCol.style.display = 'flex';
   }
-  ['col-cal', 'col-diary', 'col-right-desktop'].forEach(function (id) {
+  // Ẩn các panel gốc trên desktop (đã được di chuyển)
+  if (annCol) annCol.style.display = 'block';
+  if (albumCol) albumCol.style.display = 'block';
+  // Đảm bảo các panel khác hiển thị
+  ['col-cal', 'col-diary'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) { el.style.display = 'block'; el.classList.add('on'); }
   });
-  var ann = document.getElementById('col-ann');
-  var alb = document.getElementById('col-album');
-  if (ann) ann.style.display = 'none';
-  if (alb) alb.style.display = 'none';
 }
 
 var _lastIsDesktop = window.innerWidth >= 769;
@@ -1229,6 +1232,7 @@ window.addEventListener('resize', function () {
   if (nowDesktop && !_lastIsDesktop) {
     setupDesktopLayout();
   } else if (!nowDesktop && _lastIsDesktop) {
+    // Trả lại col-ann và col-album về vị trí cũ trong main-layout
     var mainLayout = document.getElementById('main-layout');
     var rightCol = document.getElementById('col-right-desktop');
     var albumCol = document.getElementById('col-album');
@@ -1456,21 +1460,17 @@ window.addEventListener('offline', function () {
 });
 
 // ============================================================
-// POST DATA & COMMENT API (sửa lỗi callback)
+// POST DATA & COMMENT API
 // ============================================================
 function postData(payload, msg, cb) {
-  // Không lưu base64 trong payload
   var cleanPayload = JSON.parse(JSON.stringify(payload));
-  // Nếu có entry.images, loại bỏ trường data nếu có
   if (cleanPayload.entry && cleanPayload.entry.images) {
     cleanPayload.entry.images = cleanPayload.entry.images.map(function (img) {
-      var out = { url: img.url, driveId: img.driveId };
-      return out;
+      return { url: img.url, driveId: img.driveId };
     });
   }
 
   var body = JSON.stringify(cleanPayload);
-  // Giới hạn kích thước payload (khoảng 45 MB)
   if (body.length > 45 * 1024 * 1024) {
     toast('⚠️ Dung lượng ảnh quá lớn, vui lòng chọn ít ảnh hơn hoặc ảnh nhỏ hơn.');
     if (typeof cb === 'function') cb(null);
@@ -2063,7 +2063,7 @@ function buildGalleryHTML(images) {
 }
 
 // ============================================================
-// WRITE / EDIT / VIEW / DELETE (SỬA LỖI UPLOAD)
+// WRITE / EDIT / VIEW / DELETE
 // ============================================================
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = [];
@@ -2175,7 +2175,7 @@ function chgFs(delta) {
 }
 
 // ============================================================
-// UPLOAD IMAGES (SỬA: KHÔNG LƯU BASE64)
+// UPLOAD IMAGES
 // ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -2200,7 +2200,6 @@ function onImgPick(input) {
         if (result) {
           S.imgs.push({ url: result.url, driveId: result.driveId });
         } else {
-          // Nếu upload thất bại, thông báo và không lưu ảnh
           toast('⚠️ Không thể upload ảnh: ' + file.name);
         }
         done++;
@@ -2226,7 +2225,7 @@ function compressImg(file, cb) {
     var img = new Image();
     img.onload = function () {
       var canvas = document.createElement('canvas');
-      var max = 800; // Giảm kích thước để tránh payload lớn
+      var max = 800;
       var w = img.width, h = img.height;
       if (w > max || h > max) {
         if (w > h) { h = Math.round(h * max / w); w = max; }
@@ -2246,7 +2245,6 @@ function uploadImgToDrive(b64, filename, dateStr, cb) {
   var base64Data = parts[1] || parts[0];
   var mimeType = (b64.indexOf('png') > -1) ? 'image/png' : 'image/jpeg';
 
-  // Kiểm tra kích thước payload (khoảng 1MB)
   if (base64Data.length > 1.2 * 1024 * 1024) {
     toast('⚠️ Ảnh quá lớn sau nén, bỏ qua');
     cb(null);
@@ -2296,7 +2294,7 @@ function rmImg(i) {
 }
 
 // ============================================================
-// SAVE ENTRY (SỬA: KHÔNG LƯU BASE64)
+// SAVE ENTRY
 // ============================================================
 function saveEntry() {
   var date = document.getElementById('e-date').value;
@@ -2323,7 +2321,7 @@ function saveEntry() {
     content: content,
     mood: S.mood,
     author: CURRENT_USER,
-    images: S.imgs.slice(), // chỉ chứa { url, driveId }
+    images: S.imgs.slice(),
     comments: existing && existing.comments ? existing.comments.slice() : [],
     createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
     updatedAt: nowIso
