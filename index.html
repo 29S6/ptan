@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- V7.2.1 - Cân chỉnh khoảng cách, thêm nội dung status slider -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -11,7 +10,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
-/* ===== RESET ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
@@ -25,7 +23,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 input, textarea, select { font-family: inherit; }
 img { max-width: 100%; display: block; }
 
-/* ===== LOCK SCREEN ===== */
+/* LOCK SCREEN */
 #lock-screen {
   position: fixed; inset: 0; z-index: 9000;
   display: flex; align-items: center; justify-content: center;
@@ -66,7 +64,7 @@ img { max-width: 100%; display: block; }
 .pk.del { color: #a85470; }
 .lock-err { color: #c04060; font-size: .76rem; min-height: 15px; margin-top: 8px; font-weight: 600; }
 
-/* ===== APP ===== */
+/* APP */
 #app {
   display: none;
   position: relative;
@@ -75,7 +73,7 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #app { padding-bottom: 24px; } }
 
-/* ===== HEADER (GIỐNG V6) ===== */
+/* HEADER - GIỐNG V6 */
 .app-hdr {
   background: linear-gradient(135deg, rgba(168,84,112,.92), rgba(201,125,150,.85));
   backdrop-filter: blur(20px);
@@ -152,12 +150,12 @@ img { max-width: 100%; display: block; }
 .cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
 
-/* ===== STATUS SLIDER – THÊM NỘI DUNG ===== */
-.status-slider {
+/* SEARCH BAR - thay thế streak */
+.search-bar {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 18px;
+  gap: 8px;
+  padding: 8px 18px;
   margin: 4px auto 10px;
   max-width: 1400px;
   background: rgba(255,255,255,.18);
@@ -165,79 +163,37 @@ img { max-width: 100%; display: block; }
   -webkit-backdrop-filter: blur(10px);
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,.25);
-  min-height: 60px;
-  color: #fff;
-  text-shadow: 0 1px 4px rgba(0,0,0,.12);
 }
-.status-slider .icon-fire {
-  font-size: 2rem;
-  line-height: 1;
-  flex-shrink: 0;
-  color: #ff8c00;
-  filter: drop-shadow(0 0 8px rgba(255,140,0,.4));
-}
-.status-slider .info {
+.search-bar input {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.status-slider .info .main {
-  font-size: 1.05rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.status-slider .info .main strong {
-  font-size: 1.2rem;
-  font-weight: 800;
+  background: rgba(255,255,255,.15);
+  border: none;
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-size: .85rem;
   color: #fff;
+  outline: none;
+  font-family: inherit;
 }
-.status-slider .info .sub {
-  font-size: .8rem;
-  font-weight: 400;
-  opacity: .85;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.status-slider .info .sub .heart-emoji {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-}
-.status-slider .progress-wrap {
-  width: 100%;
-  height: 4px;
-  background: rgba(255,255,255,.2);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 3px;
-}
-.status-slider .progress-wrap .fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #ffb347, #ff8c00);
-  border-radius: 4px;
-  transition: width .6s ease;
+.search-bar input::placeholder { color: rgba(255,255,255,.6); }
+.search-bar .search-icon {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,.7);
+  flex-shrink: 0;
 }
 
-/* ===== MAIN LAYOUT ===== */
+/* MAIN LAYOUT */
 .main-layout {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 8px 14px 16px; /* giảm padding-top từ 12px xuống 8px */
+  padding: 6px 14px 16px;
 }
 @media (min-width: 769px) {
   .main-layout {
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     gap: 20px;
-    padding: 10px 24px 30px;
+    padding: 8px 24px 30px;
   }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; }
@@ -249,7 +205,7 @@ img { max-width: 100%; display: block; }
   .col-panel.on { display: block; }
 }
 
-/* ===== CARD ===== */
+/* CARD */
 .gc {
   background: rgba(255,255,255,.80);
   backdrop-filter: blur(10px);
@@ -273,11 +229,11 @@ img { max-width: 100%; display: block; }
   color: #a85470;
 }
 .gc-body {
-  padding: 8px 18px 18px; /* giảm padding-top từ 12px xuống 8px để đồng bộ */
+  padding: 8px 18px 18px;
 }
 .gc-body > *:first-child { margin-top: 0; }
 
-/* ===== TIMELINE ===== */
+/* TIMELINE */
 #otd-wrap { min-height: 10px; }
 .tl-day-group { margin-bottom: 18px; }
 .tl-day-hdr {
@@ -287,32 +243,17 @@ img { max-width: 100%; display: block; }
   margin-bottom: 8px;
   padding: 0 2px;
 }
-.tl-day-hdr-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #a85470;
-}
-.tl-day-hdr-lbl {
-  font-size: .8rem;
-  font-weight: 700;
-  color: #a85470;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-}
-.tl-day-hdr-line {
-  flex: 1;
-  height: 1px;
-  background: rgba(168,84,112,.15);
-}
+.tl-day-hdr-dot { width: 8px; height: 8px; border-radius: 50%; background: #a85470; }
+.tl-day-hdr-lbl { font-size: .8rem; font-weight: 700; color: #a85470; text-transform: uppercase; letter-spacing: .05em; }
+.tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 
-/* ===== TIMELINE ITEM ===== */
+/* TIMELINE ITEM - thêm padding 12px */
 .ti {
   background: #fff;
   border: 1px solid rgba(168,84,112,.06);
   border-radius: 16px;
   padding: 14px 16px;
-  margin-bottom: 8px;
+  margin: 12px 0;
   cursor: pointer;
   transition: all .2s;
   box-shadow: 0 2px 8px rgba(168,84,112,.04);
@@ -376,7 +317,7 @@ img { max-width: 100%; display: block; }
   gap: 4px;
 }
 @media (min-width: 769px) {
-  .ti { padding: 18px 22px; }
+  .ti { padding: 18px 22px; margin: 14px 0; }
   .ti-ttl { font-size: 1.05rem; }
   .ti-pre { font-size: .85rem; }
   .ti-thumb { width: 60px; height: 60px; }
@@ -396,7 +337,7 @@ img { max-width: 100%; display: block; }
 .load-more:hover { background: rgba(168,84,112,.12); }
 .empty-hint { text-align: center; color: #b08090; font-size: .85rem; padding: 30px 0; }
 
-/* ===== OTD ===== */
+/* OTD */
 .otd-card {
   background: linear-gradient(135deg, rgba(168,84,112,.06), rgba(201,125,150,.04));
   border: 1px solid rgba(168,84,112,.1);
@@ -411,7 +352,7 @@ img { max-width: 100%; display: block; }
 .otd-ttl { font-weight: 700; font-size: .9rem; color: #3d1f2d; }
 .otd-pre { font-size: .76rem; color: #7a4a5e; margin-top: 2px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* ===== ANNIVERSARY ===== */
+/* ANNIVERSARY */
 .ann-item {
   display: flex;
   align-items: center;
@@ -420,7 +361,7 @@ img { max-width: 100%; display: block; }
   border: 1px solid rgba(168,84,112,.06);
   border-radius: 14px;
   padding: 10px 14px;
-  margin-bottom: 6px;
+  margin: 6px 0;
 }
 .ann-dot { width: 10px; height: 10px; border-radius: 50%; background: #a85470; flex-shrink: 0; }
 .ann-info { flex: 1; min-width: 0; }
@@ -446,7 +387,7 @@ img { max-width: 100%; display: block; }
 }
 .add-ann-btn:hover { background: rgba(168,84,112,.12); }
 
-/* ===== CALENDAR ===== */
+/* CALENDAR */
 .cal-nav { display: flex; align-items: center; gap: 6px; }
 .cnav {
   background: rgba(168,84,112,.08);
@@ -493,7 +434,7 @@ img { max-width: 100%; display: block; }
 .mood-map-leg { display: flex; gap: 8px; flex-wrap: wrap; }
 .ml-i { display: flex; align-items: center; gap: 3px; font-size: .66rem; color: #7a4a5e; }
 
-/* ===== ALBUM ===== */
+/* ALBUM */
 .album-day-group { margin-bottom: 20px; }
 .album-day-hdr {
   display: flex;
@@ -528,14 +469,14 @@ img { max-width: 100%; display: block; }
 }
 .album-empty { text-align: center; color: #b08090; padding: 30px 0; font-size: .85rem; }
 
-/* ===== KHUNG VIẾT NHANH (Desktop) – ẨN TRÊN MOBILE ===== */
+/* QUICK WRITE - chỉ desktop */
 .quick-write {
   display: none;
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 2px 12px rgba(168,84,112,.08);
   padding: 12px 16px;
-  margin-bottom: 16px;
+  margin: 0 0 16px 0;
   cursor: pointer;
   transition: .2s;
   align-items: center;
@@ -571,7 +512,7 @@ img { max-width: 100%; display: block; }
 .quick-write .qw-icon { font-size: 1.1rem; color: #a85470; opacity: .6; transition: .2s; }
 .quick-write:hover .qw-icon { opacity: 1; }
 
-/* ===== MOBILE NAVIBAR ===== */
+/* MOBILE NAVIBAR */
 .mob-nav {
   display: none;
   position: fixed;
@@ -637,7 +578,7 @@ img { max-width: 100%; display: block; }
 .nav-fab:active { transform: scale(.92); }
 @media (max-width: 768px) { .mob-nav { display: flex; } }
 
-/* ===== MODALS ===== */
+/* MODALS */
 .modal {
   position: fixed;
   inset: 0;
@@ -697,14 +638,14 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #modal-write .mbox { max-width: 680px; } }
 
-/* ===== FORM ===== */
-.fg { margin-bottom: 6px; }
+/* FORM - thêm padding cho các phần tử */
+.fg { margin-bottom: 8px; }
 .fl {
   display: block;
   font-size: .72rem;
   font-weight: 700;
   color: #7a4a5e;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: .04em;
 }
@@ -737,7 +678,7 @@ img { max-width: 100%; display: block; }
   border: 1px solid rgba(168,84,112,.08);
   border-radius: 14px;
   padding: 10px 14px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-size: .8rem;
   color: #7a4a5e;
   display: flex;
@@ -832,7 +773,7 @@ img { max-width: 100%; display: block; }
 }
 .btn-d:hover { background: rgba(200,50,70,.12); }
 
-/* ===== VIEW ENTRY ===== */
+/* VIEW ENTRY - padding cho content */
 .ve-date { font-size: .8rem; color: #3d1f2d; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ve-author-badge { font-size: .68rem; font-weight: 700; color: #a85470; background: rgba(168,84,112,.08); border-radius: 12px; padding: 2px 12px; }
 .ve-edited-note { font-size: .68rem; color: #b08090; font-style: italic; margin-bottom: 6px; }
@@ -856,7 +797,7 @@ img { max-width: 100%; display: block; }
 .ve-gallery .vg-img:hover img { transform: scale(1.03); }
 .ve-gallery .vg-img .vg-overlay { position: absolute; inset: 0; background: rgba(40,20,30,.5); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700; color: #fff; }
 
-/* ===== PHOTO VIEWER ===== */
+/* PHOTO VIEWER */
 #photo-viewer {
   position: fixed; inset: 0; z-index: 700;
   background: rgba(0,0,0,.92);
@@ -898,10 +839,13 @@ img { max-width: 100%; display: block; }
 #photo-viewer .pv-back-list { background: none; border: none; color: #aaa; font-size: .9rem; padding: 6px 0; text-align: left; align-self: flex-start; cursor: pointer; }
 #photo-viewer .pv-back-list:hover { color: #fff; }
 
-/* ===== DL NAV, COMMENTS ===== */
+/* DL NAV, COMMENTS - redesign */
 .dl-nav-row {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; margin: 12px 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 12px 0 4px;
   background: rgba(168,84,112,.04);
   border-radius: 14px;
   padding: 8px 12px;
@@ -920,44 +864,140 @@ img { max-width: 100%; display: block; }
 .dl-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
 .dl-counter { font-size: .78rem; font-weight: 700; color: #7a4a5e; }
 
-.cmt-section { margin-top: 16px; border-top: 1px solid rgba(168,84,112,.06); padding-top: 14px; }
-.cmt-hdr { font-size: .8rem; font-weight: 700; color: #a85470; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-.cmt-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; max-height: 300px; overflow-y: auto; }
-.cmt-item { background: rgba(255,255,255,.5); border: 1px solid rgba(168,84,112,.06); border-radius: 14px; padding: 10px 14px; transition: .15s; }
+/* COMMENTS - redesigned */
+.cmt-section {
+  margin-top: 16px;
+  border-top: 1px solid rgba(168,84,112,.06);
+  padding-top: 14px;
+}
+.cmt-hdr {
+  font-size: .8rem;
+  font-weight: 700;
+  color: #a85470;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cmt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.cmt-item {
+  background: rgba(255,255,255,.5);
+  border: 1px solid rgba(168,84,112,.06);
+  border-radius: 14px;
+  padding: 10px 14px;
+  transition: .15s;
+}
 .cmt-item:hover { background: rgba(255,255,255,.8); }
-.cmt-item-hdr { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
-.cmt-author { font-size: .8rem; font-weight: 700; color: #a85470; }
-.cmt-time { font-size: .64rem; color: #b08090; margin-left: auto; }
-.cmt-edited-tag { font-size: .6rem; color: #b08090; font-style: italic; }
-.cmt-text { font-size: .86rem; color: #3d1f2d; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; margin-bottom: 6px; }
-.cmt-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.cmt-action-btn { background: none; border: none; font-size: .7rem; font-weight: 700; color: #b08090; padding: 2px 6px; border-radius: 6px; transition: .15s; }
-.cmt-action-btn:hover { background: rgba(168,84,112,.08); color: #a85470; }
-.cmt-action-btn.del:hover { color: #c04060; background: rgba(200,50,70,.08); }
-.cmt-empty { text-align: center; font-size: .78rem; color: #b08090; padding: 12px 0; }
+.cmt-item-hdr {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.cmt-author {
+  font-size: .8rem;
+  font-weight: 700;
+  color: #a85470;
+}
+.cmt-time {
+  font-size: .64rem;
+  color: #b08090;
+  margin-left: auto;
+}
+.cmt-edited-tag {
+  font-size: .6rem;
+  color: #b08090;
+  font-style: italic;
+}
+.cmt-text {
+  font-size: .86rem;
+  color: #3d1f2d;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-bottom: 6px;
+}
+.cmt-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cmt-action-btn {
+  background: none;
+  border: none;
+  font-size: .7rem;
+  font-weight: 700;
+  color: #b08090;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: .15s;
+}
+.cmt-action-btn:hover {
+  background: rgba(168,84,112,.08);
+  color: #a85470;
+}
+.cmt-action-btn.del:hover {
+  color: #c04060;
+  background: rgba(200,50,70,.08);
+}
+.cmt-empty {
+  text-align: center;
+  font-size: .78rem;
+  color: #b08090;
+  padding: 12px 0;
+}
 .cmt-input-row {
-  display: flex; align-items: center; gap: 10px; margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
   background: rgba(255,255,255,.4);
   border-radius: 24px;
   padding: 4px 4px 4px 16px;
   border: 1px solid rgba(168,84,112,.06);
 }
-.cmt-inp { flex: 1; background: transparent; border: none; padding: 8px 6px; font-size: .86rem; color: #3d1f2d; outline: none; }
-.cmt-inp::placeholder { color: #b08090; }
+.cmt-inp {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 4px;
+  font-size: .86rem;
+  color: #3d1f2d;
+  outline: none;
+  min-width: 0;
+}
+.cmt-inp::placeholder {
+  color: #b08090;
+}
 .cmt-send-btn {
   background: linear-gradient(135deg, #f48fb1, #a85470);
   border: none;
   border-radius: 50%;
-  width: 34px; height: 34px;
+  width: 34px;
+  height: 34px;
   color: #fff;
   font-size: .9rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: .18s;
+  flex-shrink: 0;
 }
-.cmt-send-btn:hover:not(:disabled) { transform: scale(1.06); }
-.cmt-send-btn:disabled { opacity: .4; cursor: not-allowed; }
+.cmt-send-btn:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+.cmt-send-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
 
 .confirm-modal .mbox { max-width: 380px; text-align: center; }
 .confirm-modal .m-ttl { font-size: 1.2rem; margin-bottom: 8px; }
@@ -966,7 +1006,7 @@ img { max-width: 100%; display: block; }
 .confirm-actions .btn-p { flex: 0 1 auto; padding: 8px 24px; }
 .confirm-actions .btn-s { flex: 0 1 auto; padding: 8px 24px; }
 
-/* ===== TOAST ===== */
+/* TOAST */
 #toast {
   position: fixed;
   bottom: 90px;
@@ -988,7 +1028,7 @@ img { max-width: 100%; display: block; }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (min-width: 769px) { #toast { bottom: 28px; } }
 
-/* ===== SAVING OVERLAY ===== */
+/* SAVING OVERLAY */
 #saving-overlay {
   position: fixed; inset: 0; z-index: 9500;
   background: rgba(61,31,45,.35);
@@ -1010,7 +1050,6 @@ img { max-width: 100%; display: block; }
 
 .hidden { display: none !important; }
 
-/* ===== RESPONSIVE ===== */
 @media (min-width: 769px) and (max-width: 991px) {
   .main-layout { grid-template-columns: 1fr; gap: 16px; }
   #col-cal { position: static; max-height: none; overflow-y: visible; }
@@ -1020,7 +1059,7 @@ img { max-width: 100%; display: block; }
 </head>
 <body>
 
-<!-- ===== LOCK SCREEN ===== -->
+<!-- LOCK SCREEN -->
 <div id="lock-screen">
   <div class="lock-card">
     <div class="lock-quote" id="lock-quote"></div>
@@ -1050,10 +1089,10 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- ===== APP ===== -->
+<!-- APP -->
 <div id="app">
 
-  <!-- HEADER (GIỐNG V6) -->
+  <!-- HEADER -->
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
@@ -1074,10 +1113,14 @@ img { max-width: 100%; display: block; }
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <div class="status-slider" id="status-slider"></div>
+    <!-- SEARCH BAR - thay thế streak -->
+    <div class="search-bar" id="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Tìm kiếm bài viết..." oninput="filterEntries()"/>
+    </div>
   </header>
 
-  <!-- ===== MAIN LAYOUT ===== -->
+  <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
     <!-- COL 1: LỊCH -->
@@ -1106,8 +1149,8 @@ img { max-width: 100%; display: block; }
     <!-- COL 2: FEED NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
-      <!-- Khung viết nhanh – chỉ hiển thị trên desktop -->
-      <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0" aria-label="Viết nhật ký mới">
+      <!-- Khung viết nhanh - chỉ desktop -->
+      <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0">
         <div class="qw-avatar">🌻</div>
         <div class="qw-input">Hôm nay bạn thế nào? ✨</div>
         <span class="qw-icon">📝</span>
@@ -1147,34 +1190,34 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- ===== MOBILE NAVIBAR ===== -->
+<!-- MOBILE NAVIBAR -->
 <nav class="mob-nav" id="mob-nav">
   <div class="mn-tabs">
-    <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
+    <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
       <span class="mn-icon">📖</span>
       <span>Nhật ký</span>
     </button>
-    <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
+    <button class="mn-item" data-tab="ann" onclick="switchTab('ann')">
       <span class="mn-icon">🌸</span>
       <span>Kỷ niệm</span>
     </button>
-    <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
+    <button class="mn-item" data-tab="cal" onclick="switchTab('cal')">
       <span class="mn-icon">🗓</span>
       <span>Lịch</span>
     </button>
-    <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
+    <button class="mn-item" data-tab="album" onclick="switchTab('album')">
       <span class="mn-icon">🖼</span>
       <span>Album</span>
     </button>
   </div>
-  <button class="nav-fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
+  <button class="nav-fab" onclick="openWriteModal()">＋</button>
 </nav>
 
 <!-- ===== MODALS ===== -->
-<!-- (giữ nguyên tất cả modal như V7.2.0) -->
+<!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-write')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-write')">✕</button>
     <div class="m-ttl" id="write-ttl">✍️ Viết nhật ký</div>
     <div class="wp" id="wp-box">
       <span id="wp-txt">💭 Hôm nay có điều gì đặc biệt không?</span>
@@ -1226,9 +1269,10 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
+<!-- MODAL XEM BÀI -->
 <div class="modal" id="modal-view">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-view')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-view')">✕</button>
     <div class="ve-date" id="ve-date"></div>
     <div class="ve-edited-note hidden" id="ve-edited-note"></div>
     <div class="ve-mood" id="ve-mood"></div>
@@ -1246,16 +1290,17 @@ img { max-width: 100%; display: block; }
       <div class="cmt-input-row">
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendComment()"/>
-          <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
+          <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()">➤</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- MODAL DANH SÁCH CÙNG NGÀY -->
 <div class="modal" id="modal-daylist">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-daylist')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-daylist')">✕</button>
     <div class="ve-date" id="dl-date"></div>
     <div class="ve-edited-note hidden" id="dl-edited-note"></div>
     <div class="ve-mood" id="dl-mood"></div>
@@ -1278,16 +1323,17 @@ img { max-width: 100%; display: block; }
       <div class="cmt-input-row">
         <div class="cmt-input-box">
           <input type="text" class="cmt-inp" id="dl-cmt-inp" placeholder="Viết bình luận..." maxlength="300" onkeydown="if(event.key==='Enter')sendDlComment()"/>
-          <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()" title="Gửi">➤</button>
+          <button class="cmt-send-btn" id="dl-cmt-send-btn" onclick="sendDlComment()">➤</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- MODAL KỶ NIỆM -->
 <div class="modal" id="modal-ann">
   <div class="mbox" style="max-width:400px">
-    <button class="mc" onclick="closeModal('modal-ann')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('modal-ann')">✕</button>
     <div class="m-ttl">🌸 Thêm Kỷ Niệm</div>
     <div class="fg">
       <label class="fl">Ngày</label>
@@ -1304,9 +1350,10 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
+<!-- MODAL CONFIRM -->
 <div class="modal confirm-modal" id="confirm-modal">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('confirm-modal')" aria-label="Đóng">✕</button>
+    <button class="mc" onclick="closeModal('confirm-modal')">✕</button>
     <div class="m-ttl" id="confirm-ttl">Xác nhận</div>
     <div class="confirm-msg" id="confirm-msg">Bạn có chắc chắn?</div>
     <div class="confirm-actions">
@@ -1316,27 +1363,27 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- ===== PHOTO VIEWER ===== -->
+<!-- PHOTO VIEWER -->
 <div id="photo-viewer">
-  <button class="pv-close" onclick="closePhotoViewer()" aria-label="Đóng photo viewer">✕</button>
+  <button class="pv-close" onclick="closePhotoViewer()">✕</button>
   <div id="pv-list-container">
     <div class="pv-list" id="pv-list"></div>
     <div class="pv-single" id="pv-single">
-      <button class="pv-back-list" onclick="switchToGallery()" aria-label="Quay lại danh sách">‹ Quay lại danh sách</button>
+      <button class="pv-back-list" onclick="switchToGallery()">‹ Quay lại danh sách</button>
       <img class="pv-img" id="pv-single-img" src="" alt=""/>
       <div class="pv-nav">
-        <button id="pv-prev" onclick="pvPrev()" aria-label="Ảnh trước">‹</button>
+        <button id="pv-prev" onclick="pvPrev()">‹</button>
         <span id="pv-counter" style="color:#fff;font-size:.9rem;">1 / 1</span>
-        <button id="pv-next" onclick="pvNext()" aria-label="Ảnh sau">›</button>
+        <button id="pv-next" onclick="pvNext()">›</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== TOAST ===== -->
+<!-- TOAST -->
 <div id="toast"></div>
 
-<!-- ===== SAVING OVERLAY ===== -->
+<!-- SAVING OVERLAY -->
 <div id="saving-overlay">
   <div class="saving-box">
     <span class="saving-heart">💌</span>
@@ -1346,10 +1393,8 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V7.2.1 - GIỮ NGUYÊN TOÀN BỘ JAVASCRIPT (giống V7.2.0)
+// CẤU HÌNH
 // ============================================================
-
-// === CẤU HÌNH ===
 var CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
   PIN_ANH_NGOC: '2204',
@@ -1362,7 +1407,9 @@ var USER_ANH = 'Anh 💖';
 var CURRENT_USER = USER_ANH_NGOC;
 var DEFAULT_AUTHOR = USER_ANH_NGOC;
 
-// === STATE ===
+// ============================================================
+// STATE
+// ============================================================
 var S = {
   data: { entries: [], anniversaries: [] },
   calY: new Date().getFullYear(),
@@ -1386,7 +1433,8 @@ var S = {
   pvCurrentIndex: 0,
   pvMode: 'gallery',
   lastScrollY: 0,
-  isNavHidden: false
+  isNavHidden: false,
+  searchQuery: ''
 };
 
 var PROMPTS = [
@@ -1417,7 +1465,9 @@ var QUOTES = [
 document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
-// === LOCK SCREEN ===
+// ============================================================
+// LOCK SCREEN
+// ============================================================
 function kp(d) {
   if (S.pin.length >= 4) return;
   S.pin += d;
@@ -1457,7 +1507,6 @@ function unlockApp() {
     loadData();
     newPrompt();
     setupDesktopLayout();
-    updateStatusSlider();
     initPullToRefresh();
     initNavbarScrollHide();
   }, 480);
@@ -1468,7 +1517,9 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Backspace') kd();
 });
 
-// === PULL TO REFRESH ===
+// ============================================================
+// PULL TO REFRESH
+// ============================================================
 var ptrStartY = 0, ptrDragging = false;
 function initPullToRefresh() {
   var container = document.getElementById('app');
@@ -1492,7 +1543,9 @@ function initPullToRefresh() {
   }, { passive: true });
 }
 
-// === ẨN/HIỆN NAVIBAR ===
+// ============================================================
+// ẨN/HIỆN NAVIBAR
+// ============================================================
 function initNavbarScrollHide() {
   var nav = document.getElementById('mob-nav');
   if (!nav) return;
@@ -1513,7 +1566,9 @@ function initNavbarScrollHide() {
   }, { passive: true });
 }
 
-// === DESKTOP LAYOUT ===
+// ============================================================
+// DESKTOP LAYOUT
+// ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
   var rightCol = document.getElementById('col-right-desktop');
@@ -1561,7 +1616,9 @@ function getCurrentMobileTab() {
   return active ? active.dataset.tab : 'diary';
 }
 
-// === CLOCK ===
+// ============================================================
+// CLOCK
+// ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
   function tick() {
@@ -1576,7 +1633,9 @@ function startClock() {
   setInterval(tick, 1000);
 }
 
-// === LOCAL STORAGE ===
+// ============================================================
+// LOCAL STORAGE
+// ============================================================
 function saveToLocal(data) {
   try { localStorage.setItem('diary_backup', JSON.stringify(data)); } catch (e) {}
 }
@@ -1595,7 +1654,9 @@ function addPendingAction(action) {
   savePendingActions();
 }
 
-// === LOAD DATA ===
+// ============================================================
+// LOAD DATA
+// ============================================================
 function loadData(cb) {
   setSyncing(true);
   var fn = 'jcb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
@@ -1690,7 +1751,9 @@ function loadData(cb) {
   document.head.appendChild(tag);
 }
 
-// === PENDING ACTIONS ===
+// ============================================================
+// PENDING ACTIONS
+// ============================================================
 function processPendingActions() {
   if (S.pendingActions.length === 0 || !navigator.onLine) return;
   var actions = S.pendingActions.slice();
@@ -1725,7 +1788,9 @@ window.addEventListener('offline', function () {
   toast('📶 Mất kết nối, dữ liệu sẽ được lưu tạm');
 });
 
-// === POST DATA ===
+// ============================================================
+// POST DATA
+// ============================================================
 function postData(payload, msg, cb) {
   var cleanPayload = JSON.parse(JSON.stringify(payload));
   if (cleanPayload.entry && cleanPayload.entry.images) {
@@ -1792,7 +1857,9 @@ function callCommentAPI(payload, onSuccess, onError) {
     });
 }
 
-// === CONFIRM MODAL ===
+// ============================================================
+// CONFIRM MODAL
+// ============================================================
 var confirmResolve = null;
 function showConfirm(title, msg) {
   return new Promise(function (resolve) {
@@ -1813,7 +1880,9 @@ function showConfirm(title, msg) {
   });
 }
 
-// === NORMALIZE & SORT ===
+// ============================================================
+// NORMALIZE & SORT
+// ============================================================
 function normalizeEntry(e) {
   if (!e.author) e.author = DEFAULT_AUTHOR;
   if (!e.comments || !Array.isArray(e.comments)) e.comments = [];
@@ -1845,7 +1914,9 @@ function setSyncing(on) {
   document.getElementById('sync-btn').classList.toggle('syncing', on);
 }
 
-// === RENDER ALL ===
+// ============================================================
+// RENDER ALL
+// ============================================================
 function renderAll() {
   renderOTD();
   renderCalendar();
@@ -1853,10 +1924,31 @@ function renderAll() {
   renderAnniversaries();
   renderAlbum();
   buildMonthFilter();
-  updateStatusSlider();
 }
 
-// === OTD ===
+// ============================================================
+// SEARCH FUNCTION
+// ============================================================
+function filterEntries() {
+  var query = document.getElementById('search-input').value.toLowerCase().trim();
+  S.searchQuery = query;
+  renderTimeline();
+}
+
+function filteredEntries() {
+  var q = S.searchQuery;
+  if (!q) return S.data.entries;
+  return S.data.entries.filter(function (e) {
+    var title = (e.title || '').toLowerCase();
+    var content = (e.content || '').toLowerCase();
+    var author = (e.author || '').toLowerCase();
+    return title.includes(q) || content.includes(q) || author.includes(q);
+  });
+}
+
+// ============================================================
+// OTD
+// ============================================================
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
   var today = todayStr();
@@ -1877,7 +1969,9 @@ function renderOTD() {
     '</div></div></div>';
 }
 
-// === CALENDAR ===
+// ============================================================
+// CALENDAR
+// ============================================================
 function renderCalendar() {
   document.getElementById('c-mlbl').textContent = MNAMES[S.calM] + ' ' + S.calY;
   var today = new Date();
@@ -1945,7 +2039,9 @@ function offsetDay(ds, delta) {
   return fmtDate(d);
 }
 
-// === DAY LIST ===
+// ============================================================
+// DAY LIST
+// ============================================================
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
   if (!ents.length) return;
@@ -2004,7 +2100,9 @@ function delFromDayList() {
   closeModal('modal-daylist');
 }
 
-// === EDITED NOTE ===
+// ============================================================
+// EDITED NOTE
+// ============================================================
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
   if (!el) return;
@@ -2022,7 +2120,9 @@ function renderEditedNote(elId, e) {
   el.textContent = '✏️ Sửa lần cuối: ' + fmtFullDateTime(updated);
 }
 
-// === TIMELINE ===
+// ============================================================
+// TIMELINE
+// ============================================================
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
   if (sel) {
@@ -2035,10 +2135,6 @@ function buildMonthFilter() {
     });
     sel.innerHTML = opts;
   }
-}
-
-function filteredEntries() {
-  return S.data.entries;
 }
 
 function groupByDate(entries) {
@@ -2115,7 +2211,9 @@ function tiHTML(e) {
     '</div></div>';
 }
 
-// === ANNIVERSARIES ===
+// ============================================================
+// ANNIVERSARIES
+// ============================================================
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
   if (!S.data.anniversaries.length) {
@@ -2173,7 +2271,9 @@ async function delAnn(id) {
   postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
 }
 
-// === ALBUM ===
+// ============================================================
+// ALBUM
+// ============================================================
 function renderAlbum() {
   var body = document.getElementById('album-body');
   var entriesWithImgs = S.data.entries.filter(function (e) {
@@ -2212,7 +2312,9 @@ function renderAlbum() {
   body.innerHTML = html;
 }
 
-// === GALLERY ===
+// ============================================================
+// GALLERY
+// ============================================================
 function buildGridImages(images, entryId) {
   if (!images || !images.length) return '';
   var total = images.length;
@@ -2285,7 +2387,9 @@ function buildGalleryHTML(images, entryId) {
   return '<div class="ve-gallery" style="' + style + '">' + html + '</div>';
 }
 
-// === PHOTO VIEWER ===
+// ============================================================
+// PHOTO VIEWER
+// ============================================================
 function openPhotoViewer(entryId, startIndex) {
   var entry = S.data.entries.find(function (e) { return e.id === entryId; });
   if (!entry || !entry.images || !entry.images.length) return;
@@ -2356,7 +2460,9 @@ function closePhotoViewer() {
   S.pvCurrentIndex = 0;
 }
 
-// === WRITE / EDIT / VIEW / DELETE ===
+// ============================================================
+// WRITE / EDIT / VIEW / DELETE
+// ============================================================
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = [];
   document.getElementById('write-ttl').textContent = '✍️ Viết nhật ký';
@@ -2445,7 +2551,9 @@ async function delEntry() {
   S.curId = null;
 }
 
-// === MOOD ===
+// ============================================================
+// MOOD
+// ============================================================
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
   document.querySelectorAll('.mp-o').forEach(function (el) {
@@ -2464,7 +2572,9 @@ function chgFs(delta) {
   document.getElementById('fs-lbl').textContent = 'Cỡ chữ: ' + S.fontSize + 'px';
 }
 
-// === UPLOAD IMAGES ===
+// ============================================================
+// UPLOAD IMAGES
+// ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
   if (S.imgs.length + files.length > 10) {
@@ -2594,7 +2704,9 @@ function rmImg(i) {
   renderImgPrev();
 }
 
-// === SAVE ENTRY ===
+// ============================================================
+// SAVE ENTRY
+// ============================================================
 function saveEntry() {
   var date = document.getElementById('e-date').value;
   var title = document.getElementById('e-ttl').value.trim();
@@ -2647,7 +2759,9 @@ function hideSavingOverlay() {
   document.getElementById('saving-overlay').classList.remove('show');
 }
 
-// === COMMENTS ===
+// ============================================================
+// COMMENTS
+// ============================================================
 function renderComments() {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
   if (!e) return;
@@ -2774,7 +2888,9 @@ async function delComment(commentId) {
   });
 }
 
-// === COMMENTS (daylist) ===
+// ============================================================
+// COMMENTS (daylist)
+// ============================================================
 function renderDlComments() {
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -2887,7 +3003,9 @@ async function delDlComment(commentId) {
   });
 }
 
-// === TAB, MODAL, TOAST, UTILITY ===
+// ============================================================
+// TAB, MODAL, TOAST, UTILITY
+// ============================================================
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
@@ -2973,7 +3091,9 @@ function escH(s) {
     .replace(/'/g, '&#39;');
 }
 
-// === KHỞI TẠO ===
+// ============================================================
+// KHỞI TẠO
+// ============================================================
 loadPendingActions();
 if (!navigator.onLine) {
   toast('📶 Đang ở chế độ offline, dữ liệu sẽ được lưu tạm');
