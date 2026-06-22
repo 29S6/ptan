@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.0.4 - Cải tiến layout ảnh, modal, upload song song, giao diện viết nhanh -->
+<!-- V6.1.0 - Ổn định: fix thanh tìm kiếm, ưu tiên server, desktop hiển thị đủ tab -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -142,7 +142,7 @@ img { max-width: 100%; display: block; }
 .cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
 
-/* ===== STATUS SLIDER ===== */
+/* ===== STATUS SLIDER – fix chiều cao ===== */
 .status-slider {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 18px;
@@ -151,7 +151,8 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,.12);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border-radius: 20px; border: 1px solid rgba(255,255,255,.2);
-  min-height: 64px;
+  min-height: 64px;  /* cố định chiều cao tối thiểu */
+  flex-shrink: 0;
   color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 .status-slider .icon-fire { font-size: 2rem; line-height: 1; flex-shrink: 0; color: #ff8c00; filter: drop-shadow(0 0 8px #ff8c0066); }
@@ -208,6 +209,7 @@ img { max-width: 100%; display: block; }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; min-width: 0; }
   #col-right-desktop { order: 3; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
+  /* Ẩn các panel gốc để tránh trùng lặp, nhưng chúng sẽ được di chuyển vào right sidebar */
   #col-ann, #col-album { display: none !important; }
 }
 @media (min-width: 769px) and (max-width: 991px) {
@@ -247,7 +249,10 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===== TIMELINE ===== */
-#otd-wrap { min-height: 10px; }
+#otd-wrap {
+  min-height: 70px;  /* giữ chỗ cho OTD, tránh co kéo */
+  flex-shrink: 0;
+}
 
 .search-row {
   display: flex; gap: 7px; margin-bottom: 13px;
@@ -521,7 +526,6 @@ img { max-width: 100%; display: block; }
 .mbox::-webkit-scrollbar { width: 4px; }
 .mbox::-webkit-scrollbar-thumb { background: var(--p4); border-radius: 4px; }
 
-/* Nút đóng modal – cố định góc phải */
 .mc {
   position: absolute;
   top: 16px;
@@ -546,7 +550,7 @@ img { max-width: 100%; display: block; }
   font-family: var(--font-ttl);
   font-size: 1.5rem; font-weight: 700; color: var(--p1);
   margin-bottom: 15px;
-  padding-right: 36px; /* tránh đè lên nút đóng */
+  padding-right: 36px;
 }
 @media (min-width: 769px) { #modal-write .mbox { max-width: 680px; } }
 
@@ -702,7 +706,6 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   color: #fff;
 }
-/* Layout sẽ do JS tạo style inline */
 
 /* ===== PHOTO VIEWER ===== */
 #photo-viewer {
@@ -750,8 +753,6 @@ img { max-width: 100%; display: block; }
   object-fit: contain;
   display: block;
 }
-
-/* ===== PHOTO VIEWER - CHẾ ĐỘ ĐƠN LẺ ===== */
 #photo-viewer .pv-single {
   display: none;
   flex-direction: column;
@@ -1215,9 +1216,7 @@ img { max-width: 100%; display: block; }
 <div id="photo-viewer">
   <button class="pv-close" onclick="closePhotoViewer()" aria-label="Đóng photo viewer">✕</button>
   <div id="pv-list-container">
-    <!-- Danh sách ảnh (mặc định) -->
     <div class="pv-list" id="pv-list"></div>
-    <!-- Chế độ xem đơn lẻ -->
     <div class="pv-single" id="pv-single">
       <button class="pv-back-list" onclick="switchToGallery()" aria-label="Quay lại danh sách">‹ Quay lại danh sách</button>
       <img class="pv-img" id="pv-single-img" src="" alt=""/>
@@ -1243,7 +1242,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.0.4 - NHẬT KÝ ỨNG DỤNG CHÍNH
+// V6.1.0 - NHẬT KÝ ỨNG DỤNG CHÍNH
 // ============================================================
 
 // ============================================================
@@ -1283,10 +1282,9 @@ var S = {
   pendingActions: [],
   isOnline: navigator.onLine,
   hasWelcomed: false,
-  // Photo viewer state
   pvImages: [],
   pvCurrentIndex: 0,
-  pvMode: 'gallery' // 'gallery' hoặc 'single'
+  pvMode: 'gallery'
 };
 
 var PROMPTS = [
@@ -1356,7 +1354,7 @@ function unlockApp() {
     ls.style.display = 'none';
     document.getElementById('app').style.display = 'block';
     startClock();
-    loadData();
+    loadData();           // ưu tiên server
     newPrompt();
     setupDesktopLayout();
     updateStatusSlider();
@@ -1396,7 +1394,7 @@ function initPullToRefresh() {
 }
 
 // ============================================================
-// DESKTOP LAYOUT
+// DESKTOP LAYOUT – đảm bảo hiển thị ann và album
 // ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -1408,8 +1406,9 @@ function setupDesktopLayout() {
     rightCol.appendChild(albumCol);
     rightCol.style.display = 'flex';
   }
-  if (annCol) annCol.style.display = 'block';
-  if (albumCol) albumCol.style.display = 'block';
+  // Bắt buộc hiển thị block và thêm class on
+  if (annCol) { annCol.style.display = 'block'; annCol.classList.add('on'); }
+  if (albumCol) { albumCol.style.display = 'block'; albumCol.classList.add('on'); }
   ['col-cal', 'col-diary'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) { el.style.display = 'block'; el.classList.add('on'); }
@@ -1484,7 +1483,7 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA
+// LOAD DATA – ƯU TIÊN SERVER
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
@@ -1507,6 +1506,7 @@ function loadData(cb) {
         toast('🌸 Chào mừng ' + CURRENT_USER + '!');
       }
     } else {
+      // Nếu server trả về dữ liệu rỗng hoặc lỗi, fallback local
       var local = loadFromLocal();
       if (local) {
         S.data = local;
@@ -1527,6 +1527,7 @@ function loadData(cb) {
     processPendingActions();
   }
 
+  // Timeout dài hơn để ưu tiên server
   var timeout = setTimeout(function () {
     if (!callbackCalled) {
       callbackCalled = true;
@@ -1537,7 +1538,7 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
-        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian chờ)');
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (server không phản hồi)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
@@ -1547,7 +1548,7 @@ function loadData(cb) {
       if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
       delete window[fn];
     }
-  }, 10000);
+  }, 15000); // tăng lên 15s
 
   window[fn] = function (data) {
     handleServerData(data);
@@ -2194,7 +2195,7 @@ function renderAlbum() {
 }
 
 // ============================================================
-// GALLERY ẢNH (bố cục thông minh) – cải tiến layout 3 ảnh
+// GALLERY ẢNH (bố cục thông minh)
 // ============================================================
 function buildGridImages(images, entryId) {
   if (!images || !images.length) return '';
@@ -2210,7 +2211,6 @@ function buildGridImages(images, entryId) {
   } else if (displayCount === 2) {
     style = 'grid-template-columns:1fr 1fr;';
   } else if (displayCount === 3) {
-    // Layout 3 ảnh: 1 ảnh lớn bên trái (2:1), 2 ảnh vuông bên phải
     style = 'grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr;';
   } else if (displayCount === 4) {
     style = 'grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;';
@@ -2233,9 +2233,6 @@ function buildGridImages(images, entryId) {
   return '<div class="album-grid" style="' + style + '">' + html + '</div>';
 }
 
-// ============================================================
-// GALLERY HTML (dùng trong view modal) – cải tiến layout 3 ảnh
-// ============================================================
 function buildGalleryHTML(images, entryId) {
   if (!images || !images.length) return '';
   var total = images.length;
@@ -2458,7 +2455,7 @@ function chgFs(delta) {
 }
 
 // ============================================================
-// UPLOAD IMAGES – song song (tối đa 3 ảnh cùng lúc)
+// UPLOAD IMAGES – song song
 // ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -2484,7 +2481,6 @@ function onImgPick(input) {
 
   function processNext() {
     if (queue.length === 0 && processing === 0) {
-      // Hoàn thành tất cả
       setTimeout(function () {
         progEl.classList.remove('show');
         progBar.classList.remove('show');
