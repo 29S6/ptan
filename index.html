@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.7.1 - Sửa lỗi đồng bộ, thêm timeout loadData -->
+<!-- V5.7.2 - Sửa lỗi đồng bộ, fallback localStorage -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
-/* ===== GIỮ NGUYÊN CSS ===== */
 :root{
   --p1:#a85470;
   --p2:#c97d96;
@@ -717,7 +716,8 @@ var S = {
   editingCommentId: null,
   editingDlCommentId: null,
   pendingActions: [],
-  isOnline: navigator.onLine
+  isOnline: navigator.onLine,
+  isDataLoaded: false
 };
 
 var PROMPTS = [
@@ -800,7 +800,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// DESKTOP LAYOUT (giữ nguyên)
+// DESKTOP LAYOUT
 // ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -852,7 +852,7 @@ function getCurrentMobileTab() {
 }
 
 // ============================================================
-// CLOCK (giữ nguyên)
+// CLOCK
 // ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -869,7 +869,7 @@ function startClock() {
 }
 
 // ============================================================
-// SAKURA (giữ nguyên)
+// SAKURA
 // ============================================================
 (function () {
   var cv = document.getElementById('sakura-canvas');
@@ -903,7 +903,7 @@ function startClock() {
 })();
 
 // ============================================================
-// LOCAL STORAGE HELPERS (giữ nguyên)
+// LOCAL STORAGE HELPERS
 // ============================================================
 function saveToLocal(data) {
   try { localStorage.setItem('diary_backup', JSON.stringify(data)); } catch (e) {}
@@ -924,68 +924,125 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA (có timeout để tránh treo)
+// LOAD DATA (có fallback localStorage + timeout)
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
   var fn = 'jcb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
   var tag;
-  var timeout = setTimeout(function () {
-    // Nếu sau 10 giây không có callback, tự động tắt syncing và thông báo lỗi
-    if (window[fn]) {
-      delete window[fn];
-      setSyncing(false);
-      toast('⚠️ Quá thời gian chờ, kiểm tra kết nối hoặc URL Script!');
-      if (typeof cb === 'function') cb(null);
-    }
-  }, 10000);
+  var callbackCalled = false;
 
-  window[fn] = function (data) {
+  // Hàm xử lý dữ liệu nhận được
+  function handleData(data) {
+    if (callbackCalled) return;
+    callbackCalled = true;
     clearTimeout(timeout);
+    setSyncing(false);
+
     if (data && data.entries && data.anniversaries) {
       S.data = data;
       saveToLocal(data);
     } else {
       var local = loadFromLocal();
-      if (local) { S.data = local; toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)'); }
-      else { S.data = { entries: [], anniversaries: [] }; toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối'); }
+      if (local) {
+        S.data = local;
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)');
+      } else {
+        S.data = { entries: [], anniversaries: [] };
+        toast('⚠️ Không có dữ liệu, vui lòng kiểm tra kết nối');
+      }
     }
     if (!S.data.entries) S.data.entries = [];
     if (!S.data.anniversaries) S.data.anniversaries = [];
     S.data.entries.forEach(normalizeEntry);
     sortEntries(S.data.entries);
     renderAll();
-    setSyncing(false);
+    S.isDataLoaded = true;
     if (typeof cb === 'function') cb(S.data);
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
     processPendingActions();
+  }
+
+  // Fallback: sau 3 giây nếu chưa có dữ liệu từ server, hiển thị từ localStorage
+  var fallbackTimeout = setTimeout(function () {
+    if (!callbackCalled) {
+      var local = loadFromLocal();
+      if (local) {
+        S.data = local;
+        S.data.entries.forEach(normalizeEntry);
+        sortEntries(S.data.entries);
+        renderAll();
+        S.isDataLoaded = true;
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (fallback)');
+        if (typeof cb === 'function') cb(S.data);
+      } else {
+        S.data = { entries: [], anniversaries: [] };
+        renderAll();
+        toast('⚠️ Đang chờ dữ liệu từ server...');
+      }
+      setSyncing(false); // Tắt trạng thái đồng bộ để khỏi xoay
+    }
+  }, 3000);
+
+  // Timeout chính: sau 10 giây nếu không có callback, báo lỗi
+  var timeout = setTimeout(function () {
+    if (!callbackCalled) {
+      callbackCalled = true;
+      clearTimeout(fallbackTimeout);
+      setSyncing(false);
+      if (!S.isDataLoaded) {
+        var local = loadFromLocal();
+        if (local) {
+          S.data = local;
+          S.data.entries.forEach(normalizeEntry);
+          sortEntries(S.data.entries);
+          renderAll();
+          toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (timeout)');
+        } else {
+          toast('⚠️ Quá thời gian chờ, kiểm tra URL Script!');
+        }
+      }
+      if (typeof cb === 'function') cb(S.data);
+      if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
+      delete window[fn];
+    }
+  }, 10000);
+
+  // Định nghĩa callback JSONP
+  window[fn] = function (data) {
+    handleData(data);
   };
 
+  // Tạo script tag
   tag = document.createElement('script');
   tag.src = CFG.URL + '?callback=' + fn + '&_=' + Date.now();
   tag.onerror = function () {
-    clearTimeout(timeout);
-    var local = loadFromLocal();
-    if (local) {
-      S.data = local;
-      S.data.entries.forEach(normalizeEntry);
-      sortEntries(S.data.entries);
-      renderAll();
-      toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (offline)');
-    } else {
-      toast('⚠️ Không kết nối được và không có dữ liệu lưu tạm');
+    if (!callbackCalled) {
+      callbackCalled = true;
+      clearTimeout(timeout);
+      clearTimeout(fallbackTimeout);
+      setSyncing(false);
+      var local = loadFromLocal();
+      if (local) {
+        S.data = local;
+        S.data.entries.forEach(normalizeEntry);
+        sortEntries(S.data.entries);
+        renderAll();
+        toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (lỗi tải)');
+      } else {
+        toast('⚠️ Không thể tải dữ liệu, kiểm tra URL!');
+      }
+      if (typeof cb === 'function') cb(S.data);
+      delete window[fn];
+      if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     }
-    setSyncing(false);
-    delete window[fn];
-    if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-    if (typeof cb === 'function') cb(null);
   };
   document.head.appendChild(tag);
 }
 
 // ============================================================
-// PENDING ACTIONS (giữ nguyên)
+// PENDING ACTIONS
 // ============================================================
 function processPendingActions() {
   if (S.pendingActions.length === 0 || !navigator.onLine) return;
@@ -1022,7 +1079,7 @@ window.addEventListener('offline', function () {
 });
 
 // ============================================================
-// POST DATA (giữ nguyên)
+// POST DATA
 // ============================================================
 function postData(payload, msg, cb) {
   function doFetch(mode) {
@@ -1048,7 +1105,7 @@ function postData(payload, msg, cb) {
 }
 
 // ============================================================
-// CALL COMMENT API (giữ nguyên)
+// CALL COMMENT API
 // ============================================================
 function callCommentAPI(payload, onSuccess, onError) {
   function doFetch(mode) {
@@ -1074,7 +1131,7 @@ function callCommentAPI(payload, onSuccess, onError) {
 }
 
 // ============================================================
-// CONFIRM MODAL (giữ nguyên)
+// CONFIRM MODAL
 // ============================================================
 var confirmResolve = null;
 function showConfirm(title, msg) {
@@ -1148,7 +1205,7 @@ function renderAll() {
 }
 
 // ============================================================
-// OTD, CALENDAR (giữ nguyên)
+// OTD, CALENDAR
 // ============================================================
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
@@ -1232,7 +1289,7 @@ var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 // ============================================================
-// STATUS SLIDER (giữ nguyên)
+// STATUS SLIDER
 // ============================================================
 function updateStatusSlider() {
   var container = document.getElementById('status-slider');
@@ -1304,7 +1361,7 @@ function offsetDay(ds, delta) {
 }
 
 // ============================================================
-// DAY LIST (giữ nguyên)
+// DAY LIST
 // ============================================================
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
@@ -1365,7 +1422,7 @@ function delFromDayList() {
 }
 
 // ============================================================
-// EDITED NOTE (giữ nguyên)
+// EDITED NOTE
 // ============================================================
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
@@ -1385,7 +1442,7 @@ function renderEditedNote(elId, e) {
 }
 
 // ============================================================
-// TIMELINE (có like)
+// TIMELINE
 // ============================================================
 function buildMonthFilter() {
   var sel = document.getElementById('f-sel');
@@ -1469,7 +1526,7 @@ function tiHTML(e) {
   var cmtCount = (e.comments && e.comments.length) ? e.comments.length : 0;
   var cmtHTML = cmtCount > 0 ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>' : '';
 
-  var likeHTML = likeHTML(e.id, 'entry', e.likes || []);
+  var likeHTMLstr = likeHTML(e.id, 'entry', e.likes || []);
 
   return '<div class="ti" onclick="openView(\'' + e.id + '\')">' +
     '<div class="ti-row1">' +
@@ -1484,12 +1541,12 @@ function tiHTML(e) {
     cmtHTML +
     '</div>' + thumb +
     '</div>' +
-    '<div style="margin-top:4px;display:flex;align-items:center;gap:6px;">' + likeHTML + '</div>' +
+    '<div style="margin-top:4px;display:flex;align-items:center;gap:6px;">' + likeHTMLstr + '</div>' +
     '</div>';
 }
 
 // ============================================================
-// ANNIVERSARIES (giữ nguyên)
+// ANNIVERSARIES
 // ============================================================
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
@@ -1549,7 +1606,7 @@ async function delAnn(id) {
 }
 
 // ============================================================
-// ALBUM (có like)
+// ALBUM
 // ============================================================
 function renderAlbum() {
   var body = document.getElementById('album-body');
@@ -1580,12 +1637,12 @@ function renderAlbum() {
     for (var i = 0; i < max; i++) {
       var src = imgs[i].url || imgs[i];
       var imgId = e.id + '_img_' + i;
-      var likeHTML = likeHTML(imgId, 'image', e.imageLikes && e.imageLikes[i] ? e.imageLikes[i] : []);
+      var likeHTMLstr = likeHTML(imgId, 'image', e.imageLikes && e.imageLikes[i] ? e.imageLikes[i] : []);
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
         (count > max ? '<div class="a-img-more">+' + (count - max) + '</div>' : '') +
         '<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.4);border-radius:20px;padding:2px 8px;display:inline-flex;align-items:center;">' +
-          likeHTML +
+          likeHTMLstr +
         '</div>' +
         '</div>';
     }
@@ -1604,7 +1661,7 @@ function renderAlbum() {
 }
 
 // ============================================================
-// GALLERY HTML (giữ nguyên)
+// GALLERY HTML
 // ============================================================
 function buildGalleryHTML(images) {
   if (!images || !images.length) return '';
@@ -1623,7 +1680,7 @@ function buildGalleryHTML(images) {
 }
 
 // ============================================================
-// WRITE / EDIT / VIEW / DELETE (có phân quyền)
+// WRITE / EDIT / VIEW / DELETE
 // ============================================================
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = [];
@@ -1657,10 +1714,8 @@ function openView(id) {
   document.getElementById('ve-cnt').textContent = e.content || '';
   document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images);
 
-  // Like cho bài viết
   document.getElementById('view-like').innerHTML = likeHTML(e.id, 'entry', e.likes || []);
 
-  // Phân quyền sửa/xóa
   var isOwner = (e.author === CURRENT_USER);
   document.getElementById('view-edit-btn').style.display = isOwner ? '' : 'none';
   document.getElementById('view-del-btn').style.display = isOwner ? '' : 'none';
@@ -1718,7 +1773,7 @@ async function delEntry() {
 }
 
 // ============================================================
-// MOOD (giữ nguyên)
+// MOOD
 // ============================================================
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
@@ -1739,7 +1794,7 @@ function chgFs(delta) {
 }
 
 // ============================================================
-// UPLOAD IMAGES (giữ nguyên)
+// UPLOAD IMAGES
 // ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -1852,7 +1907,7 @@ function rmImg(i) {
 }
 
 // ============================================================
-// SAVE ENTRY (tự động gán author = CURRENT_USER)
+// SAVE ENTRY
 // ============================================================
 function saveEntry() {
   var date = document.getElementById('e-date').value;
@@ -1908,7 +1963,7 @@ function hideSavingOverlay() {
 }
 
 // ============================================================
-// COMMENTS (có like, avatar toggle giữ nguyên)
+// COMMENTS
 // ============================================================
 function toggleCmtAvatar() {
   var current = S.cmtAuthor;
@@ -2186,7 +2241,7 @@ async function delDlComment(commentId) {
 }
 
 // ============================================================
-// LIGHTBOX (giữ nguyên)
+// LIGHTBOX, TAB, MODAL HELPERS, TOAST, UTILITY (giữ nguyên)
 // ============================================================
 function openLb(src) {
   document.getElementById('lb-img').src = src;
@@ -2194,9 +2249,6 @@ function openLb(src) {
 }
 function closeLb() { document.getElementById('lb').classList.remove('open'); }
 
-// ============================================================
-// TAB (giữ nguyên)
-// ============================================================
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
@@ -2215,9 +2267,6 @@ function switchTab(tab) {
   });
 }
 
-// ============================================================
-// MODAL HELPERS (giữ nguyên)
-// ============================================================
 function openModal(id) {
   document.getElementById(id).classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2236,9 +2285,6 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-// ============================================================
-// TOAST (giữ nguyên)
-// ============================================================
 var _tt;
 function toast(msg) {
   if (!msg) return;
@@ -2248,9 +2294,6 @@ function toast(msg) {
   _tt = setTimeout(function () { el.classList.remove('show'); }, 2800);
 }
 
-// ============================================================
-// UTILITY (giữ nguyên)
-// ============================================================
 function p2(n) { return n < 10 ? '0' + n : '' + n; }
 function todayStr() {
   var t = new Date();
