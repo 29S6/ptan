@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V7.2.0 - Header chuẩn V6, giao diện nữ tính, navibar bo tròn -->
+<!-- V7.2.1 - Cân chỉnh khoảng cách, thêm nội dung status slider -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -152,43 +152,92 @@ img { max-width: 100%; display: block; }
 .cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
 
-/* ===== STATUS SLIDER (streak) ===== */
+/* ===== STATUS SLIDER – THÊM NỘI DUNG ===== */
 .status-slider {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 10px 18px;
   margin: 4px auto 10px;
   max-width: 1400px;
-  background: rgba(255,255,255,.12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255,255,255,.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.2);
-  min-height: 64px;
+  border: 1px solid rgba(255,255,255,.25);
+  min-height: 60px;
   color: #fff;
-  text-shadow: 0 1px 4px rgba(0,0,0,.15);
+  text-shadow: 0 1px 4px rgba(0,0,0,.12);
 }
-.status-slider .icon-fire { font-size: 2rem; line-height: 1; flex-shrink: 0; color: #ff8c00; filter: drop-shadow(0 0 8px #ff8c0066); }
-.status-slider .info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.status-slider .info .main { font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.status-slider .info .main strong { font-size: 1.2rem; font-weight: 800; color: #fff; }
-.status-slider .info .sub { font-size: .82rem; font-weight: 400; opacity: .9; display: flex; align-items: center; gap: 6px; }
-.status-slider .progress-wrap { width: 100%; height: 4px; background: rgba(255,255,255,.2); border-radius: 3px; overflow: hidden; margin-top: 2px; }
-.status-slider .progress-wrap .fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ffb347,#ff8c00); border-radius: 3px; transition: width .6s ease; }
+.status-slider .icon-fire {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  color: #ff8c00;
+  filter: drop-shadow(0 0 8px rgba(255,140,0,.4));
+}
+.status-slider .info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.status-slider .info .main {
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.status-slider .info .main strong {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+}
+.status-slider .info .sub {
+  font-size: .8rem;
+  font-weight: 400;
+  opacity: .85;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.status-slider .info .sub .heart-emoji {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+.status-slider .progress-wrap {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,.2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 3px;
+}
+.status-slider .progress-wrap .fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ffb347, #ff8c00);
+  border-radius: 4px;
+  transition: width .6s ease;
+}
 
 /* ===== MAIN LAYOUT ===== */
 .main-layout {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 12px 14px 16px;
+  padding: 8px 14px 16px; /* giảm padding-top từ 12px xuống 8px */
 }
 @media (min-width: 769px) {
   .main-layout {
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     gap: 20px;
-    padding: 18px 24px 30px;
+    padding: 10px 24px 30px;
   }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; }
@@ -224,7 +273,7 @@ img { max-width: 100%; display: block; }
   color: #a85470;
 }
 .gc-body {
-  padding: 12px 18px 18px;
+  padding: 8px 18px 18px; /* giảm padding-top từ 12px xuống 8px để đồng bộ */
 }
 .gc-body > *:first-child { margin-top: 0; }
 
@@ -479,7 +528,7 @@ img { max-width: 100%; display: block; }
 }
 .album-empty { text-align: center; color: #b08090; padding: 30px 0; font-size: .85rem; }
 
-/* ===== KHUNG VIẾT NHANH (Desktop) ===== */
+/* ===== KHUNG VIẾT NHANH (Desktop) – ẨN TRÊN MOBILE ===== */
 .quick-write {
   display: none;
   background: #fff;
@@ -492,6 +541,9 @@ img { max-width: 100%; display: block; }
   align-items: center;
   gap: 12px;
   border: 1px solid rgba(168,84,112,.06);
+}
+@media (min-width: 769px) {
+  .quick-write { display: flex; }
 }
 .quick-write:hover { box-shadow: 0 4px 20px rgba(168,84,112,.12); transform: translateY(-1px); }
 .quick-write .qw-avatar {
@@ -518,7 +570,6 @@ img { max-width: 100%; display: block; }
 .quick-write .qw-input:hover { background: #ede7ea; border-color: rgba(168,84,112,.15); }
 .quick-write .qw-icon { font-size: 1.1rem; color: #a85470; opacity: .6; transition: .2s; }
 .quick-write:hover .qw-icon { opacity: 1; }
-@media (min-width: 769px) { .quick-write { display: flex; } }
 
 /* ===== MOBILE NAVIBAR ===== */
 .mob-nav {
@@ -1055,7 +1106,7 @@ img { max-width: 100%; display: block; }
     <!-- COL 2: FEED NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
-      <!-- Khung viết nhanh desktop -->
+      <!-- Khung viết nhanh – chỉ hiển thị trên desktop -->
       <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0" aria-label="Viết nhật ký mới">
         <div class="qw-avatar">🌻</div>
         <div class="qw-input">Hôm nay bạn thế nào? ✨</div>
@@ -1119,8 +1170,8 @@ img { max-width: 100%; display: block; }
   <button class="nav-fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
 </nav>
 
-<!-- ===== MODALS (giữ nguyên) ===== -->
-<!-- MODAL VIẾT -->
+<!-- ===== MODALS ===== -->
+<!-- (giữ nguyên tất cả modal như V7.2.0) -->
 <div class="modal" id="modal-write">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-write')" aria-label="Đóng">✕</button>
@@ -1175,7 +1226,6 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- MODAL XEM BÀI -->
 <div class="modal" id="modal-view">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')" aria-label="Đóng">✕</button>
@@ -1203,7 +1253,6 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- MODAL DANH SÁCH CÙNG NGÀY -->
 <div class="modal" id="modal-daylist">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-daylist')" aria-label="Đóng">✕</button>
@@ -1236,7 +1285,6 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- MODAL KỶ NIỆM -->
 <div class="modal" id="modal-ann">
   <div class="mbox" style="max-width:400px">
     <button class="mc" onclick="closeModal('modal-ann')" aria-label="Đóng">✕</button>
@@ -1256,7 +1304,6 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- MODAL CONFIRM -->
 <div class="modal confirm-modal" id="confirm-modal">
   <div class="mbox">
     <button class="mc" onclick="closeModal('confirm-modal')" aria-label="Đóng">✕</button>
@@ -1269,7 +1316,7 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- PHOTO VIEWER -->
+<!-- ===== PHOTO VIEWER ===== -->
 <div id="photo-viewer">
   <button class="pv-close" onclick="closePhotoViewer()" aria-label="Đóng photo viewer">✕</button>
   <div id="pv-list-container">
@@ -1299,8 +1346,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V7.2.0 - GIỮ NGUYÊN TOÀN BỘ JAVASCRIPT TỪ V6.7.0
-// (CHỈ THAY ĐỔI GIAO DIỆN, KHÔNG THAY ĐỔI LOGIC)
+// V7.2.1 - GIỮ NGUYÊN TOÀN BỘ JAVASCRIPT (giống V7.2.0)
 // ============================================================
 
 // === CẤU HÌNH ===
@@ -1823,7 +1869,7 @@ function renderOTD() {
   });
   if (!match) { wrap.innerHTML = ''; return; }
   var yr = match.date.substring(0, 4);
-  wrap.innerHTML = '<div class="gc" style="margin-bottom:14px"><div class="gc-body" style="padding:10px 16px 16px;">' +
+  wrap.innerHTML = '<div class="gc" style="margin-bottom:14px"><div class="gc-body" style="padding:8px 16px 16px;">' +
     '<div class="otd-card" onclick="openView(\'' + match.id + '\')">' +
     '<div class="otd-lbl">⏳ Ngày này năm ' + yr + '</div>' +
     '<div class="otd-ttl">' + escH(match.title || '(Không tiêu đề)') + '</div>' +
