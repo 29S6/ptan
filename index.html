@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.3.0 - Search trở lại vị trí cũ, comment ảnh có preview, animation toàn hệ thống -->
+<!-- V6.3.1 - Fix khoảng cách header-search, layout OTD, sửa bình luận ảnh -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -217,7 +217,7 @@ img { max-width: 100%; display: block; }
   gap: 0;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 12px 11px 16px;
+  padding: 6px 11px 16px; /* giảm padding-top xuống 6px (mobile) */
 }
 @media (max-width: 768px) {
   .col-panel { display: none; }
@@ -228,18 +228,16 @@ img { max-width: 100%; display: block; }
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     gap: 20px;
-    padding: 22px 26px 30px;
+    padding: 4px 26px 30px; /* giảm padding-top xuống 4px (desktop) */
   }
   .col-panel { display: block !important; }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; min-width: 0; }
   #col-right-desktop { order: 3; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-ann, #col-album { display: none !important; }
-  /* desktop search ẩn đi vì đã có trong gc-body */
-  #desktop-search { display: flex !important; }
 }
 @media (min-width: 769px) and (max-width: 991px) {
-  .main-layout { grid-template-columns: 1fr; gap: 16px; }
+  .main-layout { grid-template-columns: 1fr; gap: 16px; padding-top: 6px; }
   #col-cal { order: 1; position: static; max-height: none; overflow-y: visible; }
   #col-diary { order: 2; }
   #col-right-desktop { order: 3; display: block; position: static; max-height: none; overflow-y: visible; }
@@ -278,14 +276,23 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===== TIMELINE ===== */
-#otd-wrap {
-  min-height: 70px;
-  flex-shrink: 0;
+/* OTD nằm bên trong gc-body, sau search row */
+.otd-wrap {
+  margin-bottom: 10px;
 }
+.otd-card {
+  background: linear-gradient(135deg, rgba(168,84,112,.09), rgba(201,125,150,.06));
+  border: 1.5px solid rgba(168,84,112,.18);
+  border-radius: var(--rr); padding: 13px 15px;
+  cursor: pointer; transition: all .18s;
+}
+.otd-card:hover { background: rgba(168,84,112,.14); transform: translateY(-2px); box-shadow: var(--sh-sm); }
+.otd-lbl { font-size: .65rem; font-weight: 700; color: var(--p2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+.otd-ttl { font-weight: 700; font-size: .86rem; color: var(--t1); }
+.otd-pre { font-size: .73rem; color: var(--t2); margin-top: 2px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* search row nằm trong gc-body */
 .search-row {
-  display: flex; gap: 7px; margin-bottom: 13px;
+  display: flex; gap: 7px; margin-bottom: 10px;
 }
 .s-inp {
   flex: 1; background: rgba(255,255,255,.68);
@@ -317,7 +324,6 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 .tl-day-items { display: flex; flex-direction: column; gap: 8px; }
 
-/* ===== TIMELINE ITEM ===== */
 .ti {
   background: rgba(255,255,255,.55);
   border: 1.5px solid rgba(168,84,112,.12);
@@ -373,15 +379,6 @@ img { max-width: 100%; display: block; }
 }
 .load-more:hover { background: var(--p4); transform: translateY(-2px); }
 .empty-hint { text-align: center; color: var(--t3); font-size: .83rem; padding: 26px 0; }
-
-/* ===== OTD ===== */
-.otd-card {
-  background: linear-gradient(135deg, rgba(168,84,112,.09), rgba(201,125,150,.06));
-  border: 1.5px solid rgba(168,84,112,.18);
-  border-radius: var(--rr); padding: 13px 15px;
-  margin-bottom: 13px; cursor: pointer; transition: all .18s;
-}
-.otd-card:hover { background: rgba(168,84,112,.14); transform: translateY(-2px); box-shadow: var(--sh-sm); }
 
 /* ===== ANNIVERSARY ===== */
 .ann-item {
@@ -573,8 +570,7 @@ img { max-width: 100%; display: block; }
   font-size: 1rem;
   color: var(--t2);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
   transition: all .2s;
   padding: 0;
 }
@@ -709,7 +705,7 @@ img { max-width: 100%; display: block; }
   max-height: 40vh; overflow-y: auto;
 }
 
-/* ===== GALLERY ẢNH TRONG BÀI ===== */
+/* ===== GALLERY ===== */
 .ve-gallery {
   display: grid;
   gap: 3px;
@@ -890,7 +886,7 @@ img { max-width: 100%; display: block; }
 .cmt-action-btn.del:hover { color: #c04060; background: rgba(192,64,96,.08); }
 .cmt-empty { text-align: center; font-size: .76rem; color: var(--t3); padding: 12px 0; }
 
-/* --- COMMENT INPUT ROW với preview ảnh --- */
+/* ---- COMMENT INPUT ---- */
 .cmt-input-row {
   display: flex;
   flex-direction: column;
@@ -1095,7 +1091,6 @@ img { max-width: 100%; display: block; }
 
     <!-- COL 2: FEED NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
-      <div id="otd-wrap"></div>
       <!-- Khung viết nhanh (Desktop) -->
       <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0" aria-label="Viết nhật ký mới">
         <div class="qw-avatar">🌻</div>
@@ -1107,13 +1102,16 @@ img { max-width: 100%; display: block; }
           <div class="gc-ttl">📖 Nhật Ký</div>
         </div>
         <div class="gc-body">
-          <!-- Thanh tìm kiếm (cả mobile & desktop) -->
+          <!-- Thanh tìm kiếm -->
           <div class="search-row">
             <input class="s-inp" id="s-inp" placeholder="🔍 Tìm kiếm nhật ký..." oninput="renderTimeline()"/>
             <select class="f-sel" id="f-sel" onchange="renderTimeline()">
               <option value="">Tất cả</option>
             </select>
           </div>
+          <!-- OTD nằm ngay sau search -->
+          <div id="otd-wrap" class="otd-wrap"></div>
+          <!-- Feed -->
           <div class="tl-wrap" id="tl-wrap"></div>
           <button class="load-more hidden" id="load-more" onclick="loadMore()">Xem thêm ↓</button>
         </div>
@@ -1250,7 +1248,6 @@ img { max-width: 100%; display: block; }
           </div>
           <button class="cmt-send-btn" id="cmt-send-btn" onclick="sendComment()" title="Gửi">➤</button>
         </div>
-        <!-- Preview ảnh đính kèm -->
         <div class="cmt-image-preview" id="cmt-preview">
           <img id="cmt-preview-img" src="" alt="Ảnh đính kèm"/>
           <span class="cmt-img-label" id="cmt-preview-label">1 ảnh đính kèm</span>
@@ -1366,7 +1363,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.3.0 - NHẬT KÝ ỨNG DỤNG (search cũ, comment ảnh preview, animation)
+// V6.3.1 - NHẬT KÝ ỨNG DỤNG (fix khoảng cách, layout OTD, bình luận ảnh)
 // ============================================================
 
 // ============================================================
@@ -1902,12 +1899,11 @@ function renderOTD() {
   });
   if (!match) { wrap.innerHTML = ''; return; }
   var yr = match.date.substring(0, 4);
-  wrap.innerHTML = '<div class="gc" style="margin-bottom:14px"><div class="gc-body" style="padding:11px 15px">' +
-    '<div class="otd-card" onclick="openView(\'' + match.id + '\')">' +
+  wrap.innerHTML = '<div class="otd-card" onclick="openView(\'' + match.id + '\')">' +
     '<div class="otd-lbl">⏳ Ngày này năm ' + yr + '</div>' +
     '<div class="otd-ttl">' + escH(match.title || '(Không tiêu đề)') + '</div>' +
     '<div class="otd-pre">' + escH((match.content || '').substring(0, 90)) + '...</div>' +
-    '</div></div></div>';
+    '</div>';
 }
 
 function renderCalendar() {
@@ -2498,7 +2494,6 @@ function openView(id) {
   S.curId = id;
   S.editingCommentId = null;
   S.cmtImage = null;
-  // ẩn preview
   document.getElementById('cmt-preview').classList.remove('show');
 
   document.getElementById('ve-date').innerHTML =
@@ -2904,6 +2899,7 @@ function sendComment() {
   if (S.editingCommentId) {
     payload.action = 'edit_comment';
     payload.commentId = S.editingCommentId;
+    // edit không hỗ trợ đổi ảnh, bỏ image
     delete payload.image;
     callCommentAPI(payload, function (res) {
       var e = S.data.entries.find(function (x) { return x.id === S.curId; });
@@ -2924,6 +2920,7 @@ function sendComment() {
     return;
   }
 
+  // Gửi bình luận mới (có thể kèm ảnh)
   callCommentAPI(payload, function (res) {
     var e = S.data.entries.find(function (x) { return x.id === S.curId; });
     if (e) e.comments = res.comments;
