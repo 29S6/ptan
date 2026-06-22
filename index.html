@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.6.0 - Navibar iOS 26, ẩn/hiện khi cuộn, khoảng cách header 10px -->
+<!-- V6.7.0 - Khoảng cách header 5px, navibar iOS 26, tách nút viết riêng -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -219,9 +219,9 @@ img { max-width: 100%; display: block; }
   color: var(--p1);
 }
 
-/* ===== KHOẢNG CÁCH HEADER -> NỘI DUNG CHỈ CÒN 10px ===== */
+/* ===== KHOẢNG CÁCH HEADER -> NỘI DUNG = 5px CHO TẤT CẢ TAB ===== */
 .gc-body {
-  padding: 10px 17px 17px; /* padding-top = 10px */
+  padding: 5px 17px 17px; /* padding-top = 5px */
 }
 .gc-body > *:first-child {
   margin-top: 0;
@@ -241,12 +241,13 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 .tl-day-items { display: flex; flex-direction: column; gap: 8px; }
 
-/* ===== TIMELINE ITEM ===== */
+/* ===== TIMELINE ITEM – thêm khoảng cách trên/dưới 5px ===== */
 .ti {
   background: rgba(255,255,255,.55);
   border: 1.5px solid rgba(168,84,112,.12);
   border-radius: var(--rr);
   padding: 11px 13px;
+  margin-bottom: 5px; /* cách dưới */
   cursor: pointer;
   transition: all .17s;
   position: relative;
@@ -286,7 +287,7 @@ img { max-width: 100%; display: block; }
 .ti-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
 .ti-cmt-count { font-size: .64rem; color: var(--t3); margin-top: 3px; display: flex; align-items: center; gap: 3px; }
 @media (min-width: 769px) {
-  #col-diary .ti { padding: 16px 19px; }
+  #col-diary .ti { padding: 16px 19px; margin-bottom: 8px; }
   #col-diary .ti-ttl { font-size: 1.02rem; }
   #col-diary .ti-pre { font-size: .84rem; }
   #col-diary .ti-thumb { width: 58px; height: 58px; }
@@ -318,7 +319,8 @@ img { max-width: 100%; display: block; }
   display: flex; align-items: center; gap: 9px;
   background: rgba(255,255,255,.52);
   border: 1px solid rgba(168,84,112,.12);
-  border-radius: 11px; padding: 10px 12px; margin-bottom: 8px;
+  border-radius: 11px; padding: 10px 12px;
+  margin-bottom: 5px; /* cách dưới 5px */
 }
 .ann-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--p1); flex-shrink: 0; }
 .ann-info { flex: 1; min-width: 0; }
@@ -336,6 +338,7 @@ img { max-width: 100%; display: block; }
   border-radius: 11px; padding: 9px;
   font-size: .78rem; font-weight: 700; color: var(--p2);
   transition: all .18s;
+  margin-top: 5px;
 }
 .add-ann-btn:hover { background: var(--p4); }
 
@@ -449,7 +452,7 @@ img { max-width: 100%; display: block; }
   .quick-write { display: flex; }
 }
 
-/* ===== MOBILE NAVIBAR – NỔI, BO TRÒN, CÙNG HÀNG VỚI NÚT VIẾT ===== */
+/* ===== MOBILE NAVIBAR – NỔI, CÙNG HÀNG VỚI NÚT VIẾT (iOS 26) ===== */
 .mob-nav {
   display: none;
   position: fixed;
@@ -462,7 +465,7 @@ img { max-width: 100%; display: block; }
   -webkit-backdrop-filter: blur(24px);
   border-radius: 32px;
   box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-  padding: 6px 8px;
+  padding: 6px 8px 6px 12px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;
@@ -503,7 +506,7 @@ img { max-width: 100%; display: block; }
 }
 .mn-icon { font-size: 1.5rem; line-height: 1; }
 
-/* Nút viết bài mới – nằm bên phải navibar */
+/* Nút viết bài – nằm bên phải, tách riêng */
 .nav-fab {
   flex-shrink: 0;
   width: 48px;
@@ -519,7 +522,7 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  margin-left: 4px;
+  margin-left: 6px;
 }
 .nav-fab:hover { transform: scale(1.08) rotate(7deg); box-shadow: 0 6px 20px rgba(168,84,112,.5); }
 .nav-fab:active { transform: scale(0.92); }
@@ -528,7 +531,7 @@ img { max-width: 100%; display: block; }
   .mob-nav { display: flex; }
 }
 
-/* ===== MODALS (animation iOS style) ===== */
+/* ===== MODALS (animation iOS) ===== */
 .modal {
   position: fixed; inset: 0; z-index: 500;
   background: rgba(0,0,0,0.3);
@@ -539,9 +542,7 @@ img { max-width: 100%; display: block; }
   justify-content: center;
   padding: 14px;
 }
-.modal.open {
-  display: flex;
-}
+.modal.open { display: flex; }
 .modal .mbox {
   background: linear-gradient(158deg, #fff8fb, #fde8f0);
   border: 1px solid rgba(255,255,255,0.6);
@@ -557,10 +558,7 @@ img { max-width: 100%; display: block; }
   opacity: 0;
   transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.modal.open .mbox {
-  transform: scale(1);
-  opacity: 1;
-}
+.modal.open .mbox { transform: scale(1); opacity: 1; }
 .mbox::-webkit-scrollbar { width: 4px; }
 .mbox::-webkit-scrollbar-thumb { background: var(--p4); border-radius: 4px; }
 
@@ -592,11 +590,11 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #modal-write .mbox { max-width: 680px; } }
 
-/* ===== FORM ===== */
-.fg { margin-bottom: 13px; }
+/* ===== FORM – giảm khoảng cách xuống 5px ===== */
+.fg { margin-bottom: 5px; }
 .fl {
   display: block; font-size: .71rem; font-weight: 700;
-  color: var(--t2); margin-bottom: 5px;
+  color: var(--t2); margin-bottom: 3px;
   letter-spacing: .04em; text-transform: uppercase;
 }
 .fi, .fta, .fse {
@@ -607,7 +605,7 @@ img { max-width: 100%; display: block; }
   outline: none; transition: border-color .2s;
 }
 .fi:focus, .fta:focus, .fse:focus { border-color: var(--p1); }
-.fta { resize: vertical; min-height: 125px; line-height: 1.65; }
+.fta { resize: vertical; min-height: 110px; line-height: 1.65; }
 .fse { cursor: pointer; }
 .mood-pick { display: flex; gap: 5px; flex-wrap: wrap; }
 .mp-o {
@@ -620,12 +618,13 @@ img { max-width: 100%; display: block; }
 .wp {
   background: rgba(168,84,112,.06);
   border: 1.5px solid rgba(168,84,112,.14);
-  border-radius: 9px; padding: 9px 12px; margin-bottom: 9px;
+  border-radius: 9px; padding: 7px 12px;
+  margin-bottom: 5px;
   font-size: .78rem; color: var(--t2);
   display: flex; align-items: center; justify-content: space-between; gap: 7px;
 }
 .wp-r { background: none; border: none; color: var(--p2); font-size: .82rem; padding: 2px; flex-shrink: 0; }
-.fs-row { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+.fs-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
 .fsb {
   background: rgba(168,84,112,.1);
   border: 1px solid var(--p3);
@@ -636,14 +635,14 @@ img { max-width: 100%; display: block; }
 .fs-lbl { font-size: .73rem; color: var(--t2); font-weight: 600; }
 .img-drop {
   border: 2px dashed var(--p3);
-  border-radius: 10px; padding: 13px;
+  border-radius: 10px; padding: 10px;
   text-align: center; cursor: pointer;
   background: rgba(255,255,255,.42);
   transition: all .18s; font-size: .78rem; color: var(--t3);
 }
 .img-drop:hover { background: var(--p4); border-color: var(--p2); }
 .img-prev-row {
-  display: flex; flex-wrap: wrap; gap: 7px; margin-top: 7px;
+  display: flex; flex-wrap: wrap; gap: 7px; margin-top: 5px;
 }
 .img-prev-itm {
   position: relative; width: 60px; height: 60px;
@@ -658,7 +657,7 @@ img { max-width: 100%; display: block; }
 .upload-prog {
   background: rgba(168,84,112,.07);
   border: 1px solid rgba(168,84,112,.15);
-  border-radius: 8px; padding: 7px 11px; margin-top: 7px;
+  border-radius: 8px; padding: 7px 11px; margin-top: 5px;
   font-size: .74rem; color: var(--t2);
   display: none;
 }
@@ -671,7 +670,7 @@ img { max-width: 100%; display: block; }
 .upload-prog-bar.show { display: block; }
 .upload-prog-bar .fill { height: 100%; width: 0%; background: linear-gradient(90deg,var(--p3),var(--p1)); border-radius: 3px; transition: width .3s; }
 .btn-row {
-  display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;
+  display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
 }
 .btn-p {
   flex: 1; background: linear-gradient(135deg, var(--p3), var(--p1));
@@ -960,8 +959,8 @@ img { max-width: 100%; display: block; }
 
 /* ===== Đảm bảo nội dung không bị trôi lên khi load ===== */
 #col-diary .gc-body {
-  padding-top: 10px;
-  scroll-margin-top: 10px;
+  padding-top: 5px;
+  scroll-margin-top: 5px;
 }
 </style>
 </head>
@@ -1093,7 +1092,7 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- ===== MOBILE NAVIBAR + NÚT VIẾT BÀI CÙNG HÀNG ===== -->
+<!-- ===== MOBILE NAVIBAR + NÚT VIẾT BÀI CÙNG HÀNG (iOS 26) ===== -->
 <nav class="mob-nav" id="mob-nav">
   <div class="mn-tabs">
     <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
@@ -1154,7 +1153,7 @@ img { max-width: 100%; display: block; }
         <span class="fs-lbl" id="fs-lbl">Cỡ chữ: 14px</span>
         <button class="fsb" onclick="chgFs(1)">A+</button>
       </div>
-      <textarea class="fta" id="e-cnt" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:140px"></textarea>
+      <textarea class="fta" id="e-cnt" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px;min-height:110px"></textarea>
     </div>
     <div class="fg">
       <label class="fl">Ảnh (tối đa 10)</label>
@@ -1295,7 +1294,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.6.0 - NHẬT KÝ ỨNG DỤNG CHÍNH
+// V6.7.0 - NHẬT KÝ ỨNG DỤNG CHÍNH (GIỮ NGUYÊN JAVASCRIPT TỪ V6.6.0)
 // ============================================================
 
 // ===== CẤU HÌNH =====
@@ -1448,13 +1447,11 @@ function initNavbarScrollHide() {
   window.addEventListener('scroll', function() {
     var currentScroll = window.scrollY;
     if (currentScroll > S.lastScrollY && currentScroll > 40) {
-      // Cuộn xuống – ẩn nav
       if (!S.isNavHidden) {
         nav.classList.add('hidden-nav');
         S.isNavHidden = true;
       }
     } else {
-      // Cuộn lên – hiện nav
       if (S.isNavHidden) {
         nav.classList.remove('hidden-nav');
         S.isNavHidden = false;
@@ -2039,7 +2036,6 @@ function renderEditedNote(elId, e) {
 
 // ===== TIMELINE =====
 function buildMonthFilter() {
-  // Giữ để tương thích nhưng không hiển thị
   var sel = document.getElementById('f-sel');
   if (sel) {
     var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
