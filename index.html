@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V5.7 - Login 2 người dùng, Like, Phân quyền -->
+<!-- V5.7.1 - Sửa lỗi đồng bộ, thêm timeout loadData -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
+/* ===== GIỮ NGUYÊN CSS ===== */
 :root{
   --p1:#a85470;
   --p2:#c97d96;
@@ -470,7 +471,6 @@ img{max-width:100%;display:block}
       <span id="wp-txt">💭 Hôm nay có điều gì đặc biệt không?</span>
       <button class="wp-r" onclick="newPrompt()">🔄</button>
     </div>
-    <!-- Đã bỏ phần chọn người viết -->
     <div class="fg">
       <label class="fl">Ngày viết</label>
       <input type="date" class="fi" id="e-date"/>
@@ -643,7 +643,7 @@ var CFG = {
 
 var USER_ANH_NGOC = 'Ánh Ngọc 🌻';
 var USER_ANH = 'Anh 💖';
-var CURRENT_USER = USER_ANH_NGOC; // sẽ được gán khi login
+var CURRENT_USER = USER_ANH_NGOC;
 var DEFAULT_AUTHOR = USER_ANH_NGOC;
 
 // ============================================================
@@ -924,12 +924,24 @@ function addPendingAction(action) {
 }
 
 // ============================================================
-// LOAD DATA (giữ nguyên)
+// LOAD DATA (có timeout để tránh treo)
 // ============================================================
 function loadData(cb) {
   setSyncing(true);
-  var fn = 'jcb_' + Date.now(), tag;
+  var fn = 'jcb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+  var tag;
+  var timeout = setTimeout(function () {
+    // Nếu sau 10 giây không có callback, tự động tắt syncing và thông báo lỗi
+    if (window[fn]) {
+      delete window[fn];
+      setSyncing(false);
+      toast('⚠️ Quá thời gian chờ, kiểm tra kết nối hoặc URL Script!');
+      if (typeof cb === 'function') cb(null);
+    }
+  }, 10000);
+
   window[fn] = function (data) {
+    clearTimeout(timeout);
     if (data && data.entries && data.anniversaries) {
       S.data = data;
       saveToLocal(data);
@@ -944,14 +956,16 @@ function loadData(cb) {
     sortEntries(S.data.entries);
     renderAll();
     setSyncing(false);
-    if (typeof cb === 'function') cb();
+    if (typeof cb === 'function') cb(S.data);
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
     processPendingActions();
   };
+
   tag = document.createElement('script');
   tag.src = CFG.URL + '?callback=' + fn + '&_=' + Date.now();
   tag.onerror = function () {
+    clearTimeout(timeout);
     var local = loadFromLocal();
     if (local) {
       S.data = local;
@@ -965,7 +979,7 @@ function loadData(cb) {
     setSyncing(false);
     delete window[fn];
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-    if (typeof cb === 'function') cb();
+    if (typeof cb === 'function') cb(null);
   };
   document.head.appendChild(tag);
 }
@@ -1566,7 +1580,6 @@ function renderAlbum() {
     for (var i = 0; i < max; i++) {
       var src = imgs[i].url || imgs[i];
       var imgId = e.id + '_img_' + i;
-      // Like cho ảnh (tạm thời chưa support nhưng để sẵn)
       var likeHTML = likeHTML(imgId, 'image', e.imageLikes && e.imageLikes[i] ? e.imageLikes[i] : []);
       gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
         '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
@@ -1865,7 +1878,7 @@ function saveEntry() {
     title: title || ('Ngày ' + fmtDateVN(date)),
     content: content,
     mood: S.mood,
-    author: CURRENT_USER, // TỰ ĐỘNG GÁN
+    author: CURRENT_USER,
     images: S.imgs.slice(),
     comments: existing && existing.comments ? existing.comments.slice() : [],
     createdAt: existing ? (existing.createdAt || existing.updatedAt || nowIso) : nowIso,
@@ -1907,7 +1920,6 @@ function updateCmtToggleUI() {
   var icon = S.cmtAuthor === USER_ANH_NGOC ? '🌻' : '💖';
   document.getElementById('cmt-avatar-toggle').textContent = icon;
 }
-// Khởi tạo cmtAuthor = CURRENT_USER
 var cmtAuthor = CURRENT_USER;
 Object.defineProperty(S, 'cmtAuthor', {
   get: function() { return cmtAuthor; },
