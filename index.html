@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.0.1 - Sửa lỗi hiển thị kỷ niệm & album -->
+<!-- V6.0.4 - Cải tiến layout ảnh, modal, upload song song, giao diện viết nhanh -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -30,7 +30,6 @@
   --font-ttl: 'Baloo 2', sans-serif;
   --font-body: 'Itim', 'Baloo 2', sans-serif;
   --max-width: 1400px;
-  --header-height: 72px;
 }
 *,
 *::before,
@@ -47,9 +46,6 @@ body {
 button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 input, textarea, select { font-family: inherit; }
 img { max-width: 100%; display: block; }
-
-/* ===== SAKURA CANVAS ===== */
-#sakura-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .45; }
 
 /* ===== LOCK SCREEN ===== */
 #lock-screen {
@@ -155,7 +151,8 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,.12);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border-radius: 20px; border: 1px solid rgba(255,255,255,.2);
-  min-height: 64px; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
+  min-height: 64px;
+  color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 .status-slider .icon-fire { font-size: 2rem; line-height: 1; flex-shrink: 0; color: #ff8c00; filter: drop-shadow(0 0 8px #ff8c0066); }
 .status-slider .info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
@@ -165,27 +162,29 @@ img { max-width: 100%; display: block; }
 .status-slider .progress-wrap { width: 100%; height: 4px; background: rgba(255,255,255,.2); border-radius: 3px; overflow: hidden; margin-top: 2px; }
 .status-slider .progress-wrap .fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ffb347,#ff8c00); border-radius: 3px; transition: width .6s ease; }
 
-/* ===== MOBILE NAV ===== */
+/* ===== MOBILE NAV (Android Style) ===== */
 .mob-nav {
   display: none;
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
-  background: rgba(255,243,249,.94);
+  background: #fff;
   backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
-  border-top: 1.5px solid rgba(168,84,112,.12);
-  padding: 5px 0 env(safe-area-inset-bottom,5px);
-  box-shadow: 0 -4px 18px rgba(168,84,112,.10);
+  border-top: 1px solid rgba(0,0,0,.06);
+  padding: 4px 0 env(safe-area-inset-bottom,4px);
+  box-shadow: 0 -2px 12px rgba(0,0,0,.04);
 }
 @media (max-width: 768px) { .mob-nav { display: flex; } }
 .mn-item {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px; padding: 5px 3px;
-  color: var(--t3); font-size: .6rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .03em; transition: color .18s; position: relative;
+  gap: 1px; padding: 6px 3px;
+  color: #888; font-size: .68rem; font-weight: 600; text-transform: none;
+  transition: color .18s; position: relative;
+  border: none; background: transparent;
+  min-height: 48px;
 }
 .mn-item.on { color: var(--p1); }
-.mn-icon { font-size: 1.25rem; line-height: 1; }
+.mn-icon { font-size: 1.55rem; line-height: 1; }
 
-/* ===== MAIN LAYOUT (DESKTOP 3 CỘT) ===== */
+/* ===== MAIN LAYOUT ===== */
 .main-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -209,7 +208,6 @@ img { max-width: 100%; display: block; }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; min-width: 0; }
   #col-right-desktop { order: 3; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
-  /* Ẩn các panel gốc trên desktop để tránh trùng lặp, sẽ được di chuyển vào right sidebar */
   #col-ann, #col-album { display: none !important; }
 }
 @media (min-width: 769px) and (max-width: 991px) {
@@ -220,7 +218,7 @@ img { max-width: 100%; display: block; }
   #col-right-desktop .gc { margin-bottom: 14px; }
 }
 
-/* ===== CARD CHUNG ===== */
+/* ===== CARD ===== */
 .gc {
   background: var(--glass);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
@@ -249,6 +247,8 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===== TIMELINE ===== */
+#otd-wrap { min-height: 10px; }
+
 .search-row {
   display: flex; gap: 7px; margin-bottom: 13px;
 }
@@ -280,7 +280,7 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 .tl-day-items { display: flex; flex-direction: column; gap: 8px; }
 
-/* ===== TIMELINE ITEM (CARD STYLE) ===== */
+/* ===== TIMELINE ITEM ===== */
 .ti {
   background: rgba(255,255,255,.55);
   border: 1.5px solid rgba(168,84,112,.12);
@@ -419,54 +419,82 @@ img { max-width: 100%; display: block; }
 .album-day-time { font-size: .68rem; color: var(--t3); font-weight: 600; white-space: nowrap; margin-left: auto; }
 .album-day-entry-ttl { font-size: .75rem; color: var(--t2); margin-bottom: 8px; padding-left: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .album-grid { display: grid; gap: 4px; border-radius: 12px; overflow: hidden; }
-.album-grid.g1 { grid-template-columns: 1fr; }
-.album-grid.g2 { grid-template-columns: 1fr 1fr; }
-.album-grid.g3 { grid-template-columns: 1fr 1fr; }
-.album-grid.g4 { grid-template-columns: 1fr 1fr 1fr; }
-.album-grid.g5 { grid-template-columns: 1fr 1fr 1fr; }
-.album-grid.g6 { grid-template-columns: 1fr 1fr 1fr; }
-.album-grid.g7 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.album-grid.g8 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.album-grid.g9 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.album-grid.g10 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 .album-grid .a-img {
   position: relative; overflow: hidden; cursor: pointer;
   background: var(--p4); border-radius: 6px;
 }
 .album-grid .a-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .22s; display: block; }
-.album-grid .a-img:hover img { transform: scale(1.05); }
+.album-grid .a-img:hover img { transform: scale(1.03); }
 .album-grid .a-img-more {
   position: absolute; inset: 0;
-  background: rgba(60,20,40,.5);
+  background: rgba(40,20,30,.6);
   display: flex; align-items: center; justify-content: center;
   font-size: 1.4rem; font-weight: 700; color: #fff;
 }
-.album-grid.g1 .a-img { height: 240px; }
-.album-grid.g2 .a-img { height: 180px; }
-.album-grid.g3 .a-img:first-child { grid-column: 1/3; height: 200px; }
-.album-grid.g3 .a-img:not(:first-child) { height: 150px; }
-.album-grid.g4 .a-img { height: 150px; }
-.album-grid.g5 .a-img { height: 140px; }
-.album-grid.g6 .a-img { height: 140px; }
-.album-grid.g7 .a-img { height: 130px; }
-.album-grid.g8 .a-img { height: 130px; }
-.album-grid.g9 .a-img { height: 130px; }
-.album-grid.g10 .a-img { height: 130px; }
 .album-empty { text-align: center; color: var(--t3); padding: 36px 0; font-size: .85rem; }
 
-/* ===== FAB ===== */
+/* ===== FAB (mobile) ===== */
 #fab {
   position: fixed; bottom: calc(58px + env(safe-area-inset-bottom,0px)); right: 18px;
   z-index: 250; width: 52px; height: 52px; border-radius: 50%;
   background: linear-gradient(135deg, var(--p3), var(--p1));
   border: none; box-shadow: 0 6px 22px rgba(168,84,112,.44);
-  font-size: 1.3rem; color: #fff;
+  font-size: 1.6rem; color: #fff; line-height: 1;
   display: flex; align-items: center; justify-content: center;
   transition: all .18s;
 }
 #fab:hover { transform: scale(1.1) rotate(7deg); box-shadow: 0 10px 28px rgba(168,84,112,.55); }
+@media (min-width: 769px) { #fab { display: none; } }
+
+/* ===== KHUNG VIẾT NHANH (Desktop) ===== */
+.quick-write {
+  display: none;
+  background: #fff;
+  border-radius: var(--rrb);
+  box-shadow: 0 2px 12px rgba(168,84,112,.12);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all .2s;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(168,84,112,.08);
+}
+.quick-write:hover {
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(168,84,112,.18);
+  transform: translateY(-1px);
+}
+.quick-write .qw-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--p3), var(--p1));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; color: #fff;
+  flex-shrink: 0;
+}
+.quick-write .qw-input {
+  flex: 1;
+  background: #f5f0f2;
+  border-radius: 30px;
+  padding: 12px 20px;
+  font-size: .92rem;
+  color: var(--t2);
+  border: 1px solid transparent;
+  transition: all .2s;
+}
+.quick-write .qw-input:hover {
+  background: #ede7ea;
+  border-color: rgba(168,84,112,.2);
+}
+.quick-write .qw-icon {
+  font-size: 1.2rem;
+  color: var(--p2);
+  opacity: .7;
+  transition: opacity .2s;
+}
+.quick-write:hover .qw-icon { opacity: 1; }
 @media (min-width: 769px) {
-  #fab { bottom: 24px; right: 26px; width: 56px; height: 56px; font-size: 1.42rem; }
+  .quick-write { display: flex; }
 }
 
 /* ===== MODALS ===== */
@@ -481,26 +509,44 @@ img { max-width: 100%; display: block; }
 .mbox {
   background: linear-gradient(158deg, #fff8fb, #fde8f0);
   border: 1.5px solid rgba(255,255,255,.72);
-  border-radius: 24px; box-shadow: 0 24px 64px rgba(120,40,70,.2);
-  width: 100%; max-width: 560px; max-height: 92vh;
-  overflow-y: auto; padding: 24px 24px 20px;
+  border-radius: 24px;
+  box-shadow: 0 24px 64px rgba(120,40,70,.2);
+  width: 100%;
+  max-width: 560px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 24px 24px 20px;
   position: relative;
 }
 .mbox::-webkit-scrollbar { width: 4px; }
 .mbox::-webkit-scrollbar-thumb { background: var(--p4); border-radius: 4px; }
+
+/* Nút đóng modal – cố định góc phải */
 .mc {
-  position: absolute; top: 13px; right: 13px;
-  background: rgba(168,84,112,.1);
-  border: 1px solid var(--p4); border-radius: 50%;
-  width: 29px; height: 29px; font-size: .86rem; color: var(--t2);
-  display: flex; align-items: center; justify-content: center;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  background: rgba(168,84,112,.12);
+  border: 1px solid rgba(168,84,112,.2);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 1rem;
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all .14s;
+  padding: 0;
 }
-.mc:hover { background: var(--p4); color: var(--p1); }
+.mc:hover { background: var(--p4); color: var(--p1); transform: rotate(90deg); }
+
 .m-ttl {
   font-family: var(--font-ttl);
   font-size: 1.5rem; font-weight: 700; color: var(--p1);
   margin-bottom: 15px;
+  padding-right: 36px; /* tránh đè lên nút đóng */
 }
 @media (min-width: 769px) { #modal-write .mbox { max-width: 680px; } }
 
@@ -623,34 +669,136 @@ img { max-width: 100%; display: block; }
   color: var(--t1); white-space: pre-wrap;
   max-height: 40vh; overflow-y: auto;
 }
-.ve-gallery { display: grid; gap: 4px; margin-top: 10px; border-radius: 14px; overflow: hidden; }
-.ve-gallery.n1 { grid-template-columns: 1fr; }
-.ve-gallery.n2 { grid-template-columns: 1fr 1fr; }
-.ve-gallery.n3 { grid-template-columns: 1fr 1fr; }
-.ve-gallery.n4 { grid-template-columns: 1fr 1fr 1fr; }
-.ve-gallery.n5 { grid-template-columns: 1fr 1fr 1fr; }
-.ve-gallery.n6 { grid-template-columns: 1fr 1fr 1fr; }
-.ve-gallery.n7 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.ve-gallery.n8 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.ve-gallery.n9 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.ve-gallery.n10 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.ve-gallery .vg-img {
-  position: relative; overflow: hidden; cursor: pointer;
-  background: var(--p4); border-radius: 10px;
+
+/* ===== GALLERY ẢNH TRONG BÀI VIẾT ===== */
+.ve-gallery {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
 }
-.ve-gallery .vg-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s; }
-.ve-gallery .vg-img:hover img { transform: scale(1.06); }
-.ve-gallery.n1 .vg-img { height: 320px; }
-.ve-gallery.n2 .vg-img { height: 220px; }
-.ve-gallery.n3 .vg-img:first-child { grid-column: 1/3; height: 240px; }
-.ve-gallery.n3 .vg-img:not(:first-child) { height: 160px; }
-.ve-gallery.n4 .vg-img { height: 170px; }
-.ve-gallery.n5 .vg-img { height: 160px; }
-.ve-gallery.n6 .vg-img { height: 160px; }
-.ve-gallery.n7 .vg-img { height: 150px; }
-.ve-gallery.n8 .vg-img { height: 150px; }
-.ve-gallery.n9 .vg-img { height: 150px; }
-.ve-gallery.n10 .vg-img { height: 150px; }
+.ve-gallery .vg-img {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--p4);
+}
+.ve-gallery .vg-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .25s;
+}
+.ve-gallery .vg-img:hover img { transform: scale(1.03); }
+.ve-gallery .vg-img .vg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(40,20,30,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+/* Layout sẽ do JS tạo style inline */
+
+/* ===== PHOTO VIEWER ===== */
+#photo-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 700;
+  background: rgba(0,0,0,.92);
+  display: none;
+  flex-direction: column;
+  padding: 16px 10px env(safe-area-inset-bottom,10px);
+  overflow-y: auto;
+}
+#photo-viewer.open { display: flex; }
+#photo-viewer .pv-close {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.6rem;
+  padding: 8px 4px;
+  margin-bottom: 12px;
+  text-align: left;
+  align-self: flex-start;
+  cursor: pointer;
+}
+#photo-viewer .pv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 30px;
+}
+#photo-viewer .pv-item {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #222;
+  cursor: pointer;
+}
+#photo-viewer .pv-item img {
+  width: 100%;
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* ===== PHOTO VIEWER - CHẾ ĐỘ ĐƠN LẺ ===== */
+#photo-viewer .pv-single {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px 0;
+}
+#photo-viewer .pv-single.active { display: flex; }
+#photo-viewer .pv-single .pv-img {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+#photo-viewer .pv-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 0 10px;
+  width: 100%;
+}
+#photo-viewer .pv-nav button {
+  background: rgba(255,255,255,.2);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: all .2s;
+  cursor: pointer;
+}
+#photo-viewer .pv-nav button:hover { background: rgba(255,255,255,.3); }
+#photo-viewer .pv-nav button:disabled { opacity: .3; pointer-events: none; }
+#photo-viewer .pv-back-list {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: .9rem;
+  padding: 6px 0;
+  text-align: left;
+  align-self: flex-start;
+  cursor: pointer;
+}
+#photo-viewer .pv-back-list:hover { color: #fff; }
+
+/* ===== DL NAV, COMMENTS ===== */
 .dl-nav-row {
   display: flex; align-items: center; justify-content: space-between;
   gap: 8px; margin: 12px 0 4px;
@@ -669,7 +817,6 @@ img { max-width: 100%; display: block; }
 .dl-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
 .dl-counter { font-size: .76rem; font-weight: 700; color: var(--t2); }
 
-/* ===== COMMENTS ===== */
 .cmt-section { margin-top: 16px; border-top: 1.5px solid rgba(168,84,112,.12); padding-top: 14px; }
 .cmt-hdr { font-size: .78rem; font-weight: 700; color: var(--p1); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 .cmt-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; max-height: 300px; overflow-y: auto; }
@@ -717,23 +864,12 @@ img { max-width: 100%; display: block; }
 .cmt-send-btn:hover:not(:disabled) { transform: scale(1.08); }
 .cmt-send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-/* ===== CONFIRM ===== */
 .confirm-modal .mbox { max-width: 380px; text-align: center; }
 .confirm-modal .m-ttl { font-size: 1.2rem; margin-bottom: 8px; }
 .confirm-modal .confirm-msg { font-size: .9rem; color: var(--t2); margin-bottom: 16px; }
 .confirm-actions { display: flex; gap: 10px; justify-content: center; }
 .confirm-actions .btn-p { flex: 0 1 auto; padding: 8px 20px; }
 .confirm-actions .btn-s { flex: 0 1 auto; padding: 8px 20px; }
-
-/* ===== LIGHTBOX ===== */
-#lb {
-  position: fixed; inset: 0; z-index: 800;
-  background: rgba(20,5,15,.92);
-  display: none; align-items: center; justify-content: center;
-  cursor: pointer;
-}
-#lb.open { display: flex; }
-#lb img { max-width: 94vw; max-height: 90vh; border-radius: 11px; object-fit: contain; }
 
 /* ===== TOAST ===== */
 #toast {
@@ -769,8 +905,6 @@ img { max-width: 100%; display: block; }
 </style>
 </head>
 <body>
-
-<canvas id="sakura-canvas"></canvas>
 
 <!-- LOCK SCREEN -->
 <div id="lock-screen">
@@ -857,6 +991,12 @@ img { max-width: 100%; display: block; }
     <!-- COL 2: FEED NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
+      <!-- Khung viết nhanh (Desktop) -->
+      <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0" aria-label="Viết nhật ký mới">
+        <div class="qw-avatar">🌻</div>
+        <div class="qw-input">Hôm nay bạn thế nào? ✨</div>
+        <span class="qw-icon">📝</span>
+      </div>
       <div class="gc">
         <div class="gc-hd">
           <div class="gc-ttl">📖 Nhật Ký</div>
@@ -874,10 +1014,10 @@ img { max-width: 100%; display: block; }
       </div>
     </div>
 
-    <!-- COL 3: RIGHT SIDEBAR (desktop) – ban đầu rỗng, sẽ được JavaScript đổ nội dung vào -->
+    <!-- COL 3: RIGHT SIDEBAR (desktop) -->
     <div id="col-right-desktop" style="display:none"></div>
 
-    <!-- Các panel cho kỷ niệm và album (sẽ được di chuyển vào right sidebar trên desktop) -->
+    <!-- Các panel cho kỷ niệm và album (sẽ di chuyển vào right sidebar) -->
     <div class="col-panel" id="col-ann">
       <div class="gc">
         <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
@@ -899,28 +1039,33 @@ img { max-width: 100%; display: block; }
 
 </div>
 
-<button id="fab" onclick="openWriteModal()" title="Viết nhật ký mới">✍️</button>
+<!-- FAB (mobile) – dấu cộng -->
+<button id="fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
 
-<!-- MOBILE BOTTOM NAV -->
+<!-- MOBILE BOTTOM NAV (Android style) -->
 <nav class="mob-nav">
-  <div class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
-    <div class="mn-icon">📖</div><div>Nhật ký</div>
-  </div>
-  <div class="mn-item" data-tab="ann" onclick="switchTab('ann')">
-    <div class="mn-icon">🌸</div><div>Kỷ niệm</div>
-  </div>
-  <div class="mn-item" data-tab="cal" onclick="switchTab('cal')">
-    <div class="mn-icon">🗓</div><div>Lịch</div>
-  </div>
-  <div class="mn-item" data-tab="album" onclick="switchTab('album')">
-    <div class="mn-icon">🖼</div><div>Album</div>
-  </div>
+  <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
+    <span class="mn-icon">📖</span>
+    <span>Nhật ký</span>
+  </button>
+  <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
+    <span class="mn-icon">🌸</span>
+    <span>Kỷ niệm</span>
+  </button>
+  <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
+    <span class="mn-icon">🗓</span>
+    <span>Lịch</span>
+  </button>
+  <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
+    <span class="mn-icon">🖼</span>
+    <span>Album</span>
+  </button>
 </nav>
 
 <!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-write')">✕</button>
+    <button class="mc" onclick="closeModal('modal-write')" aria-label="Đóng">✕</button>
     <div class="m-ttl" id="write-ttl">✍️ Viết nhật ký</div>
     <div class="wp" id="wp-box">
       <span id="wp-txt">💭 Hôm nay có điều gì đặc biệt không?</span>
@@ -975,7 +1120,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL XEM BÀI -->
 <div class="modal" id="modal-view">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-view')">✕</button>
+    <button class="mc" onclick="closeModal('modal-view')" aria-label="Đóng">✕</button>
     <div class="ve-date" id="ve-date"></div>
     <div class="ve-edited-note hidden" id="ve-edited-note"></div>
     <div class="ve-mood" id="ve-mood"></div>
@@ -1003,7 +1148,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL DANH SÁCH CÙNG NGÀY -->
 <div class="modal" id="modal-daylist">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('modal-daylist')">✕</button>
+    <button class="mc" onclick="closeModal('modal-daylist')" aria-label="Đóng">✕</button>
     <div class="ve-date" id="dl-date"></div>
     <div class="ve-edited-note hidden" id="dl-edited-note"></div>
     <div class="ve-mood" id="dl-mood"></div>
@@ -1036,7 +1181,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL KỶ NIỆM -->
 <div class="modal" id="modal-ann">
   <div class="mbox" style="max-width:400px">
-    <button class="mc" onclick="closeModal('modal-ann')">✕</button>
+    <button class="mc" onclick="closeModal('modal-ann')" aria-label="Đóng">✕</button>
     <div class="m-ttl">🌸 Thêm Kỷ Niệm</div>
     <div class="fg">
       <label class="fl">Ngày</label>
@@ -1056,7 +1201,7 @@ img { max-width: 100%; display: block; }
 <!-- MODAL CONFIRM -->
 <div class="modal confirm-modal" id="confirm-modal">
   <div class="mbox">
-    <button class="mc" onclick="closeModal('confirm-modal')">✕</button>
+    <button class="mc" onclick="closeModal('confirm-modal')" aria-label="Đóng">✕</button>
     <div class="m-ttl" id="confirm-ttl">Xác nhận</div>
     <div class="confirm-msg" id="confirm-msg">Bạn có chắc chắn?</div>
     <div class="confirm-actions">
@@ -1066,8 +1211,24 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- LIGHTBOX -->
-<div id="lb" onclick="closeLb()"><img id="lb-img" src="" alt=""/></div>
+<!-- PHOTO VIEWER (toàn màn hình) -->
+<div id="photo-viewer">
+  <button class="pv-close" onclick="closePhotoViewer()" aria-label="Đóng photo viewer">✕</button>
+  <div id="pv-list-container">
+    <!-- Danh sách ảnh (mặc định) -->
+    <div class="pv-list" id="pv-list"></div>
+    <!-- Chế độ xem đơn lẻ -->
+    <div class="pv-single" id="pv-single">
+      <button class="pv-back-list" onclick="switchToGallery()" aria-label="Quay lại danh sách">‹ Quay lại danh sách</button>
+      <img class="pv-img" id="pv-single-img" src="" alt=""/>
+      <div class="pv-nav">
+        <button id="pv-prev" onclick="pvPrev()" aria-label="Ảnh trước">‹</button>
+        <span id="pv-counter" style="color:#fff;font-size:.9rem;">1 / 1</span>
+        <button id="pv-next" onclick="pvNext()" aria-label="Ảnh sau">›</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div id="toast"></div>
@@ -1082,7 +1243,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.0.1 - NHẬT KÝ ỨNG DỤNG CHÍNH (đã sửa lỗi hiển thị kỷ niệm & album)
+// V6.0.4 - NHẬT KÝ ỨNG DỤNG CHÍNH
 // ============================================================
 
 // ============================================================
@@ -1109,7 +1270,7 @@ var S = {
   calM: new Date().getMonth(),
   curId: null,
   mood: '',
-  imgs: [],         // [{ url, driveId }]  KHÔNG LƯU BASE64
+  imgs: [],
   fontSize: 14,
   page: 1,
   pageSize: 8,
@@ -1121,7 +1282,11 @@ var S = {
   editingDlCommentId: null,
   pendingActions: [],
   isOnline: navigator.onLine,
-  hasWelcomed: false
+  hasWelcomed: false,
+  // Photo viewer state
+  pvImages: [],
+  pvCurrentIndex: 0,
+  pvMode: 'gallery' // 'gallery' hoặc 'single'
 };
 
 var PROMPTS = [
@@ -1195,6 +1360,7 @@ function unlockApp() {
     newPrompt();
     setupDesktopLayout();
     updateStatusSlider();
+    initPullToRefresh();
   }, 480);
 }
 document.addEventListener('keydown', function (e) {
@@ -1204,7 +1370,33 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// DESKTOP LAYOUT (di chuyển col-ann và col-album vào right sidebar)
+// PULL TO REFRESH
+// ============================================================
+var ptrStartY = 0, ptrDragging = false;
+function initPullToRefresh() {
+  var container = document.getElementById('app');
+  container.addEventListener('touchstart', function(e) {
+    if (window.scrollY === 0) {
+      ptrStartY = e.touches[0].clientY;
+      ptrDragging = true;
+    }
+  }, { passive: true });
+  container.addEventListener('touchmove', function(e) {
+    if (!ptrDragging) return;
+    var delta = e.touches[0].clientY - ptrStartY;
+    if (delta > 60) {
+      ptrDragging = false;
+      toast('🔄 Đang làm mới...');
+      loadData();
+    }
+  }, { passive: true });
+  container.addEventListener('touchend', function() {
+    ptrDragging = false;
+  }, { passive: true });
+}
+
+// ============================================================
+// DESKTOP LAYOUT
 // ============================================================
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
@@ -1216,10 +1408,8 @@ function setupDesktopLayout() {
     rightCol.appendChild(albumCol);
     rightCol.style.display = 'flex';
   }
-  // Ẩn các panel gốc trên desktop (đã được di chuyển)
   if (annCol) annCol.style.display = 'block';
   if (albumCol) albumCol.style.display = 'block';
-  // Đảm bảo các panel khác hiển thị
   ['col-cal', 'col-diary'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) { el.style.display = 'block'; el.classList.add('on'); }
@@ -1232,7 +1422,6 @@ window.addEventListener('resize', function () {
   if (nowDesktop && !_lastIsDesktop) {
     setupDesktopLayout();
   } else if (!nowDesktop && _lastIsDesktop) {
-    // Trả lại col-ann và col-album về vị trí cũ trong main-layout
     var mainLayout = document.getElementById('main-layout');
     var rightCol = document.getElementById('col-right-desktop');
     var albumCol = document.getElementById('col-album');
@@ -1257,7 +1446,7 @@ function getCurrentMobileTab() {
 }
 
 // ============================================================
-// CLOCK & SAKURA
+// CLOCK
 // ============================================================
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
@@ -1272,37 +1461,6 @@ function startClock() {
   tick();
   setInterval(tick, 1000);
 }
-
-(function () {
-  var cv = document.getElementById('sakura-canvas');
-  var ctx = cv.getContext('2d');
-  var petals = [];
-  var W, H;
-  function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-  function r(a, b) { return a + Math.random() * (b - a); }
-  function Petal() {
-    this.x = r(0, W); this.y = r(-120, 0);
-    this.sz = r(5, 9); this.vy = r(0.55, 1.35); this.vx = r(-0.35, 0.35);
-    this.ang = r(0, Math.PI * 2); this.rs = r(-0.022, 0.022);
-    this.op = r(0.38, 0.80);
-    this.c = 'rgba(' + (238 + ~~r(0, 12)) + ',' + (140 + ~~r(0, 65)) + ',' + (165 + ~~r(0, 45)) + ',';
-  }
-  for (var i = 0; i < 26; i++) { var p = new Petal(); p.y = r(0, H); petals.push(p); }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    petals.forEach(function (p) {
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.ang);
-      ctx.beginPath(); ctx.ellipse(0, 0, p.sz, p.sz * 0.52, 0, 0, Math.PI * 2);
-      ctx.fillStyle = p.c + p.op + ')'; ctx.fill(); ctx.restore();
-      p.x += p.vx; p.y += p.vy; p.ang += p.rs;
-      if (p.y > H + 18) { p.y = -18; p.x = r(0, W); }
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
 
 // ============================================================
 // LOCAL STORAGE HELPERS
@@ -1786,7 +1944,7 @@ function showDayListModal() {
   document.getElementById('dl-mood').textContent = e.mood || '';
   document.getElementById('dl-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('dl-cnt').textContent = e.content || '';
-  document.getElementById('dl-imgs').innerHTML = buildGalleryHTML(e.images);
+  document.getElementById('dl-imgs').innerHTML = buildGalleryHTML(e.images, e.id);
 
   document.getElementById('dl-prev').disabled = (idx === 0);
   document.getElementById('dl-next').disabled = (idx === total - 1);
@@ -1915,7 +2073,7 @@ function tiHTML(e) {
   if (e.images && e.images.length) {
     var src = e.images[0].url || e.images[0];
     thumb = '<img class="ti-thumb" src="' + escH(src) + '" alt="ảnh" ' +
-      'onclick="event.stopPropagation();openLb(\'' + escH(src) + '\')" loading="lazy"/>';
+      'onclick="event.stopPropagation();openPhotoViewer(\'' + e.id + '\', 0)" loading="lazy"/>';
   }
   var cmtCount = (e.comments && e.comments.length) ? e.comments.length : 0;
   var cmtHTML = cmtCount > 0 ? '<div class="ti-cmt-count">💬 ' + cmtCount + ' bình luận</div>' : '';
@@ -2020,16 +2178,7 @@ function renderAlbum() {
   entriesWithImgs.forEach(function (e) {
     var imgs = e.images;
     var count = imgs.length;
-    var cls = 'album-grid g' + Math.min(count, 10);
-    var gridHTML = '';
-    var max = Math.min(count, 10);
-    for (var i = 0; i < max; i++) {
-      var src = imgs[i].url || imgs[i];
-      gridHTML += '<div class="a-img" onclick="openLb(\'' + escH(src) + '\')">' +
-        '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-        (i === max - 1 && count > 10 ? '<div class="a-img-more">+' + (count - 10) + '</div>' : '') +
-        '</div>';
-    }
+    var gridHTML = buildGridImages(imgs, e.id);
     var timeLabel = fmtTimeShort(e.updatedAt);
     html += '<div class="album-day-group">' +
       '<div class="album-day-hdr">' +
@@ -2038,28 +2187,162 @@ function renderAlbum() {
       (timeLabel ? '<div class="album-day-time">🕐 ' + timeLabel + '</div>' : '') +
       '</div>' +
       '<div class="album-day-entry-ttl">' + escH(e.title || '(Không tiêu đề)') + '</div>' +
-      '<div class="' + cls + '">' + gridHTML + '</div>' +
+      '<div class="album-grid">' + gridHTML + '</div>' +
       '</div>';
   });
   body.innerHTML = html;
 }
 
 // ============================================================
-// GALLERY HTML
+// GALLERY ẢNH (bố cục thông minh) – cải tiến layout 3 ảnh
 // ============================================================
-function buildGalleryHTML(images) {
+function buildGridImages(images, entryId) {
   if (!images || !images.length) return '';
-  var n = Math.min(images.length, 10);
-  var cls = 've-gallery n' + n;
+  var total = images.length;
   var html = '';
-  for (var i = 0; i < n; i++) {
-    var src = images[i].url || images[i];
-    html += '<div class="vg-img" onclick="openLb(\'' + escH(src) + '\')">' +
+  var maxDisplay = 4;
+  var displayCount = total < maxDisplay ? total : maxDisplay;
+  var extra = total - maxDisplay;
+
+  var style = '';
+  if (displayCount === 1) {
+    style = 'grid-template-columns:1fr;';
+  } else if (displayCount === 2) {
+    style = 'grid-template-columns:1fr 1fr;';
+  } else if (displayCount === 3) {
+    // Layout 3 ảnh: 1 ảnh lớn bên trái (2:1), 2 ảnh vuông bên phải
+    style = 'grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr;';
+  } else if (displayCount === 4) {
+    style = 'grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;';
+  }
+
+  for (var i = 0; i < displayCount; i++) {
+    var img = images[i];
+    var src = img.url || img;
+    var isLast = (i === displayCount - 1 && extra > 0);
+    var overlay = isLast ? '<div class="a-img-more">+' + extra + '</div>' : '';
+    var gridPos = '';
+    if (displayCount === 3 && i === 0) {
+      gridPos = 'grid-row:1/3; grid-column:1/2;';
+    }
+    html += '<div class="a-img" style="' + gridPos + '" onclick="openPhotoViewer(\'' + entryId + '\', ' + i + ')">' +
       '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
-      (i === n - 1 && images.length > 10 ? '<div class="a-img-more">+' + (images.length - 10) + '</div>' : '') +
+      overlay +
       '</div>';
   }
-  return '<div class="' + cls + '">' + html + '</div>';
+  return '<div class="album-grid" style="' + style + '">' + html + '</div>';
+}
+
+// ============================================================
+// GALLERY HTML (dùng trong view modal) – cải tiến layout 3 ảnh
+// ============================================================
+function buildGalleryHTML(images, entryId) {
+  if (!images || !images.length) return '';
+  var total = images.length;
+  var maxDisplay = 4;
+  var displayCount = total < maxDisplay ? total : maxDisplay;
+  var extra = total - maxDisplay;
+
+  var style = '';
+  if (displayCount === 1) {
+    style = 'grid-template-columns:1fr;';
+  } else if (displayCount === 2) {
+    style = 'grid-template-columns:1fr 1fr;';
+  } else if (displayCount === 3) {
+    style = 'grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr;';
+  } else if (displayCount === 4) {
+    style = 'grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;';
+  }
+
+  var html = '';
+  for (var i = 0; i < displayCount; i++) {
+    var img = images[i];
+    var src = img.url || img;
+    var isLast = (i === displayCount - 1 && extra > 0);
+    var overlay = isLast ? '<div class="vg-overlay">+' + extra + '</div>' : '';
+    var gridPos = '';
+    if (displayCount === 3 && i === 0) {
+      gridPos = 'grid-row:1/3; grid-column:1/2;';
+    }
+    html += '<div class="vg-img" style="' + gridPos + '" onclick="openPhotoViewer(\'' + entryId + '\', ' + i + ')">' +
+      '<img src="' + escH(src) + '" loading="lazy" alt="ảnh"/>' +
+      overlay +
+      '</div>';
+  }
+  return '<div class="ve-gallery" style="' + style + '">' + html + '</div>';
+}
+
+// ============================================================
+// PHOTO VIEWER
+// ============================================================
+function openPhotoViewer(entryId, startIndex) {
+  var entry = S.data.entries.find(function (e) { return e.id === entryId; });
+  if (!entry || !entry.images || !entry.images.length) return;
+  S.pvImages = entry.images;
+  S.pvCurrentIndex = startIndex || 0;
+  S.pvMode = 'gallery';
+
+  var list = document.getElementById('pv-list');
+  list.innerHTML = S.pvImages.map(function (img, idx) {
+    var src = img.url || img;
+    return '<div class="pv-item" onclick="switchToSingle(' + idx + ')"><img src="' + escH(src) + '" alt="ảnh" loading="lazy"/></div>';
+  }).join('');
+
+  document.getElementById('pv-single').classList.remove('active');
+  document.getElementById('pv-list').style.display = 'flex';
+
+  document.getElementById('photo-viewer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  if (startIndex && startIndex > 0) {
+    setTimeout(function () {
+      var items = list.querySelectorAll('.pv-item');
+      if (items[startIndex]) items[startIndex].scrollIntoView({ block: 'center' });
+    }, 100);
+  }
+}
+
+function switchToSingle(index) {
+  S.pvCurrentIndex = index;
+  S.pvMode = 'single';
+  updateSingleView();
+  document.getElementById('pv-list').style.display = 'none';
+  document.getElementById('pv-single').classList.add('active');
+}
+
+function updateSingleView() {
+  var img = S.pvImages[S.pvCurrentIndex];
+  if (!img) return;
+  document.getElementById('pv-single-img').src = img.url || img;
+  document.getElementById('pv-counter').textContent = (S.pvCurrentIndex + 1) + ' / ' + S.pvImages.length;
+  document.getElementById('pv-prev').disabled = (S.pvCurrentIndex === 0);
+  document.getElementById('pv-next').disabled = (S.pvCurrentIndex === S.pvImages.length - 1);
+}
+
+function switchToGallery() {
+  S.pvMode = 'gallery';
+  document.getElementById('pv-single').classList.remove('active');
+  document.getElementById('pv-list').style.display = 'flex';
+}
+
+function pvPrev() {
+  if (S.pvCurrentIndex > 0) {
+    S.pvCurrentIndex--;
+    updateSingleView();
+  }
+}
+function pvNext() {
+  if (S.pvCurrentIndex < S.pvImages.length - 1) {
+    S.pvCurrentIndex++;
+    updateSingleView();
+  }
+}
+
+function closePhotoViewer() {
+  document.getElementById('photo-viewer').classList.remove('open');
+  document.body.style.overflow = '';
+  S.pvImages = [];
+  S.pvCurrentIndex = 0;
 }
 
 // ============================================================
@@ -2095,7 +2378,7 @@ function openView(id) {
   document.getElementById('ve-mood').textContent = e.mood || '';
   document.getElementById('ve-ttl').textContent = e.title || '(Không tiêu đề)';
   document.getElementById('ve-cnt').textContent = e.content || '';
-  document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images);
+  document.getElementById('ve-imgs').innerHTML = buildGalleryHTML(e.images, e.id);
 
   var isOwner = (e.author === CURRENT_USER);
   document.getElementById('view-edit-btn').style.display = isOwner ? '' : 'none';
@@ -2175,7 +2458,7 @@ function chgFs(delta) {
 }
 
 // ============================================================
-// UPLOAD IMAGES
+// UPLOAD IMAGES – song song (tối đa 3 ảnh cùng lúc)
 // ============================================================
 function onImgPick(input) {
   var files = Array.from(input.files);
@@ -2192,30 +2475,44 @@ function onImgPick(input) {
   fillBar.style.width = '0%';
   document.getElementById('save-entry-btn').disabled = true;
   var dateForFolder = document.getElementById('e-date').value || todayStr();
-  var done = 0;
+
   var total = files.length;
-  files.forEach(function (file) {
-    compressImg(file, function (b64) {
-      uploadImgToDrive(b64, file.name, dateForFolder, function (result) {
-        if (result) {
-          S.imgs.push({ url: result.url, driveId: result.driveId });
-        } else {
-          toast('⚠️ Không thể upload ảnh: ' + file.name);
-        }
-        done++;
-        var percent = Math.round((done / total) * 100);
-        fillBar.style.width = percent + '%';
-        if (done === total) {
-          setTimeout(function () {
-            progEl.classList.remove('show');
-            progBar.classList.remove('show');
-            document.getElementById('save-entry-btn').disabled = false;
-            renderImgPrev();
-          }, 300);
-        }
+  var completed = 0;
+  var processing = 0;
+  var maxConcurrent = 3;
+  var queue = files.slice();
+
+  function processNext() {
+    if (queue.length === 0 && processing === 0) {
+      // Hoàn thành tất cả
+      setTimeout(function () {
+        progEl.classList.remove('show');
+        progBar.classList.remove('show');
+        document.getElementById('save-entry-btn').disabled = false;
+        renderImgPrev();
+      }, 300);
+      return;
+    }
+    while (processing < maxConcurrent && queue.length > 0) {
+      var file = queue.shift();
+      processing++;
+      compressImg(file, function (b64) {
+        uploadImgToDrive(b64, file.name, dateForFolder, function (result) {
+          if (result) {
+            S.imgs.push({ url: result.url, driveId: result.driveId });
+          } else {
+            toast('⚠️ Không thể upload ảnh: ' + file.name);
+          }
+          completed++;
+          processing--;
+          var percent = Math.round((completed / total) * 100);
+          fillBar.style.width = percent + '%';
+          processNext();
+        });
       });
-    });
-  });
+    }
+  }
+  processNext();
   input.value = '';
 }
 
@@ -2595,12 +2892,6 @@ async function delDlComment(commentId) {
 // ============================================================
 // LIGHTBOX, TAB, MODAL HELPERS, TOAST, UTILITY
 // ============================================================
-function openLb(src) {
-  document.getElementById('lb-img').src = src;
-  document.getElementById('lb').classList.add('open');
-}
-function closeLb() { document.getElementById('lb').classList.remove('open'); }
-
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
@@ -2633,7 +2924,7 @@ document.querySelectorAll('.modal').forEach(function (o) {
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal.open').forEach(function (m) { closeModal(m.id); });
-    closeLb();
+    closePhotoViewer();
   }
 });
 
