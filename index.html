@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V6.7.0 - Khoảng cách header 5px, navibar iOS 26, tách nút viết riêng -->
+<!-- V7.0.0 - Redesign giao diện theo mockup, gọn nhẹ, tập trung vào nội dung -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -39,7 +39,7 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   font-family: var(--font-body);
-  background: linear-gradient(145deg, #fce8f0 0%, #f4e0ef 50%, #ece0f5 100%);
+  background: #f5edf0;
   min-height: 100vh;
   color: var(--t1);
   overflow-x: hidden;
@@ -88,11 +88,11 @@ img { max-width: 100%; display: block; }
   display: none;
   position: relative; z-index: 1;
   min-height: 100vh;
-  padding-bottom: calc(64px + env(safe-area-inset-bottom,0px));
+  padding-bottom: calc(80px + env(safe-area-inset-bottom,0px));
 }
 @media (min-width: 769px) { #app { padding-bottom: 24px; } }
 
-/* ===== HEADER ===== */
+/* ===== HEADER (đơn giản) ===== */
 .app-hdr {
   background: linear-gradient(135deg, rgba(168,84,112,.92), rgba(201,125,150,.85));
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -105,14 +105,39 @@ img { max-width: 100%; display: block; }
   padding: 13px 18px 9px;
   max-width: var(--max-width); margin: 0 auto;
 }
+.hdr-left {
+  display: flex; align-items: center; gap: 10px;
+}
 .hdr-logo {
   font-family: var(--font-ttl);
   font-size: 1.46rem; font-weight: 800;
   color: #fff; text-shadow: 0 2px 8px rgba(100,30,60,.28);
 }
-.hdr-actions {
-  display: flex; gap: 8px; align-items: center;
+.hdr-clock {
+  font-size: .85rem;
+  color: rgba(255,255,255,.9);
+  font-weight: 600;
+  background: rgba(255,255,255,.18);
+  padding: 3px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.25);
 }
+.hdr-right {
+  display: flex; align-items: center; gap: 10px;
+}
+.hdr-streak {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,.18);
+  padding: 3px 12px 3px 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.25);
+  font-size: .82rem;
+  color: #fff;
+  font-weight: 600;
+}
+.hdr-streak .fire { font-size: 1.1rem; }
 .hdr-btn {
   background: rgba(255,255,255,.22);
   border: 1px solid rgba(255,255,255,.32);
@@ -125,44 +150,12 @@ img { max-width: 100%; display: block; }
 .hdr-btn.syncing svg { animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .user-badge {
-  font-size: .8rem; font-weight: 700; color: #fff;
+  font-size: .78rem; font-weight: 700; color: #fff;
   background: rgba(255,255,255,.2);
-  border-radius: 20px; padding: 4px 12px;
+  border-radius: 20px; padding: 3px 12px;
   border: 1px solid rgba(255,255,255,.3);
   display: flex; align-items: center; gap: 4px;
 }
-.clock-row {
-  display: flex; gap: 6px; justify-content: center;
-  padding: 0 18px 10px; flex-wrap: wrap;
-}
-.cu {
-  background: rgba(255,255,255,.18);
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 9px; padding: 4px 9px;
-  text-align: center; min-width: 56px;
-}
-.cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
-.cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
-
-/* ===== STATUS SLIDER ===== */
-.status-slider {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 18px;
-  margin: 4px auto 10px;
-  max-width: var(--max-width);
-  background: rgba(255,255,255,.12);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  border-radius: 20px; border: 1px solid rgba(255,255,255,.2);
-  min-height: 64px;
-  color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.15);
-}
-.status-slider .icon-fire { font-size: 2rem; line-height: 1; flex-shrink: 0; color: #ff8c00; filter: drop-shadow(0 0 8px #ff8c0066); }
-.status-slider .info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.status-slider .info .main { font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.status-slider .info .main strong { font-size: 1.2rem; font-weight: 800; color: #fff; }
-.status-slider .info .sub { font-size: .82rem; font-weight: 400; opacity: .9; display: flex; align-items: center; gap: 6px; }
-.status-slider .progress-wrap { width: 100%; height: 4px; background: rgba(255,255,255,.2); border-radius: 3px; overflow: hidden; margin-top: 2px; }
-.status-slider .progress-wrap .fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ffb347,#ff8c00); border-radius: 3px; transition: width .6s ease; }
 
 /* ===== MAIN LAYOUT ===== */
 .main-layout {
@@ -200,17 +193,15 @@ img { max-width: 100%; display: block; }
 
 /* ===== CARD ===== */
 .gc {
-  background: var(--glass);
-  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-  border: 1.5px solid var(--glass-b);
+  background: #fff;
   border-radius: var(--rrb);
-  box-shadow: var(--sh);
+  box-shadow: 0 2px 12px rgba(168,84,112,.10);
   overflow: hidden;
   margin-bottom: 14px;
 }
 .gc-hd {
   padding: 13px 17px 11px;
-  border-bottom: 1px solid rgba(168,84,112,.09);
+  border-bottom: 1px solid rgba(168,84,112,.08);
   display: flex; align-items: center; justify-content: space-between;
 }
 .gc-ttl {
@@ -219,9 +210,9 @@ img { max-width: 100%; display: block; }
   color: var(--p1);
 }
 
-/* ===== KHOẢNG CÁCH HEADER -> NỘI DUNG = 5px CHO TẤT CẢ TAB ===== */
+/* ===== KHOẢNG CÁCH HEADER -> NỘI DUNG = 5px ===== */
 .gc-body {
-  padding: 5px 17px 17px; /* padding-top = 5px */
+  padding: 5px 17px 17px;
 }
 .gc-body > *:first-child {
   margin-top: 0;
@@ -241,29 +232,21 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 .tl-day-items { display: flex; flex-direction: column; gap: 8px; }
 
-/* ===== TIMELINE ITEM – thêm khoảng cách trên/dưới 5px ===== */
+/* ===== TIMELINE ITEM – card đơn giản ===== */
 .ti {
-  background: rgba(255,255,255,.55);
-  border: 1.5px solid rgba(168,84,112,.12);
+  background: rgba(255,255,255,.65);
+  border: 1px solid rgba(168,84,112,.08);
   border-radius: var(--rr);
   padding: 11px 13px;
-  margin-bottom: 5px; /* cách dưới */
+  margin-bottom: 5px;
   cursor: pointer;
   transition: all .17s;
   position: relative;
-  overflow: hidden;
-}
-.ti::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: linear-gradient(to bottom, var(--p3), var(--p1));
-  border-radius: 3px 0 0 3px;
 }
 .ti:hover {
-  transform: translateX(3px);
+  transform: translateY(-1px);
   box-shadow: var(--sh-sm);
-  background: rgba(255,255,255,.78);
+  background: rgba(255,255,255,.85);
 }
 .ti-row1 {
   display: flex; align-items: center; gap: 6px;
@@ -304,12 +287,12 @@ img { max-width: 100%; display: block; }
 
 /* ===== OTD ===== */
 .otd-card {
-  background: linear-gradient(135deg, rgba(168,84,112,.09), rgba(201,125,150,.06));
-  border: 1.5px solid rgba(168,84,112,.18);
+  background: linear-gradient(135deg, rgba(168,84,112,.08), rgba(201,125,150,.05));
+  border: 1px solid rgba(168,84,112,.15);
   border-radius: var(--rr); padding: 13px 15px;
   margin-bottom: 13px; cursor: pointer; transition: all .18s;
 }
-.otd-card:hover { background: rgba(168,84,112,.14); transform: translateY(-1px); }
+.otd-card:hover { background: rgba(168,84,112,.12); transform: translateY(-1px); }
 .otd-lbl { font-size: .65rem; font-weight: 700; color: var(--p2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
 .otd-ttl { font-weight: 700; font-size: .86rem; color: var(--t1); }
 .otd-pre { font-size: .73rem; color: var(--t2); margin-top: 2px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -318,9 +301,9 @@ img { max-width: 100%; display: block; }
 .ann-item {
   display: flex; align-items: center; gap: 9px;
   background: rgba(255,255,255,.52);
-  border: 1px solid rgba(168,84,112,.12);
+  border: 1px solid rgba(168,84,112,.08);
   border-radius: 11px; padding: 10px 12px;
-  margin-bottom: 5px; /* cách dưới 5px */
+  margin-bottom: 5px;
 }
 .ann-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--p1); flex-shrink: 0; }
 .ann-info { flex: 1; min-width: 0; }
@@ -452,35 +435,28 @@ img { max-width: 100%; display: block; }
   .quick-write { display: flex; }
 }
 
-/* ===== MOBILE NAVIBAR – NỔI, CÙNG HÀNG VỚI NÚT VIẾT (iOS 26) ===== */
+/* ===== MOBILE NAVIBAR – ĐƠN GIẢN, CÓ NÚT VIẾT ===== */
 .mob-nav {
   display: none;
   position: fixed;
-  bottom: 20px;
-  left: 16px;
-  right: 16px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 300;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-radius: 32px;
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-  padding: 6px 8px 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 6px 8px env(safe-area-inset-bottom, 6px);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   transition: transform 0.35s cubic-bezier(0.32, 0.94, 0.6, 1);
   transform: translateY(0);
 }
 .mob-nav.hidden-nav {
-  transform: translateY(calc(100% + 20px));
-}
-.mn-tabs {
-  display: flex;
-  flex: 1;
-  justify-content: space-around;
-  align-items: center;
+  transform: translateY(100%);
 }
 .mn-item {
   display: flex;
@@ -488,29 +464,28 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   gap: 1px;
-  padding: 8px 4px;
-  color: #888;
-  font-size: .64rem;
+  padding: 6px 4px;
+  color: #999;
+  font-size: .6rem;
   font-weight: 600;
-  text-transform: none;
-  transition: all .2s;
+  transition: color .2s;
   border: none;
   background: transparent;
-  border-radius: 24px;
-  min-height: 48px;
+  border-radius: 16px;
+  min-height: 44px;
   flex: 1;
+  max-width: 70px;
 }
 .mn-item.on {
   color: var(--p1);
-  background: rgba(168,84,112,.10);
 }
-.mn-icon { font-size: 1.5rem; line-height: 1; }
+.mn-icon { font-size: 1.4rem; line-height: 1; }
 
-/* Nút viết bài – nằm bên phải, tách riêng */
+/* Nút viết bài mới – nổi bật */
 .nav-fab {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--p3), var(--p1));
   border: none;
@@ -522,7 +497,7 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  margin-left: 6px;
+  margin: -10px 0;
 }
 .nav-fab:hover { transform: scale(1.08) rotate(7deg); box-shadow: 0 6px 20px rgba(168,84,112,.5); }
 .nav-fab:active { transform: scale(0.92); }
@@ -590,7 +565,7 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #modal-write .mbox { max-width: 680px; } }
 
-/* ===== FORM – giảm khoảng cách xuống 5px ===== */
+/* ===== FORM ===== */
 .fg { margin-bottom: 5px; }
 .fl {
   display: block; font-size: .71rem; font-weight: 700;
@@ -748,7 +723,7 @@ img { max-width: 100%; display: block; }
   color: #fff;
 }
 
-/* ===== PHOTO VIEWER (iOS style) ===== */
+/* ===== PHOTO VIEWER ===== */
 #photo-viewer {
   position: fixed;
   inset: 0;
@@ -956,12 +931,6 @@ img { max-width: 100%; display: block; }
 .saving-txt { font-family: var(--font-ttl); font-size: 1.05rem; font-weight: 700; color: var(--p1); }
 
 .hidden { display: none !important; }
-
-/* ===== Đảm bảo nội dung không bị trôi lên khi load ===== */
-#col-diary .gc-body {
-  padding-top: 5px;
-  scroll-margin-top: 5px;
-}
 </style>
 </head>
 <body>
@@ -999,10 +968,18 @@ img { max-width: 100%; display: block; }
 <!-- ===== APP ===== -->
 <div id="app">
 
+  <!-- HEADER MỚI – ĐƠN GIẢN: Logo + Clock + Streak -->
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
-      <div class="hdr-logo">💕 Nhật Ký</div>
-      <div class="hdr-actions">
+      <div class="hdr-left">
+        <div class="hdr-logo">💕 Nhật Ký</div>
+        <div class="hdr-clock" id="hdr-clock">0 ngày</div>
+      </div>
+      <div class="hdr-right">
+        <div class="hdr-streak" id="hdr-streak">
+          <span class="fire">🔥</span>
+          <span id="streak-count">0</span>
+        </div>
         <span class="user-badge" id="user-badge">🌻 Ánh Ngọc</span>
         <button class="hdr-btn" id="sync-btn" onclick="syncData()">
           <svg id="sync-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1013,13 +990,6 @@ img { max-width: 100%; display: block; }
         </button>
       </div>
     </div>
-    <div class="clock-row">
-      <div class="cu"><div class="cn" id="ck-d">0</div><div class="cl">Ngày</div></div>
-      <div class="cu"><div class="cn" id="ck-h">00</div><div class="cl">Giờ</div></div>
-      <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
-      <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
-    </div>
-    <div class="status-slider" id="status-slider"></div>
   </header>
 
   <!-- ===== MAIN LAYOUT ===== -->
@@ -1092,26 +1062,24 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- ===== MOBILE NAVIBAR + NÚT VIẾT BÀI CÙNG HÀNG (iOS 26) ===== -->
+<!-- ===== MOBILE NAVIBAR (đơn giản) ===== -->
 <nav class="mob-nav" id="mob-nav">
-  <div class="mn-tabs">
-    <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
-      <span class="mn-icon">📖</span>
-      <span>Nhật ký</span>
-    </button>
-    <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
-      <span class="mn-icon">🌸</span>
-      <span>Kỷ niệm</span>
-    </button>
-    <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
-      <span class="mn-icon">🗓</span>
-      <span>Lịch</span>
-    </button>
-    <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
-      <span class="mn-icon">🖼</span>
-      <span>Album</span>
-    </button>
-  </div>
+  <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')" aria-label="Nhật ký">
+    <span class="mn-icon">📖</span>
+    <span>Nhật ký</span>
+  </button>
+  <button class="mn-item" data-tab="ann" onclick="switchTab('ann')" aria-label="Kỷ niệm">
+    <span class="mn-icon">🌸</span>
+    <span>Kỷ niệm</span>
+  </button>
+  <button class="mn-item" data-tab="cal" onclick="switchTab('cal')" aria-label="Lịch">
+    <span class="mn-icon">🗓</span>
+    <span>Lịch</span>
+  </button>
+  <button class="mn-item" data-tab="album" onclick="switchTab('album')" aria-label="Album">
+    <span class="mn-icon">🖼</span>
+    <span>Album</span>
+  </button>
   <button class="nav-fab" onclick="openWriteModal()" aria-label="Viết nhật ký mới">＋</button>
 </nav>
 
@@ -1294,7 +1262,8 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V6.7.0 - NHẬT KÝ ỨNG DỤNG CHÍNH (GIỮ NGUYÊN JAVASCRIPT TỪ V6.6.0)
+// V7.0.0 - REDESIGN GIAO DIỆN THEO MOCKUP
+// GIỮ NGUYÊN JAVASCRIPT TỪ V6.7.0 (chỉ điều chỉnh header)
 // ============================================================
 
 // ===== CẤU HÌNH =====
@@ -1405,7 +1374,7 @@ function unlockApp() {
     loadData();
     newPrompt();
     setupDesktopLayout();
-    updateStatusSlider();
+    updateHeaderInfo();
     initPullToRefresh();
     initNavbarScrollHide();
   }, 480);
@@ -1509,19 +1478,30 @@ function getCurrentMobileTab() {
   return active ? active.dataset.tab : 'diary';
 }
 
-// ===== CLOCK =====
+// ===== CLOCK & HEADER =====
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
   function tick() {
     var diff = Math.max(0, Date.now() - start);
     var days = Math.floor(diff / 86400000);
-    document.getElementById('ck-d').textContent = String(days);
-    document.getElementById('ck-h').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
-    document.getElementById('ck-m').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
-    document.getElementById('ck-s').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+    document.getElementById('hdr-clock').textContent = days + ' ngày';
   }
   tick();
   setInterval(tick, 1000);
+}
+
+function updateHeaderInfo() {
+  // Cập nhật streak
+  var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
+  var today = todayStr();
+  var yesterday = offsetDay(today, -1);
+  var checkFrom = dates.indexOf(today) >= 0 ? today : (dates.indexOf(yesterday) >= 0 ? yesterday : null);
+  var cur = 0;
+  if (checkFrom) {
+    var d = checkFrom;
+    while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
+  }
+  document.getElementById('streak-count').textContent = cur;
 }
 
 // ===== LOCAL STORAGE =====
@@ -1579,6 +1559,7 @@ function loadData(cb) {
     S.data.entries.forEach(normalizeEntry);
     sortEntries(S.data.entries);
     renderAll();
+    updateHeaderInfo();
     if (typeof cb === 'function') cb(S.data);
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
@@ -1595,10 +1576,12 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
+        updateHeaderInfo();
         toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian chờ)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
+        updateHeaderInfo();
         toast('⚠️ Không thể kết nối server, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
@@ -1624,10 +1607,12 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
+        updateHeaderInfo();
         toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (lỗi tải)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
+        updateHeaderInfo();
         toast('⚠️ Lỗi kết nối, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
@@ -1801,7 +1786,7 @@ function renderAll() {
   renderAnniversaries();
   renderAlbum();
   buildMonthFilter();
-  updateStatusSlider();
+  updateHeaderInfo();
 }
 
 // ===== OTD =====
@@ -1886,70 +1871,6 @@ function cm(delta) {
 
 var MNAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
               'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
-
-// ===== STATUS SLIDER =====
-function updateStatusSlider() {
-  var container = document.getElementById('status-slider');
-  if (!container) return;
-  var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
-  var cur = 0;
-  var today = todayStr();
-  var yesterday = offsetDay(today, -1);
-  var checkFrom = dates.indexOf(today) >= 0 ? today : (dates.indexOf(yesterday) >= 0 ? yesterday : null);
-  if (checkFrom) {
-    var d = checkFrom;
-    while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
-  }
-  var nextMilestone = 0;
-  if (cur < 5) nextMilestone = 5;
-  else if (cur < 10) nextMilestone = 10;
-  else if (cur < 30) nextMilestone = 30;
-  else if (cur < 50) nextMilestone = 50;
-  else if (cur < 100) nextMilestone = 100;
-  else if (cur < 365) nextMilestone = 365;
-  else nextMilestone = 365;
-  var progress = nextMilestone > 0 ? Math.min(100, (cur / nextMilestone) * 100) : 0;
-
-  var mainText = cur > 0 ? '<strong>' + cur + '</strong> ngày liên tiếp' : 'Chưa có streak';
-  var subText = '';
-  var emoji = '';
-  if (cur === 0) {
-    subText = 'Hãy bắt đầu viết hôm nay nhé! 🌱';
-    emoji = '🌱';
-  } else if (cur < 5) {
-    subText = 'Tiếp tục giữ lửa nào! 🔥';
-    emoji = '💪';
-  } else if (cur < 10) {
-    subText = 'Cố lên, sắp 10 ngày rồi! ⭐';
-    emoji = '⭐';
-  } else if (cur < 30) {
-    subText = 'Gần đến 30 ngày, cố gắng nhé! 🌈';
-    emoji = '🌈';
-  } else if (cur < 50) {
-    subText = 'Chỉ còn ' + (50 - cur) + ' ngày nữa là 50 ngày! 🎯';
-    emoji = '🎯';
-  } else if (cur < 100) {
-    subText = 'Tiến tới 100 ngày nào! 🚀';
-    emoji = '🚀';
-  } else if (cur < 365) {
-    subText = cur + ' ngày, sắp chạm 365 rồi! 🏆';
-    emoji = '🏆';
-  } else {
-    subText = '365 ngày – Bạn là huyền thoại! 👑';
-    emoji = '👑';
-  }
-  var progressHTML = '';
-  if (cur > 0 && nextMilestone > 0 && nextMilestone > cur) {
-    progressHTML = '<div class="progress-wrap"><div class="fill" style="width:' + progress + '%;"></div></div>';
-  }
-  container.innerHTML =
-    '<span class="icon-fire">🔥</span>' +
-    '<div class="info">' +
-      '<span class="main">' + mainText + ' <span style="font-size:1rem;">' + emoji + '</span></span>' +
-      '<span class="sub">' + subText + '</span>' +
-      progressHTML +
-    '</div>';
-}
 
 function offsetDay(ds, delta) {
   var d = new Date(ds + 'T00:00:00');
