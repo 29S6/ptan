@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- V7.5.0 - Căn chỉnh khoảng cách, modal mobile, bỏ nút Đóng -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -73,7 +74,7 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #app { padding-bottom: 24px; } }
 
-/* HEADER - GIỐNG V6 */
+/* HEADER */
 .app-hdr {
   background: linear-gradient(135deg, rgba(168,84,112,.92), rgba(201,125,150,.85));
   backdrop-filter: blur(20px);
@@ -150,7 +151,7 @@ img { max-width: 100%; display: block; }
 .cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
 
-/* SEARCH + FILTER - chiều rộng khớp với card bên dưới */
+/* SEARCH + FILTER */
 .search-filter {
   display: flex;
   align-items: center;
@@ -215,18 +216,18 @@ img { max-width: 100%; display: block; }
 }
 .search-filter select option { color: #3d1f2d; background: #fff; }
 
-/* MAIN LAYOUT - khoảng cách header→nội dung = 8px */
+/* MAIN LAYOUT - thêm padding-top để đồng đều khoảng cách */
 .main-layout {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 14px 16px;
+  padding: 8px 14px 16px; /* top padding 8px */
 }
 @media (min-width: 769px) {
   .main-layout {
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     gap: 20px;
-    padding: 0 24px 30px;
+    padding: 8px 24px 30px; /* top padding 8px */
   }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; }
@@ -238,7 +239,7 @@ img { max-width: 100%; display: block; }
   .col-panel.on { display: block; }
 }
 
-/* CARD - padding-top 8px cho tất cả tab */
+/* CARD */
 .gc {
   background: rgba(255,255,255,.80);
   backdrop-filter: blur(10px);
@@ -262,7 +263,7 @@ img { max-width: 100%; display: block; }
   color: #a85470;
 }
 .gc-body {
-  padding: 8px 18px 16px; /* tất cả tab đều 8px padding-top */
+  padding: 8px 18px 16px;
 }
 .gc-body > *:first-child { margin-top: 0; }
 
@@ -280,7 +281,6 @@ img { max-width: 100%; display: block; }
 .tl-day-hdr-lbl { font-size: .75rem; font-weight: 700; color: #a85470; text-transform: uppercase; letter-spacing: .05em; }
 .tl-day-hdr-line { flex: 1; height: 1px; background: rgba(168,84,112,.15); }
 
-/* TIMELINE ITEM */
 .ti {
   background: #fff;
   border: 1px solid rgba(168,84,112,.06);
@@ -502,7 +502,7 @@ img { max-width: 100%; display: block; }
 }
 .album-empty { text-align: center; color: #b08090; padding: 30px 0; font-size: .82rem; }
 
-/* QUICK WRITE - chỉ desktop, không margin-top để giữ khoảng cách 8px */
+/* QUICK WRITE - desktop */
 .quick-write {
   display: none;
   background: #fff;
@@ -611,7 +611,7 @@ img { max-width: 100%; display: block; }
 .nav-fab:active { transform: scale(.92); }
 @media (max-width: 768px) { .mob-nav { display: flex; } }
 
-/* MODALS */
+/* MODALS - cải thiện khoảng cách và kích thước trên mobile */
 .modal {
   position: fixed;
   inset: 0;
@@ -622,7 +622,7 @@ img { max-width: 100%; display: block; }
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 14px;
+  padding: 20px; /* tăng padding để tránh dính sát */
 }
 .modal.open { display: flex; }
 .modal .mbox {
@@ -631,7 +631,7 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 24px 64px rgba(0,0,0,.12);
   width: 100%;
   max-width: 560px;
-  max-height: 92vh;
+  max-height: 85vh; /* giới hạn chiều cao */
   overflow-y: auto;
   padding: 24px;
   position: relative;
@@ -806,7 +806,7 @@ img { max-width: 100%; display: block; }
 }
 .btn-d:hover { background: rgba(200,50,70,.12); }
 
-/* VIEW ENTRY - fix bố cục tiêu đề và nội dung */
+/* VIEW ENTRY */
 .ve-date {
   font-size: .78rem;
   color: #3d1f2d;
@@ -1357,7 +1357,7 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- MODAL XEM BÀI - fix bố cục -->
+<!-- MODAL XEM BÀI - đã bỏ nút Đóng -->
 <div class="modal" id="modal-view">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')">✕</button>
@@ -1370,7 +1370,7 @@ img { max-width: 100%; display: block; }
     <div class="action-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid rgba(168,84,112,.06);">
       <button class="btn-s" id="view-edit-btn" onclick="editEntry()" style="padding:6px 14px;font-size:.8rem;border-radius:14px;">✏️ Sửa</button>
       <button class="btn-d" id="view-del-btn" onclick="delEntry()" style="padding:6px 14px;font-size:.8rem;border-radius:14px;">🗑 Xóa</button>
-      <button class="btn-p" style="flex:0;padding:6px 16px;font-size:.8rem;border-radius:14px;" onclick="closeModal('modal-view')">Đóng</button>
+      <!-- Đã bỏ nút Đóng -->
     </div>
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
@@ -1477,8 +1477,10 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// CẤU HÌNH
+// V7.5.0 - GIỮ NGUYÊN JAVASCRIPT (không thay đổi)
 // ============================================================
+
+// === CẤU HÌNH ===
 var CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
   PIN_ANH_NGOC: '2204',
@@ -1491,9 +1493,7 @@ var USER_ANH = 'Anh 💖';
 var CURRENT_USER = USER_ANH_NGOC;
 var DEFAULT_AUTHOR = USER_ANH_NGOC;
 
-// ============================================================
-// STATE
-// ============================================================
+// === STATE ===
 var S = {
   data: { entries: [], anniversaries: [] },
   calY: new Date().getFullYear(),
@@ -1550,9 +1550,7 @@ var QUOTES = [
 document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
-// ============================================================
-// LOCK SCREEN
-// ============================================================
+// === LOCK SCREEN ===
 function kp(d) {
   if (S.pin.length >= 4) return;
   S.pin += d;
@@ -1602,9 +1600,7 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Backspace') kd();
 });
 
-// ============================================================
-// PULL TO REFRESH
-// ============================================================
+// === PULL TO REFRESH ===
 var ptrStartY = 0, ptrDragging = false;
 function initPullToRefresh() {
   var container = document.getElementById('app');
@@ -1628,9 +1624,7 @@ function initPullToRefresh() {
   }, { passive: true });
 }
 
-// ============================================================
-// ẨN/HIỆN NAVIBAR
-// ============================================================
+// === ẨN/HIỆN NAVIBAR ===
 function initNavbarScrollHide() {
   var nav = document.getElementById('mob-nav');
   if (!nav) return;
@@ -1651,9 +1645,7 @@ function initNavbarScrollHide() {
   }, { passive: true });
 }
 
-// ============================================================
-// DESKTOP LAYOUT
-// ============================================================
+// === DESKTOP LAYOUT ===
 function setupDesktopLayout() {
   if (window.innerWidth < 769) return;
   var rightCol = document.getElementById('col-right-desktop');
@@ -1701,9 +1693,7 @@ function getCurrentMobileTab() {
   return active ? active.dataset.tab : 'diary';
 }
 
-// ============================================================
-// CLOCK
-// ============================================================
+// === CLOCK ===
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
   function tick() {
@@ -1718,9 +1708,7 @@ function startClock() {
   setInterval(tick, 1000);
 }
 
-// ============================================================
-// LOCAL STORAGE
-// ============================================================
+// === LOCAL STORAGE ===
 function saveToLocal(data) {
   try { localStorage.setItem('diary_backup', JSON.stringify(data)); } catch (e) {}
 }
@@ -1739,9 +1727,7 @@ function addPendingAction(action) {
   savePendingActions();
 }
 
-// ============================================================
-// LOAD DATA
-// ============================================================
+// === LOAD DATA ===
 function loadData(cb) {
   setSyncing(true);
   var fn = 'jcb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
@@ -1836,9 +1822,7 @@ function loadData(cb) {
   document.head.appendChild(tag);
 }
 
-// ============================================================
-// PENDING ACTIONS
-// ============================================================
+// === PENDING ACTIONS ===
 function processPendingActions() {
   if (S.pendingActions.length === 0 || !navigator.onLine) return;
   var actions = S.pendingActions.slice();
@@ -1873,9 +1857,7 @@ window.addEventListener('offline', function () {
   toast('📶 Mất kết nối, dữ liệu sẽ được lưu tạm');
 });
 
-// ============================================================
-// POST DATA
-// ============================================================
+// === POST DATA ===
 function postData(payload, msg, cb) {
   var cleanPayload = JSON.parse(JSON.stringify(payload));
   if (cleanPayload.entry && cleanPayload.entry.images) {
@@ -1942,9 +1924,7 @@ function callCommentAPI(payload, onSuccess, onError) {
     });
 }
 
-// ============================================================
-// CONFIRM MODAL
-// ============================================================
+// === CONFIRM MODAL ===
 var confirmResolve = null;
 function showConfirm(title, msg) {
   return new Promise(function (resolve) {
@@ -1965,9 +1945,7 @@ function showConfirm(title, msg) {
   });
 }
 
-// ============================================================
-// NORMALIZE & SORT
-// ============================================================
+// === NORMALIZE & SORT ===
 function normalizeEntry(e) {
   if (!e.author) e.author = DEFAULT_AUTHOR;
   if (!e.comments || !Array.isArray(e.comments)) e.comments = [];
@@ -1999,9 +1977,7 @@ function setSyncing(on) {
   document.getElementById('sync-btn').classList.toggle('syncing', on);
 }
 
-// ============================================================
-// RENDER ALL
-// ============================================================
+// === RENDER ALL ===
 function renderAll() {
   renderOTD();
   renderCalendar();
@@ -2011,9 +1987,7 @@ function renderAll() {
   renderAlbum();
 }
 
-// ============================================================
-// FILTER & SEARCH
-// ============================================================
+// === FILTER & SEARCH ===
 function filterEntries() {
   var q = document.getElementById('search-input').value.toLowerCase().trim();
   S.searchQuery = q;
@@ -2058,9 +2032,7 @@ function buildMonthFilter() {
   sel.innerHTML = opts;
 }
 
-// ============================================================
-// OTD
-// ============================================================
+// === OTD ===
 function renderOTD() {
   var wrap = document.getElementById('otd-wrap');
   var today = todayStr();
@@ -2081,9 +2053,7 @@ function renderOTD() {
     '</div></div></div>';
 }
 
-// ============================================================
-// CALENDAR
-// ============================================================
+// === CALENDAR ===
 function renderCalendar() {
   document.getElementById('c-mlbl').textContent = MNAMES[S.calM] + ' ' + S.calY;
   var today = new Date();
@@ -2151,9 +2121,7 @@ function offsetDay(ds, delta) {
   return fmtDate(d);
 }
 
-// ============================================================
-// DAY LIST
-// ============================================================
+// === DAY LIST ===
 function openDayList(dateStr) {
   var ents = S.data.entries.filter(function (e) { return e.date === dateStr; });
   if (!ents.length) return;
@@ -2212,9 +2180,7 @@ function delFromDayList() {
   closeModal('modal-daylist');
 }
 
-// ============================================================
-// EDITED NOTE
-// ============================================================
+// === EDITED NOTE ===
 function renderEditedNote(elId, e) {
   var el = document.getElementById(elId);
   if (!el) return;
@@ -2232,9 +2198,7 @@ function renderEditedNote(elId, e) {
   el.textContent = '✏️ Sửa lần cuối: ' + fmtFullDateTime(updated);
 }
 
-// ============================================================
-// TIMELINE
-// ============================================================
+// === TIMELINE ===
 function renderTimeline() {
   S.page = 1;
   var entries = filteredEntries();
@@ -2309,9 +2273,7 @@ function tiHTML(e) {
     '</div></div>';
 }
 
-// ============================================================
-// ANNIVERSARIES
-// ============================================================
+// === ANNIVERSARIES ===
 function renderAnniversaries() {
   var el = document.getElementById('ann-list');
   if (!S.data.anniversaries.length) {
@@ -2369,9 +2331,7 @@ async function delAnn(id) {
   postData({ action: 'delete_anniversary', id: id }, '🗑 Đã xóa!');
 }
 
-// ============================================================
-// ALBUM
-// ============================================================
+// === ALBUM ===
 function renderAlbum() {
   var body = document.getElementById('album-body');
   var entriesWithImgs = S.data.entries.filter(function (e) {
@@ -2410,9 +2370,7 @@ function renderAlbum() {
   body.innerHTML = html;
 }
 
-// ============================================================
-// GALLERY
-// ============================================================
+// === GALLERY ===
 function buildGridImages(images, entryId) {
   if (!images || !images.length) return '';
   var total = images.length;
@@ -2485,9 +2443,7 @@ function buildGalleryHTML(images, entryId) {
   return '<div class="ve-gallery" style="' + style + '">' + html + '</div>';
 }
 
-// ============================================================
-// PHOTO VIEWER
-// ============================================================
+// === PHOTO VIEWER ===
 function openPhotoViewer(entryId, startIndex) {
   var entry = S.data.entries.find(function (e) { return e.id === entryId; });
   if (!entry || !entry.images || !entry.images.length) return;
@@ -2558,9 +2514,7 @@ function closePhotoViewer() {
   S.pvCurrentIndex = 0;
 }
 
-// ============================================================
-// WRITE / EDIT / VIEW / DELETE
-// ============================================================
+// === WRITE / EDIT / VIEW / DELETE ===
 function openWriteModal() {
   S.curId = null; S.mood = ''; S.imgs = [];
   document.getElementById('write-ttl').textContent = '✍️ Viết nhật ký';
@@ -2649,9 +2603,7 @@ async function delEntry() {
   S.curId = null;
 }
 
-// ============================================================
-// MOOD
-// ============================================================
+// === MOOD ===
 function selMood(m) {
   S.mood = S.mood === m ? '' : m;
   document.querySelectorAll('.mp-o').forEach(function (el) {
@@ -2670,9 +2622,7 @@ function chgFs(delta) {
   document.getElementById('fs-lbl').textContent = 'Cỡ chữ: ' + S.fontSize + 'px';
 }
 
-// ============================================================
-// UPLOAD IMAGES
-// ============================================================
+// === UPLOAD IMAGES ===
 function onImgPick(input) {
   var files = Array.from(input.files);
   if (S.imgs.length + files.length > 10) {
@@ -2802,9 +2752,7 @@ function rmImg(i) {
   renderImgPrev();
 }
 
-// ============================================================
-// SAVE ENTRY
-// ============================================================
+// === SAVE ENTRY ===
 function saveEntry() {
   var date = document.getElementById('e-date').value;
   var title = document.getElementById('e-ttl').value.trim();
@@ -2857,9 +2805,7 @@ function hideSavingOverlay() {
   document.getElementById('saving-overlay').classList.remove('show');
 }
 
-// ============================================================
-// COMMENTS
-// ============================================================
+// === COMMENTS ===
 function renderComments() {
   var e = S.data.entries.find(function (x) { return x.id === S.curId; });
   if (!e) return;
@@ -2986,9 +2932,7 @@ async function delComment(commentId) {
   });
 }
 
-// ============================================================
-// COMMENTS (daylist)
-// ============================================================
+// === COMMENTS (daylist) ===
 function renderDlComments() {
   var e = S.dayListEntries[S.dayListIdx];
   if (!e) return;
@@ -3101,9 +3045,7 @@ async function delDlComment(commentId) {
   });
 }
 
-// ============================================================
-// TAB, MODAL, TOAST, UTILITY
-// ============================================================
+// === TAB, MODAL, TOAST, UTILITY ===
 var TABS = ['diary', 'ann', 'cal', 'album'];
 
 function switchTab(tab) {
@@ -3189,9 +3131,7 @@ function escH(s) {
     .replace(/'/g, '&#39;');
 }
 
-// ============================================================
-// KHỞI TẠO
-// ============================================================
+// === KHỞI TẠO ===
 loadPendingActions();
 if (!navigator.onLine) {
   toast('📶 Đang ở chế độ offline, dữ liệu sẽ được lưu tạm');
