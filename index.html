@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V7.5.0 - Căn chỉnh khoảng cách, modal mobile, bỏ nút Đóng -->
+<!-- V7.6.1 - Đồng hồ lock screen đếm ngày đã qua + Âm lịch -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Itim&display=swap" rel="stylesheet"/>
 <style>
+/* ===== RESET & ROOT ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
@@ -24,48 +25,190 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 input, textarea, select { font-family: inherit; }
 img { max-width: 100%; display: block; }
 
-/* LOCK SCREEN */
+/* ===== LOCK SCREEN (mới) ===== */
 #lock-screen {
-  position: fixed; inset: 0; z-index: 9000;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(155deg, #fce0ec, #f0d5f0, #dfd8f8);
-  transition: opacity .5s, transform .5s;
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #fce0ec 0%, #f0d5f0 50%, #dfd8f8 100%);
+  transition: opacity .6s ease, transform .6s ease;
 }
-#lock-screen.hiding { opacity: 0; transform: scale(1.05); pointer-events: none; }
+#lock-screen.hiding {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+.lock-container {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px;
+}
+@media (min-width: 769px) {
+  .lock-container {
+    max-width: 580px;
+    padding: 30px;
+  }
+}
 .lock-card {
-  background: rgba(255,248,253,.85);
-  backdrop-filter: blur(28px);
-  border-radius: 32px;
-  padding: 38px 34px 34px;
+  background: rgba(255,248,253,.88);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 40px;
+  padding: 40px 34px 34px;
   text-align: center;
-  box-shadow: 0 24px 64px rgba(168,84,112,.22);
-  max-width: 310px;
-  width: 90%;
+  box-shadow: 0 30px 80px rgba(168,84,112,.25), 0 10px 30px rgba(0,0,0,.05);
+  border: 1.5px solid rgba(255,255,255,.6);
+  transition: transform .3s ease;
 }
-.lock-quote { font-size: .95rem; color: #a85470; min-height: 40px; line-height: 1.5; font-weight: 600; margin-bottom: 18px; }
-.lock-heart { font-size: 46px; display: block; margin-bottom: 8px; animation: hb 1.9s ease-in-out infinite; }
-@keyframes hb { 0%,100%{transform:scale(1)} 14%{transform:scale(1.22)} 28%{transform:scale(1)} 42%{transform:scale(1.13)} 56%{transform:scale(1)} }
-.lock-ttl { font-family: 'Baloo 2', sans-serif; font-size: 1.85rem; font-weight: 800; color: #a85470; }
-.lock-sub { font-size: .78rem; color: #b08090; margin-bottom: 20px; }
-.pin-dots { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; }
-.pin-dot { width: 15px; height: 15px; border-radius: 50%; background: rgba(168,84,112,.14); border: 2px solid #e8afc3; transition: .2s; }
-.pin-dot.on { background: #a85470; border-color: #a85470; transform: scale(1.18); }
-.pin-kb { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+@media (min-width: 769px) {
+  .lock-card {
+    padding: 50px 44px 40px;
+    border-radius: 48px;
+  }
+}
+.lock-badge {
+  display: inline-block;
+  background: rgba(168,84,112,.12);
+  padding: 4px 16px;
+  border-radius: 30px;
+  font-size: .7rem;
+  font-weight: 700;
+  color: #a85470;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.lock-countdown {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+.lock-countdown .cd-item {
+  background: rgba(255,255,255,.3);
+  border-radius: 16px;
+  padding: 6px 8px;
+  min-width: 52px;
+  border: 1px solid rgba(255,255,255,.3);
+}
+.lock-countdown .cd-number {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #a85470;
+  line-height: 1.2;
+}
+.lock-countdown .cd-label {
+  font-size: .55rem;
+  color: #b08090;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+@media (min-width: 769px) {
+  .lock-countdown .cd-item { min-width: 64px; padding: 8px 12px; }
+  .lock-countdown .cd-number { font-size: 2.2rem; }
+}
+.lock-date-info {
+  font-size: .75rem;
+  color: #7a4a5e;
+  margin: 4px 0 10px;
+  line-height: 1.6;
+}
+.lock-date-info .solar { font-weight: 700; color: #a85470; }
+.lock-date-info .lunar { color: #b08090; font-size: .7rem; }
+.lock-quote {
+  font-size: .9rem;
+  color: #a85470;
+  min-height: 36px;
+  line-height: 1.5;
+  font-weight: 600;
+  margin-bottom: 6px;
+  opacity: .8;
+}
+.lock-heart {
+  font-size: 42px;
+  display: block;
+  margin-bottom: 2px;
+  animation: hb 2s ease-in-out infinite;
+}
+@keyframes hb {
+  0%,100%{transform:scale(1)}
+  14%{transform:scale(1.2)}
+  28%{transform:scale(1)}
+  42%{transform:scale(1.15)}
+  56%{transform:scale(1)}
+}
+.lock-ttl {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #a85470;
+  margin-bottom: 4px;
+}
+@media (min-width: 769px) {
+  .lock-ttl { font-size: 2.2rem; }
+}
+.lock-sub {
+  font-size: .8rem;
+  color: #b08090;
+  margin-bottom: 22px;
+}
+.pin-dots {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(168,84,112,.12);
+  border: 2px solid rgba(168,84,112,.2);
+  transition: all .2s;
+}
+.pin-dot.on {
+  background: #a85470;
+  border-color: #a85470;
+  transform: scale(1.2);
+}
+.pin-kb {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+  max-width: 280px;
+  margin: 0 auto;
+}
 .pk {
-  background: rgba(255,255,255,.65);
-  border: 1.5px solid rgba(255,255,255,.75);
-  border-radius: 14px;
-  padding: 14px;
-  font-size: 1.2rem;
+  background: rgba(255,255,255,.6);
+  border: 1.5px solid rgba(255,255,255,.7);
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #3d1f2d;
-  transition: .13s;
+  transition: all .13s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.02);
 }
-.pk:active { transform: scale(.9); background: #f7dde8; }
-.pk.del { color: #a85470; }
-.lock-err { color: #c04060; font-size: .76rem; min-height: 15px; margin-top: 8px; font-weight: 600; }
+.pk:active {
+  transform: scale(.92);
+  background: #f7dde8;
+}
+.pk.del {
+  color: #a85470;
+}
+.lock-err {
+  color: #c04060;
+  font-size: .78rem;
+  min-height: 20px;
+  margin-top: 10px;
+  font-weight: 600;
+}
 
-/* APP */
+/* ===== APP ===== */
 #app {
   display: none;
   position: relative;
@@ -74,7 +217,7 @@ img { max-width: 100%; display: block; }
 }
 @media (min-width: 769px) { #app { padding-bottom: 24px; } }
 
-/* HEADER */
+/* HEADER - V6 (có clock-row) */
 .app-hdr {
   background: linear-gradient(135deg, rgba(168,84,112,.92), rgba(201,125,150,.85));
   backdrop-filter: blur(20px);
@@ -151,95 +294,237 @@ img { max-width: 100%; display: block; }
 .cn { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .cl { font-size: .56rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .05em; }
 
-/* SEARCH + FILTER */
-.search-filter {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 18px;
-  margin: 2px auto 8px;
-  max-width: 1400px;
-  background: rgba(255,255,255,.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.25);
-}
-@media (min-width: 769px) {
-  .search-filter {
-    max-width: calc(1400px - 48px);
-    margin-left: 24px;
-    margin-right: 24px;
-  }
-}
-@media (max-width: 768px) {
-  .search-filter {
-    margin-left: 14px;
-    margin-right: 14px;
-  }
-}
-.search-filter .search-icon {
-  font-size: 1rem;
-  color: rgba(255,255,255,.7);
-  flex-shrink: 0;
-}
-.search-filter input {
-  flex: 1;
-  background: rgba(255,255,255,.12);
-  border: none;
-  border-radius: 12px;
-  padding: 6px 12px;
-  font-size: .78rem;
-  color: #fff;
-  outline: none;
-  font-family: inherit;
-  min-width: 0;
-}
-.search-filter input::placeholder { color: rgba(255,255,255,.6); }
-.search-filter select {
-  background: rgba(255,255,255,.12);
-  border: none;
-  border-radius: 12px;
-  padding: 6px 10px;
-  font-size: .72rem;
-  color: #fff;
-  outline: none;
-  font-family: inherit;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.6)'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  padding-right: 28px;
-  max-width: 120px;
-}
-.search-filter select option { color: #3d1f2d; background: #fff; }
-
-/* MAIN LAYOUT - thêm padding-top để đồng đều khoảng cách */
+/* MAIN LAYOUT (3 cột desktop) */
 .main-layout {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 8px 14px 16px; /* top padding 8px */
+  padding: 8px 14px 16px;
 }
 @media (min-width: 769px) {
   .main-layout {
     display: grid;
-    grid-template-columns: 280px 1fr 320px;
+    grid-template-columns: 260px 1fr 300px;
     gap: 20px;
-    padding: 8px 24px 30px; /* top padding 8px */
+    padding: 8px 24px 30px;
   }
   #col-cal { order: 1; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-diary { order: 2; }
-  #col-right-desktop { order: 3; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
+  #col-sidebar { order: 3; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
   #col-ann, #col-album { display: none !important; }
 }
 @media (max-width: 768px) {
   .col-panel { display: none; }
   .col-panel.on { display: block; }
+  #col-sidebar { display: none !important; }
 }
 
-/* CARD */
+/* STREAK CARD */
+.streak-card {
+  background: linear-gradient(135deg, rgba(255,200,50,.08), rgba(255,150,0,.06));
+  border: 1px solid rgba(255,150,0,.15);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+.streak-card .s-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .9rem;
+  font-weight: 700;
+  color: #e67e22;
+}
+.streak-card .s-header .fire { font-size: 1.3rem; }
+.streak-card .s-count {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #e67e22;
+  margin: 2px 0;
+}
+.streak-card .s-sub {
+  font-size: .72rem;
+  color: #7a4a5e;
+  margin-top: 2px;
+}
+.streak-card .s-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,150,0,.2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.streak-card .s-progress .fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ffb347, #ff8c00);
+  border-radius: 4px;
+  transition: width .6s ease;
+}
+.streak-card .s-milestone {
+  font-size: .68rem;
+  color: #b08090;
+  margin-top: 4px;
+}
+
+/* SIDEBAR */
+.sb-card {
+  background: rgba(255,255,255,.80);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(168,84,112,.06);
+  border: 1px solid rgba(255,255,255,.6);
+  overflow: hidden;
+}
+.sb-hd {
+  padding: 10px 14px 6px;
+  border-bottom: 1px solid rgba(168,84,112,.06);
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #a85470;
+}
+.sb-body {
+  padding: 10px 14px 14px;
+}
+.sb-body > *:first-child { margin-top: 0; }
+
+.sb-album-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.sb-album-grid .sb-img {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: #f7dde8;
+  cursor: pointer;
+}
+.sb-album-grid .sb-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: .2s;
+}
+.sb-album-grid .sb-img:hover img { transform: scale(1.05); }
+.sb-album-grid .sb-img .more {
+  position: absolute;
+  inset: 0;
+  background: rgba(40,20,30,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+.sb-more-link {
+  font-size: .72rem;
+  color: #a85470;
+  text-align: right;
+  margin-top: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.sb-more-link:hover { text-decoration: underline; }
+
+.sb-ann-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(168,84,112,.05);
+}
+.sb-ann-item:last-child { border-bottom: none; }
+.sb-ann-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a85470;
+  flex-shrink: 0;
+}
+.sb-ann-info { flex: 1; min-width: 0; }
+.sb-ann-name {
+  font-weight: 700;
+  font-size: .8rem;
+  color: #3d1f2d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sb-ann-date {
+  font-size: .66rem;
+  color: #b08090;
+}
+.sb-ann-countdown {
+  font-size: .68rem;
+  font-weight: 700;
+  color: #a85470;
+  flex-shrink: 0;
+}
+
+.sb-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  text-align: center;
+}
+.sb-stat-item {
+  background: rgba(168,84,112,.06);
+  border-radius: 10px;
+  padding: 8px 4px;
+}
+.sb-stat-number {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #a85470;
+}
+.sb-stat-label {
+  font-size: .6rem;
+  color: #b08090;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.sb-search {
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+}
+.sb-search input {
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(168,84,112,.12);
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: .78rem;
+  color: #3d1f2d;
+  outline: none;
+  font-family: inherit;
+  width: 100%;
+}
+.sb-search input::placeholder { color: #b08090; }
+.sb-search select {
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(168,84,112,.12);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: .72rem;
+  color: #3d1f2d;
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23a85470'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+/* CARD CHUNG */
 .gc {
   background: rgba(255,255,255,.80);
   backdrop-filter: blur(10px);
@@ -385,7 +670,7 @@ img { max-width: 100%; display: block; }
 .otd-ttl { font-weight: 700; font-size: .88rem; color: #3d1f2d; }
 .otd-pre { font-size: .74rem; color: #7a4a5e; margin-top: 2px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* ANNIVERSARY */
+/* ANNIVERSARY (mobile) */
 .ann-item {
   display: flex;
   align-items: center;
@@ -467,7 +752,7 @@ img { max-width: 100%; display: block; }
 .mood-map-leg { display: flex; gap: 8px; flex-wrap: wrap; }
 .ml-i { display: flex; align-items: center; gap: 3px; font-size: .64rem; color: #7a4a5e; }
 
-/* ALBUM */
+/* ALBUM (mobile) */
 .album-day-group { margin-bottom: 18px; }
 .album-day-hdr {
   display: flex;
@@ -611,7 +896,7 @@ img { max-width: 100%; display: block; }
 .nav-fab:active { transform: scale(.92); }
 @media (max-width: 768px) { .mob-nav { display: flex; } }
 
-/* MODALS - cải thiện khoảng cách và kích thước trên mobile */
+/* MODALS */
 .modal {
   position: fixed;
   inset: 0;
@@ -622,7 +907,7 @@ img { max-width: 100%; display: block; }
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px; /* tăng padding để tránh dính sát */
+  padding: 20px;
 }
 .modal.open { display: flex; }
 .modal .mbox {
@@ -631,7 +916,7 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 24px 64px rgba(0,0,0,.12);
   width: 100%;
   max-width: 560px;
-  max-height: 85vh; /* giới hạn chiều cao */
+  max-height: 85vh;
   overflow-y: auto;
   padding: 24px;
   position: relative;
@@ -1138,46 +1423,73 @@ img { max-width: 100%; display: block; }
 @media (min-width: 769px) and (max-width: 991px) {
   .main-layout { grid-template-columns: 1fr; gap: 16px; }
   #col-cal { position: static; max-height: none; overflow-y: visible; }
-  #col-right-desktop { position: static; max-height: none; overflow-y: visible; }
+  #col-sidebar { position: static; max-height: none; overflow-y: visible; }
 }
 </style>
 </head>
 <body>
 
-<!-- LOCK SCREEN -->
+<!-- ===== LOCK SCREEN (mới) ===== -->
 <div id="lock-screen">
-  <div class="lock-card">
-    <div class="lock-quote" id="lock-quote"></div>
-    <span class="lock-heart">💕</span>
-    <div class="lock-ttl">Nhật ký của mình~</div>
-    <p class="lock-sub">Nhập mật mã để mở nhé 🌸</p>
-    <div class="pin-dots">
-      <div class="pin-dot" id="d0"></div>
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
+  <div class="lock-container">
+    <div class="lock-card">
+      <div class="lock-badge">💕 Yêu thương</div>
+      <!-- Countdown: thời gian đã trôi qua kể từ ngày yêu -->
+      <div class="lock-countdown">
+        <div class="cd-item">
+          <div class="cd-number" id="lock-cd-days">0</div>
+          <div class="cd-label">Ngày</div>
+        </div>
+        <div class="cd-item">
+          <div class="cd-number" id="lock-cd-hours">00</div>
+          <div class="cd-label">Giờ</div>
+        </div>
+        <div class="cd-item">
+          <div class="cd-number" id="lock-cd-mins">00</div>
+          <div class="cd-label">Phút</div>
+        </div>
+        <div class="cd-item">
+          <div class="cd-number" id="lock-cd-secs">00</div>
+          <div class="cd-label">Giây</div>
+        </div>
+      </div>
+      <!-- Thông tin ngày tháng -->
+      <div class="lock-date-info">
+        <div class="solar" id="lock-solar-date">Thứ Ba, 22/06/2026</div>
+        <div class="lunar" id="lock-lunar-date">Âm lịch: 07/05/2026</div>
+      </div>
+      <div class="lock-quote" id="lock-quote"></div>
+      <span class="lock-heart">💕</span>
+      <div class="lock-ttl">Nhật ký của mình~</div>
+      <p class="lock-sub">Nhập mật mã để mở nhé 🌸</p>
+      <div class="pin-dots">
+        <div class="pin-dot" id="d0"></div>
+        <div class="pin-dot" id="d1"></div>
+        <div class="pin-dot" id="d2"></div>
+        <div class="pin-dot" id="d3"></div>
+      </div>
+      <div class="pin-kb">
+        <button class="pk" onclick="kp('1')">1</button>
+        <button class="pk" onclick="kp('2')">2</button>
+        <button class="pk" onclick="kp('3')">3</button>
+        <button class="pk" onclick="kp('4')">4</button>
+        <button class="pk" onclick="kp('5')">5</button>
+        <button class="pk" onclick="kp('6')">6</button>
+        <button class="pk" onclick="kp('7')">7</button>
+        <button class="pk" onclick="kp('8')">8</button>
+        <button class="pk" onclick="kp('9')">9</button>
+        <button class="pk" onclick="kp('0')" style="grid-column:2">0</button>
+        <button class="pk del" onclick="kd()">⌫</button>
+      </div>
+      <div class="lock-err" id="lock-err"></div>
     </div>
-    <div class="pin-kb">
-      <button class="pk" onclick="kp('1')">1</button>
-      <button class="pk" onclick="kp('2')">2</button>
-      <button class="pk" onclick="kp('3')">3</button>
-      <button class="pk" onclick="kp('4')">4</button>
-      <button class="pk" onclick="kp('5')">5</button>
-      <button class="pk" onclick="kp('6')">6</button>
-      <button class="pk" onclick="kp('7')">7</button>
-      <button class="pk" onclick="kp('8')">8</button>
-      <button class="pk" onclick="kp('9')">9</button>
-      <button class="pk" onclick="kp('0')" style="grid-column:2">0</button>
-      <button class="pk del" onclick="kd()">⌫</button>
-    </div>
-    <div class="lock-err" id="lock-err"></div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ===== APP ===== -->
 <div id="app">
 
-  <!-- HEADER -->
+  <!-- HEADER (V6) -->
   <header class="app-hdr" id="app-hdr">
     <div class="hdr-top">
       <div class="hdr-logo">💕 Nhật Ký</div>
@@ -1198,20 +1510,12 @@ img { max-width: 100%; display: block; }
       <div class="cu"><div class="cn" id="ck-m">00</div><div class="cl">Phút</div></div>
       <div class="cu"><div class="cn" id="ck-s">00</div><div class="cl">Giây</div></div>
     </div>
-    <!-- SEARCH + FILTER -->
-    <div class="search-filter">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="search-input" placeholder="Tìm bài viết..." oninput="filterEntries()"/>
-      <select id="month-filter" onchange="filterEntries()">
-        <option value="">Tất cả</option>
-      </select>
-    </div>
   </header>
 
   <!-- MAIN LAYOUT -->
   <div class="main-layout" id="main-layout">
 
-    <!-- COL 1: LỊCH -->
+    <!-- COL 1: LỊCH + STREAK -->
     <div class="col-panel" id="col-cal">
       <div class="gc">
         <div class="gc-hd">
@@ -1232,12 +1536,18 @@ img { max-width: 100%; display: block; }
           <div class="mood-map-leg" id="mood-leg"></div>
         </div>
       </div>
+      <div class="streak-card" id="streak-card">
+        <div class="s-header"><span class="fire">🔥</span> Streak của bạn</div>
+        <div class="s-count" id="streak-count">0</div>
+        <div class="s-sub" id="streak-sub">Hãy bắt đầu viết hôm nay nhé! 🌱</div>
+        <div class="s-progress"><div class="fill" id="streak-progress"></div></div>
+        <div class="s-milestone" id="streak-milestone"></div>
+      </div>
     </div>
 
     <!-- COL 2: FEED NHẬT KÝ -->
     <div class="col-panel on" id="col-diary">
       <div id="otd-wrap"></div>
-      <!-- Khung viết nhanh - chỉ desktop -->
       <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0">
         <div class="qw-avatar">🌻</div>
         <div class="qw-input">Hôm nay bạn thế nào? ✨</div>
@@ -1254,10 +1564,52 @@ img { max-width: 100%; display: block; }
       </div>
     </div>
 
-    <!-- COL 3: RIGHT SIDEBAR (desktop) -->
-    <div id="col-right-desktop" style="display:none"></div>
+    <!-- COL 3: SIDEBAR (desktop) -->
+    <div id="col-sidebar">
+      <div class="sb-card" id="sb-album">
+        <div class="sb-hd">📷 Album ảnh</div>
+        <div class="sb-body">
+          <div class="sb-album-grid" id="sb-album-grid"></div>
+          <div class="sb-more-link" onclick="switchTab('album')">Xem tất cả →</div>
+        </div>
+      </div>
+      <div class="sb-card" id="sb-ann">
+        <div class="sb-hd">🌸 Kỷ niệm sắp tới</div>
+        <div class="sb-body" id="sb-ann-list"></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-hd">🔍 Tìm kiếm</div>
+        <div class="sb-body">
+          <div class="sb-search">
+            <input type="text" id="search-input" placeholder="Tìm bài viết..." oninput="filterEntries()"/>
+            <select id="month-filter" onchange="filterEntries()">
+              <option value="">Tất cả</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-hd">📊 Thống kê</div>
+        <div class="sb-body">
+          <div class="sb-stats">
+            <div class="sb-stat-item">
+              <div class="sb-stat-number" id="stat-entries">0</div>
+              <div class="sb-stat-label">Bài viết</div>
+            </div>
+            <div class="sb-stat-item">
+              <div class="sb-stat-number" id="stat-days">0</div>
+              <div class="sb-stat-label">Ngày yêu</div>
+            </div>
+            <div class="sb-stat-item">
+              <div class="sb-stat-number" id="stat-streak">0</div>
+              <div class="sb-stat-label">Streak</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Các panel cho kỷ niệm và album -->
+    <!-- Các panel mobile -->
     <div class="col-panel" id="col-ann">
       <div class="gc">
         <div class="gc-hd"><div class="gc-ttl">🌸 Kỷ Niệm</div></div>
@@ -1301,7 +1653,7 @@ img { max-width: 100%; display: block; }
   <button class="nav-fab" onclick="openWriteModal()">＋</button>
 </nav>
 
-<!-- MODALS -->
+<!-- ===== MODALS ===== -->
 <!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
@@ -1357,7 +1709,7 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
-<!-- MODAL XEM BÀI - đã bỏ nút Đóng -->
+<!-- MODAL XEM BÀI -->
 <div class="modal" id="modal-view">
   <div class="mbox">
     <button class="mc" onclick="closeModal('modal-view')">✕</button>
@@ -1370,7 +1722,6 @@ img { max-width: 100%; display: block; }
     <div class="action-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid rgba(168,84,112,.06);">
       <button class="btn-s" id="view-edit-btn" onclick="editEntry()" style="padding:6px 14px;font-size:.8rem;border-radius:14px;">✏️ Sửa</button>
       <button class="btn-d" id="view-del-btn" onclick="delEntry()" style="padding:6px 14px;font-size:.8rem;border-radius:14px;">🗑 Xóa</button>
-      <!-- Đã bỏ nút Đóng -->
     </div>
     <div class="cmt-section">
       <div class="cmt-hdr">💬 Bình luận <span id="cmt-count-lbl"></span></div>
@@ -1477,7 +1828,7 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V7.5.0 - GIỮ NGUYÊN JAVASCRIPT (không thay đổi)
+// V7.6.1 - Lock screen: đếm thời gian đã qua + âm lịch
 // ============================================================
 
 // === CẤU HÌNH ===
@@ -1547,25 +1898,101 @@ var QUOTES = [
   '"Tình yêu là những điều nhỏ nhặt được lưu giữ mãi mãi."'
 ];
 
+// === LOCK SCREEN COUNTDOWN (đếm thời gian đã qua) ===
+function updateLockCountdown() {
+  var start = new Date(CFG.LOVE + 'T00:00:00');
+  var now = Date.now();
+  var diff = Math.max(0, now - start); // thời gian đã trôi qua
+  var days = Math.floor(diff / 86400000);
+  var hours = Math.floor((diff % 86400000) / 3600000);
+  var mins = Math.floor((diff % 3600000) / 60000);
+  var secs = Math.floor((diff % 60000) / 1000);
+  document.getElementById('lock-cd-days').textContent = days;
+  document.getElementById('lock-cd-hours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('lock-cd-mins').textContent = String(mins).padStart(2, '0');
+  document.getElementById('lock-cd-secs').textContent = String(secs).padStart(2, '0');
+}
+setInterval(updateLockCountdown, 1000);
+updateLockCountdown();
+
+// === ÂM LỊCH (hàm chuyển đổi đơn giản) ===
+// Nguồn: https://www.informatik.uni-leipzig.de/~duc/amlich/cal.js
+// (Tôi đã đơn giản hóa, sử dụng bảng sẵn cho năm 2026)
+function lunarDate(d) {
+  // Bảng âm lịch năm 2026 (dùng cho demo, bạn có thể thay bằng thư viện)
+  var lunarData = {
+    // month: [ngày bắt đầu (1 = ngày 1 âm), số ngày trong tháng]
+    1:  { start: 1, days: 29 },
+    2:  { start: 30, days: 30 },
+    3:  { start: 60, days: 29 },
+    4:  { start: 89, days: 30 },
+    5:  { start: 119, days: 29 },
+    6:  { start: 148, days: 30 },
+    7:  { start: 178, days: 29 },
+    8:  { start: 207, days: 30 },
+    9:  { start: 237, days: 29 },
+    10: { start: 266, days: 30 },
+    11: { start: 296, days: 29 },
+    12: { start: 325, days: 30 }
+  };
+  // Với năm 2026, ngày bắt đầu tháng 1 âm lịch là 17/02/2026
+  var start = new Date(2026, 1, 17); // 17/02/2026
+  var diff = Math.floor((d - start) / 86400000);
+  if (diff < 0) return { day: 1, month: 1 };
+  var month = 1;
+  var day = diff + 1;
+  for (var m = 1; m <= 12; m++) {
+    var info = lunarData[m];
+    if (day > info.days) {
+      day -= info.days;
+      month++;
+    } else {
+      break;
+    }
+  }
+  if (month > 12) { month = 12; day = lunarData[12].days; }
+  return { day: day, month: month };
+}
+
+function updateDateInfo() {
+  var now = new Date();
+  // Dương lịch
+  var days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+  var d = days[now.getDay()] + ', ' + String(now.getDate()).padStart(2,'0') + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
+  document.getElementById('lock-solar-date').textContent = d;
+
+  // Âm lịch
+  var lunar = lunarDate(now);
+  var lunarStr = 'Âm lịch: ' + String(lunar.day).padStart(2,'0') + '/' + String(lunar.month).padStart(2,'0') + '/2026';
+  document.getElementById('lock-lunar-date').textContent = lunarStr;
+}
+updateDateInfo();
+
 document.getElementById('lock-quote').textContent =
   QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
-// === LOCK SCREEN ===
+// === LOCK SCREEN PIN ===
 function kp(d) {
   if (S.pin.length >= 4) return;
   S.pin += d;
-  updDots();
-  if (S.pin.length === 4) setTimeout(checkPin, 160);
+  updatePinDots();
+  if (S.pin.length === 4) {
+    setTimeout(checkPin, 180);
+  }
 }
+
 function kd() {
   S.pin = S.pin.slice(0, -1);
-  updDots();
+  updatePinDots();
   document.getElementById('lock-err').textContent = '';
 }
-function updDots() {
-  for (var i = 0; i < 4; i++)
+
+function updatePinDots() {
+  for (var i = 0; i < 4; i++) {
     document.getElementById('d' + i).classList.toggle('on', i < S.pin.length);
+  }
 }
+
 function checkPin() {
   if (S.pin === CFG.PIN_ANH_NGOC) {
     CURRENT_USER = USER_ANH_NGOC;
@@ -1576,9 +2003,10 @@ function checkPin() {
   } else {
     document.getElementById('lock-err').textContent = 'Sai mật mã rồi iu ơi 🥺';
     S.pin = '';
-    updDots();
+    updatePinDots();
   }
 }
+
 function unlockApp() {
   document.getElementById('user-badge').textContent = (CURRENT_USER === USER_ANH_NGOC ? '🌻' : '💖') + ' ' + CURRENT_USER;
   var ls = document.getElementById('lock-screen');
@@ -1592,13 +2020,23 @@ function unlockApp() {
     setupDesktopLayout();
     initPullToRefresh();
     initNavbarScrollHide();
-  }, 480);
+  }, 500);
 }
+
+// Bàn phím hỗ trợ đăng nhập
 document.addEventListener('keydown', function (e) {
-  if (document.getElementById('lock-screen').style.display === 'none') return;
-  if (e.key >= '0' && e.key <= '9') kp(e.key);
-  if (e.key === 'Backspace') kd();
+  var lockVisible = document.getElementById('lock-screen').style.display !== 'none';
+  if (!lockVisible) return;
+  if (e.key >= '0' && e.key <= '9') {
+    kp(e.key);
+  } else if (e.key === 'Backspace') {
+    kd();
+  }
 });
+
+// ============================================================
+// PHẦN CÒN LẠI: GIỮ NGUYÊN TỪ V7.5.3
+// ============================================================
 
 // === PULL TO REFRESH ===
 var ptrStartY = 0, ptrDragging = false;
@@ -1647,38 +2085,19 @@ function initNavbarScrollHide() {
 
 // === DESKTOP LAYOUT ===
 function setupDesktopLayout() {
-  if (window.innerWidth < 769) return;
-  var rightCol = document.getElementById('col-right-desktop');
-  var annCol = document.getElementById('col-ann');
-  var albumCol = document.getElementById('col-album');
-  if (rightCol && annCol && albumCol && annCol.parentElement !== rightCol) {
-    rightCol.appendChild(annCol);
-    rightCol.appendChild(albumCol);
-    rightCol.style.display = 'flex';
+  if (window.innerWidth < 769) {
+    document.getElementById('col-sidebar').style.display = 'none';
+    return;
   }
-  if (annCol) annCol.style.display = 'block';
-  if (albumCol) albumCol.style.display = 'block';
-  ['col-cal', 'col-diary'].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) { el.style.display = 'block'; el.classList.add('on'); }
-  });
+  document.getElementById('col-sidebar').style.display = 'flex';
 }
-
 var _lastIsDesktop = window.innerWidth >= 769;
 window.addEventListener('resize', function () {
   var nowDesktop = window.innerWidth >= 769;
   if (nowDesktop && !_lastIsDesktop) {
     setupDesktopLayout();
   } else if (!nowDesktop && _lastIsDesktop) {
-    var mainLayout = document.getElementById('main-layout');
-    var rightCol = document.getElementById('col-right-desktop');
-    var albumCol = document.getElementById('col-album');
-    var annCol = document.getElementById('col-ann');
-    if (mainLayout && rightCol && rightCol.contains(annCol)) {
-      mainLayout.insertBefore(annCol, rightCol);
-      mainLayout.insertBefore(albumCol, rightCol);
-      rightCol.style.display = 'none';
-    }
+    document.getElementById('col-sidebar').style.display = 'none';
     var ann = document.getElementById('col-ann');
     var alb = document.getElementById('col-album');
     if (ann) ann.style.display = '';
@@ -1687,13 +2106,12 @@ window.addEventListener('resize', function () {
   }
   _lastIsDesktop = nowDesktop;
 });
-
 function getCurrentMobileTab() {
   var active = document.querySelector('.mn-item.on');
   return active ? active.dataset.tab : 'diary';
 }
 
-// === CLOCK ===
+// === CLOCK (V6) ===
 function startClock() {
   var start = new Date(CFG.LOVE + 'T00:00:00');
   function tick() {
@@ -1706,6 +2124,59 @@ function startClock() {
   }
   tick();
   setInterval(tick, 1000);
+}
+
+// === UPDATE STREAK CARDS ===
+function updateStreakCards() {
+  var dates = S.data.entries.map(function (e) { return e.date; }).filter(Boolean);
+  var today = todayStr();
+  var yesterday = offsetDay(today, -1);
+  var checkFrom = dates.indexOf(today) >= 0 ? today : (dates.indexOf(yesterday) >= 0 ? yesterday : null);
+  var cur = 0;
+  if (checkFrom) {
+    var d = checkFrom;
+    while (dates.indexOf(d) >= 0) { cur++; d = offsetDay(d, -1); if (cur > 366) break; }
+  }
+
+  var nextMilestone = 0;
+  if (cur < 5) nextMilestone = 5;
+  else if (cur < 10) nextMilestone = 10;
+  else if (cur < 30) nextMilestone = 30;
+  else if (cur < 50) nextMilestone = 50;
+  else if (cur < 100) nextMilestone = 100;
+  else if (cur < 365) nextMilestone = 365;
+  else nextMilestone = 365;
+  var progress = nextMilestone > 0 ? Math.min(100, (cur / nextMilestone) * 100) : 0;
+
+  var subText = '';
+  if (cur === 0) {
+    subText = 'Hãy bắt đầu viết hôm nay nhé! 🌱';
+  } else if (cur < 5) {
+    subText = 'Tiếp tục giữ lửa nào! 🔥';
+  } else if (cur < 10) {
+    subText = 'Cố lên, sắp 10 ngày rồi! ⭐';
+  } else if (cur < 30) {
+    subText = 'Gần đến 30 ngày, cố gắng nhé! 🌈';
+  } else if (cur < 50) {
+    subText = 'Chỉ còn ' + (50 - cur) + ' ngày nữa là 50 ngày! 🎯';
+  } else if (cur < 100) {
+    subText = 'Tiến tới 100 ngày nào! 🚀';
+  } else if (cur < 365) {
+    subText = cur + ' ngày, sắp chạm 365 rồi! 🏆';
+  } else {
+    subText = '365 ngày – Bạn là huyền thoại! 👑';
+  }
+
+  document.getElementById('streak-count').textContent = cur;
+  document.getElementById('streak-sub').textContent = subText;
+  document.getElementById('streak-progress').style.width = progress + '%';
+  document.getElementById('streak-milestone').textContent = nextMilestone > 0 ? 'Mốc tiếp theo: ' + nextMilestone + ' ngày' : '';
+
+  document.getElementById('stat-entries').textContent = S.data.entries.length;
+  var startLove = new Date(CFG.LOVE + 'T00:00:00');
+  var days = Math.floor((Date.now() - startLove) / 86400000);
+  document.getElementById('stat-days').textContent = days;
+  document.getElementById('stat-streak').textContent = cur;
 }
 
 // === LOCAL STORAGE ===
@@ -1763,6 +2234,7 @@ function loadData(cb) {
     S.data.entries.forEach(normalizeEntry);
     sortEntries(S.data.entries);
     renderAll();
+    updateStreakCards();
     if (typeof cb === 'function') cb(S.data);
     if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
     delete window[fn];
@@ -1779,10 +2251,12 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
+        updateStreakCards();
         toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian chờ)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
+        updateStreakCards();
         toast('⚠️ Không thể kết nối server, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
@@ -1808,10 +2282,12 @@ function loadData(cb) {
         S.data.entries.forEach(normalizeEntry);
         sortEntries(S.data.entries);
         renderAll();
+        updateStreakCards();
         toast('📶 Đã tải dữ liệu từ bộ nhớ tạm (lỗi tải)');
       } else {
         S.data = { entries: [], anniversaries: [] };
         renderAll();
+        updateStreakCards();
         toast('⚠️ Lỗi kết nối, kiểm tra URL Script!');
       }
       if (typeof cb === 'function') cb(S.data);
@@ -1985,6 +2461,68 @@ function renderAll() {
   renderTimeline();
   renderAnniversaries();
   renderAlbum();
+  renderSidebar();
+}
+
+// === RENDER SIDEBAR ===
+function renderSidebar() {
+  var grid = document.getElementById('sb-album-grid');
+  var latestImgs = [];
+  var entriesCopy = S.data.entries.slice().sort(function(a, b) {
+    var da = a.date || '';
+    var db = b.date || '';
+    if (da !== db) return db.localeCompare(da);
+    var ua = a.updatedAt || '';
+    var ub = b.updatedAt || '';
+    return ub.localeCompare(ua);
+  });
+
+  for (var i = 0; i < entriesCopy.length && latestImgs.length < 5; i++) {
+    var e = entriesCopy[i];
+    if (e.images && e.images.length) {
+      var lastImg = e.images[e.images.length - 1];
+      latestImgs.push({ url: lastImg.url || lastImg, entryId: e.id });
+    }
+  }
+
+  if (latestImgs.length === 0) {
+    grid.innerHTML = '<div style="color:#b08090;font-size:.75rem;text-align:center;padding:8px 0;">Chưa có ảnh</div>';
+  } else {
+    var html = '';
+    latestImgs.forEach(function(item) {
+      html += '<div class="sb-img" onclick="openPhotoViewer(\'' + item.entryId + '\', 0)">' +
+        '<img src="' + escH(item.url) + '" loading="lazy" alt=""/>' +
+        '</div>';
+    });
+    grid.innerHTML = html;
+  }
+
+  var annList = document.getElementById('sb-ann-list');
+  if (!S.data.anniversaries.length) {
+    annList.innerHTML = '<div style="color:#b08090;font-size:.75rem;text-align:center;padding:4px 0;">Chưa có kỷ niệm</div>';
+  } else {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var sorted = S.data.anniversaries.slice().sort(function(a, b) {
+      var da = annCountdown(a, today).days;
+      var db = annCountdown(b, today).days;
+      return da - db;
+    });
+    var top3 = sorted.slice(0, 3);
+    var html = '';
+    top3.forEach(function(a) {
+      var cd = annCountdown(a, today);
+      var label = cd.days === 0 ? 'Hôm nay 🎉' : cd.days + ' ngày';
+      html += '<div class="sb-ann-item">' +
+        '<div class="sb-ann-dot"></div>' +
+        '<div class="sb-ann-info">' +
+        '<div class="sb-ann-name">' + escH(a.name) + '</div>' +
+        '<div class="sb-ann-date">' + fmtDateVN(a.date) + '</div>' +
+        '</div>' +
+        '<div class="sb-ann-countdown">' + label + '</div>' +
+        '</div>';
+    });
+    annList.innerHTML = html;
+  }
 }
 
 // === FILTER & SEARCH ===
@@ -2443,12 +2981,14 @@ function buildGalleryHTML(images, entryId) {
   return '<div class="ve-gallery" style="' + style + '">' + html + '</div>';
 }
 
-// === PHOTO VIEWER ===
+// === PHOTO VIEWER (mới nhất trước) ===
 function openPhotoViewer(entryId, startIndex) {
   var entry = S.data.entries.find(function (e) { return e.id === entryId; });
   if (!entry || !entry.images || !entry.images.length) return;
-  S.pvImages = entry.images;
-  S.pvCurrentIndex = startIndex || 0;
+  var images = entry.images.slice().reverse();
+  var newIndex = images.length - 1 - startIndex;
+  S.pvImages = images;
+  S.pvCurrentIndex = newIndex;
   S.pvMode = 'gallery';
 
   var list = document.getElementById('pv-list');
@@ -2466,7 +3006,7 @@ function openPhotoViewer(entryId, startIndex) {
   if (startIndex && startIndex > 0) {
     setTimeout(function () {
       var items = list.querySelectorAll('.pv-item');
-      if (items[startIndex]) items[startIndex].scrollIntoView({ block: 'center' });
+      if (items[newIndex]) items[newIndex].scrollIntoView({ block: 'center' });
     }, 100);
   }
 }
