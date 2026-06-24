@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <!--
   Love Story – Nhật ký cặp đôi
-  Phiên bản: 2.0 (Tái cấu trúc hoàn toàn)
-  Mô tả: Ứng dụng lưu giữ kỷ niệm, nhật ký, tương tác cho hai người.
-  Tương thích với Google Apps Script backend (Code.gs mới).
+  Phiên bản: 2.2 (Hoàn chỉnh, nav iOS 26 Dock, Streak, modal tối ưu)
 -->
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#e8437e" />
   <title>💕 Love Story</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Itim&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
-    /* ========================================
+    /* ==============================
        CSS Variables & Reset
-    ======================================== */
+    ============================== */
     :root {
       --primary: #e8437e;
       --primary-light: #f7a1b5;
@@ -39,8 +36,8 @@
       --space-lg: 24px;
       --space-xl: 32px;
       --font-body: 'Nunito', sans-serif;
-      --font-title: 'Itim', cursive;
       --nav-height: 68px;
+      --safe-area-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     * {
@@ -61,6 +58,8 @@
       line-height: 1.6;
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     button,
@@ -84,9 +83,9 @@
       display: block;
     }
 
-    /* ========================================
+    /* ==============================
        LOCK SCREEN
-    ======================================== */
+    ============================== */
     #lock-screen {
       position: fixed;
       inset: 0;
@@ -140,7 +139,7 @@
     }
 
     .lock-title {
-      font-family: var(--font-title);
+      font-family: var(--font-body);
       font-size: 1.7rem;
       font-weight: 800;
       color: var(--primary);
@@ -208,14 +207,14 @@
       font-weight: 600;
     }
 
-    /* ========================================
+    /* ==============================
        APP CONTAINER
-    ======================================== */
+    ============================== */
     #app {
       display: none;
       position: relative;
       min-height: 100vh;
-      padding-bottom: calc(var(--nav-height) + var(--space-md) + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(var(--nav-height) + var(--space-md) + var(--safe-area-bottom));
     }
 
     @media (min-width: 769px) {
@@ -224,9 +223,9 @@
       }
     }
 
-    /* ========================================
+    /* ==============================
        HEADER
-    ======================================== */
+    ============================== */
     .app-header {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       box-shadow: 0 2px 12px rgba(232, 67, 126, 0.18);
@@ -246,8 +245,8 @@
     }
 
     .header-logo {
-      font-family: var(--font-title);
-      font-size: 1.4rem;
+      font-family: var(--font-body);
+      font-size: 1.3rem;
       font-weight: 800;
       color: #fff;
       text-shadow: 0 2px 8px rgba(100, 30, 60, 0.25);
@@ -404,9 +403,9 @@
       background: #fff;
     }
 
-    /* ========================================
+    /* ==============================
        MAIN LAYOUT
-    ======================================== */
+    ============================== */
     .main-layout {
       max-width: 1400px;
       margin: 0 auto;
@@ -464,9 +463,9 @@
       }
     }
 
-    /* ========================================
+    /* ==============================
        CARD COMPONENT
-    ======================================== */
+    ============================== */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -485,7 +484,7 @@
     }
 
     .card-title {
-      font-family: var(--font-title);
+      font-family: var(--font-body);
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--primary);
@@ -495,13 +494,9 @@
       padding: 8px 16px 16px;
     }
 
-    .card-body > *:first-child {
-      margin-top: 0;
-    }
-
-    /* ========================================
+    /* ==============================
        TIMELINE & ENTRIES
-    ======================================== */
+    ============================== */
     .timeline-day {
       margin-bottom: 14px;
     }
@@ -669,9 +664,9 @@
       padding: 30px 0;
     }
 
-    /* ========================================
+    /* ==============================
        ON THIS DAY (OTD)
-    ======================================== */
+    ============================== */
     .otd-card {
       background: linear-gradient(135deg, rgba(232, 67, 126, 0.06), rgba(247, 161, 181, 0.04));
       border: 1px solid rgba(232, 67, 126, 0.10);
@@ -713,9 +708,9 @@
       overflow: hidden;
     }
 
-    /* ========================================
+    /* ==============================
        ANNIVERSARIES
-    ======================================== */
+    ============================== */
     .anniversary-item {
       display: flex;
       align-items: center;
@@ -798,9 +793,9 @@
       background: rgba(232, 67, 126, 0.12);
     }
 
-    /* ========================================
+    /* ==============================
        CALENDAR
-    ======================================== */
+    ============================== */
     .calendar-nav {
       display: flex;
       align-items: center;
@@ -936,9 +931,37 @@
       color: var(--text-secondary);
     }
 
-    /* ========================================
+    /* Streak card */
+    .streak-card {
+      background: linear-gradient(135deg, rgba(232, 67, 126, 0.06), rgba(247, 161, 181, 0.04));
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      text-align: center;
+      border: 1px solid rgba(232, 67, 126, 0.10);
+    }
+
+    .streak-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .streak-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .streak-fire {
+      font-size: 1.8rem;
+      margin-right: 6px;
+    }
+
+    /* ==============================
        ALBUM
-    ======================================== */
+    ============================== */
     .album-day-group {
       margin-bottom: 18px;
     }
@@ -1026,9 +1049,9 @@
       font-size: 0.8rem;
     }
 
-    /* ========================================
+    /* ==============================
        QUICK WRITE (desktop)
-    ======================================== */
+    ============================== */
     .quick-write {
       display: none;
       background: #fff;
@@ -1094,37 +1117,44 @@
       opacity: 1;
     }
 
-    /* ========================================
-       MOBILE NAVIBAR (fixed bottom)
-    ======================================== */
+    /* ==============================
+       MOBILE NAVIBAR – iOS 26 Dock Style
+    ============================== */
     .mobile-nav {
-      display: none;
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
       z-index: 300;
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(232, 67, 126, 0.08);
-      padding: 4px 0 env(safe-area-inset-bottom, 8px);
-      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 30px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 6px 10px;
+      display: flex;
       align-items: center;
-      justify-content: space-around;
+      justify-content: space-between;
+      transition: transform 0.35s cubic-bezier(0.32, 0.94, 0.6, 1), opacity 0.3s ease;
+      transform: translateY(0);
+      opacity: 1;
+      height: var(--nav-height);
     }
 
-    @media (max-width: 768px) {
-      .mobile-nav {
-        display: flex;
-      }
+    .mobile-nav.hidden-nav {
+      transform: translateY(calc(100% + 20px));
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .mobile-nav-tabs {
+    /* Container cho các tab (bên trái) */
+    .nav-tabs {
       display: flex;
       flex: 1;
-      justify-content: space-around;
+      gap: 4px;
       align-items: center;
+      justify-content: flex-start;
     }
 
     .mobile-tab {
@@ -1132,21 +1162,19 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1px;
-      padding: 4px 0;
-      color: var(--text-secondary);
-      font-size: 0.58rem;
-      font-weight: 600;
-      transition: 0.2s;
-      border-radius: 20px;
-      min-height: 44px;
-      flex: 1;
+      gap: 0px;
+      padding: 6px 12px;
+      border-radius: 24px;
       background: transparent;
-    }
-
-    .mobile-tab.active {
-      color: var(--primary);
-      font-weight: 700;
+      transition: 0.2s;
+      min-width: 52px;
+      flex: 0 1 auto;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.6rem;
+      letter-spacing: 0.02em;
+      border: none;
+      background: transparent;
     }
 
     .mobile-tab .tab-icon {
@@ -1155,40 +1183,87 @@
     }
 
     .mobile-tab .tab-label {
-      font-size: 0.55rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+      font-size: 0.5rem;
+      margin-top: 1px;
+      opacity: 0.8;
     }
 
+    .mobile-tab.active {
+      background: rgba(232, 67, 126, 0.12);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .mobile-tab.active .tab-label {
+      opacity: 1;
+    }
+
+    /* Nút thêm mới (bên phải) – giống nút tìm kiếm trong ảnh */
     .fab-button {
       flex-shrink: 0;
-      width: 50px;
-      height: 50px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #f7a1b5, var(--primary));
-      border: none;
-      box-shadow: 0 4px 16px rgba(232, 67, 126, 0.35);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid rgba(232, 67, 126, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       font-size: 1.6rem;
-      color: #fff;
+      color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      margin: 0 4px;
+      transition: all 0.2s ease;
+      margin-left: 4px;
     }
 
     .fab-button:hover {
-      transform: scale(1.08) rotate(5deg);
-      box-shadow: 0 6px 24px rgba(232, 67, 126, 0.4);
+      transform: scale(1.04);
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(232, 67, 126, 0.15);
     }
 
     .fab-button:active {
       transform: scale(0.92);
     }
 
-    /* ========================================
-       MODALS
-    ======================================== */
+    @media (max-width: 768px) {
+      .mobile-nav {
+        display: flex;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        border-radius: 30px;
+        padding: 5px 8px;
+        height: 64px;
+      }
+      .mobile-tab {
+        min-width: 44px;
+        padding: 4px 8px;
+        border-radius: 20px;
+      }
+      .mobile-tab .tab-icon {
+        font-size: 1.1rem;
+      }
+      .mobile-tab .tab-label {
+        font-size: 0.45rem;
+      }
+      .fab-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+      }
+    }
+
+    /* Ẩn nav trên desktop */
+    @media (min-width: 769px) {
+      .mobile-nav {
+        display: none !important;
+      }
+    }
+
+    /* ==============================
+       MODALS – cố định, không zoom, tối ưu mobile
+    ============================== */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -1214,11 +1289,12 @@
       max-width: 560px;
       max-height: 90vh;
       overflow-y: auto;
-      padding: 24px 20px;
+      padding: 20px 16px;
       position: relative;
       transform: scale(0.94);
       opacity: 0;
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      -webkit-overflow-scrolling: touch;
     }
 
     .modal-overlay.open .modal-box {
@@ -1235,9 +1311,9 @@
     }
 
     .modal-close {
-      position: absolute;
-      top: 14px;
-      right: 14px;
+      position: sticky;
+      top: 0;
+      float: right;
       background: rgba(232, 67, 126, 0.08);
       border: 1px solid rgba(232, 67, 126, 0.1);
       border-radius: 50%;
@@ -1249,7 +1325,9 @@
       align-items: center;
       justify-content: center;
       transition: 0.2s;
-      z-index: 1;
+      z-index: 2;
+      margin-bottom: 8px;
+      margin-left: 8px;
     }
 
     .modal-close:hover {
@@ -1259,17 +1337,18 @@
     }
 
     .modal-title {
-      font-family: var(--font-title);
-      font-size: 1.3rem;
+      font-family: var(--font-body);
+      font-size: 1.2rem;
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 14px;
-      padding-right: 36px;
+      margin-bottom: 12px;
+      padding-right: 40px;
+      clear: both;
     }
 
-    /* ========================================
-       FORM ELEMENTS
-    ======================================== */
+    /* ==============================
+       FORM ELEMENTS – cố định kích thước
+    ============================== */
     .form-group {
       margin-bottom: var(--space-sm);
     }
@@ -1292,10 +1371,12 @@
       border: 1.5px solid rgba(232, 67, 126, 0.12);
       border-radius: 14px;
       padding: 10px 14px;
-      font-size: 0.88rem;
+      font-size: 16px;
       color: var(--text-primary);
       outline: none;
       transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
     }
 
     .form-input:focus,
@@ -1306,8 +1387,9 @@
 
     .form-textarea {
       resize: vertical;
-      min-height: 100px;
+      min-height: 120px;
       line-height: 1.7;
+      font-size: 16px;
     }
 
     .mood-picker {
@@ -1317,7 +1399,7 @@
     }
 
     .mood-option {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       cursor: pointer;
       padding: 4px 8px;
       border-radius: 12px;
@@ -1341,7 +1423,7 @@
       border-radius: 14px;
       padding: 10px 14px;
       margin-bottom: 8px;
-      font-size: 0.76rem;
+      font-size: 0.82rem;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
@@ -1388,7 +1470,7 @@
       cursor: pointer;
       background: rgba(255, 255, 255, 0.4);
       transition: 0.18s;
-      font-size: 0.76rem;
+      font-size: 0.82rem;
       color: var(--text-secondary);
     }
 
@@ -1483,7 +1565,7 @@
       border-radius: 14px;
       padding: 12px;
       color: #fff;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 700;
       transition: 0.18s;
       min-width: 80px;
@@ -1506,7 +1588,7 @@
       border-radius: 14px;
       padding: 10px 18px;
       color: var(--primary);
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 700;
       transition: 0.18s;
     }
@@ -1521,7 +1603,7 @@
       border-radius: 14px;
       padding: 10px 18px;
       color: #b03050;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 700;
       transition: 0.18s;
     }
@@ -1530,9 +1612,9 @@
       background: rgba(200, 50, 70, 0.12);
     }
 
-    /* ========================================
+    /* ==============================
        VIEW ENTRY MODAL
-    ======================================== */
+    ============================== */
     .view-entry-date {
       font-size: 0.76rem;
       color: var(--text-primary);
@@ -1570,13 +1652,14 @@
       border-radius: 14px;
       padding: 14px;
       margin: 8px 0 10px;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       line-height: 1.8;
       color: var(--text-primary);
       white-space: pre-wrap;
       word-break: break-word;
-      max-height: 40vh;
+      max-height: 35vh;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .view-gallery {
@@ -1627,9 +1710,9 @@
       border-top: 1px solid var(--border-color);
     }
 
-    /* ========================================
+    /* ==============================
        PHOTO VIEWER
-    ======================================== */
+    ============================== */
     #photo-viewer {
       position: fixed;
       inset: 0;
@@ -1638,7 +1721,7 @@
       backdrop-filter: blur(20px);
       display: none;
       flex-direction: column;
-      padding: 16px 12px env(safe-area-inset-bottom, 12px);
+      padding: 16px 12px var(--safe-area-bottom);
       overflow-y: auto;
       opacity: 0;
       transition: opacity 0.35s ease;
@@ -1756,9 +1839,9 @@
       color: #fff;
     }
 
-    /* ========================================
+    /* ==============================
        DAY LIST NAVIGATION
-    ======================================== */
+    ============================== */
     .daylist-nav {
       display: flex;
       align-items: center;
@@ -1796,9 +1879,9 @@
       color: var(--text-secondary);
     }
 
-    /* ========================================
+    /* ==============================
        COMMENTS
-    ======================================== */
+    ============================== */
     .comment-section {
       margin-top: 16px;
       border-top: 1px solid var(--border-color);
@@ -1822,6 +1905,7 @@
       margin-bottom: 12px;
       max-height: 300px;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .comment-item {
@@ -1921,7 +2005,7 @@
       background: transparent;
       border: none;
       padding: 8px 4px;
-      font-size: 0.84rem;
+      font-size: 16px;
       color: var(--text-primary);
       outline: none;
       min-width: 0;
@@ -1955,9 +2039,9 @@
       cursor: not-allowed;
     }
 
-    /* ========================================
+    /* ==============================
        CONFIRM MODAL
-    ======================================== */
+    ============================== */
     .confirm-modal .modal-box {
       max-width: 380px;
       text-align: center;
@@ -1982,9 +2066,9 @@
       padding: 8px 24px;
     }
 
-    /* ========================================
+    /* ==============================
        TOAST
-    ======================================== */
+    ============================== */
     #toast {
       position: fixed;
       bottom: 90px;
@@ -2002,6 +2086,7 @@
       pointer-events: none;
       transition: all 0.26s;
       white-space: nowrap;
+      max-width: 90%;
     }
 
     #toast.show {
@@ -2015,9 +2100,9 @@
       }
     }
 
-    /* ========================================
+    /* ==============================
        SAVING OVERLAY
-    ======================================== */
+    ============================== */
     #saving-overlay {
       position: fixed;
       inset: 0;
@@ -2049,22 +2134,22 @@
     }
 
     .saving-text {
-      font-family: var(--font-title);
+      font-family: var(--font-body);
       font-size: 1rem;
       font-weight: 700;
       color: var(--primary);
     }
 
-    /* ========================================
+    /* ==============================
        UTILITY
-    ======================================== */
+    ============================== */
     .hidden {
       display: none !important;
     }
 
-    /* ========================================
+    /* ==============================
        RESPONSIVE OVERRIDES
-    ======================================== */
+    ============================== */
     @media (min-width: 769px) and (max-width: 991px) {
       .main-layout {
         grid-template-columns: 1fr;
@@ -2084,11 +2169,13 @@
 
     @media (max-width: 480px) {
       .modal-box {
-        padding: 16px 14px;
+        padding: 16px 12px;
+        border-radius: 24px;
       }
       .form-input,
-      .form-textarea {
-        font-size: 16px; /* prevent zoom on iOS */
+      .form-textarea,
+      .comment-input {
+        font-size: 16px !important;
       }
       .entry-item {
         padding: 10px 12px;
@@ -2106,14 +2193,38 @@
         font-size: 0.65rem;
         padding: 3px 8px;
       }
+      .mobile-nav {
+        bottom: 8px;
+        left: 8px;
+        right: 8px;
+        padding: 4px 6px;
+        height: 60px;
+        border-radius: 24px;
+      }
+      .mobile-tab {
+        min-width: 40px;
+        padding: 4px 6px;
+        border-radius: 16px;
+      }
+      .mobile-tab .tab-icon {
+        font-size: 1rem;
+      }
+      .mobile-tab .tab-label {
+        font-size: 0.4rem;
+      }
+      .fab-button {
+        width: 38px;
+        height: 38px;
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- ========================================
+  <!-- ==============================
        LOCK SCREEN
-  ======================================== -->
+  ============================== -->
   <div id="lock-screen">
     <div class="lock-card">
       <div class="lock-quote" id="lock-quote"></div>
@@ -2143,9 +2254,9 @@
     </div>
   </div>
 
-  <!-- ========================================
+  <!-- ==============================
        APP
-  ======================================== -->
+  ============================== -->
   <div id="app">
 
     <!-- HEADER -->
@@ -2204,6 +2315,15 @@
               <div class="mood-legend-title">Cảm xúc tháng này</div>
               <div class="mood-legend" id="mood-legend"></div>
             </div>
+
+            <!-- Streak card -->
+            <div class="streak-card" id="streak-card">
+              <div>
+                <span class="streak-fire">🔥</span>
+                <span class="streak-number" id="streak-number">0</span>
+              </div>
+              <div class="streak-label">ngày viết liên tục</div>
+            </div>
           </div>
         </div>
       </div>
@@ -2259,11 +2379,11 @@
     </div><!-- end main-layout -->
   </div><!-- end app -->
 
-  <!-- ========================================
-       MOBILE NAVIBAR (fixed bottom)
-  ======================================== -->
+  <!-- ==============================
+       MOBILE NAVIBAR – iOS 26 Dock Style
+  ============================== -->
   <nav class="mobile-nav" id="mobile-nav">
-    <div class="mobile-nav-tabs">
+    <div class="nav-tabs">
       <button class="mobile-tab active" data-tab="diary" onclick="switchTab('diary')">
         <span class="tab-icon">📖</span>
         <span class="tab-label">Nhật ký</span>
@@ -2284,9 +2404,9 @@
     <button class="fab-button" onclick="openWriteModal()">＋</button>
   </nav>
 
-  <!-- ========================================
+  <!-- ==============================
        MODALS
-  ======================================== -->
+  ============================== -->
 
   <!-- WRITE / EDIT MODAL -->
   <div class="modal-overlay" id="modal-write">
@@ -2326,7 +2446,7 @@
           <span class="font-size-label" id="font-size-label">Cỡ chữ: 14px</span>
           <button class="font-size-btn" onclick="adjustFontSize(1)">A+</button>
         </div>
-        <textarea class="form-textarea" id="entry-content" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:14px; min-height:100px;"></textarea>
+        <textarea class="form-textarea" id="entry-content" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:16px; min-height:130px;"></textarea>
       </div>
       <div class="form-group">
         <label class="form-label">Ảnh (tối đa 10)</label>
@@ -2460,9 +2580,9 @@
     </div>
   </div>
 
-  <!-- ========================================
-       JAVASCRIPT – Tái cấu trúc hoàn chỉnh
-  ======================================== -->
+  <!-- ==============================
+       JAVASCRIPT – Đầy đủ toàn bộ logic + Streak
+  ============================== -->
   <script>
     // ================================================================
     // 1. CẤU HÌNH & BIẾN TOÀN CỤC
@@ -2470,19 +2590,17 @@
 
     var CONFIG = {
       BACKEND_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
-      PIN_USER1: '2204',   // Ánh Ngọc
-      PIN_USER2: '2009',   // Anh
-      LOVE_START: '2026-04-22', // Ngày bắt đầu yêu
+      PIN_USER1: '2204',
+      PIN_USER2: '2009',
+      LOVE_START: '2026-04-22',
       USER1_NAME: 'Ánh Ngọc 🌻',
       USER2_NAME: 'Anh 💖',
       MAX_IMAGES: 10,
       PAGE_SIZE: 8
     };
 
-    // Người dùng hiện tại
     var currentUser = CONFIG.USER1_NAME;
 
-    // Trạng thái ứng dụng
     var appState = {
       data: { entries: [], anniversaries: [] },
       calendarYear: new Date().getFullYear(),
@@ -2505,7 +2623,8 @@
       photoViewerIndex: 0,
       photoViewerMode: 'gallery',
       searchQuery: '',
-      monthFilter: ''
+      monthFilter: '',
+      scrollY: 0
     };
 
     var promptList = [
@@ -2538,10 +2657,9 @@
     // ================================================================
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Hiển thị quote ngẫu nhiên
       document.getElementById('lock-quote').textContent = quoteList[Math.floor(Math.random() * quoteList.length)];
-      // Tải dữ liệu offline queue
       loadOfflineQueue();
+      initNavScroll();
     });
 
     // ================================================================
@@ -2586,10 +2704,8 @@
     }
 
     function unlockApp() {
-      // Cập nhật badge người dùng
       var icon = currentUser === CONFIG.USER1_NAME ? '🌻' : '💖';
       document.getElementById('user-badge').textContent = icon + ' ' + currentUser;
-
       var lockScreen = document.getElementById('lock-screen');
       lockScreen.classList.add('hiding');
       setTimeout(function() {
@@ -2599,11 +2715,9 @@
         loadData();
         refreshPrompt();
         setupDesktopLayout();
-        // Không cần ẩn nav nữa (luôn hiển thị)
       }, 500);
     }
 
-    // Cho phép nhập pin bằng bàn phím khi lock screen hiện
     document.addEventListener('keydown', function(e) {
       var lockScreen = document.getElementById('lock-screen');
       if (lockScreen.style.display === 'none') return;
@@ -2612,7 +2726,7 @@
     });
 
     // ================================================================
-    // 4. CLOCK (đếm ngược từ ngày yêu)
+    // 4. CLOCK
     // ================================================================
 
     function startClock() {
@@ -2630,8 +2744,32 @@
     }
 
     // ================================================================
-    // 5. QUẢN LÝ DỮ LIỆU (Lưu, tải, đồng bộ)
+    // 5. QUẢN LÝ DỮ LIỆU & RENDER
     // ================================================================
+
+    function saveScrollPosition() {
+      appState.scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    }
+
+    function restoreScrollPosition() {
+      requestAnimationFrame(function() {
+        window.scrollTo(0, appState.scrollY);
+      });
+    }
+
+    var originalRenderAll = renderAll;
+    renderAll = function() {
+      saveScrollPosition();
+      originalRenderAll();
+      restoreScrollPosition();
+    };
+
+    var originalRenderTimeline = renderTimeline;
+    renderTimeline = function() {
+      saveScrollPosition();
+      originalRenderTimeline();
+      restoreScrollPosition();
+    };
 
     function loadData(callback) {
       setSyncing(true);
@@ -2665,6 +2803,7 @@
         normalizeEntries(appState.data.entries);
         sortEntries(appState.data.entries);
         renderAll();
+        updateStreak();
         if (typeof callback === 'function') callback(appState.data);
         cleanup();
       }
@@ -2679,10 +2818,12 @@
           normalizeEntries(appState.data.entries);
           sortEntries(appState.data.entries);
           renderAll();
+          updateStreak();
           showToast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian)');
         } else {
           appState.data = { entries: [], anniversaries: [] };
           renderAll();
+          updateStreak();
           showToast('⚠️ Không thể kết nối server');
         }
         if (typeof callback === 'function') callback(appState.data);
@@ -2752,12 +2893,14 @@
         if (action.type === 'save_entry') {
           sendToServer(action.payload, null, function(res) {
             if (res && res.success) showToast('✅ Đã đồng bộ bài viết');
-            else { appState.offlineQueue.push(action); saveOfflineQueue(); }
+            else { appState.offlineQueue.push(action);
+              saveOfflineQueue(); }
           });
         } else if (action.type === 'add_comment' || action.type === 'edit_comment' || action.type === 'delete_comment') {
           sendCommentToServer(action.payload, function(res) {
             if (res && res.success) showToast('✅ Đã đồng bộ bình luận');
-            else { appState.offlineQueue.push(action); saveOfflineQueue(); }
+            else { appState.offlineQueue.push(action);
+              saveOfflineQueue(); }
           });
         }
       });
@@ -2780,7 +2923,6 @@
     // ================================================================
 
     function sendToServer(payload, successMessage, callback) {
-      // Sao chép payload và làm sạch ảnh
       var cleanPayload = JSON.parse(JSON.stringify(payload));
       if (cleanPayload.entry && cleanPayload.entry.images) {
         cleanPayload.entry.images = cleanPayload.entry.images.map(function(img) {
@@ -2789,7 +2931,6 @@
       }
 
       var body = JSON.stringify(cleanPayload);
-      // Giới hạn dung lượng (khoảng 45MB)
       if (body.length > 45 * 1024 * 1024) {
         showToast('⚠️ Dung lượng ảnh quá lớn, vui lòng chọn ít ảnh hơn');
         if (typeof callback === 'function') callback(null);
@@ -2855,7 +2996,7 @@
     }
 
     // ================================================================
-    // 7. TIỆN ÍCH DỮ LIỆU (chuẩn hóa, sắp xếp)
+    // 7. TIỆN ÍCH DỮ LIỆU
     // ================================================================
 
     function normalizeEntries(entries) {
@@ -2881,7 +3022,63 @@
     }
 
     // ================================================================
-    // 8. HIỂN THỊ TOÀN BỘ GIAO DIỆN
+    // 8. STREAK (số ngày viết liên tục)
+    // ================================================================
+
+    function updateStreak() {
+      var entries = appState.data.entries;
+      if (!entries || entries.length === 0) {
+        document.getElementById('streak-number').textContent = '0';
+        return;
+      }
+
+      var dateSet = new Set();
+      entries.forEach(function(entry) {
+        if (entry.date) dateSet.add(entry.date);
+      });
+
+      var dates = Array.from(dateSet).sort();
+      if (dates.length === 0) {
+        document.getElementById('streak-number').textContent = '0';
+        return;
+      }
+
+      var today = getTodayString();
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      var yesterdayStr = yesterday.getFullYear() + '-' + pad2(yesterday.getMonth() + 1) + '-' + pad2(yesterday.getDate());
+
+      if (!dateSet.has(today) && !dateSet.has(yesterdayStr)) {
+        document.getElementById('streak-number').textContent = '0';
+        return;
+      }
+
+      var streak = 0;
+      var currentDate = new Date();
+      if (dateSet.has(today)) {
+        // giữ nguyên currentDate là hôm nay
+      } else if (dateSet.has(yesterdayStr)) {
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        document.getElementById('streak-number').textContent = '0';
+        return;
+      }
+
+      while (true) {
+        var dateStr = currentDate.getFullYear() + '-' + pad2(currentDate.getMonth() + 1) + '-' + pad2(currentDate.getDate());
+        if (dateSet.has(dateStr)) {
+          streak++;
+          currentDate.setDate(currentDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+
+      document.getElementById('streak-number').textContent = streak;
+    }
+
+    // ================================================================
+    // 9. HIỂN THỊ TOÀN BỘ GIAO DIỆN
     // ================================================================
 
     function renderAll() {
@@ -2891,10 +3088,11 @@
       renderTimeline();
       renderAnniversaries();
       renderAlbum();
+      updateStreak();
     }
 
     // ================================================================
-    // 9. BỘ LỌC & TÌM KIẾM
+    // 10. BỘ LỌC & TÌM KIẾM
     // ================================================================
 
     function applyFilters() {
@@ -2943,7 +3141,7 @@
     }
 
     // ================================================================
-    // 10. NGÀY NÀY NĂM XƯA (OTD)
+    // 11. NGÀY NÀY NĂM XƯA (OTD)
     // ================================================================
 
     function renderOnThisDay() {
@@ -2974,7 +3172,7 @@
     }
 
     // ================================================================
-    // 11. LỊCH
+    // 12. LỊCH
     // ================================================================
 
     var monthNames = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
@@ -2989,7 +3187,6 @@
       var firstDay = new Date(appState.calendarYear, appState.calendarMonth, 1).getDay();
       var daysInMonth = new Date(appState.calendarYear, appState.calendarMonth + 1, 0).getDate();
 
-      // Xây dựng map entry theo ngày
       var entryMap = {};
       appState.data.entries.forEach(function(entry) {
         if (entry.date) {
@@ -2998,7 +3195,6 @@
         }
       });
 
-      // Xây dựng map kỷ niệm theo MM-DD
       var annMap = new Set();
       appState.data.anniversaries.forEach(function(ann) {
         if (ann.date) annMap.add(ann.date.substring(5));
@@ -3047,7 +3243,6 @@
 
       document.getElementById('calendar-days').innerHTML = html;
 
-      // Legend cảm xúc
       var legendHtml = '';
       Object.keys(moodCount).forEach(function(m) {
         legendHtml += '<div class="mood-legend-item"><span>' + m + '</span><span>×' + moodCount[m] + '</span></div>';
@@ -3069,7 +3264,7 @@
     }
 
     // ================================================================
-    // 12. TIMELINE (Nhật ký)
+    // 13. TIMELINE (Nhật ký)
     // ================================================================
 
     function renderTimeline() {
@@ -3159,7 +3354,7 @@
     }
 
     // ================================================================
-    // 13. KỶ NIỆM
+    // 14. KỶ NIỆM
     // ================================================================
 
     function renderAnniversaries() {
@@ -3235,7 +3430,7 @@
     }
 
     // ================================================================
-    // 14. ALBUM ẢNH
+    // 15. ALBUM ẢNH
     // ================================================================
 
     function renderAlbum() {
@@ -3249,7 +3444,6 @@
         return;
       }
 
-      // Sắp xếp mới nhất trước
       entriesWithImages.sort(function(a, b) {
         var dateA = a.date || '';
         var dateB = b.date || '';
@@ -3306,7 +3500,7 @@
     }
 
     // ================================================================
-    // 15. PHOTO VIEWER
+    // 16. PHOTO VIEWER
     // ================================================================
 
     function openPhotoViewer(entryId, startIndex) {
@@ -3378,7 +3572,7 @@
     }
 
     // ================================================================
-    // 16. XEM BÀI VIẾT (Modal)
+    // 17. XEM BÀI VIẾT (Modal)
     // ================================================================
 
     function openEntryView(entryId) {
@@ -3388,7 +3582,6 @@
       appState.currentEntryId = entryId;
       appState.editingCommentId = null;
 
-      // Thông tin
       document.getElementById('view-entry-date').innerHTML =
         '🕐 ' + formatFullDateTime(entry.createdAt || entry.updatedAt) +
         ' <span class="view-entry-author-badge">' + escapeHtml(entry.author || CONFIG.USER1_NAME) + '</span>';
@@ -3399,10 +3592,8 @@
       document.getElementById('view-title').textContent = entry.title || '(Không tiêu đề)';
       document.getElementById('view-content').textContent = entry.content || '';
 
-      // Gallery
       document.getElementById('view-gallery').innerHTML = buildViewGallery(entry.images, entry.id);
 
-      // Nút sửa/xóa chỉ hiện cho chủ sở hữu
       var isOwner = (entry.author === currentUser);
       document.getElementById('view-edit-btn').style.display = isOwner ? '' : 'none';
       document.getElementById('view-delete-btn').style.display = isOwner ? '' : 'none';
@@ -3463,7 +3654,7 @@
     }
 
     // ================================================================
-    // 17. BÌNH LUẬN
+    // 18. BÌNH LUẬN
     // ================================================================
 
     function renderComments() {
@@ -3603,7 +3794,7 @@
     }
 
     // ================================================================
-    // 18. DANH SÁCH BÀI CÙNG NGÀY
+    // 19. DANH SÁCH BÀI CÙNG NGÀY
     // ================================================================
 
     function openDayList(dateStr) {
@@ -3669,7 +3860,7 @@
     }
 
     // ================================================================
-    // 19. BÌNH LUẬN TRONG DAYLIST
+    // 20. BÌNH LUẬN TRONG DAYLIST
     // ================================================================
 
     function renderDlComments() {
@@ -3795,7 +3986,7 @@
     }
 
     // ================================================================
-    // 20. VIẾT / SỬA / XÓA BÀI VIẾT
+    // 21. VIẾT / SỬA / XÓA BÀI VIẾT
     // ================================================================
 
     function openWriteModal() {
@@ -3865,7 +4056,7 @@
     }
 
     // ================================================================
-    // 21. LƯU BÀI VIẾT (từ modal write)
+    // 22. LƯU BÀI VIẾT (từ modal write)
     // ================================================================
 
     function saveEntry() {
@@ -3925,7 +4116,7 @@
     }
 
     // ================================================================
-    // 22. CHỌN CẢM XÚC
+    // 23. CHỌN CẢM XÚC & PROMPT
     // ================================================================
 
     function selectMood(mood) {
@@ -3950,7 +4141,7 @@
     }
 
     // ================================================================
-    // 23. UPLOAD ẢNH
+    // 24. UPLOAD ẢNH
     // ================================================================
 
     function handleImagePick(input) {
@@ -4092,7 +4283,7 @@
     }
 
     // ================================================================
-    // 24. ĐIỀU HƯỚNG VÀ LAYOUT
+    // 25. ĐIỀU HƯỚNG VÀ LAYOUT
     // ================================================================
 
     function switchTab(tab) {
@@ -4130,7 +4321,34 @@
     }
 
     // ================================================================
-    // 25. MODAL
+    // 26. NAV SCROLL (ẩn/hiện dock)
+    // ================================================================
+
+    function initNavScroll() {
+      var nav = document.getElementById('mobile-nav');
+      if (!nav) return;
+      var lastScrollY = 0;
+      var isHidden = false;
+
+      window.addEventListener('scroll', function() {
+        var currentScroll = window.scrollY || document.documentElement.scrollTop || 0;
+        if (currentScroll > 50 && currentScroll > lastScrollY) {
+          if (!isHidden) {
+            nav.classList.add('hidden-nav');
+            isHidden = true;
+          }
+        } else if (currentScroll < lastScrollY || currentScroll <= 50) {
+          if (isHidden) {
+            nav.classList.remove('hidden-nav');
+            isHidden = false;
+          }
+        }
+        lastScrollY = currentScroll;
+      }, { passive: true });
+    }
+
+    // ================================================================
+    // 27. MODAL
     // ================================================================
 
     function openModal(id) {
@@ -4143,7 +4361,6 @@
       document.body.style.overflow = '';
     }
 
-    // Click outside to close
     document.querySelectorAll('.modal-overlay').forEach(function(el) {
       el.addEventListener('click', function(e) {
         if (e.target === el) closeModal(el.id);
@@ -4160,10 +4377,8 @@
     });
 
     // ================================================================
-    // 26. CONFIRM MODAL (Promise-based)
+    // 28. CONFIRM MODAL
     // ================================================================
-
-    var confirmResolve = null;
 
     function showConfirm(title, message, callback) {
       document.getElementById('confirm-title').textContent = title || 'Xác nhận';
@@ -4180,7 +4395,7 @@
     }
 
     // ================================================================
-    // 27. TOAST (thông báo nhẹ)
+    // 29. TOAST
     // ================================================================
 
     var toastTimer = null;
@@ -4197,7 +4412,7 @@
     }
 
     // ================================================================
-    // 28. SYNCHRONIZATION BUTTON
+    // 30. SYNCHRONIZATION BUTTON
     // ================================================================
 
     function triggerSync() {
@@ -4213,7 +4428,7 @@
     }
 
     // ================================================================
-    // 29. TIỆN ÍCH CHUỖI & NGÀY THÁNG
+    // 31. TIỆN ÍCH CHUỖI & NGÀY THÁNG
     // ================================================================
 
     function escapeHtml(str) {
@@ -4261,15 +4476,10 @@
     }
 
     // ================================================================
-    // 30. KHỞI TẠO (tải dữ liệu nếu đã mở khóa)
+    // KHỞI TẠO HOÀN TẤT
     // ================================================================
 
-    // Sau khi unlock, loadData sẽ được gọi.
-    // Nếu đã login từ trước (tức mở lại trang) thì chạy luôn.
-    // Nhưng ở đây chúng ta chỉ gọi loadData khi unlock.
-    // Mọi thứ khởi động từ unlockApp().
-
-    console.log('💕 Love Story – Phiên bản 2.0 đã sẵn sàng!');
+    console.log('💕 Love Story – Phiên bản 2.2 đã sẵn sàng!');
   </script>
 </body>
 </html>
