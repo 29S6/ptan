@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- V7.6.2 - Lock screen gọn mobile, khôi phục thanh tìm kiếm mobile -->
+<!-- V7.6.3 - Fix lỗi cuộn trang, xóa pull-to-refresh, ổn định -->
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
@@ -68,7 +68,6 @@ img { max-width: 100%; display: block; }
     border-radius: 48px;
   }
 }
-/* Trên desktop giữ nhiều nội dung hơn */
 @media (max-width: 768px) {
   .lock-card .lock-badge,
   .lock-card .lock-quote,
@@ -1518,7 +1517,6 @@ img { max-width: 100%; display: block; }
   <div class="lock-container">
     <div class="lock-card">
       <div class="lock-badge">💕 Yêu thương</div>
-      <!-- Countdown: thời gian đã trôi qua -->
       <div class="lock-countdown">
         <div class="cd-item">
           <div class="cd-number" id="lock-cd-days">0</div>
@@ -1537,7 +1535,6 @@ img { max-width: 100%; display: block; }
           <div class="cd-label">Giây</div>
         </div>
       </div>
-      <!-- Thông tin ngày tháng -->
       <div class="lock-date-info">
         <div class="solar" id="lock-solar-date">Thứ Ba, 22/06/2026</div>
         <div class="lunar" id="lock-lunar-date">Âm lịch: 07/05/2026</div>
@@ -1596,7 +1593,7 @@ img { max-width: 100%; display: block; }
     </div>
   </header>
 
-  <!-- ===== SEARCH MOBILE (chỉ hiển thị trên mobile) ===== -->
+  <!-- ===== SEARCH MOBILE ===== -->
   <div class="search-mobile" id="search-mobile">
     <div class="sm-row">
       <input type="text" id="search-input-mobile" placeholder="Tìm bài viết..." oninput="filterEntriesMobile()"/>
@@ -1747,7 +1744,7 @@ img { max-width: 100%; display: block; }
   <button class="nav-fab" onclick="openWriteModal()">＋</button>
 </nav>
 
-<!-- ===== MODALS (giữ nguyên) ===== -->
+<!-- ===== MODALS ===== -->
 <!-- MODAL VIẾT -->
 <div class="modal" id="modal-write">
   <div class="mbox">
@@ -1922,9 +1919,10 @@ img { max-width: 100%; display: block; }
 
 <script>
 // ============================================================
-// V7.6.2 - GIỮ NGUYÊN JAVASCRIPT, THÊM TÌM KIẾM MOBILE
+// V7.6.3 - Fix lỗi cuộn trang, xóa pull-to-refresh, ổn định
 // ============================================================
 
+// === CẤU HÌNH ===
 var CFG = {
   URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
   PIN_ANH_NGOC: '2204',
@@ -1937,6 +1935,7 @@ var USER_ANH = 'Anh 💖';
 var CURRENT_USER = USER_ANH_NGOC;
 var DEFAULT_AUTHOR = USER_ANH_NGOC;
 
+// === STATE ===
 var S = {
   data: { entries: [], anniversaries: [] },
   calY: new Date().getFullYear(),
@@ -2095,11 +2094,12 @@ function unlockApp() {
     loadData();
     newPrompt();
     setupDesktopLayout();
-    initPullToRefresh();
     initNavbarScrollHide();
+    // KHÔNG GỌI initPullToRefresh (đã xóa)
   }, 500);
 }
 
+// Hỗ trợ bàn phím đăng nhập
 document.addEventListener('keydown', function (e) {
   var lockVisible = document.getElementById('lock-screen').style.display !== 'none';
   if (!lockVisible) return;
@@ -2108,32 +2108,8 @@ document.addEventListener('keydown', function (e) {
 });
 
 // ============================================================
-// PHẦN CÒN LẠI: GIỮ NGUYÊN TỪ V7.6.1, THÊM TÌM KIẾM MOBILE
+// CÁC HÀM CHÍNH (không có pull-to-refresh)
 // ============================================================
-
-// === PULL TO REFRESH ===
-var ptrStartY = 0, ptrDragging = false;
-function initPullToRefresh() {
-  var container = document.getElementById('app');
-  container.addEventListener('touchstart', function(e) {
-    if (window.scrollY === 0) {
-      ptrStartY = e.touches[0].clientY;
-      ptrDragging = true;
-    }
-  }, { passive: true });
-  container.addEventListener('touchmove', function(e) {
-    if (!ptrDragging) return;
-    var delta = e.touches[0].clientY - ptrStartY;
-    if (delta > 60) {
-      ptrDragging = false;
-      toast('🔄 Đang làm mới...');
-      loadData();
-    }
-  }, { passive: true });
-  container.addEventListener('touchend', function() {
-    ptrDragging = false;
-  }, { passive: true });
-}
 
 // === ẨN/HIỆN NAVIBAR ===
 function initNavbarScrollHide() {
@@ -2525,7 +2501,6 @@ function filterEntries() {
   var month = document.getElementById('month-filter').value;
   S.monthFilter = month;
   renderTimeline();
-  // đồng bộ với mobile
   var mobileSearch = document.getElementById('search-input-mobile');
   var mobileMonth = document.getElementById('month-filter-mobile');
   if (mobileSearch && mobileSearch.value !== q) mobileSearch.value = q;
@@ -2539,14 +2514,13 @@ function filterEntriesMobile() {
   var month = document.getElementById('month-filter-mobile').value;
   S.monthFilter = month;
   renderTimeline();
-  // đồng bộ với desktop
   var desktopSearch = document.getElementById('search-input');
   var desktopMonth = document.getElementById('month-filter');
   if (desktopSearch && desktopSearch.value !== q) desktopSearch.value = q;
   if (desktopMonth && desktopMonth.value !== month) desktopMonth.value = month;
 }
 
-// === BUILD MONTH FILTER (cho cả desktop và mobile) ===
+// === BUILD MONTH FILTER ===
 function buildMonthFilter() {
   var sels = document.querySelectorAll('#month-filter, #month-filter-mobile');
   var ms = new Set(S.data.entries.map(function (e) { return (e.date || '').substring(0, 7); }));
@@ -3456,14 +3430,73 @@ function sendDlComment() {
     loadData(function () { renderDlComments(); renderTimeline(); });
   });
 }
-function startEditDlComment(commentId) { ... }
-async function delDlComment(commentId) { ... }
+function startEditDlComment(commentId) {
+  var e = S.dayListEntries[S.dayListIdx];
+  if (!e) return;
+  var c = e.comments.find(function (x) { return x.id === commentId; });
+  if (!c) return;
+  if (c.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể sửa bình luận của mình!');
+    return;
+  }
+  S.editingDlCommentId = commentId;
+  var inp = document.getElementById('dl-cmt-inp');
+  inp.value = c.text;
+  inp.focus();
+  document.getElementById('dl-cmt-send-btn').textContent = '✓';
+  toast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
+}
+async function delDlComment(commentId) {
+  var e = S.dayListEntries[S.dayListIdx];
+  if (!e) return;
+  var c = e.comments.find(function (x) { return x.id === commentId; });
+  if (!c) return;
+  if (c.author !== CURRENT_USER) {
+    toast('⚠️ Bạn chỉ có thể xóa bình luận của mình!');
+    return;
+  }
+  var ok = await showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?');
+  if (!ok) return;
+  callCommentAPI({ action: 'delete_comment', entryId: e.id, commentId: commentId }, function (res) {
+    e.comments = res.comments;
+    var master = S.data.entries.find(function (x) { return x.id === e.id; });
+    if (master) master.comments = res.comments;
+    if (S.editingDlCommentId === commentId) {
+      S.editingDlCommentId = null;
+      document.getElementById('dl-cmt-inp').value = '';
+      document.getElementById('dl-cmt-send-btn').textContent = '➤';
+    }
+    renderDlComments();
+    renderTimeline();
+  }, function () {
+    loadData(function () { renderDlComments(); renderTimeline(); });
+  });
+}
 
 // === TAB, MODAL, TOAST, UTILITY ===
 var TABS = ['diary', 'ann', 'cal', 'album'];
-function switchTab(tab) { ... }
-function openModal(id) { ... }
-function closeModal(id) { ... }
+function switchTab(tab) {
+  var isMobile = window.innerWidth < 769;
+  if (!isMobile) return;
+  TABS.forEach(function (t) {
+    var el = document.getElementById('col-' + t);
+    if (el) {
+      el.classList.toggle('on', t === tab);
+      el.style.display = (t === tab) ? 'block' : 'none';
+    }
+  });
+  document.querySelectorAll('.mn-item').forEach(function (el) {
+    el.classList.toggle('on', el.dataset.tab === tab);
+  });
+}
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
 document.querySelectorAll('.modal').forEach(function (o) {
   o.addEventListener('click', function (e) { if (e.target === o) closeModal(o.id); });
 });
@@ -3474,18 +3507,55 @@ document.addEventListener('keydown', function (e) {
   }
 });
 var _tt;
-function toast(msg) { ... }
+function toast(msg) {
+  if (!msg) return;
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(function () { el.classList.remove('show'); }, 2800);
+}
 function p2(n) { return n < 10 ? '0' + n : '' + n; }
-function todayStr() { ... }
-function fmtDate(d) { ... }
-function fmtDateVN(ds) { ... }
-function fmtTimeShort(iso) { ... }
-function fmtFullDateTime(iso) { ... }
-function escH(s) { ... }
+function todayStr() {
+  var t = new Date();
+  return t.getFullYear() + '-' + p2(t.getMonth() + 1) + '-' + p2(t.getDate());
+}
+function fmtDate(d) {
+  return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+}
+function fmtDateVN(ds) {
+  if (!ds) return '';
+  var p = ds.split('-');
+  if (p.length < 3) return ds;
+  return 'ngày ' + parseInt(p[2]) + ' tháng ' + parseInt(p[1]) + ', ' + p[0];
+}
+function fmtTimeShort(iso) {
+  if (!iso) return '';
+  try {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return p2(d.getHours()) + ':' + p2(d.getMinutes());
+  } catch (ex) { return ''; }
+}
+function fmtFullDateTime(iso) {
+  if (!iso) return '';
+  try {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    var dateLabel = 'ngày ' + d.getDate() + ' tháng ' + (d.getMonth() + 1) + ', ' + d.getFullYear();
+    return dateLabel + ' lúc ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+  } catch (ex) { return ''; }
+}
+function escH(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
-// === RENDER SIDEBAR (album, kỷ niệm) ===
+// === RENDER SIDEBAR ===
 function renderSidebar() {
-  // album
   var grid = document.getElementById('sb-album-grid');
   var latestImgs = [];
   var entriesCopy = S.data.entries.slice().sort(function(a, b) {
@@ -3514,7 +3584,6 @@ function renderSidebar() {
     });
     grid.innerHTML = html;
   }
-  // kỷ niệm
   var annList = document.getElementById('sb-ann-list');
   if (!S.data.anniversaries.length) {
     annList.innerHTML = '<div style="color:#b08090;font-size:.75rem;text-align:center;padding:4px 0;">Chưa có kỷ niệm</div>';
