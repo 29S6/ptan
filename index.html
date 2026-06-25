@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <!--
   Love Story – Nhật ký cặp đôi
-  Phiên bản: 2.6 (V2 + navbar gốc + streak thông minh + desktop mode)
-  Full code, không viết tắt
+  Phiên bản: 3.1 (Fix desktop layout)
 -->
 <html lang="vi">
 <head>
@@ -37,7 +36,7 @@
       --space-lg: 24px;
       --space-xl: 32px;
       --font-body: 'Nunito', sans-serif;
-      --nav-height: 68px;
+      --nav-height: 76px;
       --safe-area-bottom: env(safe-area-inset-bottom, 0px);
     }
 
@@ -215,7 +214,7 @@
       display: none;
       position: relative;
       min-height: 100vh;
-      padding-bottom: calc(var(--nav-height) + var(--space-md) + var(--safe-area-bottom));
+      padding-bottom: calc(var(--nav-height) + var(--space-md) + var(--safe-area-bottom) + 16px);
     }
 
     @media (min-width: 769px) {
@@ -406,7 +405,7 @@
     }
 
     /* ==============================
-       MAIN LAYOUT
+       MAIN LAYOUT – DESKTOP FIX
     ============================== */
     .main-layout {
       max-width: 1400px;
@@ -420,6 +419,7 @@
         grid-template-columns: 280px 1fr 320px;
         gap: 20px;
         padding: 8px 24px 30px;
+        min-height: 70vh;
       }
 
       #col-cal {
@@ -433,11 +433,12 @@
 
       #col-diary {
         order: 2;
+        min-height: 400px;
       }
 
       #col-right-desktop {
         order: 3;
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         gap: 20px;
         position: sticky;
@@ -445,11 +446,17 @@
         align-self: start;
         max-height: calc(100vh - 120px);
         overflow-y: auto;
+        min-width: 0;
       }
 
+      #col-right-desktop .card {
+        flex-shrink: 0;
+      }
+
+      /* Ẩn các panel mobile trên desktop */
       #col-ann,
       #col-album {
-        display: block !important;
+        display: none !important;
       }
     }
 
@@ -1198,144 +1205,187 @@
     }
 
     /* ==============================
-       MOBILE NAVIBAR – GỐC 7.5.0, KHÔNG ẨN
+       MOBILE DOCK – PHIÊN BẢN A
     ============================== */
-    .mob-nav {
-      display: none;
-      position: fixed;
-      bottom: 16px;
-      left: 16px;
-      right: 16px;
-      z-index: 300;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 30px;
-      box-shadow: 0 6px 28px rgba(0, 0, 0, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      padding: 6px 10px;
-      align-items: center;
-      justify-content: space-between;
-      transition: none;
-      transform: translateY(0);
-      /* KHÔNG ẨN */
-    }
-    .mob-nav.hidden-nav { /* KHÔNG DÙNG */ }
-    .mn-tabs {
+    .dock-wrapper {
       display: flex;
-      flex: 1;
-      justify-content: space-around;
-      align-items: center;
+      gap: 10px;
+      align-items: stretch;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 12px;
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 300;
     }
-    .mn-item {
+
+    .dock-left {
+      flex: 1;
+      display: flex;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 8px;
+      gap: 6px;
+      height: 76px;
+      min-width: 0;
+    }
+
+    .dock-left .tab {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1px;
       padding: 6px 4px;
-      color: #999;
-      font-size: 0.6rem;
-      font-weight: 600;
-      transition: background 0.15s, transform 0.1s;
-      border-radius: 20px;
-      min-height: 42px;
-      flex: 1;
+      border-radius: 22px;
       background: transparent;
-    }
-    .mn-item.on {
-      color: var(--primary);
-      background: rgba(232, 67, 126, 0.08);
-    }
-    .mn-item:active {
-      transform: scale(0.92);
-    }
-    .mn-icon {
-      font-size: 1.35rem;
-      line-height: 1;
-    }
-    .nav-fab {
-      flex-shrink: 0;
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #f48fb1, var(--primary));
+      transition: background 0.25s ease, transform 0.15s ease;
+      cursor: pointer;
       border: none;
-      box-shadow: 0 4px 16px rgba(232, 67, 126, 0.35);
-      font-size: 1.5rem;
-      color: #fff;
+      color: #8a6a78;
+      font-family: inherit;
+      gap: 2px;
+      height: 100%;
+      min-width: 0;
+    }
+
+    .dock-left .tab .icon {
+      font-size: 1.6rem;
+      line-height: 1.2;
+    }
+
+    .dock-left .tab .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+
+    .dock-left .tab.active {
+      background: rgba(232, 67, 126, 0.12);
+      color: #e8437e;
+    }
+
+    .dock-left .tab.active .label {
+      opacity: 1;
+    }
+
+    .dock-left .tab:active {
+      transform: scale(0.94);
+    }
+
+    .btn-add {
+      flex-shrink: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      margin-left: 4px;
+      padding: 0;
+      border: none;
+      box-shadow: 0 6px 20px rgba(232, 67, 126, 0.30);
+      gap: 0;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.15s ease;
+      background: linear-gradient(135deg, #f7a1b5, #e8437e);
+      color: #fff;
     }
-    .nav-fab:hover {
-      transform: scale(1.08) rotate(7deg);
-      box-shadow: 0 6px 24px rgba(232, 67, 126, 0.4);
+
+    .btn-add .icon {
+      font-size: 1.8rem;
+      line-height: 1;
     }
-    .nav-fab:active {
+
+    .btn-add .label {
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-top: 1px;
+    }
+
+    .btn-add:active {
       transform: scale(0.92);
     }
 
-    @media (max-width: 768px) {
-      .mob-nav {
-        display: flex;
-        bottom: 12px;
-        left: 12px;
-        right: 12px;
-        padding: 5px 8px;
-        border-radius: 28px;
-        height: 64px;
-      }
-      .mn-item {
-        font-size: 0.55rem;
-        min-height: 38px;
-        padding: 4px 2px;
-      }
-      .mn-icon {
-        font-size: 1.2rem;
-      }
-      .nav-fab {
-        width: 44px;
-        height: 44px;
-        font-size: 1.4rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .mob-nav {
-        bottom: 8px;
-        left: 8px;
-        right: 8px;
-        padding: 4px 6px;
-        height: 60px;
-        border-radius: 24px;
-      }
-      .mn-item {
-        font-size: 0.48rem;
-        min-height: 34px;
-        padding: 3px 2px;
-      }
-      .mn-icon {
-        font-size: 1.1rem;
-      }
-      .nav-fab {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-      }
-    }
-
-    /* Ẩn nav trên desktop */
+    /* Ẩn dock trên desktop */
     @media (min-width: 769px) {
-      .mob-nav {
+      .dock-wrapper {
         display: none !important;
       }
     }
 
+    /* Responsive cho dock */
+    @media (max-width: 480px) {
+      .dock-wrapper {
+        gap: 8px;
+        padding: 0 8px;
+        bottom: 8px;
+      }
+      .dock-left {
+        height: 68px;
+        padding: 6px;
+        gap: 4px;
+        border-radius: 24px;
+      }
+      .dock-left .tab .icon {
+        font-size: 1.4rem;
+      }
+      .dock-left .tab .label {
+        font-size: 0.6rem;
+      }
+      .btn-add {
+        width: 68px;
+        height: 68px;
+      }
+      .btn-add .icon {
+        font-size: 1.6rem;
+      }
+      .btn-add .label {
+        font-size: 0.5rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .dock-left {
+        height: 60px;
+        padding: 4px;
+        gap: 3px;
+        border-radius: 20px;
+      }
+      .dock-left .tab {
+        border-radius: 16px;
+      }
+      .dock-left .tab .icon {
+        font-size: 1.2rem;
+      }
+      .dock-left .tab .label {
+        font-size: 0.5rem;
+      }
+      .btn-add {
+        width: 60px;
+        height: 60px;
+      }
+      .btn-add .icon {
+        font-size: 1.4rem;
+      }
+      .btn-add .label {
+        font-size: 0.45rem;
+      }
+    }
+
     /* ==============================
-       MODALS – cố định, không zoom
+       MODALS
     ============================== */
     .modal-overlay {
       position: fixed;
@@ -2402,15 +2452,15 @@
       </div>
 
       <!-- COLUMN 3: RIGHT SIDEBAR (desktop) -->
-      <div id="col-right-desktop" style="display:none">
-        <!-- Album sẽ được render bởi JS -->
+      <div id="col-right-desktop" style="display:flex; flex-direction:column; gap:20px;">
+        <!-- Album -->
         <div class="card">
           <div class="card-header">
             <div class="card-title">🖼 Album Ảnh</div>
           </div>
           <div class="card-body" id="album-desktop-body"></div>
         </div>
-        <!-- Kỷ niệm sẽ được render bởi JS -->
+        <!-- Kỷ niệm -->
         <div class="card">
           <div class="card-header">
             <div class="card-title">🌸 Kỷ Niệm</div>
@@ -2446,29 +2496,32 @@
   </div><!-- end app -->
 
   <!-- ==============================
-       MOBILE NAVIBAR – GỐC 7.5.0, KHÔNG ẨN
+       MOBILE DOCK – PHIÊN BẢN A
   ============================== -->
-  <nav class="mob-nav" id="mob-nav">
-    <div class="mn-tabs">
-      <button class="mn-item on" data-tab="diary" onclick="switchTab('diary')">
-        <span class="mn-icon">📖</span>
-        <span>Nhật ký</span>
+  <div class="dock-wrapper" id="dock-wrapper">
+    <div class="dock-left" id="dock-left">
+      <button class="tab active" data-tab="diary" onclick="switchTab('diary')">
+        <span class="icon">📖</span>
+        <span class="label">Nhật ký</span>
       </button>
-      <button class="mn-item" data-tab="ann" onclick="switchTab('ann')">
-        <span class="mn-icon">🌸</span>
-        <span>Kỷ niệm</span>
+      <button class="tab" data-tab="ann" onclick="switchTab('ann')">
+        <span class="icon">🌸</span>
+        <span class="label">Kỷ niệm</span>
       </button>
-      <button class="mn-item" data-tab="cal" onclick="switchTab('cal')">
-        <span class="mn-icon">🗓</span>
-        <span>Lịch</span>
+      <button class="tab" data-tab="cal" onclick="switchTab('cal')">
+        <span class="icon">🗓</span>
+        <span class="label">Lịch</span>
       </button>
-      <button class="mn-item" data-tab="album" onclick="switchTab('album')">
-        <span class="mn-icon">🖼</span>
-        <span>Album</span>
+      <button class="tab" data-tab="album" onclick="switchTab('album')">
+        <span class="icon">🖼</span>
+        <span class="label">Album</span>
       </button>
     </div>
-    <button class="nav-fab" onclick="openWriteModal()">＋</button>
-  </nav>
+    <button class="btn-add" onclick="openWriteModal()">
+      <span class="icon">＋</span>
+      <span class="label">Thêm</span>
+    </button>
+  </div>
 
   <!-- ==============================
        MODALS
@@ -2647,7 +2700,7 @@
   </div>
 
   <!-- ==============================
-       JAVASCRIPT – LOGIC CHÍNH (từ V2, thêm streak & desktop)
+       JAVASCRIPT – LOGIC CHÍNH
   ============================== -->
   <script>
     // ================================================================
@@ -2783,6 +2836,8 @@
         loadData();
         refreshPrompt();
         setupDesktopLayout();
+        // Kích hoạt tab mặc định (diary)
+        switchTab('diary');
       }, 500);
     }
 
@@ -3156,22 +3211,17 @@
 
       document.getElementById('streak-number').textContent = streak;
 
-      // Thông điệp
       var message = getStreakMessage(streak);
       document.getElementById('streak-message').textContent = message;
 
-      // Toast khi đạt mốc 100+
       if (isMilestoneHundred(streak)) {
         showToast('🎉 Chúc mừng! Bạn đã đạt ' + streak + ' ngày viết liên tục!');
       }
 
-      // Hiển thị cột mốc: 2 đã đạt + 3 sắp tới
       var achieved = ALL_MILESTONES.filter(function(m) { return m <= streak; });
       var upcoming = ALL_MILESTONES.filter(function(m) { return m > streak; });
 
-      // Lấy 2 cột mốc đã đạt gần nhất
       var showAchieved = achieved.slice(-2);
-      // Lấy 3 cột mốc sắp đạt đầu tiên
       var showUpcoming = upcoming.slice(0, 3);
 
       var html = '';
@@ -3187,7 +3237,7 @@
     }
 
     // ================================================================
-    // 9. HIỂN THỊ TOÀN BỘ GIAO DIỆN
+    // 9. HIỂN THỊ TOÀN BỘ GIAO DIỆN – FIX DESKTOP
     // ================================================================
 
     function renderAll() {
@@ -3195,10 +3245,26 @@
       renderCalendar();
       populateMonthFilter();
       renderTimeline();
-      renderAnniversaries();
-      renderAlbum();
-      renderDesktopAlbum();
-      renderDesktopAnniversaries();
+
+      var isDesktop = window.innerWidth >= 769;
+      if (isDesktop) {
+        // Desktop: chỉ render album và kỷ niệm desktop
+        renderDesktopAlbum();
+        renderDesktopAnniversaries();
+        // Ẩn các panel mobile (đã được CSS xử lý)
+        document.getElementById('col-ann').style.display = 'none';
+        document.getElementById('col-album').style.display = 'none';
+        // Hiển thị cột phải desktop
+        document.getElementById('col-right-desktop').style.display = 'flex';
+      } else {
+        // Mobile: chỉ render album và kỷ niệm mobile
+        renderAlbum();
+        renderAnniversaries();
+        // Ẩn cột desktop
+        document.getElementById('col-right-desktop').style.display = 'none';
+        // Hiển thị các panel mobile theo tab
+        // (đã được xử lý qua switchTab khi khởi động)
+      }
       updateStreak();
     }
 
@@ -3465,7 +3531,7 @@
     }
 
     // ================================================================
-    // 14. KỶ NIỆM
+    // 14. KỶ NIỆM (mobile)
     // ================================================================
 
     function renderAnniversaries() {
@@ -4468,18 +4534,24 @@
     // ================================================================
 
     function switchTab(tab) {
-      if (window.innerWidth >= 769) return;
-      var panels = ['diary', 'ann', 'cal', 'album'];
-      panels.forEach(function(t) {
-        var el = document.getElementById('col-' + t);
-        if (el) {
-          el.classList.toggle('active', t === tab);
-          el.style.display = (t === tab) ? 'block' : 'none';
-        }
+      // Cập nhật dock
+      var dockTabs = document.querySelectorAll('.dock-left .tab');
+      dockTabs.forEach(function(t) {
+        t.classList.toggle('active', t.dataset.tab === tab);
       });
-      document.querySelectorAll('.mn-item').forEach(function(el) {
-        el.classList.toggle('on', el.dataset.tab === tab);
-      });
+
+      // Cập nhật các panel
+      if (window.innerWidth < 769) {
+        var panels = ['diary', 'ann', 'cal', 'album'];
+        panels.forEach(function(t) {
+          var el = document.getElementById('col-' + t);
+          if (el) {
+            el.classList.toggle('active', t === tab);
+            el.style.display = (t === tab) ? 'block' : 'none';
+          }
+        });
+      }
+      // Trên desktop, không cần chuyển tab vì đã hiển thị sẵn các cột
     }
 
     function setupDesktopLayout() {
@@ -4487,13 +4559,37 @@
       var rightCol = document.getElementById('col-right-desktop');
       var annCol = document.getElementById('col-ann');
       var albumCol = document.getElementById('col-album');
+
+      // Di chuyển các panel mobile vào rightCol nếu chưa có
       if (rightCol && annCol && albumCol && annCol.parentElement !== rightCol) {
-        rightCol.appendChild(annCol);
-        rightCol.appendChild(albumCol);
+        // Lấy nội dung của annCol và albumCol (card) để đưa vào rightCol
+        var annCard = annCol.querySelector('.card');
+        var albumCard = albumCol.querySelector('.card');
+        if (annCard) {
+          // Tạo card mới trong rightCol nếu chưa có
+          var existingAnn = rightCol.querySelector('#ann-desktop-body');
+          if (!existingAnn) {
+            var newAnnCard = document.createElement('div');
+            newAnnCard.className = 'card';
+            newAnnCard.innerHTML = '<div class="card-header"><div class="card-title">🌸 Kỷ Niệm</div></div><div class="card-body" id="ann-desktop-body"></div>';
+            rightCol.appendChild(newAnnCard);
+          }
+        }
+        if (albumCard) {
+          var existingAlbum = rightCol.querySelector('#album-desktop-body');
+          if (!existingAlbum) {
+            var newAlbumCard = document.createElement('div');
+            newAlbumCard.className = 'card';
+            newAlbumCard.innerHTML = '<div class="card-header"><div class="card-title">🖼 Album Ảnh</div></div><div class="card-body" id="album-desktop-body"></div>';
+            rightCol.appendChild(newAlbumCard);
+          }
+        }
+        // Ẩn các panel mobile
+        annCol.style.display = 'none';
+        albumCol.style.display = 'none';
         rightCol.style.display = 'flex';
       }
-      if (annCol) annCol.style.display = 'block';
-      if (albumCol) albumCol.style.display = 'block';
+      // Hiển thị các cột chính
       ['col-cal', 'col-diary'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) { el.style.display = 'block';
@@ -4637,7 +4733,7 @@
     // KHỞI TẠO HOÀN TẤT
     // ================================================================
 
-    console.log('💕 Love Story – Phiên bản 2.6 (navbar gốc, streak thông minh, desktop mode)');
+    console.log('💕 Love Story – Phiên bản 3.1 (Fix desktop)');
   </script>
 </body>
 </html>
