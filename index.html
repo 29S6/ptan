@@ -118,7 +118,7 @@
     .clock-number { font-size:1.1rem; font-weight:800; color:#fff; line-height:1.2; }
     .clock-label { font-size:0.5rem; color:rgba(255,255,255,0.75); text-transform:uppercase; letter-spacing:0.05em; }
 
-    /* ===== Hamburger (chỉ hiển thị trên mobile) ===== */
+    /* ===== Hamburger (chỉ mobile) ===== */
     .hamburger-btn {
       background: none;
       border: none;
@@ -132,12 +132,11 @@
     }
     .hamburger-btn:hover { opacity: 0.8; }
     .hamburger-btn:active { transform: scale(0.92); }
-    /* Ẩn trên desktop */
     @media (min-width:769px) {
       .hamburger-btn { display: none !important; }
     }
 
-    /* ===== Drawer (chỉ hiển thị trên mobile) ===== */
+    /* ===== Drawer (chỉ mobile) ===== */
     #drawer-overlay {
       position:fixed; inset:0; z-index:400;
       background:rgba(0,0,0,0.3);
@@ -162,7 +161,6 @@
     @media (min-width:769px) {
       #drawer-overlay, #drawer { display: none !important; }
     }
-
     .drawer-header {
       display:flex; align-items:center; justify-content:space-between;
       margin-bottom:16px; padding-bottom:12px;
@@ -548,14 +546,14 @@
     }
     .modal-overlay.open { display:flex; }
     .modal-box {
-      background: #f8e8ee;
-      border-radius:28px;
+      background: #ffffff;
+      border-radius:8px;
       box-shadow:0 24px 64px rgba(0,0,0,0.10);
       width:100%;
       max-width:720px;
       max-height:90vh;
       overflow-y:auto;
-      padding:24px 28px;
+      padding:16px 18px;
       position:relative;
       transform:scale(0.94);
       opacity:0;
@@ -586,159 +584,119 @@
     }
     .modal-close:hover { background:#f7dde8; color:var(--primary); transform:rotate(90deg); }
 
-    /* ===== View Entry ===== */
+    /* ===== View Entry - Minimal Style ===== */
     .view-header {
       display:flex;
-      align-items:flex-start;
       justify-content:space-between;
+      align-items:flex-start;
       margin-bottom:10px;
-      gap:12px;
+      padding-bottom:8px;
+      border-bottom:1px solid #f0d6de;
     }
-    .view-title {
-      font-family: 'Playfair Display', serif;
-      font-size:1.7rem;
+    .view-header .author-wrapper {
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .view-header .author-pill {
+      background:#fce4ec;
+      border-radius:30px;
+      padding:1px 10px 1px 8px; /* thu nhỏ padding */
       font-weight:700;
-      color:var(--primary);
-      line-height:1.2;
-      flex:1;
-      font-style: normal;
-    }
-    .view-actions {
-      display:flex;
-      gap:6px;
-      align-items:center;
-      flex-shrink:0;
-    }
-    .menu-btn {
-      background:rgba(232,67,126,0.08);
-      border:1px solid rgba(232,67,126,0.12);
-      border-radius:50%;
-      width:36px;
-      height:36px;
-      font-size:1.2rem;
-      color:#8a6a78;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      transition:0.2s;
-      cursor:pointer;
-      line-height:1;
-    }
-    .menu-btn:hover { background:#f7dde8; color:#e8437e; }
-    .dropdown-wrapper { position:relative; display:inline-block; }
-    .dropdown-menu {
-      position:absolute;
-      right:0;
-      top:calc(100% + 6px);
-      background:#fff;
-      border:1px solid rgba(232,67,126,0.10);
-      border-radius:16px;
-      box-shadow:0 8px 30px rgba(0,0,0,0.08);
-      min-width:140px;
-      display:none;
-      overflow:hidden;
-      z-index:20;
-    }
-    .dropdown-menu.show { display:block; }
-    .dropdown-menu button {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:12px 18px;
-      width:100%;
-      border:none;
-      background:none;
-      font-size:0.85rem;
-      font-weight:700;
-      color:#3d2a33;
-      transition:0.15s;
-      text-align:left;
-      cursor:pointer;
-    }
-    .dropdown-menu button:hover { background:rgba(232,67,126,0.06); }
-    .dropdown-menu button.danger { color:#b03050; }
-    .dropdown-menu button.danger:hover { background:rgba(200,50,70,0.06); }
-
-    .view-meta {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-      font-size:0.78rem;
-      color:var(--text-secondary);
-      font-weight:600;
-    }
-    .author-pill {
+      font-size:0.8rem; /* nhỏ hơn */
+      color:#c7306a;
       display:inline-flex;
       align-items:center;
-      gap:5px;
-      background:linear-gradient(135deg, #f7a1b5, #e8437e);
-      color:#fff;
-      padding:2px 12px 2px 10px;
-      border-radius:30px;
-      font-size:0.7rem;
-      font-weight:700;
-      box-shadow:0 2px 8px rgba(232,67,126,0.15);
+      gap:4px;
     }
-    .author-pill .avatar { font-size:0.8rem; }
-    .view-meta .date { font-style:italic; font-size:0.75rem; }
-    .edited-note { font-size:0.7rem; color:var(--text-secondary); font-style:italic; margin-bottom:10px; }
+    .view-header .author-pill .avatar { font-size:0.9rem; }
+    .view-header .time {
+      font-size:0.65rem;
+      color:#b07a8a;
+      padding-left:10px;
+    }
+    .view-header .view-actions {
+      display:flex;
+      gap:2px;
+      flex-shrink:0;
+    }
+    .view-header .view-actions .menu-btn,
+    .view-header .view-actions .modal-close {
+      background:transparent;
+      border:none;
+      font-size:0.95rem;
+      color:#b07a8a;
+      padding:4px 6px;
+      border-radius:4px;
+      cursor:pointer;
+      transition:0.15s;
+      line-height:1;
+    }
+    .view-header .view-actions .menu-btn:hover,
+    .view-header .view-actions .modal-close:hover {
+      background:rgba(232,67,126,0.08);
+      color:#c7306a;
+    }
 
-    /* Nội dung và bình luận: nền trắng, shadow, chữ đen */
+    .view-title {
+      font-family:'Playfair Display', serif;
+      font-size:1.4rem;
+      font-weight:700;
+      color:#c7306a;
+      margin-bottom:6px;
+    }
+    .view-meta { display:none; }
+    .edited-note {
+      font-size:0.7rem;
+      color:#b07a8a;
+      font-style:italic;
+      margin-bottom:10px;
+    }
+
     .view-content {
-      background:#ffffff;
-      border-radius:12px;
-      padding:18px 20px;
-      margin:10px 0 16px;
-      font-size:1rem;
-      line-height:1.9;
-      color:#000000;
+      background:#faf7f8;
+      border-radius:6px;
+      padding:14px 16px;
+      font-size:0.95rem;
+      line-height:1.8;
+      color:#1a1a1a;
+      margin:8px 0 12px;
+      border:1px solid #f5dce4;
       white-space:pre-wrap;
       word-break:break-word;
-      border:1px solid rgba(232,67,126,0.06);
-      box-shadow:0 2px 12px rgba(0,0,0,0.06);
     }
 
-    /* Gallery chỉ hiển thị khi có ảnh */
     .view-gallery {
       display:grid;
       gap:4px;
-      margin-top:14px;
-      border-radius:12px;
+      margin:8px 0 12px;
+      border-radius:6px;
       overflow:hidden;
-      background:transparent;
     }
     .view-gallery .gallery-image {
-      position:relative;
-      overflow:hidden;
-      cursor:pointer;
-      background:#f7dde8;
-      border-radius:8px;
       aspect-ratio:1/1;
-      box-shadow:0 2px 8px rgba(0,0,0,0.04);
-      transition:0.2s;
+      background:#f0d6de;
+      border-radius:4px;
+      overflow:hidden;
+      position:relative;
+      cursor:pointer;
     }
-    .view-gallery .gallery-image:hover { transform:scale(1.02); box-shadow:0 4px 16px rgba(0,0,0,0.08); }
     .view-gallery .gallery-image img {
       width:100%;
       height:100%;
       object-fit:cover;
-      transition:0.2s;
-      display:block;
     }
     .view-gallery .gallery-image .gallery-overlay {
       position:absolute;
       inset:0;
-      background:rgba(40,20,30,0.2);
+      background:rgba(0,0,0,0.1);
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:1.2rem;
-      font-weight:700;
       color:#fff;
+      font-size:1.2rem;
       opacity:0;
-      transition:opacity 0.2s;
+      transition:0.2s;
     }
     .view-gallery .gallery-image:hover .gallery-overlay { opacity:1; }
     .view-gallery.count-1 { grid-template-columns:1fr; }
@@ -753,54 +711,51 @@
     .view-gallery.count-9,
     .view-gallery.count-10 { grid-template-columns:repeat(3,1fr); }
 
-    /* ===== Comment section ===== */
+    /* ===== Comment section - Minimal ===== */
     .comment-section {
-      margin-top:20px;
-      border-top:1px solid var(--border-color);
-      padding-top:18px;
+      margin-top:12px;
+      border-top:1px solid #f0d6de;
+      padding-top:12px;
     }
     .comment-header {
-      font-size:0.9rem;
+      font-size:0.8rem;
       font-weight:700;
-      color:var(--primary);
-      margin-bottom:14px;
+      color:#b07a8a;
+      margin-bottom:10px;
       display:flex;
       align-items:center;
-      gap:6px;
+      gap:4px;
     }
     .comment-list {
       display:flex;
       flex-direction:column;
-      gap:14px;
-      margin-bottom:16px;
-      max-height:380px;
+      gap:8px;
+      margin-bottom:12px;
+      max-height:340px;
       overflow-y:auto;
-      padding-right:4px;
+      padding-right:2px;
     }
     .comment-list::-webkit-scrollbar { width:4px; }
     .comment-list::-webkit-scrollbar-thumb { background:#d1b8c0; border-radius:10px; }
 
     .comment-item {
-      background:#ffffff;
-      border:1px solid var(--border-color);
-      border-radius:16px;
-      padding:14px 18px;
-      transition:0.15s;
-      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+      background:#faf7f8;
+      border-radius:6px;
+      padding:10px 12px;
+      border:1px solid #f5dce4;
     }
-    .comment-item:hover { box-shadow:0 4px 16px rgba(232,67,126,0.04); }
-    .comment-item-header {
+    .comment-item .cmt-header-row {
       display:flex;
       align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:6px;
+      gap:8px;
+      flex-wrap:nowrap;
+      margin-bottom:4px;
     }
-    .comment-avatar {
+    .comment-item .cmt-avatar {
       width:28px;
       height:28px;
       border-radius:50%;
-      background:linear-gradient(135deg, #f7a1b5, var(--primary));
+      background:linear-gradient(135deg, #f7a1b5, #e8437e);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -809,102 +764,140 @@
       font-weight:700;
       flex-shrink:0;
     }
-    .comment-author {
-      font-size:0.85rem;
+    .comment-item .cmt-author {
       font-weight:700;
-      color:var(--primary);
+      font-size:0.8rem;
+      color:#c7306a;
+      flex-shrink:0;
     }
-    .comment-time {
+    .comment-item .cmt-time {
       font-size:0.6rem;
-      color:var(--text-secondary);
+      color:#b07a8a;
       margin-left:auto;
+      flex-shrink:0;
     }
-    .comment-edited-tag {
-      font-size:0.55rem;
-      color:var(--text-secondary);
-      font-style:italic;
+    .comment-item .cmt-dropdown {
+      position:relative;
+      flex-shrink:0;
+      margin-left:2px;
     }
-    .comment-text {
-      font-size:0.9rem;
-      color:#000000;
-      line-height:1.6;
-      white-space:pre-wrap;
-      word-break:break-word;
-      padding-left:38px;
-      margin-bottom:6px;
-    }
-    .comment-actions {
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-      padding-left:38px;
-      margin-top:4px;
-    }
-    .comment-action-btn {
-      background:none;
-      border:none;
-      font-size:0.65rem;
-      font-weight:700;
-      color:var(--text-secondary);
-      padding:2px 10px;
-      border-radius:12px;
-      transition:0.15s;
-      cursor:pointer;
-    }
-    .comment-action-btn:hover { background:rgba(232,67,126,0.08); color:var(--primary); }
-    .comment-action-btn.danger:hover { color:#c04060; background:rgba(200,50,70,0.08); }
-    .comment-empty {
-      text-align:center;
-      font-size:0.85rem;
-      color:var(--text-secondary);
-      padding:20px 0;
-    }
-
-    /* Ô nhập bình luận: textarea và nút Gửi cùng hàng, nút bo tròn */
-    .comment-input-row {
-      display:flex;
-      align-items:flex-end;
-      gap:10px;
-      background:#fff;
-      border:1px solid var(--border-color);
-      border-radius:30px;
-      padding:4px 6px 4px 18px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.03);
-      transition:border-color 0.2s;
-    }
-    .comment-input-row:focus-within { border-color:var(--primary); }
-    .comment-input-row textarea {
-      flex:1;
+    .comment-item .cmt-dropdown-btn {
       background:transparent;
       border:none;
-      padding:10px 4px;
+      color:#b07a8a;
       font-size:0.9rem;
-      color:var(--text-primary);
-      outline:none;
-      resize:none;
-      overflow:hidden;
-      line-height:1.5;
-      min-height:44px;
+      padding:0 4px;
+      cursor:pointer;
+      border-radius:4px;
+      transition:0.15s;
+      line-height:1;
+    }
+    .comment-item .cmt-dropdown-btn:hover {
+      background:rgba(232,67,126,0.08);
+      color:#c7306a;
+    }
+    .comment-item .cmt-dropdown-menu {
+      position:absolute;
+      right:0;
+      top:100%;
+      background:#fff;
+      border:1px solid #f0d6de;
+      border-radius:6px;
+      box-shadow:0 4px 16px rgba(0,0,0,0.06);
+      min-width:90px;
+      display:none;
+      z-index:10;
+      padding:4px 0;
+    }
+    .comment-item .cmt-dropdown-menu.show { display:block; }
+    .comment-item .cmt-dropdown-menu button {
+      background:transparent;
+      border:none;
+      width:100%;
+      text-align:left;
+      padding:6px 14px;
+      font-size:0.75rem;
+      font-weight:600;
+      color:#2d1a24;
+      cursor:pointer;
+      transition:0.1s;
       font-family:inherit;
     }
-    .comment-input-row textarea::placeholder { color:var(--text-secondary); }
+    .comment-item .cmt-dropdown-menu button:hover {
+      background:rgba(232,67,126,0.06);
+      color:#c7306a;
+    }
+    .comment-item .cmt-dropdown-menu button.delete:hover {
+      color:#c04060;
+      background:rgba(200,50,70,0.06);
+    }
+    .comment-item .cmt-text {
+      font-size:0.85rem;
+      color:#1a1a1a;
+      padding-left:36px;
+      word-break:break-word;
+    }
+    .comment-empty {
+      color:#b07a8a;
+      font-size:0.8rem;
+      text-align:center;
+      padding:8px 0;
+    }
+
+    /* Comment input - tách nút Gửi ra ngoài */
+    .comment-input-row {
+      display:flex;
+      align-items:center; /* căn giữa theo chiều cao */
+      gap:10px;
+      margin-top:6px;
+    }
+    .comment-input-row textarea {
+      flex:1;
+      background:#faf7f8;
+      border:1px solid #f0d6de;
+      border-radius:30px;
+      padding:8px 14px;
+      font-size:0.85rem;
+      resize:none;
+      outline:none;
+      min-height:38px;
+      font-family:inherit;
+      color:#1a1a1a;
+      transition:border 0.2s;
+    }
+    .comment-input-row textarea:focus {
+      border-color:#e8437e;
+    }
+    .comment-input-row textarea::placeholder {
+      color:#b07a8a;
+    }
     .comment-send-btn {
-      background:linear-gradient(135deg, #f7a1b5, #e8437e);
+      background:#e8437e;
       border:none;
       border-radius:30px;
-      padding:10px 20px;
+      padding:6px 18px;
       color:#fff;
-      font-size:0.9rem;
       font-weight:700;
-      transition:0.18s;
+      font-size:0.8rem;
       cursor:pointer;
+      white-space:nowrap;
+      transition:0.15s;
       flex-shrink:0;
-      min-height:44px;
-      letter-spacing:0.3px;
-      box-shadow:0 2px 8px rgba(232,67,126,0.2);
+      height:38px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
-    .comment-send-btn:hover:not(:disabled) { background:linear-gradient(135deg, #e8437e, #d6336b); transform:translateY(-1px); }
-    .comment-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+    .comment-send-btn:hover:not(:disabled) {
+      background:#d6336b;
+    }
+    .comment-send-btn:disabled {
+      opacity:0.4;
+      cursor:not-allowed;
+    }
+    .comment-send-btn:active:not(:disabled) {
+      transform:scale(0.96);
+    }
 
     /* ===== Daylist nav ===== */
     .daylist-nav {
@@ -1108,8 +1101,8 @@
 
     /* ===== Responsive ===== */
     @media (max-width:600px) {
-      .modal-box { padding:20px 16px; border-radius:24px; }
-      .view-title { font-size:1.4rem; }
+      .modal-box { padding:14px 16px; border-radius:8px; }
+      .view-title { font-size:1.3rem; }
       .view-gallery { gap:3px; }
       .photo-nav-btn { width:40px; height:40px; font-size:1.2rem; }
       .photo-nav-btn.prev { left:10px; }
@@ -1117,12 +1110,48 @@
       .photo-viewer-top-actions { top:10px; right:16px; gap:8px; }
       .photo-viewer-top-actions button { width:40px; height:40px; font-size:1rem; }
       .fab-btn { width:56px; height:56px; font-size:1.8rem; }
-      .comment-send-btn { padding:8px 16px; font-size:0.8rem; min-height:38px; }
+      .comment-send-btn { padding:6px 14px; font-size:0.75rem; height:36px; }
+      .comment-input-row textarea { min-height:36px; font-size:0.8rem; }
     }
     @media (max-width:400px) {
       .view-gallery { gap:2px; }
-      .view-gallery .gallery-image { border-radius:6px; }
+      .view-gallery .gallery-image { border-radius:4px; }
     }
+
+    /* Điều chỉnh dropdown menu cho modal */
+    .dropdown-wrapper { position:relative; display:inline-block; }
+    .dropdown-menu {
+      position:absolute;
+      right:0;
+      top:calc(100% + 6px);
+      background:#fff;
+      border:1px solid rgba(232,67,126,0.10);
+      border-radius:16px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.08);
+      min-width:140px;
+      display:none;
+      overflow:hidden;
+      z-index:20;
+    }
+    .dropdown-menu.show { display:block; }
+    .dropdown-menu button {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      width:100%;
+      border:none;
+      background:none;
+      font-size:0.85rem;
+      font-weight:700;
+      color:#3d2a33;
+      transition:0.15s;
+      text-align:left;
+      cursor:pointer;
+    }
+    .dropdown-menu button:hover { background:rgba(232,67,126,0.06); }
+    .dropdown-menu button.danger { color:#b03050; }
+    .dropdown-menu button.danger:hover { background:rgba(200,50,70,0.06); }
   </style>
 </head>
 <body>
@@ -1156,7 +1185,7 @@
     </div>
   </div>
 
-  <!-- ===== DRAWER OVERLAY & DRAWER (chỉ mobile) ===== -->
+  <!-- ===== DRAWER ===== -->
   <div id="drawer-overlay" onclick="closeDrawer()"></div>
   <div id="drawer">
     <div class="drawer-header">
@@ -1180,13 +1209,13 @@
         <span class="icon">🖼</span> Album
       </button>
     </div>
-    <div class="drawer-streak" id="drawer-streak">
+    <div class="drawer-streak">
       <div class="streak-top">
         <span class="streak-fire">🔥</span>
         <span class="streak-number" id="drawer-streak-number">0</span>
       </div>
       <div class="streak-label">ngày viết liên tục</div>
-      <div class="streak-progress" id="streak-progress">
+      <div class="streak-progress">
         <div class="track"><div class="fill" id="streak-progress-fill" style="width:0%"></div></div>
         <span class="milestone-label" id="streak-next-milestone">7 ngày</span>
       </div>
@@ -1363,34 +1392,42 @@
     </div>
   </div>
 
-  <!-- VIEW ENTRY MODAL -->
+  <!-- VIEW ENTRY MODAL - Minimal Style -->
   <div class="modal-overlay" id="modal-view">
     <div class="modal-box">
+      <!-- Header -->
       <div class="view-header">
-        <div class="view-title" id="view-title">Tiêu đề bài viết</div>
+        <div class="author-wrapper">
+          <div class="author-pill">
+            <span class="avatar" id="view-avatar">🌻</span>
+            <span id="view-author-name">Ánh Ngọc</span>
+          </div>
+          <div class="time" id="view-date">ngày 3 tháng 7, 2026 lúc 14:30</div>
+        </div>
         <div class="view-actions">
           <div class="dropdown-wrapper">
             <button class="menu-btn" id="view-menu-btn" onclick="toggleDropdown('view-dropdown')">⋯</button>
             <div class="dropdown-menu" id="view-dropdown">
-              <button onclick="editCurrentEntry(); closeDropdown('view-dropdown');">✏️ Sửa</button>
-              <button class="danger" onclick="deleteCurrentEntry(); closeDropdown('view-dropdown');">🗑 Xóa</button>
+              <button onclick="editCurrentEntry(); closeDropdown('view-dropdown');">✏️ Sửa bài</button>
+              <button class="danger" onclick="deleteCurrentEntry(); closeDropdown('view-dropdown');">🗑 Xóa bài</button>
             </div>
           </div>
           <button class="modal-close" onclick="closeModal('modal-view')">✕</button>
         </div>
       </div>
-      <div class="view-meta" id="view-meta">
-        <span class="author-pill" id="view-author-pill"><span class="avatar">🌻</span> Ánh Ngọc</span>
-        <span class="date" id="view-date">ngày 3 tháng 7, 2026 lúc 14:30</span>
-      </div>
+
+      <!-- Tiêu đề & nội dung -->
+      <div class="view-title" id="view-title">Tiêu đề bài viết</div>
       <div class="edited-note hidden" id="view-edited-note"></div>
       <div class="view-content" id="view-content"></div>
       <div class="view-gallery" id="view-gallery"></div>
+
+      <!-- Comment section -->
       <div class="comment-section">
         <div class="comment-header">💬 Bình luận <span id="comment-count-label"></span></div>
         <div class="comment-list" id="comment-list"></div>
         <div class="comment-input-row">
-          <textarea class="comment-textarea" id="comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter') sendComment()"></textarea>
+          <textarea id="comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter') sendComment()"></textarea>
           <button class="comment-send-btn" id="comment-send-btn" onclick="sendComment()">Gửi</button>
         </div>
       </div>
@@ -1401,22 +1438,25 @@
   <div class="modal-overlay" id="modal-daylist">
     <div class="modal-box">
       <div class="view-header">
-        <div class="view-title" id="dl-title">Tiêu đề bài viết</div>
+        <div class="author-wrapper">
+          <div class="author-pill">
+            <span class="avatar" id="dl-avatar">🌻</span>
+            <span id="dl-author-name">Ánh Ngọc</span>
+          </div>
+          <div class="time" id="dl-date">ngày 3 tháng 7, 2026 lúc 14:30</div>
+        </div>
         <div class="view-actions">
           <div class="dropdown-wrapper">
             <button class="menu-btn" id="dl-menu-btn" onclick="toggleDropdown('dl-dropdown')">⋯</button>
             <div class="dropdown-menu" id="dl-dropdown">
-              <button onclick="editFromDayList(); closeDropdown('dl-dropdown');">✏️ Sửa</button>
-              <button class="danger" onclick="deleteFromDayList(); closeDropdown('dl-dropdown');">🗑 Xóa</button>
+              <button onclick="editFromDayList(); closeDropdown('dl-dropdown');">✏️ Sửa bài</button>
+              <button class="danger" onclick="deleteFromDayList(); closeDropdown('dl-dropdown');">🗑 Xóa bài</button>
             </div>
           </div>
           <button class="modal-close" onclick="closeModal('modal-daylist')">✕</button>
         </div>
       </div>
-      <div class="view-meta" id="dl-meta">
-        <span class="author-pill" id="dl-author-pill"><span class="avatar">🌻</span> Ánh Ngọc</span>
-        <span class="date" id="dl-date">ngày 3 tháng 7, 2026 lúc 14:30</span>
-      </div>
+      <div class="view-title" id="dl-title">Tiêu đề bài viết</div>
       <div class="edited-note hidden" id="dl-edited-note"></div>
       <div class="view-content" id="dl-content"></div>
       <div class="view-gallery" id="dl-gallery"></div>
@@ -1429,7 +1469,7 @@
         <div class="comment-header">💬 Bình luận <span id="dl-comment-count-label"></span></div>
         <div class="comment-list" id="dl-comment-list"></div>
         <div class="comment-input-row">
-          <textarea class="comment-textarea" id="dl-comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter') sendDlComment()"></textarea>
+          <textarea id="dl-comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter') sendDlComment()"></textarea>
           <button class="comment-send-btn" id="dl-comment-send-btn" onclick="sendDlComment()">Gửi</button>
         </div>
       </div>
@@ -2713,10 +2753,12 @@
       appState.editingCommentId = null;
 
       document.getElementById('view-title').textContent = entry.title || '(Không tiêu đề)';
+
       var authorStr = entry.author || CONFIG.USER1_NAME;
       var dateStr = formatFullDateTime(entry.createdAt || entry.updatedAt);
       var avatar = authorStr.includes('Ánh') ? '🌻' : '💖';
-      document.getElementById('view-author-pill').innerHTML = '<span class="avatar">' + avatar + '</span> ' + escapeHtml(authorStr);
+      document.getElementById('view-author-name').textContent = authorStr;
+      document.getElementById('view-avatar').textContent = avatar;
       document.getElementById('view-date').textContent = dateStr;
 
       renderEditedNote('view-edited-note', entry);
@@ -2796,7 +2838,7 @@
       countEl.textContent = entry.comments.length ? '(' + entry.comments.length + ')' : '';
 
       if (!entry.comments.length) {
-        listEl.innerHTML = '<div class="comment-empty">Chưa có bình luận nào, hãy là người đầu tiên~ 💌</div>';
+        listEl.innerHTML = '<div class="comment-empty">💬 Chưa có bình luận nào</div>';
         return;
       }
 
@@ -2814,7 +2856,7 @@
       var countEl = document.getElementById('dl-comment-count-label');
       countEl.textContent = entry.comments.length ? '(' + entry.comments.length + ')' : '';
       if (!entry.comments.length) {
-        listEl.innerHTML = '<div class="comment-empty">Chưa có bình luận nào, hãy là người đầu tiên~ 💌</div>';
+        listEl.innerHTML = '<div class="comment-empty">💬 Chưa có bình luận nào</div>';
         return;
       }
       listEl.innerHTML = entry.comments.map(function(c) {
@@ -2825,28 +2867,49 @@
 
     function renderCommentItem(comment) {
       var isOwner = (comment.author === currentUser);
-      var editedTag = comment.editedAt ? '<span class="comment-edited-tag">(đã sửa)</span>' : '';
-      var avatar = comment.author.includes('Ánh') ? '🌻' : '💖';
+      var avatar = comment.author.includes('Ánh') ? '🌻' : comment.author.charAt(0).toUpperCase();
 
       var actionsHtml = '';
       if (isOwner) {
-        actionsHtml = '<div class="comment-actions">' +
-          '<button class="comment-action-btn" onclick="startEditComment(\'' + comment.id + '\')">✏️ Sửa</button>' +
-          '<button class="comment-action-btn danger" onclick="deleteComment(\'' + comment.id + '\')">🗑 Xóa</button>' +
-          '</div>';
+        actionsHtml = `
+          <div class="cmt-dropdown">
+            <button class="cmt-dropdown-btn" onclick="toggleCmtDropdown(event, '${comment.id}')">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="cmt-dropdown-menu" id="cmt-dropdown-${comment.id}">
+              <button class="edit-cmt" data-id="${comment.id}">Sửa</button>
+              <button class="delete-cmt" data-id="${comment.id}">Xóa</button>
+            </div>
+          </div>
+        `;
       }
 
-      return '<div class="comment-item">' +
-        '<div class="comment-item-header">' +
-        '<div class="comment-avatar">' + avatar + '</div>' +
-        '<span class="comment-author">' + escapeHtml(comment.author || CONFIG.USER1_NAME) + '</span>' +
-        editedTag +
-        '<span class="comment-time">' + formatTimeShort(comment.time) + '</span>' +
-        '</div>' +
-        '<div class="comment-text">' + escapeHtml(comment.text) + '</div>' +
-        actionsHtml +
-        '</div>';
+      return `
+        <div class="comment-item" data-cmt-id="${comment.id}">
+          <div class="cmt-header-row">
+            <div class="cmt-avatar">${avatar}</div>
+            <span class="cmt-author">${escapeHtml(comment.author)}</span>
+            <span class="cmt-time">${formatTimeShort(comment.time)}</span>
+            ${actionsHtml}
+          </div>
+          <div class="cmt-text">${escapeHtml(comment.text)}</div>
+        </div>
+      `;
     }
+
+    function toggleCmtDropdown(event, commentId) {
+      event.stopPropagation();
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (!menu) return;
+      document.querySelectorAll('.cmt-dropdown-menu.show').forEach(m => {
+        if (m.id !== `cmt-dropdown-${commentId}`) m.classList.remove('show');
+      });
+      menu.classList.toggle('show');
+    }
+
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.cmt-dropdown-menu.show').forEach(m => m.classList.remove('show'));
+    });
 
     // ===================== SEND COMMENT (Main) =====================
     function sendComment() {
@@ -2986,6 +3049,8 @@
       input.focus();
       document.getElementById('comment-send-btn').textContent = '✓';
       showToast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (menu) menu.classList.remove('show');
     }
 
     function deleteComment(commentId) {
@@ -3021,6 +3086,8 @@
           showToast('🗑 Đã xóa bình luận');
         });
       });
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (menu) menu.classList.remove('show');
     }
 
     // ===================== EDIT / DELETE COMMENT (Daylist) =====================
@@ -3040,6 +3107,8 @@
       input.focus();
       document.getElementById('dl-comment-send-btn').textContent = '✓';
       showToast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (menu) menu.classList.remove('show');
     }
 
     function deleteDlComment(commentId) {
@@ -3076,6 +3145,8 @@
           showToast('🗑 Đã xóa bình luận');
         });
       });
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (menu) menu.classList.remove('show');
     }
 
     // ===================== DAY LIST MODAL =====================
@@ -3104,7 +3175,8 @@
       var authorStr = entry.author || CONFIG.USER1_NAME;
       var dateStr = formatFullDateTime(entry.createdAt || entry.updatedAt);
       var avatar = authorStr.includes('Ánh') ? '🌻' : '💖';
-      document.getElementById('dl-author-pill').innerHTML = '<span class="avatar">' + avatar + '</span> ' + escapeHtml(authorStr);
+      document.getElementById('dl-author-name').textContent = authorStr;
+      document.getElementById('dl-avatar').textContent = avatar;
       document.getElementById('dl-date').textContent = dateStr;
 
       renderEditedNote('dl-edited-note', entry);
@@ -3554,7 +3626,7 @@
       btn.classList.toggle('syncing', isSyncing);
     }
 
-    console.log('💕 Love Story – Phiên bản 4.6 (Nút Gửi cùng hàng, drawer chỉ mobile)');
+    console.log('💕 Love Story – Phiên bản 5.0 Stable (Minimal style, tách nút Gửi)');
   </script>
 </body>
 </html>
