@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <!-- GSAP -->
@@ -34,6 +35,7 @@
       --space-lg: 24px;
       --space-xl: 32px;
       --font-body: 'Nunito', sans-serif;
+      --font-roboto: 'Roboto', sans-serif;
       --nav-height: 76px;
       --safe-area-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -71,7 +73,6 @@
       padding:32px 28px 28px; text-align:center; box-shadow:0 24px 64px rgba(168,84,112,0.18);
       max-width:320px; width:90%;
     }
-    .lock-quote { font-size:0.9rem; color:#a85470; min-height:44px; line-height:1.5; font-weight:600; margin-bottom:14px; }
     .lock-heart { font-size:44px; display:block; margin-bottom:6px; animation:heartbeat 1.8s ease-in-out infinite; }
     @keyframes heartbeat { 0%,100%{transform:scale(1)} 14%{transform:scale(1.2)} 28%{transform:scale(1)} 42%{transform:scale(1.12)} 56%{transform:scale(1)} }
     .lock-title { font-size:1.7rem; font-weight:800; color:var(--primary); }
@@ -86,7 +87,7 @@
     .lock-error { color:#c04060; font-size:0.72rem; min-height:18px; margin-top:6px; font-weight:600; }
 
     /* ===== App container ===== */
-    #app { display:none; position:relative; min-height:100vh; padding-bottom:calc(var(--nav-height) + var(--space-md) + var(--safe-area-bottom) + 16px); }
+    #app { display:none; position:relative; min-height:100vh; padding-bottom:calc(var(--nav-height) + var(--space-md) + var(--safe-area-bottom) + 80px); }
     @media (min-width:769px) { #app { padding-bottom:24px; } }
 
     /* ===== Header ===== */
@@ -96,17 +97,173 @@
       position:sticky; top:0; z-index:200; border-bottom:1px solid rgba(255,255,255,0.2);
     }
     .header-top { display:flex; align-items:center; justify-content:space-between; padding:12px 16px 6px; max-width:1400px; margin:0 auto; }
+    .header-left { display:flex; align-items:center; gap:10px; }
     .header-logo { font-size:1.3rem; font-weight:800; color:#fff; text-shadow:0 2px 8px rgba(100,30,60,0.25); display:flex; align-items:center; gap:6px; }
     .header-actions { display:flex; gap:8px; align-items:center; }
-    .header-btn { background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:5px 12px; font-size:0.72rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:4px; transition:0.15s; }
-    .header-btn:hover { background:rgba(255,255,255,0.32); }
-    .header-btn.syncing svg { animation:spin 0.8s linear infinite; }
+    .sync-circle-btn {
+      width:38px; height:38px; border-radius:50%;
+      background:rgba(255,255,255,0.22);
+      border:1px solid rgba(255,255,255,0.3);
+      color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      transition:0.15s;
+      font-size:1.1rem;
+    }
+    .sync-circle-btn:hover { background:rgba(255,255,255,0.32); }
+    .sync-circle-btn.syncing svg { animation:spin 0.8s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
-    .user-badge { font-size:0.75rem; font-weight:700; color:#fff; background:rgba(255,255,255,0.18); border-radius:20px; padding:4px 12px; border:1px solid rgba(255,255,255,0.25); display:inline-flex; align-items:center; gap:4px; }
+
     .clock-row { display:flex; gap:6px; justify-content:center; padding:0 16px 10px; flex-wrap:wrap; }
     .clock-unit { background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.2); border-radius:10px; padding:4px 10px; text-align:center; min-width:54px; }
     .clock-number { font-size:1.1rem; font-weight:800; color:#fff; line-height:1.2; }
     .clock-label { font-size:0.5rem; color:rgba(255,255,255,0.75); text-transform:uppercase; letter-spacing:0.05em; }
+
+    /* ===== Hamburger (chỉ hiển thị trên mobile) ===== */
+    .hamburger-btn {
+      background: none;
+      border: none;
+      border-radius: 0;
+      color: #fff;
+      font-size: 1.6rem;
+      padding: 0 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      line-height: 1;
+    }
+    .hamburger-btn:hover { opacity: 0.8; }
+    .hamburger-btn:active { transform: scale(0.92); }
+    /* Ẩn trên desktop */
+    @media (min-width:769px) {
+      .hamburger-btn { display: none !important; }
+    }
+
+    /* ===== Drawer (chỉ hiển thị trên mobile) ===== */
+    #drawer-overlay {
+      position:fixed; inset:0; z-index:400;
+      background:rgba(0,0,0,0.3);
+      backdrop-filter:blur(6px);
+      display:none;
+      opacity:0;
+      transition:opacity 0.3s ease;
+    }
+    #drawer-overlay.open { display:block; opacity:1; }
+    #drawer {
+      position:fixed; top:0; left:0; bottom:0; z-index:500;
+      width:280px; max-width:80vw;
+      background:#fff;
+      box-shadow:4px 0 30px rgba(0,0,0,0.08);
+      transform:translateX(-100%);
+      transition:transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      display:flex; flex-direction:column;
+      overflow-y:auto;
+      padding:20px 16px 30px;
+    }
+    #drawer.open { transform:translateX(0); }
+    @media (min-width:769px) {
+      #drawer-overlay, #drawer { display: none !important; }
+    }
+
+    .drawer-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:16px; padding-bottom:12px;
+      border-bottom:1px solid var(--border-color);
+    }
+    .drawer-user {
+      display:flex; align-items:center; gap:10px;
+      font-weight:700; font-size:0.95rem;
+      color:var(--text-primary);
+    }
+    .drawer-user .avatar { font-size:1.6rem; }
+    .drawer-close { font-size:1.4rem; color:var(--text-secondary); padding:4px; transition:0.15s; }
+    .drawer-close:hover { color:var(--primary); transform:rotate(90deg); }
+    .drawer-tabs { display:flex; flex-direction:column; gap:6px; flex:1; }
+    .drawer-tab {
+      display:flex; align-items:center; gap:14px;
+      padding:12px 16px;
+      border-radius:16px;
+      background:transparent;
+      transition:background 0.2s, transform 0.15s;
+      font-weight:700;
+      color:var(--text-secondary);
+      cursor:pointer;
+      border:none;
+      width:100%;
+      text-align:left;
+      font-size:0.92rem;
+    }
+    .drawer-tab .icon { font-size:1.4rem; width:28px; text-align:center; }
+    .drawer-tab:hover { background:rgba(232,67,126,0.06); }
+    .drawer-tab:active { transform:scale(0.96); }
+    .drawer-tab.active { background:rgba(232,67,126,0.10); color:var(--primary); }
+
+    /* ===== Streak ===== */
+    .drawer-streak {
+      background:linear-gradient(135deg, #fff5f7, #fce8f0, #f7dde8);
+      border-radius:20px;
+      padding:18px 16px 14px;
+      margin-top:8px;
+      border:1px solid rgba(232,67,126,0.15);
+      box-shadow:0 4px 16px rgba(232,67,126,0.08);
+      flex-shrink:0;
+      text-align:center;
+    }
+    .drawer-streak .streak-top {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      margin-bottom:4px;
+    }
+    .drawer-streak .streak-fire {
+      font-size:2.2rem;
+      line-height:1;
+    }
+    .drawer-streak .streak-number {
+      font-size:2.2rem;
+      font-weight:900;
+      color:var(--primary);
+      line-height:1.2;
+    }
+    .drawer-streak .streak-label {
+      font-size:0.75rem;
+      color:var(--text-secondary);
+      font-weight:600;
+    }
+    .drawer-streak .streak-progress {
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .drawer-streak .streak-progress .track {
+      flex:1;
+      height:6px;
+      background:rgba(232,67,126,0.12);
+      border-radius:4px;
+      overflow:hidden;
+    }
+    .drawer-streak .streak-progress .track .fill {
+      height:100%;
+      background:linear-gradient(90deg, #f7a1b5, var(--primary));
+      border-radius:4px;
+      transition:width 0.6s ease;
+    }
+    .drawer-streak .streak-progress .milestone-label {
+      font-size:0.6rem;
+      font-weight:700;
+      color:var(--text-secondary);
+      white-space:nowrap;
+    }
+    .drawer-streak .streak-message {
+      font-size:0.8rem;
+      font-weight:700;
+      color:var(--primary-dark);
+      margin-top:8px;
+      padding:4px 12px;
+      background:rgba(255,255,255,0.6);
+      border-radius:20px;
+      display:inline-block;
+    }
 
     /* ===== Search & filter ===== */
     .search-filter { display:flex; align-items:center; gap:8px; padding:4px 14px; margin:0 auto 8px; max-width:1400px; background:rgba(255,255,255,0.2); backdrop-filter:blur(6px); border-radius:16px; border:1px solid rgba(255,255,255,0.2); }
@@ -152,8 +309,6 @@
     .entry-item:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(232,67,126,0.08); }
     .entry-top { display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap; }
     .entry-time { font-size:0.62rem; color:var(--text-secondary); font-weight:600; }
-    .entry-mood { display:none; }
-    .entry-author-badge { display:none; }
     .entry-body { display:flex; gap:12px; align-items:flex-start; }
     .entry-text { flex:1; min-width:0; }
     .entry-title { font-weight:700; font-size:0.9rem; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; }
@@ -173,51 +328,153 @@
     .otd-preview { font-size:0.74rem; color:var(--text-secondary); margin-top:2px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 
     /* ===== Anniversary ===== */
-    .anniversary-item { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.6); border:1px solid var(--border-color); border-radius:14px; padding:10px 14px; margin:6px 0; }
-    .ann-dot { width:10px; height:10px; border-radius:50%; background:var(--primary); flex-shrink:0; }
+    .ann-item {
+      background:#fff;
+      border:1px solid var(--border-color);
+      border-radius:16px;
+      padding:12px 14px;
+      margin:6px 0;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      transition:0.2s;
+      box-shadow:0 2px 6px rgba(0,0,0,0.02);
+    }
+    .ann-item:hover { box-shadow:0 4px 16px rgba(232,67,126,0.06); transform:translateY(-1px); }
+    .ann-icon { font-size:1.6rem; line-height:1; flex-shrink:0; }
     .ann-info { flex:1; min-width:0; }
-    .ann-name { font-weight:700; font-size:0.84rem; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .ann-date { font-size:0.64rem; color:var(--text-secondary); }
-    .ann-countdown { font-size:0.68rem; font-weight:700; margin-top:2px; }
+    .ann-name { font-weight:700; font-size:0.9rem; color:var(--text-primary); }
+    .ann-date { font-size:0.68rem; color:var(--text-secondary); }
+    .ann-countdown { font-size:0.7rem; font-weight:700; margin-top:2px; font-family:var(--font-roboto); }
     .ann-countdown.today { color:#c04060; }
     .ann-countdown.soon { color:var(--primary); }
     .ann-countdown.far { color:var(--text-secondary); }
-    .ann-delete { color:var(--text-secondary); font-size:0.9rem; padding:4px; transition:0.15s; }
-    .ann-delete:hover { color:#c04060; }
-    .add-ann-btn { width:100%; background:rgba(232,67,126,0.06); border:1.5px dashed rgba(232,67,126,0.15); border-radius:14px; padding:10px; font-size:0.74rem; font-weight:700; color:var(--primary); transition:0.18s; margin-top:6px; }
+    .ann-actions {
+      display:flex;
+      gap:4px;
+      flex-shrink:0;
+    }
+    .ann-actions button {
+      width:30px; height:30px;
+      border-radius:50%;
+      background:rgba(232,67,126,0.06);
+      border:1px solid transparent;
+      color:var(--text-secondary);
+      font-size:0.8rem;
+      transition:0.15s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .ann-actions button:hover { background:rgba(232,67,126,0.12); color:var(--primary); }
+    .ann-actions button.delete:hover { color:#c04060; background:rgba(200,50,70,0.08); }
+    .add-ann-btn {
+      width:100%;
+      background:rgba(232,67,126,0.06);
+      border:1.5px dashed rgba(232,67,126,0.15);
+      border-radius:14px;
+      padding:10px;
+      font-size:0.74rem;
+      font-weight:700;
+      color:var(--primary);
+      transition:0.18s;
+      margin-top:6px;
+    }
     .add-ann-btn:hover { background:rgba(232,67,126,0.12); }
 
     /* ===== Calendar ===== */
     .calendar-nav { display:flex; align-items:center; gap:6px; }
-    .calendar-nav-btn { background:rgba(232,67,126,0.08); border:1px solid rgba(232,67,126,0.1); border-radius:10px; width:30px; height:30px; font-size:0.9rem; color:var(--primary); display:flex; align-items:center; justify-content:center; transition:0.14s; }
+    .calendar-nav-btn {
+      background:rgba(232,67,126,0.08);
+      border:1px solid rgba(232,67,126,0.1);
+      border-radius:8px;
+      width:28px; height:28px;
+      font-size:0.9rem;
+      color:var(--primary);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:0.14s;
+    }
     .calendar-nav-btn:hover { background:rgba(232,67,126,0.15); }
-    .calendar-month-label { font-weight:700; color:var(--text-primary); font-size:0.8rem; min-width:90px; text-align:center; }
-    .calendar-grid { padding:6px 0 10px; }
-    .calendar-weekdays { display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:4px; }
-    .calendar-weekdays span { font-size:0.56rem; font-weight:700; color:var(--text-secondary); text-align:center; padding:2px 0; text-transform:uppercase; }
-    .calendar-days { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
-    .calendar-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:10px; font-size:0.76rem; font-weight:600; color:var(--text-primary); min-height:34px; transition:0.13s; }
-    .calendar-day.today { background:linear-gradient(135deg, #f8bbd0, var(--primary)); color:#fff; box-shadow:0 4px 12px rgba(232,67,126,0.25); }
-    .calendar-day.has-entry { background:rgba(232,67,126,0.08); cursor:pointer; border:1px solid rgba(232,67,126,0.12); }
-    .calendar-day.has-entry:hover { background:rgba(232,67,126,0.18); transform:scale(1.05); }
-    .calendar-day-icon { font-size:0.46rem; line-height:1; }
-    .calendar-day-ann { width:5px; height:5px; border-radius:50%; background:var(--primary); margin-top:1px; }
-    .calendar-day-multi { font-size:0.42rem; font-weight:800; background:var(--primary); color:#fff; border-radius:6px; padding:0 4px; line-height:1.3; margin-top:1px; }
-    .mood-legend-title { font-size:0.64rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; margin:8px 0 4px; }
-    .mood-legend { display:flex; gap:8px; flex-wrap:wrap; }
-    .mood-legend-item { display:flex; align-items:center; gap:3px; font-size:0.62rem; color:var(--text-secondary); }
-
-    /* ===== Streak ===== */
-    .streak-card { background:linear-gradient(135deg, #fff5f7, #fce8f0); border-radius:16px; padding:16px 16px 14px; margin-top:14px; border:1px solid rgba(232,67,126,0.12); text-align:center; box-shadow:0 2px 12px rgba(232,67,126,0.06); }
-    .streak-header { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:4px; }
-    .streak-fire { font-size:2rem; line-height:1; }
-    .streak-number { font-size:2.4rem; font-weight:900; color:var(--primary); line-height:1.1; }
-    .streak-label { font-size:0.8rem; color:var(--text-secondary); font-weight:600; margin-top:2px; }
-    .streak-message { font-size:0.9rem; font-weight:700; color:var(--primary-dark); margin-top:6px; padding:4px 10px; background:rgba(232,67,126,0.08); border-radius:20px; display:inline-block; }
-    .streak-milestones { display:flex; justify-content:center; gap:6px; margin-top:8px; flex-wrap:wrap; }
-    .streak-milestone { font-size:0.6rem; font-weight:700; color:var(--text-secondary); padding:2px 8px; border-radius:12px; background:rgba(255,255,255,0.6); border:1px solid rgba(232,67,126,0.08); }
-    .streak-milestone.achieved { color:var(--primary); background:rgba(232,67,126,0.10); border-color:var(--primary); }
-    .streak-milestone.next { color:var(--text-secondary); opacity:0.6; }
+    .calendar-month-label {
+      font-weight:700;
+      color:var(--text-primary);
+      font-size:0.8rem;
+      min-width:90px;
+      text-align:center;
+    }
+    .calendar-grid {
+      padding:4px 0 6px;
+    }
+    .calendar-weekdays {
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      margin-bottom:2px;
+    }
+    .calendar-weekdays span {
+      font-size:0.55rem;
+      font-weight:700;
+      color:var(--text-secondary);
+      text-align:center;
+      padding:2px 0;
+      text-transform:uppercase;
+      letter-spacing:0.02em;
+    }
+    .calendar-days {
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:2px;
+    }
+    .calendar-day {
+      aspect-ratio:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      border-radius:6px;
+      font-size:0.7rem;
+      font-weight:600;
+      color:var(--text-primary);
+      min-height:28px;
+      transition:0.12s;
+      background:transparent;
+      position:relative;
+    }
+    .calendar-day.today {
+      background:linear-gradient(135deg, #f8bbd0, var(--primary));
+      color:#fff;
+      box-shadow:0 2px 8px rgba(232,67,126,0.2);
+    }
+    .calendar-day.has-entry {
+      background:rgba(232,67,126,0.06);
+      cursor:pointer;
+      border:1px solid rgba(232,67,126,0.08);
+    }
+    .calendar-day.has-entry:hover {
+      background:rgba(232,67,126,0.14);
+      transform:scale(1.04);
+    }
+    .calendar-day .dot-indicator {
+      width:4px;
+      height:4px;
+      border-radius:50%;
+      background:var(--primary);
+      margin-top:1px;
+    }
+    .calendar-day.today .dot-indicator { background:#fff; }
+    .calendar-day .multi-badge {
+      font-size:0.4rem;
+      font-weight:800;
+      background:var(--primary);
+      color:#fff;
+      border-radius:4px;
+      padding:0 4px;
+      line-height:1.2;
+      margin-top:1px;
+    }
+    .calendar-day.today .multi-badge { background:#fff; color:var(--primary); }
 
     /* ===== Album desktop ===== */
     .album-grid-desktop { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; border-radius:12px; overflow:hidden; }
@@ -250,28 +507,48 @@
     .quick-write-icon { font-size:1rem; color:var(--primary); opacity:0.6; transition:0.2s; }
     .quick-write:hover .quick-write-icon { opacity:1; }
 
-    /* ===== Mobile dock ===== */
-    .dock-wrapper { display:flex; gap:10px; align-items:stretch; width:100%; max-width:480px; margin:0 auto; padding:0 12px; position:fixed; bottom:12px; left:50%; transform:translateX(-50%); z-index:300; }
-    .dock-left { flex:1; display:flex; background:rgba(255,255,255,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:28px; border:1px solid rgba(255,255,255,0.6); box-shadow:0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04); padding:8px; gap:6px; height:76px; min-width:0; }
-    .dock-left .tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px 4px; border-radius:22px; background:transparent; transition:background 0.25s ease, transform 0.15s ease; cursor:pointer; border:none; color:#8a6a78; font-family:inherit; gap:2px; height:100%; min-width:0; }
-    .dock-left .tab .icon { font-size:1.6rem; line-height:1.2; }
-    .dock-left .tab .label { font-size:0.7rem; font-weight:600; letter-spacing:0.3px; opacity:0.8; white-space:nowrap; }
-    .dock-left .tab.active { background:rgba(232,67,126,0.12); color:#e8437e; }
-    .dock-left .tab.active .label { opacity:1; }
-    .dock-left .tab:active { transform:scale(0.94); }
-    .btn-add { flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0; border:none; box-shadow:0 6px 20px rgba(232,67,126,0.30); gap:0; width:76px; height:76px; border-radius:50%; cursor:pointer; font-family:inherit; transition:transform 0.15s ease; background:linear-gradient(135deg, #f7a1b5, #e8437e); color:#fff; }
-    .btn-add .icon { font-size:1.8rem; line-height:1; }
-    .btn-add .label { font-size:0.55rem; font-weight:700; letter-spacing:0.3px; margin-top:1px; }
-    .btn-add:active { transform:scale(0.92); }
-    @media (min-width:769px) { .dock-wrapper { display:none !important; } }
-    @media (max-width:480px) { .dock-wrapper { gap:8px; padding:0 8px; bottom:8px; } .dock-left { height:68px; padding:6px; gap:4px; border-radius:24px; } .dock-left .tab .icon { font-size:1.4rem; } .dock-left .tab .label { font-size:0.6rem; } .btn-add { width:68px; height:68px; } .btn-add .icon { font-size:1.6rem; } .btn-add .label { font-size:0.5rem; } }
-    @media (max-width:400px) { .dock-left { height:60px; padding:4px; gap:3px; border-radius:20px; } .dock-left .tab { border-radius:16px; } .dock-left .tab .icon { font-size:1.2rem; } .dock-left .tab .label { font-size:0.5rem; } .btn-add { width:60px; height:60px; } .btn-add .icon { font-size:1.4rem; } .btn-add .label { font-size:0.45rem; } }
+    /* ===== FAB ===== */
+    .fab-wrapper {
+      position:fixed;
+      bottom:30px;
+      right:20px;
+      z-index:300;
+      display:none;
+    }
+    @media (max-width:768px) {
+      .fab-wrapper.show { display:block; }
+    }
+    .fab-btn {
+      width:64px; height:64px;
+      border-radius:50%;
+      background:linear-gradient(135deg, #f7a1b5, var(--primary));
+      color:#fff;
+      border:none;
+      box-shadow:0 6px 24px rgba(232,67,126,0.35);
+      font-size:2.2rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:transform 0.2s, box-shadow 0.2s;
+      cursor:pointer;
+    }
+    .fab-btn:active { transform:scale(0.88); }
+    .fab-btn:hover { box-shadow:0 8px 32px rgba(232,67,126,0.45); }
 
     /* ===== Modals ===== */
-    .modal-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.25); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; padding:16px; }
+    .modal-overlay {
+      position:fixed; inset:0; z-index:500;
+      background:rgba(0,0,0,0.25);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
     .modal-overlay.open { display:flex; }
     .modal-box {
-      background:#fff;
+      background: #f8e8ee;
       border-radius:28px;
       box-shadow:0 24px 64px rgba(0,0,0,0.10);
       width:100%;
@@ -286,7 +563,6 @@
       -webkit-overflow-scrolling:touch;
     }
     .modal-overlay.open .modal-box { transform:scale(1); opacity:1; }
-    /* Scrollbar modal */
     .modal-box::-webkit-scrollbar { width:6px; }
     .modal-box::-webkit-scrollbar-track { background:transparent; }
     .modal-box::-webkit-scrollbar-thumb { background:#d1b8c0; border-radius:10px; }
@@ -296,8 +572,7 @@
       background:rgba(232,67,126,0.08);
       border:1px solid rgba(232,67,126,0.12);
       border-radius:50%;
-      width:36px;
-      height:36px;
+      width:36px; height:36px;
       font-size:1.1rem;
       color:var(--text-secondary);
       display:flex;
@@ -316,12 +591,12 @@
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      margin-bottom:4px;
+      margin-bottom:10px;
       gap:12px;
     }
     .view-title {
       font-family: 'Playfair Display', serif;
-      font-size:1.8rem;
+      font-size:1.7rem;
       font-weight:700;
       color:var(--primary);
       line-height:1.2;
@@ -390,7 +665,7 @@
       gap:10px;
       flex-wrap:wrap;
       margin-bottom:12px;
-      font-size:0.8rem;
+      font-size:0.78rem;
       color:var(--text-secondary);
       font-weight:600;
     }
@@ -408,36 +683,43 @@
     }
     .author-pill .avatar { font-size:0.8rem; }
     .view-meta .date { font-style:italic; font-size:0.75rem; }
-    .edited-note { font-size:0.7rem; color:var(--text-secondary); font-style:italic; margin-bottom:8px; }
+    .edited-note { font-size:0.7rem; color:var(--text-secondary); font-style:italic; margin-bottom:10px; }
 
+    /* Nội dung và bình luận: nền trắng, shadow, chữ đen */
     .view-content {
-      background:rgba(255,255,255,0.5);
-      border-radius:16px;
-      padding:16px 18px;
-      margin:8px 0 14px;
-      font-size:0.95rem;
+      background:#ffffff;
+      border-radius:12px;
+      padding:18px 20px;
+      margin:10px 0 16px;
+      font-size:1rem;
       line-height:1.9;
-      color:var(--text-primary);
+      color:#000000;
       white-space:pre-wrap;
       word-break:break-word;
+      border:1px solid rgba(232,67,126,0.06);
+      box-shadow:0 2px 12px rgba(0,0,0,0.06);
     }
 
+    /* Gallery chỉ hiển thị khi có ảnh */
     .view-gallery {
       display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(140px,1fr));
-      gap:8px;
-      margin-top:12px;
-      border-radius:16px;
+      gap:4px;
+      margin-top:14px;
+      border-radius:12px;
       overflow:hidden;
+      background:transparent;
     }
     .view-gallery .gallery-image {
       position:relative;
       overflow:hidden;
       cursor:pointer;
       background:#f7dde8;
-      border-radius:12px;
+      border-radius:8px;
       aspect-ratio:1/1;
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+      transition:0.2s;
     }
+    .view-gallery .gallery-image:hover { transform:scale(1.02); box-shadow:0 4px 16px rgba(0,0,0,0.08); }
     .view-gallery .gallery-image img {
       width:100%;
       height:100%;
@@ -445,11 +727,10 @@
       transition:0.2s;
       display:block;
     }
-    .view-gallery .gallery-image:hover img { transform:scale(1.04); }
     .view-gallery .gallery-image .gallery-overlay {
       position:absolute;
       inset:0;
-      background:rgba(40,20,30,0.3);
+      background:rgba(40,20,30,0.2);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -460,68 +741,138 @@
       transition:opacity 0.2s;
     }
     .view-gallery .gallery-image:hover .gallery-overlay { opacity:1; }
+    .view-gallery.count-1 { grid-template-columns:1fr; }
+    .view-gallery.count-2 { grid-template-columns:1fr 1fr; }
+    .view-gallery.count-3 { grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; }
+    .view-gallery.count-3 .gallery-image:first-child { grid-row:1/3; grid-column:1/2; }
+    .view-gallery.count-4 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; }
+    .view-gallery.count-5,
+    .view-gallery.count-6,
+    .view-gallery.count-7,
+    .view-gallery.count-8,
+    .view-gallery.count-9,
+    .view-gallery.count-10 { grid-template-columns:repeat(3,1fr); }
 
     /* ===== Comment section ===== */
-    .comment-section { margin-top:18px; border-top:1px solid var(--border-color); padding-top:16px; }
-    .comment-header { font-size:0.85rem; font-weight:700; color:var(--primary); margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+    .comment-section {
+      margin-top:20px;
+      border-top:1px solid var(--border-color);
+      padding-top:18px;
+    }
+    .comment-header {
+      font-size:0.9rem;
+      font-weight:700;
+      color:var(--primary);
+      margin-bottom:14px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
     .comment-list {
       display:flex;
       flex-direction:column;
-      gap:12px;
-      margin-bottom:14px;
-      max-height:340px;
+      gap:14px;
+      margin-bottom:16px;
+      max-height:380px;
       overflow-y:auto;
       padding-right:4px;
     }
     .comment-list::-webkit-scrollbar { width:4px; }
     .comment-list::-webkit-scrollbar-thumb { background:#d1b8c0; border-radius:10px; }
+
     .comment-item {
-      background:rgba(255,255,255,0.6);
+      background:#ffffff;
       border:1px solid var(--border-color);
       border-radius:16px;
-      padding:12px 16px;
+      padding:14px 18px;
       transition:0.15s;
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);
     }
-    .comment-item:hover { background:rgba(255,255,255,0.85); }
+    .comment-item:hover { box-shadow:0 4px 16px rgba(232,67,126,0.04); }
     .comment-item-header {
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:10px;
       flex-wrap:wrap;
-      margin-bottom:4px;
+      margin-bottom:6px;
     }
-    .comment-author { font-size:0.8rem; font-weight:700; color:var(--primary); }
-    .comment-time { font-size:0.6rem; color:var(--text-secondary); margin-left:auto; }
-    .comment-edited-tag { font-size:0.55rem; color:var(--text-secondary); font-style:italic; }
-    .comment-text { font-size:0.88rem; color:var(--text-primary); line-height:1.5; white-space:pre-wrap; word-break:break-word; margin-bottom:4px; }
-    .comment-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; }
+    .comment-avatar {
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:linear-gradient(135deg, #f7a1b5, var(--primary));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:0.7rem;
+      font-weight:700;
+      flex-shrink:0;
+    }
+    .comment-author {
+      font-size:0.85rem;
+      font-weight:700;
+      color:var(--primary);
+    }
+    .comment-time {
+      font-size:0.6rem;
+      color:var(--text-secondary);
+      margin-left:auto;
+    }
+    .comment-edited-tag {
+      font-size:0.55rem;
+      color:var(--text-secondary);
+      font-style:italic;
+    }
+    .comment-text {
+      font-size:0.9rem;
+      color:#000000;
+      line-height:1.6;
+      white-space:pre-wrap;
+      word-break:break-word;
+      padding-left:38px;
+      margin-bottom:6px;
+    }
+    .comment-actions {
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      padding-left:38px;
+      margin-top:4px;
+    }
     .comment-action-btn {
       background:none;
       border:none;
       font-size:0.65rem;
       font-weight:700;
       color:var(--text-secondary);
-      padding:2px 8px;
-      border-radius:6px;
+      padding:2px 10px;
+      border-radius:12px;
       transition:0.15s;
       cursor:pointer;
     }
     .comment-action-btn:hover { background:rgba(232,67,126,0.08); color:var(--primary); }
     .comment-action-btn.danger:hover { color:#c04060; background:rgba(200,50,70,0.08); }
-    .comment-empty { text-align:center; font-size:0.8rem; color:var(--text-secondary); padding:16px 0; }
+    .comment-empty {
+      text-align:center;
+      font-size:0.85rem;
+      color:var(--text-secondary);
+      padding:20px 0;
+    }
 
+    /* Ô nhập bình luận: textarea và nút Gửi cùng hàng, nút bo tròn */
     .comment-input-row {
       display:flex;
       align-items:flex-end;
       gap:10px;
-      background:rgba(255,255,255,0.5);
-      border-radius:30px;
-      padding:4px 4px 4px 18px;
-      border:1px solid var(--border-color);
-      position:sticky;
-      bottom:0;
       background:#fff;
+      border:1px solid var(--border-color);
+      border-radius:30px;
+      padding:4px 6px 4px 18px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.03);
+      transition:border-color 0.2s;
     }
+    .comment-input-row:focus-within { border-color:var(--primary); }
     .comment-input-row textarea {
       flex:1;
       background:transparent;
@@ -530,7 +881,6 @@
       font-size:0.9rem;
       color:var(--text-primary);
       outline:none;
-      min-width:0;
       resize:none;
       overflow:hidden;
       line-height:1.5;
@@ -541,20 +891,20 @@
     .comment-send-btn {
       background:linear-gradient(135deg, #f7a1b5, #e8437e);
       border:none;
-      border-radius:50%;
-      width:38px;
-      height:38px;
+      border-radius:30px;
+      padding:10px 20px;
       color:#fff;
       font-size:0.9rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      font-weight:700;
       transition:0.18s;
-      flex-shrink:0;
       cursor:pointer;
+      flex-shrink:0;
+      min-height:44px;
+      letter-spacing:0.3px;
+      box-shadow:0 2px 8px rgba(232,67,126,0.2);
     }
-    .comment-send-btn:hover:not(:disabled) { transform:scale(1.06); }
-    .comment-send-btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .comment-send-btn:hover:not(:disabled) { background:linear-gradient(135deg, #e8437e, #d6336b); transform:translateY(-1px); }
+    .comment-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
     /* ===== Daylist nav ===== */
     .daylist-nav {
@@ -716,12 +1066,9 @@
     .form-input, .form-textarea, .form-select { width:100%; background:rgba(255,255,255,0.8); border:1.5px solid rgba(232,67,126,0.12); border-radius:14px; padding:10px 14px; font-size:16px; color:var(--text-primary); outline:none; transition:border-color 0.2s; -webkit-appearance:none; appearance:none; }
     .form-input:focus, .form-textarea:focus, .form-select:focus { border-color:var(--primary); }
     .form-textarea { resize:vertical; min-height:120px; line-height:1.7; font-size:16px; }
-    .mood-picker { display:flex; gap:4px; flex-wrap:wrap; }
-    .mood-option { font-size:1.4rem; cursor:pointer; padding:4px 8px; border-radius:12px; border:2px solid transparent; transition:0.13s; }
-    .mood-option:hover { transform:scale(1.1); }
-    .mood-option.selected { border-color:var(--primary); background:#f7dde8; transform:scale(1.05); }
-    .writing-prompt { background:rgba(232,67,126,0.04); border:1px solid rgba(232,67,126,0.08); border-radius:14px; padding:10px 14px; margin-bottom:8px; font-size:0.82rem; color:var(--text-secondary); display:flex; align-items:center; justify-content:space-between; }
-    .writing-prompt-refresh { color:var(--primary); font-size:0.9rem; padding:4px; }
+    .writing-prompt { display:none; }
+    .mood-picker { display:none; }
+
     .font-size-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
     .font-size-btn { background:rgba(232,67,126,0.08); border:1px solid rgba(232,67,126,0.1); border-radius:8px; width:28px; height:28px; font-size:0.9rem; color:var(--primary); display:flex; align-items:center; justify-content:center; }
     .font-size-label { font-size:0.7rem; color:var(--text-secondary); font-weight:600; }
@@ -763,15 +1110,18 @@
     @media (max-width:600px) {
       .modal-box { padding:20px 16px; border-radius:24px; }
       .view-title { font-size:1.4rem; }
-      .view-gallery { grid-template-columns:repeat(auto-fill, minmax(100px,1fr)); gap:6px; }
+      .view-gallery { gap:3px; }
       .photo-nav-btn { width:40px; height:40px; font-size:1.2rem; }
       .photo-nav-btn.prev { left:10px; }
       .photo-nav-btn.next { right:10px; }
       .photo-viewer-top-actions { top:10px; right:16px; gap:8px; }
       .photo-viewer-top-actions button { width:40px; height:40px; font-size:1rem; }
+      .fab-btn { width:56px; height:56px; font-size:1.8rem; }
+      .comment-send-btn { padding:8px 16px; font-size:0.8rem; min-height:38px; }
     }
     @media (max-width:400px) {
-      .view-gallery { grid-template-columns:repeat(auto-fill, minmax(80px,1fr)); }
+      .view-gallery { gap:2px; }
+      .view-gallery .gallery-image { border-radius:6px; }
     }
   </style>
 </head>
@@ -780,7 +1130,6 @@
   <!-- ===== LOCK SCREEN ===== -->
   <div id="lock-screen">
     <div class="lock-card">
-      <div class="lock-quote" id="lock-quote"></div>
       <span class="lock-heart">💕</span>
       <div class="lock-title">Love Story</div>
       <p class="lock-sub">Nhập mật mã để vào nhé 🌸</p>
@@ -807,21 +1156,60 @@
     </div>
   </div>
 
+  <!-- ===== DRAWER OVERLAY & DRAWER (chỉ mobile) ===== -->
+  <div id="drawer-overlay" onclick="closeDrawer()"></div>
+  <div id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-user">
+        <span class="avatar" id="drawer-avatar">🌻</span>
+        <span id="drawer-username">Ánh Ngọc</span>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-tabs">
+      <button class="drawer-tab active" data-tab="diary" onclick="switchTab('diary'); closeDrawer();">
+        <span class="icon">📖</span> Nhật ký
+      </button>
+      <button class="drawer-tab" data-tab="ann" onclick="switchTab('ann'); closeDrawer();">
+        <span class="icon">🌸</span> Kỷ niệm
+      </button>
+      <button class="drawer-tab" data-tab="cal" onclick="switchTab('cal'); closeDrawer();">
+        <span class="icon">🗓</span> Lịch
+      </button>
+      <button class="drawer-tab" data-tab="album" onclick="switchTab('album'); closeDrawer();">
+        <span class="icon">🖼</span> Album
+      </button>
+    </div>
+    <div class="drawer-streak" id="drawer-streak">
+      <div class="streak-top">
+        <span class="streak-fire">🔥</span>
+        <span class="streak-number" id="drawer-streak-number">0</span>
+      </div>
+      <div class="streak-label">ngày viết liên tục</div>
+      <div class="streak-progress" id="streak-progress">
+        <div class="track"><div class="fill" id="streak-progress-fill" style="width:0%"></div></div>
+        <span class="milestone-label" id="streak-next-milestone">7 ngày</span>
+      </div>
+      <div class="streak-message" id="drawer-streak-message">Hãy viết mỗi ngày ✨</div>
+    </div>
+  </div>
+
   <!-- ===== APP ===== -->
   <div id="app">
 
     <!-- HEADER -->
     <header class="app-header">
       <div class="header-top">
-        <div class="header-logo">💕 Love Story</div>
+        <div class="header-left">
+          <button class="hamburger-btn" onclick="toggleDrawer()" aria-label="Menu">☰</button>
+          <div class="header-logo">💕 Love Story</div>
+        </div>
         <div class="header-actions">
-          <span class="user-badge" id="user-badge">🌻 Ánh Ngọc</span>
-          <button class="header-btn" id="sync-btn" onclick="triggerSync()">
-            <svg id="sync-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <button class="sync-circle-btn" id="sync-btn" onclick="triggerSync()" title="Đồng bộ">
+            <svg id="sync-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
               <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
             </svg>
-            Đồng bộ
           </button>
         </div>
       </div>
@@ -861,17 +1249,6 @@
                 <span>T4</span><span>T5</span><span>T6</span><span>T7</span>
               </div>
               <div class="calendar-days" id="calendar-days"></div>
-              <div class="mood-legend-title">Cảm xúc tháng này</div>
-              <div class="mood-legend" id="mood-legend"></div>
-            </div>
-            <div class="streak-card" id="streak-card">
-              <div class="streak-header">
-                <span class="streak-fire">🔥</span>
-                <span class="streak-number" id="streak-number">0</span>
-              </div>
-              <div class="streak-label">ngày viết liên tục</div>
-              <div class="streak-message" id="streak-message">Hãy viết một điều nhỏ mỗi ngày 💕</div>
-              <div class="streak-milestones" id="streak-milestones"></div>
             </div>
           </div>
         </div>
@@ -938,29 +1315,10 @@
     </div>
   </div>
 
-  <!-- MOBILE DOCK -->
-  <div class="dock-wrapper" id="dock-wrapper">
-    <div class="dock-left" id="dock-left">
-      <button class="tab active" data-tab="diary" onclick="switchTab('diary')">
-        <span class="icon">📖</span>
-        <span class="label">Nhật ký</span>
-      </button>
-      <button class="tab" data-tab="ann" onclick="switchTab('ann')">
-        <span class="icon">🌸</span>
-        <span class="label">Kỷ niệm</span>
-      </button>
-      <button class="tab" data-tab="cal" onclick="switchTab('cal')">
-        <span class="icon">🗓</span>
-        <span class="label">Lịch</span>
-      </button>
-      <button class="tab" data-tab="album" onclick="switchTab('album')">
-        <span class="icon">🖼</span>
-        <span class="label">Album</span>
-      </button>
-    </div>
-    <button class="btn-add" onclick="openWriteModal()">
-      <span class="icon">＋</span>
-      <span class="label">Thêm</span>
+  <!-- ===== FAB ===== -->
+  <div class="fab-wrapper show" id="fab-wrapper">
+    <button class="fab-btn" onclick="openWriteModal()" aria-label="Viết bài mới">
+      <i class="fas fa-pen"></i>
     </button>
   </div>
 
@@ -973,10 +1331,6 @@
         <div class="modal-title" id="write-modal-title" style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:0;">✍️ Viết nhật ký</div>
         <button class="modal-close" onclick="closeModal('modal-write')" style="position:static;">✕</button>
       </div>
-      <div class="writing-prompt">
-        <span id="writing-prompt-text">💭 Hôm nay có điều gì đặc biệt không?</span>
-        <button class="writing-prompt-refresh" onclick="refreshPrompt()">🔄</button>
-      </div>
       <div class="form-group">
         <label class="form-label">Ngày viết</label>
         <input type="date" class="form-input" id="entry-date" />
@@ -984,20 +1338,6 @@
       <div class="form-group">
         <label class="form-label">Tiêu đề</label>
         <input type="text" class="form-input" id="entry-title" placeholder="Hôm nay mình cảm thấy..." maxlength="100" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Cảm xúc</label>
-        <div class="mood-picker" id="mood-picker">
-          <span class="mood-option" data-mood="😊" onclick="selectMood('😊')">😊</span>
-          <span class="mood-option" data-mood="😍" onclick="selectMood('😍')">😍</span>
-          <span class="mood-option" data-mood="🥰" onclick="selectMood('🥰')">🥰</span>
-          <span class="mood-option" data-mood="😢" onclick="selectMood('😢')">😢</span>
-          <span class="mood-option" data-mood="😔" onclick="selectMood('😔')">😔</span>
-          <span class="mood-option" data-mood="😡" onclick="selectMood('😡')">😡</span>
-          <span class="mood-option" data-mood="😴" onclick="selectMood('😴')">😴</span>
-          <span class="mood-option" data-mood="✨" onclick="selectMood('✨')">✨</span>
-          <span class="mood-option" data-mood="🌸" onclick="selectMood('🌸')">🌸</span>
-        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Nội dung</label>
@@ -1026,12 +1366,10 @@
   <!-- VIEW ENTRY MODAL -->
   <div class="modal-overlay" id="modal-view">
     <div class="modal-box">
-      <!-- Header -->
       <div class="view-header">
         <div class="view-title" id="view-title">Tiêu đề bài viết</div>
         <div class="view-actions">
           <div class="dropdown-wrapper">
-            <!-- Đã sửa: gọi toggleDropdown thay vì toggleEntryDropdown -->
             <button class="menu-btn" id="view-menu-btn" onclick="toggleDropdown('view-dropdown')">⋯</button>
             <div class="dropdown-menu" id="view-dropdown">
               <button onclick="editCurrentEntry(); closeDropdown('view-dropdown');">✏️ Sửa</button>
@@ -1041,23 +1379,19 @@
           <button class="modal-close" onclick="closeModal('modal-view')">✕</button>
         </div>
       </div>
-      <!-- Meta -->
       <div class="view-meta" id="view-meta">
         <span class="author-pill" id="view-author-pill"><span class="avatar">🌻</span> Ánh Ngọc</span>
         <span class="date" id="view-date">ngày 3 tháng 7, 2026 lúc 14:30</span>
       </div>
       <div class="edited-note hidden" id="view-edited-note"></div>
-      <!-- Content -->
       <div class="view-content" id="view-content"></div>
-      <!-- Gallery -->
       <div class="view-gallery" id="view-gallery"></div>
-      <!-- Comments -->
       <div class="comment-section">
         <div class="comment-header">💬 Bình luận <span id="comment-count-label"></span></div>
         <div class="comment-list" id="comment-list"></div>
         <div class="comment-input-row">
           <textarea class="comment-textarea" id="comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter') sendComment()"></textarea>
-          <button class="comment-send-btn" id="comment-send-btn" onclick="sendComment()">➤</button>
+          <button class="comment-send-btn" id="comment-send-btn" onclick="sendComment()">Gửi</button>
         </div>
       </div>
     </div>
@@ -1070,7 +1404,6 @@
         <div class="view-title" id="dl-title">Tiêu đề bài viết</div>
         <div class="view-actions">
           <div class="dropdown-wrapper">
-            <!-- Đã sửa: gọi toggleDropdown thay vì toggleEntryDropdown -->
             <button class="menu-btn" id="dl-menu-btn" onclick="toggleDropdown('dl-dropdown')">⋯</button>
             <div class="dropdown-menu" id="dl-dropdown">
               <button onclick="editFromDayList(); closeDropdown('dl-dropdown');">✏️ Sửa</button>
@@ -1097,7 +1430,7 @@
         <div class="comment-list" id="dl-comment-list"></div>
         <div class="comment-input-row">
           <textarea class="comment-textarea" id="dl-comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter') sendDlComment()"></textarea>
-          <button class="comment-send-btn" id="dl-comment-send-btn" onclick="sendDlComment()">➤</button>
+          <button class="comment-send-btn" id="dl-comment-send-btn" onclick="sendDlComment()">Gửi</button>
         </div>
       </div>
     </div>
@@ -1121,6 +1454,28 @@
       <div class="button-row">
         <button class="btn-secondary" onclick="closeModal('modal-ann')">Hủy</button>
         <button class="btn-primary" onclick="saveAnniversary()">💾 Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT ANNIVERSARY MODAL -->
+  <div class="modal-overlay" id="modal-edit-ann">
+    <div class="modal-box" style="max-width:400px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <div class="modal-title" style="font-family:'Playfair Display',serif; font-size:1.2rem; margin:0;">✏️ Sửa Kỷ Niệm</div>
+        <button class="modal-close" onclick="closeModal('modal-edit-ann')" style="position:static;">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ngày</label>
+        <input type="date" class="form-input" id="edit-ann-date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tên kỷ niệm</label>
+        <input type="text" class="form-input" id="edit-ann-name" placeholder="Tên kỷ niệm..." maxlength="80" />
+      </div>
+      <div class="button-row">
+        <button class="btn-secondary" onclick="closeModal('modal-edit-ann')">Hủy</button>
+        <button class="btn-primary" onclick="saveEditAnniversary()">💾 Cập nhật</button>
       </div>
     </div>
   </div>
@@ -1150,7 +1505,6 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-
     <button class="photo-nav-btn prev" id="pv-prev" onclick="navigatePhoto(-1)">
       <i class="fas fa-chevron-left"></i>
     </button>
@@ -1211,33 +1565,9 @@
       photoViewerIndex: 0,
       searchQuery: '',
       monthFilter: '',
-      scrollY: 0
+      scrollY: 0,
+      editingAnnId: null
     };
-
-    var promptList = [
-      '💭 Hôm nay có điều gì đặc biệt không?',
-      '🌸 Khoảnh khắc nào hôm nay khiến mình mỉm cười?',
-      '✨ Điều mình biết ơn nhất hôm nay là gì?',
-      '🌙 Nếu hôm nay là một màu sắc, nó sẽ là màu gì?',
-      '💕 Điều gì đang ở trong tim mình lúc này?',
-      '🍃 Hôm nay mình đã học được điều gì mới?',
-      '🎵 Bài hát nào đang hợp tâm trạng mình nhất?',
-      '☁️ Điều gì khiến mình lo lắng và làm thế nào để buông bỏ?',
-      '🌟 Mình tự hào về bản thân điều gì hôm nay?',
-      '💌 Nếu viết thư cho mình của 1 năm sau, mình sẽ nói gì?',
-      '🍀 Điều ước lớn nhất của mình lúc này là gì?',
-      '🌺 Sáng nay thức dậy, điều đầu tiên mình nghĩ đến là gì?'
-    ];
-
-    var quoteList = [
-      '"Mỗi ngày bên nhau là một trang sách đẹp..."',
-      '"Tình yêu không cần lý do, chỉ cần hai trái tim..."',
-      '"Em là trang nhật ký đẹp nhất của anh."',
-      '"Yêu là khi nhớ đến nhau cả trong khoảnh khắc bình thường."',
-      '"Có những điều không nói được bằng lời, chỉ viết thôi..."',
-      '"Mỗi khoảnh khắc đều xứng đáng được ghi lại."',
-      '"Tình yêu là những điều nhỏ nhặt được lưu giữ mãi mãi."'
-    ];
 
     var ALL_MILESTONES = [7, 14, 30, 60, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
@@ -1290,6 +1620,97 @@
       } catch (e) { return ''; }
     }
 
+    // ===================== DRAWER =====================
+    function toggleDrawer() {
+      var drawer = document.getElementById('drawer');
+      var overlay = document.getElementById('drawer-overlay');
+      var isOpen = drawer.classList.contains('open');
+      if (isOpen) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    }
+
+    function openDrawer() {
+      var drawer = document.getElementById('drawer');
+      var overlay = document.getElementById('drawer-overlay');
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      updateDrawerStreak();
+    }
+
+    function closeDrawer() {
+      var drawer = document.getElementById('drawer');
+      var overlay = document.getElementById('drawer-overlay');
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function updateDrawerStreak() {
+      var entries = appState.data.entries;
+      var streak = 0;
+      if (entries && entries.length > 0) {
+        var dateSet = new Set();
+        entries.forEach(function(entry) { if (entry.date) dateSet.add(entry.date); });
+        var today = getTodayString();
+        var yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        var yesterdayStr = formatDate(yesterday);
+        var currentDate = new Date();
+        if (dateSet.has(today)) {
+          streak = 1;
+        } else if (dateSet.has(yesterdayStr)) {
+          streak = 1;
+          currentDate.setDate(currentDate.getDate() - 1);
+        } else {
+          streak = 0;
+        }
+        if (streak > 0) {
+          while (true) {
+            currentDate.setDate(currentDate.getDate() - 1);
+            var dateStr = formatDate(currentDate);
+            if (dateSet.has(dateStr)) { streak++; } else { break; }
+          }
+        }
+      }
+      document.getElementById('drawer-streak-number').textContent = streak;
+
+      var nextMilestone = ALL_MILESTONES.find(function(m) { return m > streak; });
+      if (nextMilestone) {
+        var progress = (streak / nextMilestone) * 100;
+        document.getElementById('streak-progress-fill').style.width = Math.min(progress, 100) + '%';
+        document.getElementById('streak-next-milestone').textContent = nextMilestone + ' ngày';
+      } else {
+        document.getElementById('streak-progress-fill').style.width = '100%';
+        document.getElementById('streak-next-milestone').textContent = '🏆 Kỷ lục!';
+      }
+
+      var msg = getStreakMessage(streak);
+      document.getElementById('drawer-streak-message').textContent = msg;
+    }
+
+    function getStreakMessage(streak) {
+      if (streak === 0) return 'Hãy viết một điều nhỏ mỗi ngày 💕';
+      if (streak >= 1000) return '🏆 1000 ngày – con số kỷ lục!';
+      if (streak >= 900) return '🌟 900 ngày – thật phi thường!';
+      if (streak >= 800) return '🔥 800 ngày – tình yêu bền chặt!';
+      if (streak >= 700) return '🎊 700 ngày – một hành trình vĩ đại!';
+      if (streak >= 600) return '💪 600 ngày – thật đáng nể!';
+      if (streak >= 500) return '🎉 500 ngày – nửa chặng đường nghìn ngày!';
+      if (streak >= 400) return '🏆 400 ngày – thật đáng tự hào!';
+      if (streak >= 300) return '🌟 300 ngày – tình yêu bền chặt!';
+      if (streak >= 200) return '🎊 200 ngày – một hành trình đẹp!';
+      if (streak >= 100) return '💯 Trăm ngày – quá đỉnh!';
+      if (streak >= 60) return '🔥 2 tháng – thật tuyệt vời!';
+      if (streak >= 30) return '🎉 Một tháng đầy kỷ niệm!';
+      if (streak >= 14) return '💪 2 tuần – cố lên!';
+      if (streak >= 7) return '🌟 Bắt đầu thói quen tốt!';
+      return '🔥 Cố lên, mỗi ngày một chút yêu thương!';
+    }
+
     // ===================== DROPDOWN =====================
     function toggleDropdown(id) {
       var menu = document.getElementById(id);
@@ -1315,7 +1736,6 @@
 
     // ===================== LOCK SCREEN =====================
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('lock-quote').textContent = quoteList[Math.floor(Math.random() * quoteList.length)];
       loadOfflineQueue();
     });
 
@@ -1358,17 +1778,19 @@
 
     function unlockApp() {
       var icon = currentUser === CONFIG.USER1_NAME ? '🌻' : '💖';
-      document.getElementById('user-badge').textContent = icon + ' ' + currentUser;
+      document.getElementById('drawer-username').textContent = currentUser;
+      document.getElementById('drawer-avatar').textContent = icon;
       var lockScreen = document.getElementById('lock-screen');
       lockScreen.classList.add('hiding');
       setTimeout(function() {
         lockScreen.style.display = 'none';
         document.getElementById('app').style.display = 'block';
+        document.getElementById('fab-wrapper').classList.add('show');
         startClock();
         loadData();
-        refreshPrompt();
         setupDesktopLayout();
         switchTab('diary');
+        gsap.from('#app', { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
       }, 500);
     }
 
@@ -1451,7 +1873,7 @@
         normalizeEntries(appState.data.entries);
         sortEntries(appState.data.entries);
         renderAll();
-        updateStreak();
+        updateDrawerStreak();
         if (typeof callback === 'function') callback(appState.data);
         cleanup();
       }
@@ -1466,12 +1888,12 @@
           normalizeEntries(appState.data.entries);
           sortEntries(appState.data.entries);
           renderAll();
-          updateStreak();
+          updateDrawerStreak();
           showToast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian)');
         } else {
           appState.data = { entries: [], anniversaries: [] };
           renderAll();
-          updateStreak();
+          updateDrawerStreak();
           showToast('⚠️ Không thể kết nối server');
         }
         if (typeof callback === 'function') callback(appState.data);
@@ -1547,6 +1969,13 @@
         } else if (action.type === 'add_comment' || action.type === 'edit_comment' || action.type === 'delete_comment') {
           sendCommentToServer(action.payload, function(res) {
             if (res && res.success) showToast('✅ Đã đồng bộ bình luận');
+            else { appState.offlineQueue.push(action);
+              saveOfflineQueue(); }
+          });
+        } else if (action.type === 'save_anniversary' || action.type === 'delete_anniversary' || action.type ===
+          'edit_anniversary') {
+          sendToServer(action.payload, null, function(res) {
+            if (res && res.success) showToast('✅ Đã đồng bộ kỷ niệm');
             else { appState.offlineQueue.push(action);
               saveOfflineQueue(); }
           });
@@ -1663,95 +2092,6 @@
       return entries;
     }
 
-    // ===================== STREAK =====================
-    function getStreakMessage(streak) {
-      if (streak === 0) return 'Hãy viết một điều nhỏ mỗi ngày 💕';
-      if (streak >= 1000) return '🏆 1000 ngày – con số kỷ lục!';
-      if (streak >= 900) return '🌟 900 ngày – thật phi thường!';
-      if (streak >= 800) return '🔥 800 ngày – tình yêu bền chặt!';
-      if (streak >= 700) return '🎊 700 ngày – một hành trình vĩ đại!';
-      if (streak >= 600) return '💪 600 ngày – thật đáng nể!';
-      if (streak >= 500) return '🎉 500 ngày – nửa chặng đường nghìn ngày!';
-      if (streak >= 400) return '🏆 400 ngày – thật đáng tự hào!';
-      if (streak >= 300) return '🌟 300 ngày – tình yêu bền chặt!';
-      if (streak >= 200) return '🎊 200 ngày – một hành trình đẹp!';
-      if (streak >= 100) return '💯 Trăm ngày – quá đỉnh!';
-      if (streak >= 60) return '🔥 2 tháng – thật tuyệt vời!';
-      if (streak >= 30) return '🎉 Một tháng đầy kỷ niệm!';
-      if (streak >= 14) return '💪 2 tuần – cố lên!';
-      if (streak >= 7) return '🌟 Bắt đầu thói quen tốt!';
-      return '🔥 Cố lên, mỗi ngày một chút yêu thương!';
-    }
-
-    function isMilestoneHundred(streak) {
-      return streak >= 100 && streak % 100 === 0;
-    }
-
-    function updateStreak() {
-      var entries = appState.data.entries;
-      var streak = 0;
-
-      if (entries && entries.length > 0) {
-        var dateSet = new Set();
-        entries.forEach(function(entry) {
-          if (entry.date) dateSet.add(entry.date);
-        });
-
-        var today = getTodayString();
-        var yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        var yesterdayStr = formatDate(yesterday);
-
-        var currentDate = new Date();
-        if (dateSet.has(today)) {
-          streak = 1;
-        } else if (dateSet.has(yesterdayStr)) {
-          streak = 1;
-          currentDate.setDate(currentDate.getDate() - 1);
-        } else {
-          streak = 0;
-        }
-
-        if (streak > 0) {
-          while (true) {
-            currentDate.setDate(currentDate.getDate() - 1);
-            var dateStr = formatDate(currentDate);
-            if (dateSet.has(dateStr)) {
-              streak++;
-            } else {
-              break;
-            }
-          }
-        }
-      }
-
-      document.getElementById('streak-number').textContent = streak;
-
-      var message = getStreakMessage(streak);
-      document.getElementById('streak-message').textContent = message;
-
-      if (isMilestoneHundred(streak)) {
-        showToast('🎉 Chúc mừng! Bạn đã đạt ' + streak + ' ngày viết liên tục!');
-      }
-
-      var achieved = ALL_MILESTONES.filter(function(m) { return m <= streak; });
-      var upcoming = ALL_MILESTONES.filter(function(m) { return m > streak; });
-
-      var showAchieved = achieved.slice(-2);
-      var showUpcoming = upcoming.slice(0, 3);
-
-      var html = '';
-      showAchieved.forEach(function(m) {
-        html += '<span class="streak-milestone achieved">✓ ' + m + ' ngày</span>';
-      });
-      showUpcoming.forEach(function(m) {
-        html += '<span class="streak-milestone next">' + m + ' ngày</span>';
-      });
-
-      document.getElementById('streak-milestones').innerHTML = html ||
-        '<span class="streak-milestone next">Tiếp tục nhé!</span>';
-    }
-
     // ===================== RENDER FUNCTIONS =====================
     function renderAll() {
       renderOnThisDay();
@@ -1771,7 +2111,7 @@
         renderAnniversaries();
         document.getElementById('col-right-desktop').style.display = 'none';
       }
-      updateStreak();
+      updateDrawerStreak();
     }
 
     function applyFilters() {
@@ -1876,8 +2216,6 @@
         html += '<div class="calendar-day"></div>';
       }
 
-      var moodCount = {};
-
       for (var d = 1; d <= daysInMonth; d++) {
         var dateStr = appState.calendarYear + '-' + pad2(appState.calendarMonth + 1) + '-' + pad2(d);
         var isToday = (d === today.getDate() && appState.calendarMonth === today.getMonth() &&
@@ -1891,15 +2229,13 @@
 
         var inner = '<span>' + d + '</span>';
         if (entries.length) {
-          inner += '<span class="calendar-day-icon">' + (entries[0].mood || '❤️') + '</span>';
-          if (entries.length > 1) {
-            inner += '<span class="calendar-day-multi">×' + entries.length + '</span>';
+          if (entries.length === 1) {
+            inner += '<div class="dot-indicator"></div>';
+          } else {
+            inner += '<span class="multi-badge">' + entries.length + '</span>';
           }
-          entries.forEach(function(en) {
-            if (en.mood) moodCount[en.mood] = (moodCount[en.mood] || 0) + 1;
-          });
         } else if (hasAnn) {
-          inner += '<span class="calendar-day-ann"></span>';
+          inner += '<div class="dot-indicator" style="background:#f7a1b5;"></div>';
         }
 
         var clickHandler = '';
@@ -1913,13 +2249,6 @@
       }
 
       document.getElementById('calendar-days').innerHTML = html;
-
-      var legendHtml = '';
-      Object.keys(moodCount).forEach(function(m) {
-        legendHtml += '<div class="mood-legend-item"><span>' + m + '</span><span>×' + moodCount[m] + '</span></div>';
-      });
-      document.getElementById('mood-legend').innerHTML = legendHtml ||
-        '<span style="font-size:0.64rem;color:var(--text-secondary);">Chưa có bài nào tháng này</span>';
     }
 
     function changeMonth(delta) {
@@ -2028,18 +2357,31 @@
       }
       var today = new Date();
       today.setHours(0, 0, 0, 0);
+      anns.sort(function(a, b) {
+        var da = new Date(a.date);
+        var db = new Date(b.date);
+        return da - db;
+      });
       var html = anns.map(function(ann) {
         var countdown = getAnniversaryCountdown(ann, today);
         var cls = countdown.days === 0 ? 'ann-countdown today' :
           countdown.days <= 30 ? 'ann-countdown soon' : 'ann-countdown far';
-        return '<div class="anniversary-item">' +
-          '<div class="ann-dot"></div>' +
+        var icon = '🌸';
+        if (ann.name.toLowerCase().includes('yêu')) icon = '💕';
+        else if (ann.name.toLowerCase().includes('hôn')) icon = '💋';
+        else if (ann.name.toLowerCase().includes('cưới')) icon = '💍';
+        else if (ann.name.toLowerCase().includes('sinh')) icon = '🎂';
+        return '<div class="ann-item">' +
+          '<div class="ann-icon">' + icon + '</div>' +
           '<div class="ann-info">' +
           '<div class="ann-name">' + escapeHtml(ann.name) + '</div>' +
           '<div class="ann-date">' + formatDateVN(ann.date) + ' · hằng năm</div>' +
           '<div class="' + cls + '">' + countdown.text + '</div>' +
           '</div>' +
-          '<button class="ann-delete" onclick="deleteAnniversary(\'' + ann.id + '\')" title="Xóa">🗑</button>' +
+          '<div class="ann-actions">' +
+          '<button onclick="editAnniversary(\'' + ann.id + '\')" title="Sửa">✏️</button>' +
+          '<button class="delete" onclick="deleteAnniversary(\'' + ann.id + '\')" title="Xóa">🗑</button>' +
+          '</div>' +
           '</div>';
       }).join('');
       container.innerHTML = html;
@@ -2081,6 +2423,34 @@
         }
       };
       sendToServer(payload, '🌸 Đã lưu kỷ niệm!');
+    }
+
+    function editAnniversary(id) {
+      var ann = appState.data.anniversaries.find(function(a) { return a.id === id; });
+      if (!ann) return;
+      appState.editingAnnId = id;
+      document.getElementById('edit-ann-date').value = ann.date;
+      document.getElementById('edit-ann-name').value = ann.name;
+      openModal('modal-edit-ann');
+    }
+
+    function saveEditAnniversary() {
+      var date = document.getElementById('edit-ann-date').value;
+      var name = document.getElementById('edit-ann-name').value.trim();
+      if (!date) { showToast('⚠️ Chọn ngày nhé!'); return; }
+      if (!name) { showToast('⚠️ Đặt tên đi nào!'); return; }
+      closeModal('modal-edit-ann');
+      showToast('⏳ Đang cập nhật...');
+      var payload = {
+        action: 'edit_anniversary',
+        anniversary: {
+          id: appState.editingAnnId,
+          date: date,
+          name: name
+        }
+      };
+      sendToServer(payload, '🌸 Đã cập nhật kỷ niệm!');
+      appState.editingAnnId = null;
     }
 
     function deleteAnniversary(id) {
@@ -2207,18 +2577,31 @@
       }
       var today = new Date();
       today.setHours(0, 0, 0, 0);
+      anns.sort(function(a, b) {
+        var da = new Date(a.date);
+        var db = new Date(b.date);
+        return da - db;
+      });
       var html = anns.map(function(ann) {
         var countdown = getAnniversaryCountdown(ann, today);
         var cls = countdown.days === 0 ? 'ann-countdown today' :
           countdown.days <= 30 ? 'ann-countdown soon' : 'ann-countdown far';
-        return '<div class="anniversary-item">' +
-          '<div class="ann-dot"></div>' +
+        var icon = '🌸';
+        if (ann.name.toLowerCase().includes('yêu')) icon = '💕';
+        else if (ann.name.toLowerCase().includes('hôn')) icon = '💋';
+        else if (ann.name.toLowerCase().includes('cưới')) icon = '💍';
+        else if (ann.name.toLowerCase().includes('sinh')) icon = '🎂';
+        return '<div class="ann-item">' +
+          '<div class="ann-icon">' + icon + '</div>' +
           '<div class="ann-info">' +
           '<div class="ann-name">' + escapeHtml(ann.name) + '</div>' +
           '<div class="ann-date">' + formatDateVN(ann.date) + ' · hằng năm</div>' +
           '<div class="' + cls + '">' + countdown.text + '</div>' +
           '</div>' +
-          '<button class="ann-delete" onclick="deleteAnniversary(\'' + ann.id + '\')" title="Xóa">🗑</button>' +
+          '<div class="ann-actions">' +
+          '<button onclick="editAnniversary(\'' + ann.id + '\')" title="Sửa">✏️</button>' +
+          '<button class="delete" onclick="deleteAnniversary(\'' + ann.id + '\')" title="Xóa">🗑</button>' +
+          '</div>' +
           '</div>';
       }).join('');
       container.innerHTML = html;
@@ -2355,15 +2738,24 @@
       openModal('modal-view');
     }
 
+    // ===================== GALLERY =====================
     function renderGallery(containerId, images, entryId) {
       var container = document.getElementById(containerId);
       if (!container) return;
-      if (!images || !images.length) {
-        container.innerHTML = '<p style="color:#8a6a78; font-size:0.85rem; padding:8px 0;">📷 Chưa có ảnh nào</p>';
+
+      if (!images || images.length === 0) {
+        container.innerHTML = '';
+        container.className = 'view-gallery';
         return;
       }
+
+      var count = images.length;
+      var className = 'view-gallery count-' + Math.min(count, 10);
+      container.className = className;
+
       var html = '';
-      images.forEach(function(img, index) {
+      var displayImages = images.slice(0, 10);
+      displayImages.forEach(function(img, index) {
         var src = img.url || img;
         html += '<div class="gallery-image" onclick="openPhotoViewer(\'' + entryId + '\', ' + index + ')">' +
           '<img src="' + escapeHtml(src) + '" alt="ảnh" loading="lazy" />' +
@@ -2434,6 +2826,7 @@
     function renderCommentItem(comment) {
       var isOwner = (comment.author === currentUser);
       var editedTag = comment.editedAt ? '<span class="comment-edited-tag">(đã sửa)</span>' : '';
+      var avatar = comment.author.includes('Ánh') ? '🌻' : '💖';
 
       var actionsHtml = '';
       if (isOwner) {
@@ -2445,6 +2838,7 @@
 
       return '<div class="comment-item">' +
         '<div class="comment-item-header">' +
+        '<div class="comment-avatar">' + avatar + '</div>' +
         '<span class="comment-author">' + escapeHtml(comment.author || CONFIG.USER1_NAME) + '</span>' +
         editedTag +
         '<span class="comment-time">' + formatTimeShort(comment.time) + '</span>' +
@@ -2485,7 +2879,7 @@
           input.value = '';
           autoResize(input);
           btn.disabled = false;
-          btn.textContent = '➤';
+          btn.textContent = 'Gửi';
           renderComments();
           renderTimeline();
         });
@@ -2506,7 +2900,7 @@
         input.value = '';
         autoResize(input);
         btn.disabled = false;
-        btn.textContent = '➤';
+        btn.textContent = 'Gửi';
         renderComments();
         renderTimeline();
         showToast('💬 Đã bình luận!');
@@ -2546,7 +2940,7 @@
           input.value = '';
           autoResize(input);
           btn.disabled = false;
-          btn.textContent = '➤';
+          btn.textContent = 'Gửi';
           renderDlComments();
           renderTimeline();
         });
@@ -2568,7 +2962,7 @@
         input.value = '';
         autoResize(input);
         btn.disabled = false;
-        btn.textContent = '➤';
+        btn.textContent = 'Gửi';
         renderDlComments();
         renderTimeline();
         showToast('💬 Đã bình luận!');
@@ -2620,7 +3014,7 @@
             appState.editingCommentId = null;
             document.getElementById('comment-input').value = '';
             autoResize(document.getElementById('comment-input'));
-            document.getElementById('comment-send-btn').textContent = '➤';
+            document.getElementById('comment-send-btn').textContent = 'Gửi';
           }
           renderComments();
           renderTimeline();
@@ -2675,7 +3069,7 @@
             appState.editingDlCommentId = null;
             document.getElementById('dl-comment-input').value = '';
             autoResize(document.getElementById('dl-comment-input'));
-            document.getElementById('dl-comment-send-btn').textContent = '➤';
+            document.getElementById('dl-comment-send-btn').textContent = 'Gửi';
           }
           renderDlComments();
           renderTimeline();
@@ -2767,10 +3161,6 @@
       document.getElementById('image-preview').innerHTML = '';
       document.getElementById('upload-progress').classList.remove('show');
       document.getElementById('upload-progress-bar').classList.remove('show');
-      document.querySelectorAll('.mood-option').forEach(function(el) {
-        el.classList.remove('selected');
-      });
-      refreshPrompt();
       openModal('modal-write');
     }
 
@@ -2790,9 +3180,6 @@
       document.getElementById('entry-date').value = entry.date;
       document.getElementById('entry-title').value = entry.title || '';
       document.getElementById('entry-content').value = entry.content || '';
-      document.querySelectorAll('.mood-option').forEach(function(el) {
-        el.classList.toggle('selected', el.dataset.mood === appState.selectedMood);
-      });
       renderImagePreviews();
       document.getElementById('upload-progress').classList.remove('show');
       document.getElementById('upload-progress-bar').classList.remove('show');
@@ -2879,19 +3266,7 @@
       document.getElementById('saving-overlay').classList.remove('show');
     }
 
-    // ===================== MOOD, PROMPT, FONT SIZE =====================
-    function selectMood(mood) {
-      appState.selectedMood = (appState.selectedMood === mood) ? '' : mood;
-      document.querySelectorAll('.mood-option').forEach(function(el) {
-        el.classList.toggle('selected', el.dataset.mood === appState.selectedMood);
-      });
-    }
-
-    function refreshPrompt() {
-      var el = document.getElementById('writing-prompt-text');
-      if (el) el.textContent = promptList[Math.floor(Math.random() * promptList.length)];
-    }
-
+    // ===================== FONT SIZE =====================
     function adjustFontSize(delta) {
       appState.fontSize = Math.min(20, Math.max(11, appState.fontSize + delta));
       var textarea = document.getElementById('entry-content');
@@ -3049,10 +3424,16 @@
 
     // ===================== NAVIGATION & LAYOUT =====================
     function switchTab(tab) {
-      var dockTabs = document.querySelectorAll('.dock-left .tab');
-      dockTabs.forEach(function(t) {
+      document.querySelectorAll('.drawer-tab').forEach(function(t) {
         t.classList.toggle('active', t.dataset.tab === tab);
       });
+
+      var fab = document.getElementById('fab-wrapper');
+      if (tab === 'diary') {
+        fab.classList.add('show');
+      } else {
+        fab.classList.remove('show');
+      }
 
       if (window.innerWidth < 769) {
         var panels = ['diary', 'ann', 'cal', 'album'];
@@ -3127,6 +3508,7 @@
           closeModal(m.id);
         });
         closePhotoViewer();
+        closeDrawer();
       }
     });
 
@@ -3172,7 +3554,7 @@
       btn.classList.toggle('syncing', isSyncing);
     }
 
-    console.log('💕 Love Story – Phiên bản 3.9 (Đã sửa lỗi script, nút tải ảnh cạnh dấu X)');
+    console.log('💕 Love Story – Phiên bản 4.6 (Nút Gửi cùng hàng, drawer chỉ mobile)');
   </script>
 </body>
 </html>
