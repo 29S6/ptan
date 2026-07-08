@@ -136,7 +136,7 @@
       .hamburger-btn { display: none !important; }
     }
 
-    /* ===== Drawer (chỉ mobile) ===== */
+    /* ===== Drawer (chỉ mobile) - điều chỉnh kích thước ===== */
     #drawer-overlay {
       position:fixed; inset:0; z-index:400;
       background:rgba(0,0,0,0.3);
@@ -148,14 +148,14 @@
     #drawer-overlay.open { display:block; opacity:1; }
     #drawer {
       position:fixed; top:0; left:0; bottom:0; z-index:500;
-      width:280px; max-width:80vw;
+      width:260px; max-width:75vw;
       background:#fff;
       box-shadow:4px 0 30px rgba(0,0,0,0.08);
       transform:translateX(-100%);
       transition:transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
       display:flex; flex-direction:column;
       overflow-y:auto;
-      padding:20px 16px 30px;
+      padding:16px 12px 24px;
     }
     #drawer.open { transform:translateX(0); }
     @media (min-width:769px) {
@@ -163,22 +163,22 @@
     }
     .drawer-header {
       display:flex; align-items:center; justify-content:space-between;
-      margin-bottom:16px; padding-bottom:12px;
+      margin-bottom:12px; padding-bottom:10px;
       border-bottom:1px solid var(--border-color);
     }
     .drawer-user {
-      display:flex; align-items:center; gap:10px;
-      font-weight:700; font-size:0.95rem;
+      display:flex; align-items:center; gap:8px;
+      font-weight:700; font-size:0.85rem;
       color:var(--text-primary);
     }
-    .drawer-user .avatar { font-size:1.6rem; }
-    .drawer-close { font-size:1.4rem; color:var(--text-secondary); padding:4px; transition:0.15s; }
+    .drawer-user .avatar { font-size:1.4rem; }
+    .drawer-close { font-size:1.2rem; color:var(--text-secondary); padding:4px; transition:0.15s; }
     .drawer-close:hover { color:var(--primary); transform:rotate(90deg); }
-    .drawer-tabs { display:flex; flex-direction:column; gap:6px; flex:1; }
+    .drawer-tabs { display:flex; flex-direction:column; gap:4px; flex:1; }
     .drawer-tab {
-      display:flex; align-items:center; gap:14px;
-      padding:12px 16px;
-      border-radius:16px;
+      display:flex; align-items:center; gap:12px;
+      padding:10px 12px;
+      border-radius:12px;
       background:transparent;
       transition:background 0.2s, transform 0.15s;
       font-weight:700;
@@ -187,9 +187,9 @@
       border:none;
       width:100%;
       text-align:left;
-      font-size:0.92rem;
+      font-size:0.85rem;
     }
-    .drawer-tab .icon { font-size:1.4rem; width:28px; text-align:center; }
+    .drawer-tab .icon { font-size:1.2rem; width:24px; text-align:center; }
     .drawer-tab:hover { background:rgba(232,67,126,0.06); }
     .drawer-tab:active { transform:scale(0.96); }
     .drawer-tab.active { background:rgba(232,67,126,0.10); color:var(--primary); }
@@ -197,9 +197,9 @@
     /* ===== Streak ===== */
     .drawer-streak {
       background:linear-gradient(135deg, #fff5f7, #fce8f0, #f7dde8);
-      border-radius:20px;
-      padding:18px 16px 14px;
-      margin-top:8px;
+      border-radius:16px;
+      padding:14px 12px;
+      margin-top:6px;
       border:1px solid rgba(232,67,126,0.15);
       box-shadow:0 4px 16px rgba(232,67,126,0.08);
       flex-shrink:0;
@@ -209,33 +209,33 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      margin-bottom:4px;
+      gap:6px;
+      margin-bottom:2px;
     }
     .drawer-streak .streak-fire {
-      font-size:2.2rem;
+      font-size:1.8rem;
       line-height:1;
     }
     .drawer-streak .streak-number {
-      font-size:2.2rem;
+      font-size:1.8rem;
       font-weight:900;
       color:var(--primary);
       line-height:1.2;
     }
     .drawer-streak .streak-label {
-      font-size:0.75rem;
+      font-size:0.65rem;
       color:var(--text-secondary);
       font-weight:600;
     }
     .drawer-streak .streak-progress {
-      margin-top:10px;
+      margin-top:8px;
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:6px;
     }
     .drawer-streak .streak-progress .track {
       flex:1;
-      height:6px;
+      height:4px;
       background:rgba(232,67,126,0.12);
       border-radius:4px;
       overflow:hidden;
@@ -247,17 +247,17 @@
       transition:width 0.6s ease;
     }
     .drawer-streak .streak-progress .milestone-label {
-      font-size:0.6rem;
+      font-size:0.55rem;
       font-weight:700;
       color:var(--text-secondary);
       white-space:nowrap;
     }
     .drawer-streak .streak-message {
-      font-size:0.8rem;
+      font-size:0.7rem;
       font-weight:700;
       color:var(--primary-dark);
-      margin-top:8px;
-      padding:4px 12px;
+      margin-top:6px;
+      padding:2px 10px;
       background:rgba(255,255,255,0.6);
       border-radius:20px;
       display:inline-block;
@@ -505,33 +505,72 @@
     .quick-write-icon { font-size:1rem; color:var(--primary); opacity:0.6; transition:0.2s; }
     .quick-write:hover .quick-write-icon { opacity:1; }
 
-    /* ===== FAB ===== */
+    /* ===== FAB và nút scroll top ===== */
     .fab-wrapper {
       position:fixed;
       bottom:30px;
       right:20px;
       z-index:300;
-      display:none;
+      display:block;
+      transition:transform 0.2s ease, opacity 0.2s ease;
     }
-    @media (max-width:768px) {
-      .fab-wrapper.show { display:block; }
+    @media (min-width:769px) {
+      .fab-wrapper { display:none !important; }
     }
+
     .fab-btn {
-      width:64px; height:64px;
+      width:56px; height:56px;
       border-radius:50%;
       background:linear-gradient(135deg, #f7a1b5, var(--primary));
       color:#fff;
       border:none;
-      box-shadow:0 6px 24px rgba(232,67,126,0.35);
-      font-size:2.2rem;
+      box-shadow:0 6px 24px rgba(232,67,126,0.4), 0 2px 8px rgba(232,67,126,0.15);
+      font-size:1.5rem;
       display:flex;
       align-items:center;
       justify-content:center;
       transition:transform 0.2s, box-shadow 0.2s;
       cursor:pointer;
+      position:relative;
     }
     .fab-btn:active { transform:scale(0.88); }
-    .fab-btn:hover { box-shadow:0 8px 32px rgba(232,67,126,0.45); }
+    .fab-btn:hover { box-shadow:0 8px 32px rgba(232,67,126,0.5); }
+
+    .scroll-top-btn {
+      position:fixed;
+      bottom:94px;
+      right:20px;
+      z-index:299;
+      width:48px; height:48px;
+      border-radius:50%;
+      background:rgba(232,67,126,0.92);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.2);
+      box-shadow:0 4px 20px rgba(0,0,0,0.15);
+      font-size:1.3rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease, visibility 0.35s ease;
+      transform:scale(0.6);
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .scroll-top-btn.visible {
+      transform:scale(1);
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+    .scroll-top-btn:active { transform:scale(0.88); }
+    .scroll-top-btn:hover { background:var(--primary); box-shadow:0 6px 24px rgba(232,67,126,0.3); }
+    @media (min-width:769px) {
+      .scroll-top-btn { display:none !important; }
+    }
 
     /* ===== Modals ===== */
     .modal-overlay {
@@ -542,7 +581,7 @@
       display:none;
       align-items:center;
       justify-content:center;
-      padding:16px;
+      padding:12px;
     }
     .modal-overlay.open { display:flex; }
     .modal-box {
@@ -550,10 +589,10 @@
       border-radius:8px;
       box-shadow:0 24px 64px rgba(0,0,0,0.10);
       width:100%;
-      max-width:720px;
-      max-height:90vh;
+      max-width:700px;
+      max-height:92vh;
       overflow-y:auto;
-      padding:16px 18px;
+      padding:14px 16px 18px;
       position:relative;
       transform:scale(0.94);
       opacity:0;
@@ -570,8 +609,8 @@
       background:rgba(232,67,126,0.08);
       border:1px solid rgba(232,67,126,0.12);
       border-radius:50%;
-      width:36px; height:36px;
-      font-size:1.1rem;
+      width:34px; height:34px;
+      font-size:1rem;
       color:var(--text-secondary);
       display:flex;
       align-items:center;
@@ -588,49 +627,60 @@
     .view-header {
       display:flex;
       justify-content:space-between;
-      align-items:flex-start;
-      margin-bottom:10px;
-      padding-bottom:8px;
+      align-items:center;
+      margin-bottom:8px;
+      padding-bottom:6px;
       border-bottom:1px solid #f0d6de;
+      gap:8px;
     }
     .view-header .author-wrapper {
       display:flex;
       flex-direction:column;
-      gap:2px;
+      gap:1px;
+      flex:1;
+      min-width:0;
     }
-    .view-header .author-pill {
-      background:#fce4ec;
-      border-radius:30px;
-      padding:1px 10px 1px 8px; /* thu nhỏ padding */
-      font-weight:700;
-      font-size:0.8rem; /* nhỏ hơn */
-      color:#c7306a;
-      display:inline-flex;
+    .view-header .author-row {
+      display:flex;
       align-items:center;
-      gap:4px;
+      gap:6px;
     }
-    .view-header .author-pill .avatar { font-size:0.9rem; }
+    .view-header .author-avatar {
+      font-size:1rem;
+    }
+    .view-header .author-name {
+      font-weight:700;
+      font-size:0.9rem;
+      color:#c7306a;
+    }
     .view-header .time {
-      font-size:0.65rem;
+      font-size:0.6rem;
       color:#b07a8a;
-      padding-left:10px;
+      margin-top:1px;
     }
     .view-header .view-actions {
       display:flex;
+      align-items:center;
       gap:2px;
       flex-shrink:0;
+      position:relative;
     }
     .view-header .view-actions .menu-btn,
     .view-header .view-actions .modal-close {
       background:transparent;
       border:none;
-      font-size:0.95rem;
+      font-size:1rem;
       color:#b07a8a;
       padding:4px 6px;
       border-radius:4px;
       cursor:pointer;
       transition:0.15s;
       line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:34px;
+      width:34px;
     }
     .view-header .view-actions .menu-btn:hover,
     .view-header .view-actions .modal-close:hover {
@@ -638,29 +688,73 @@
       color:#c7306a;
     }
 
+    /* Dropdown cho bài viết - bên trái, căn giữa, 2 chữ Sửa/Xóa dọc */
+    .view-header .dropdown-wrapper {
+      position:relative;
+      display:inline-block;
+    }
+    .view-header .dropdown-menu {
+      position:absolute;
+      right:calc(100% + 8px);
+      top:50%;
+      transform:translateY(-50%);
+      background:#fff;
+      border:1px solid #f0d6de;
+      border-radius:8px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.08);
+      min-width:90px;
+      display:none;
+      z-index:20;
+      padding:4px 0;
+      white-space:nowrap;
+    }
+    .view-header .dropdown-menu.show { display:block; }
+    .view-header .dropdown-menu button {
+      background:transparent;
+      border:none;
+      width:100%;
+      text-align:left;
+      padding:6px 14px;
+      font-size:0.75rem;
+      font-weight:600;
+      color:#2d1a24;
+      cursor:pointer;
+      transition:0.1s;
+      font-family:inherit;
+      display: block !important;
+    }
+    .view-header .dropdown-menu button:hover {
+      background:rgba(232,67,126,0.06);
+      color:#c7306a;
+    }
+    .view-header .dropdown-menu button.danger:hover {
+      color:#c04060;
+      background:rgba(200,50,70,0.06);
+    }
+
     .view-title {
       font-family:'Playfair Display', serif;
-      font-size:1.4rem;
+      font-size:1.3rem;
       font-weight:700;
       color:#c7306a;
       margin-bottom:6px;
     }
     .view-meta { display:none; }
     .edited-note {
-      font-size:0.7rem;
+      font-size:0.65rem;
       color:#b07a8a;
       font-style:italic;
-      margin-bottom:10px;
+      margin-bottom:6px;
     }
 
     .view-content {
       background:#faf7f8;
-      border-radius:6px;
-      padding:14px 16px;
-      font-size:0.95rem;
-      line-height:1.8;
+      border-radius:8px;
+      padding:12px 14px;
+      font-size:0.92rem;
+      line-height:1.7;
       color:#1a1a1a;
-      margin:8px 0 12px;
+      margin:6px 0 10px;
       border:1px solid #f5dce4;
       white-space:pre-wrap;
       word-break:break-word;
@@ -669,7 +763,7 @@
     .view-gallery {
       display:grid;
       gap:4px;
-      margin:8px 0 12px;
+      margin:6px 0 10px;
       border-radius:6px;
       overflow:hidden;
     }
@@ -713,15 +807,15 @@
 
     /* ===== Comment section - Minimal ===== */
     .comment-section {
-      margin-top:12px;
+      margin-top:10px;
       border-top:1px solid #f0d6de;
-      padding-top:12px;
+      padding-top:10px;
     }
     .comment-header {
-      font-size:0.8rem;
+      font-size:0.75rem;
       font-weight:700;
       color:#b07a8a;
-      margin-bottom:10px;
+      margin-bottom:8px;
       display:flex;
       align-items:center;
       gap:4px;
@@ -729,9 +823,9 @@
     .comment-list {
       display:flex;
       flex-direction:column;
-      gap:8px;
-      margin-bottom:12px;
-      max-height:340px;
+      gap:6px;
+      margin-bottom:10px;
+      max-height:300px;
       overflow-y:auto;
       padding-right:2px;
     }
@@ -741,37 +835,37 @@
     .comment-item {
       background:#faf7f8;
       border-radius:6px;
-      padding:10px 12px;
+      padding:8px 10px;
       border:1px solid #f5dce4;
     }
     .comment-item .cmt-header-row {
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:6px;
       flex-wrap:nowrap;
-      margin-bottom:4px;
+      margin-bottom:2px;
     }
     .comment-item .cmt-avatar {
-      width:28px;
-      height:28px;
+      width:24px;
+      height:24px;
       border-radius:50%;
       background:linear-gradient(135deg, #f7a1b5, #e8437e);
       display:flex;
       align-items:center;
       justify-content:center;
       color:#fff;
-      font-size:0.7rem;
+      font-size:0.6rem;
       font-weight:700;
       flex-shrink:0;
     }
     .comment-item .cmt-author {
       font-weight:700;
-      font-size:0.8rem;
+      font-size:0.75rem;
       color:#c7306a;
       flex-shrink:0;
     }
     .comment-item .cmt-time {
-      font-size:0.6rem;
+      font-size:0.55rem;
       color:#b07a8a;
       margin-left:auto;
       flex-shrink:0;
@@ -785,7 +879,7 @@
       background:transparent;
       border:none;
       color:#b07a8a;
-      font-size:0.9rem;
+      font-size:0.8rem;
       padding:0 4px;
       cursor:pointer;
       border-radius:4px;
@@ -798,13 +892,14 @@
     }
     .comment-item .cmt-dropdown-menu {
       position:absolute;
-      right:0;
-      top:100%;
+      right:calc(100% + 6px);
+      top:50%;
+      transform:translateY(-50%);
       background:#fff;
       border:1px solid #f0d6de;
       border-radius:6px;
       box-shadow:0 4px 16px rgba(0,0,0,0.06);
-      min-width:90px;
+      min-width:80px;
       display:none;
       z-index:10;
       padding:4px 0;
@@ -815,8 +910,8 @@
       border:none;
       width:100%;
       text-align:left;
-      padding:6px 14px;
-      font-size:0.75rem;
+      padding:4px 12px;
+      font-size:0.7rem;
       font-weight:600;
       color:#2d1a24;
       cursor:pointer;
@@ -832,38 +927,43 @@
       background:rgba(200,50,70,0.06);
     }
     .comment-item .cmt-text {
-      font-size:0.85rem;
+      font-size:0.82rem;
       color:#1a1a1a;
-      padding-left:36px;
+      padding-left:30px;
       word-break:break-word;
     }
     .comment-empty {
       color:#b07a8a;
-      font-size:0.8rem;
+      font-size:0.75rem;
       text-align:center;
-      padding:8px 0;
+      padding:6px 0;
     }
 
-    /* Comment input - tách nút Gửi ra ngoài */
+    /* Comment input - flex wrap, nút xuống dòng khi cần */
     .comment-input-row {
       display:flex;
-      align-items:center; /* căn giữa theo chiều cao */
-      gap:10px;
+      align-items:flex-start;
+      gap:8px;
       margin-top:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
     .comment-input-row textarea {
-      flex:1;
+      flex:1 1 200px;
+      min-width:120px;
       background:#faf7f8;
       border:1px solid #f0d6de;
       border-radius:30px;
-      padding:8px 14px;
-      font-size:0.85rem;
-      resize:none;
+      padding:6px 12px;
+      font-size:0.8rem;
+      resize: none;
       outline:none;
-      min-height:38px;
+      min-height:34px;
       font-family:inherit;
       color:#1a1a1a;
       transition:border 0.2s;
+      line-height:1.4;
+      overflow:hidden;
     }
     .comment-input-row textarea:focus {
       border-color:#e8437e;
@@ -871,22 +971,31 @@
     .comment-input-row textarea::placeholder {
       color:#b07a8a;
     }
+    .comment-input-row textarea::-webkit-resizer {
+      display: none;
+    }
+    .comment-input-row textarea::-webkit-scrollbar {
+      width: 0;
+    }
+
     .comment-send-btn {
       background:#e8437e;
       border:none;
       border-radius:30px;
-      padding:6px 18px;
+      padding:4px 14px;
       color:#fff;
       font-weight:700;
-      font-size:0.8rem;
+      font-size:0.75rem;
       cursor:pointer;
       white-space:nowrap;
       transition:0.15s;
       flex-shrink:0;
-      height:38px;
+      height:34px;
       display:flex;
       align-items:center;
       justify-content:center;
+      align-self:flex-start;
+      margin-top:0;
     }
     .comment-send-btn:hover:not(:disabled) {
       background:#d6336b;
@@ -905,14 +1014,14 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      margin:12px 0 8px;
+      margin:10px 0 6px;
     }
     .daylist-nav-btn {
       background:rgba(232,67,126,0.08);
       border:1px solid rgba(232,67,126,0.12);
       border-radius:30px;
-      padding:6px 16px;
-      font-size:0.8rem;
+      padding:4px 12px;
+      font-size:0.75rem;
       font-weight:700;
       color:var(--primary);
       transition:0.15s;
@@ -920,7 +1029,7 @@
     }
     .daylist-nav-btn:hover:not(:disabled) { background:rgba(232,67,126,0.15); }
     .daylist-nav-btn:disabled { opacity:0.4; cursor:not-allowed; }
-    .daylist-counter { font-size:0.8rem; color:var(--text-secondary); font-weight:600; }
+    .daylist-counter { font-size:0.75rem; color:var(--text-secondary); font-weight:600; }
 
     /* ===== PHOTO VIEWER ===== */
     #photo-viewer {
@@ -1101,57 +1210,29 @@
 
     /* ===== Responsive ===== */
     @media (max-width:600px) {
-      .modal-box { padding:14px 16px; border-radius:8px; }
-      .view-title { font-size:1.3rem; }
+      .modal-box { padding:12px 14px 16px; border-radius:8px; max-width:100%; }
+      .view-title { font-size:1.2rem; }
       .view-gallery { gap:3px; }
       .photo-nav-btn { width:40px; height:40px; font-size:1.2rem; }
       .photo-nav-btn.prev { left:10px; }
       .photo-nav-btn.next { right:10px; }
       .photo-viewer-top-actions { top:10px; right:16px; gap:8px; }
       .photo-viewer-top-actions button { width:40px; height:40px; font-size:1rem; }
-      .fab-btn { width:56px; height:56px; font-size:1.8rem; }
-      .comment-send-btn { padding:6px 14px; font-size:0.75rem; height:36px; }
-      .comment-input-row textarea { min-height:36px; font-size:0.8rem; }
+      .fab-btn { width:48px; height:48px; font-size:1.3rem; }
+      .scroll-top-btn { width:42px; height:42px; font-size:1.1rem; bottom:84px; right:16px; }
+      .comment-send-btn { padding:4px 12px; font-size:0.7rem; height:32px; }
+      .comment-input-row textarea { min-height:32px; font-size:0.75rem; padding:4px 10px; flex:1 1 140px; }
+      .view-header .author-name { font-size:0.8rem; }
+      .view-header .time { font-size:0.55rem; }
+      .view-content { padding:10px 12px; font-size:0.85rem; }
+      .fab-wrapper { bottom:24px; right:16px; }
     }
     @media (max-width:400px) {
       .view-gallery { gap:2px; }
       .view-gallery .gallery-image { border-radius:4px; }
+      .modal-box { padding:10px 12px; }
+      .comment-input-row textarea { flex:1 1 100px; }
     }
-
-    /* Điều chỉnh dropdown menu cho modal */
-    .dropdown-wrapper { position:relative; display:inline-block; }
-    .dropdown-menu {
-      position:absolute;
-      right:0;
-      top:calc(100% + 6px);
-      background:#fff;
-      border:1px solid rgba(232,67,126,0.10);
-      border-radius:16px;
-      box-shadow:0 8px 30px rgba(0,0,0,0.08);
-      min-width:140px;
-      display:none;
-      overflow:hidden;
-      z-index:20;
-    }
-    .dropdown-menu.show { display:block; }
-    .dropdown-menu button {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:12px 18px;
-      width:100%;
-      border:none;
-      background:none;
-      font-size:0.85rem;
-      font-weight:700;
-      color:#3d2a33;
-      transition:0.15s;
-      text-align:left;
-      cursor:pointer;
-    }
-    .dropdown-menu button:hover { background:rgba(232,67,126,0.06); }
-    .dropdown-menu button.danger { color:#b03050; }
-    .dropdown-menu button.danger:hover { background:rgba(200,50,70,0.06); }
   </style>
 </head>
 <body>
@@ -1344,12 +1425,16 @@
     </div>
   </div>
 
-  <!-- ===== FAB ===== -->
-  <div class="fab-wrapper show" id="fab-wrapper">
+  <!-- ===== FAB và nút scroll top (FAB cố định) ===== -->
+  <div class="fab-wrapper" id="fab-wrapper">
     <button class="fab-btn" onclick="openWriteModal()" aria-label="Viết bài mới">
-      <i class="fas fa-pen"></i>
+      <i class="fas fa-plus"></i>
     </button>
   </div>
+
+  <button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollToTop()" aria-label="Lên đầu trang">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 
   <!-- ===== MODALS ===== -->
 
@@ -1398,9 +1483,9 @@
       <!-- Header -->
       <div class="view-header">
         <div class="author-wrapper">
-          <div class="author-pill">
-            <span class="avatar" id="view-avatar">🌻</span>
-            <span id="view-author-name">Ánh Ngọc</span>
+          <div class="author-row">
+            <span class="author-avatar" id="view-avatar">🌻</span>
+            <span class="author-name" id="view-author-name">Ánh Ngọc</span>
           </div>
           <div class="time" id="view-date">ngày 3 tháng 7, 2026 lúc 14:30</div>
         </div>
@@ -1408,8 +1493,8 @@
           <div class="dropdown-wrapper">
             <button class="menu-btn" id="view-menu-btn" onclick="toggleDropdown('view-dropdown')">⋯</button>
             <div class="dropdown-menu" id="view-dropdown">
-              <button onclick="editCurrentEntry(); closeDropdown('view-dropdown');">✏️ Sửa bài</button>
-              <button class="danger" onclick="deleteCurrentEntry(); closeDropdown('view-dropdown');">🗑 Xóa bài</button>
+              <button onclick="editCurrentEntry(); closeDropdown('view-dropdown');">Sửa</button>
+              <button class="danger" onclick="deleteCurrentEntry(); closeDropdown('view-dropdown');">Xóa</button>
             </div>
           </div>
           <button class="modal-close" onclick="closeModal('modal-view')">✕</button>
@@ -1439,9 +1524,9 @@
     <div class="modal-box">
       <div class="view-header">
         <div class="author-wrapper">
-          <div class="author-pill">
-            <span class="avatar" id="dl-avatar">🌻</span>
-            <span id="dl-author-name">Ánh Ngọc</span>
+          <div class="author-row">
+            <span class="author-avatar" id="dl-avatar">🌻</span>
+            <span class="author-name" id="dl-author-name">Ánh Ngọc</span>
           </div>
           <div class="time" id="dl-date">ngày 3 tháng 7, 2026 lúc 14:30</div>
         </div>
@@ -1449,8 +1534,8 @@
           <div class="dropdown-wrapper">
             <button class="menu-btn" id="dl-menu-btn" onclick="toggleDropdown('dl-dropdown')">⋯</button>
             <div class="dropdown-menu" id="dl-dropdown">
-              <button onclick="editFromDayList(); closeDropdown('dl-dropdown');">✏️ Sửa bài</button>
-              <button class="danger" onclick="deleteFromDayList(); closeDropdown('dl-dropdown');">🗑 Xóa bài</button>
+              <button onclick="editFromDayList(); closeDropdown('dl-dropdown');">Sửa</button>
+              <button class="danger" onclick="deleteFromDayList(); closeDropdown('dl-dropdown');">Xóa</button>
             </div>
           </div>
           <button class="modal-close" onclick="closeModal('modal-daylist')">✕</button>
@@ -1825,12 +1910,13 @@
       setTimeout(function() {
         lockScreen.style.display = 'none';
         document.getElementById('app').style.display = 'block';
-        document.getElementById('fab-wrapper').classList.add('show');
+        document.getElementById('fab-wrapper').style.display = 'block';
         startClock();
         loadData();
         setupDesktopLayout();
         switchTab('diary');
         gsap.from('#app', { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
+        initScrollBehavior();
       }, 500);
     }
 
@@ -1840,6 +1926,37 @@
       if (e.key >= '0' && e.key <= '9') handlePinPress(e.key);
       if (e.key === 'Backspace') handlePinDelete();
     });
+
+    // ===================== SCROLL BEHAVIOR =====================
+    function initScrollBehavior() {
+      var scrollBtn = document.getElementById('scroll-top-btn');
+      var ticking = false;
+
+      function handleScroll() {
+        var currentScrollY = window.scrollY || window.pageYOffset || 0;
+        if (currentScrollY > 150) {
+          scrollBtn.classList.add('visible');
+        } else {
+          scrollBtn.classList.remove('visible');
+        }
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            handleScroll();
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+    }
+
+    function scrollToTop() {
+      var btn = document.getElementById('scroll-top-btn');
+      btn.classList.remove('visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     // ===================== CLOCK =====================
     function startClock() {
@@ -1863,7 +1980,7 @@
 
     function restoreScrollPosition() {
       requestAnimationFrame(function() {
-        window.scrollTo(0, appState.scrollY);
+        window.scrollTo({ top: appState.scrollY, behavior: 'instant' });
       });
     }
 
@@ -1960,32 +2077,21 @@
     }
 
     function saveToLocalStorage(data) {
-      try {
-        localStorage.setItem('diary_backup', JSON.stringify(data));
-      } catch (e) {}
+      try { localStorage.setItem('diary_backup', JSON.stringify(data)); } catch (e) {}
     }
 
     function loadFromLocalStorage() {
-      try {
-        var raw = localStorage.getItem('diary_backup');
-        if (raw) return JSON.parse(raw);
-      } catch (e) {}
+      try { var raw = localStorage.getItem('diary_backup'); if (raw) return JSON.parse(raw); } catch (e) {}
       return null;
     }
 
     function loadOfflineQueue() {
-      try {
-        var raw = localStorage.getItem('pending_actions');
-        if (raw) appState.offlineQueue = JSON.parse(raw) || [];
-      } catch (e) {
-        appState.offlineQueue = [];
-      }
+      try { var raw = localStorage.getItem('pending_actions'); if (raw) appState.offlineQueue = JSON.parse(raw) || []; } catch (
+        e) { appState.offlineQueue = []; }
     }
 
     function saveOfflineQueue() {
-      try {
-        localStorage.setItem('pending_actions', JSON.stringify(appState.offlineQueue));
-      } catch (e) {}
+      try { localStorage.setItem('pending_actions', JSON.stringify(appState.offlineQueue)); } catch (e) {}
     }
 
     function addToOfflineQueue(action) {
@@ -2061,9 +2167,7 @@
       }
 
       doFetch('cors')
-        .then(function(response) {
-          return response.json().catch(function() { return null; });
-        })
+        .then(function(response) { return response.json().catch(function() { return null; }); })
         .then(function(result) {
           if (successMessage) showToast(successMessage);
           setTimeout(function() {
@@ -2132,7 +2236,7 @@
       return entries;
     }
 
-    // ===================== RENDER FUNCTIONS =====================
+    // ===== RENDER FUNCTIONS =====
     function renderAll() {
       renderOnThisDay();
       renderCalendar();
@@ -2177,9 +2281,7 @@
       }
 
       if (month) {
-        entries = entries.filter(function(e) {
-          return (e.date || '').startsWith(month);
-        });
+        entries = entries.filter(function(e) { return (e.date || '').startsWith(month); });
       }
 
       return entries;
@@ -2187,9 +2289,7 @@
 
     function populateMonthFilter() {
       var select = document.getElementById('month-filter');
-      var months = new Set(appState.data.entries.map(function(e) {
-        return (e.date || '').substring(0, 7);
-      }));
+      var months = new Set(appState.data.entries.map(function(e) { return (e.date || '').substring(0, 7); }));
       var arr = Array.from(months).filter(Boolean).sort().reverse();
       var options = '<option value="">Tất cả</option>';
       arr.forEach(function(m) {
@@ -2355,9 +2455,7 @@
         }
         map[key].push(entry);
       });
-      return order.map(function(key) {
-        return { date: key, items: map[key] };
-      });
+      return order.map(function(key) { return { date: key, items: map[key] }; });
     }
 
     function renderEntryItem(entry) {
@@ -2387,7 +2485,7 @@
         '</div>';
     }
 
-    // ===================== ANNIVERSARIES =====================
+    // ===== ANNIVERSARIES =====
     function renderAnniversaries() {
       var container = document.getElementById('anniversary-list');
       var anns = appState.data.anniversaries;
@@ -2454,14 +2552,7 @@
       if (!name) { showToast('⚠️ Đặt tên đi nào!'); return; }
       closeModal('modal-ann');
       showToast('⏳ Đang lưu...');
-      var payload = {
-        action: 'save_anniversary',
-        anniversary: {
-          id: 'ann_' + Date.now(),
-          date: date,
-          name: name
-        }
-      };
+      var payload = { action: 'save_anniversary', anniversary: { id: 'ann_' + Date.now(), date: date, name: name } };
       sendToServer(payload, '🌸 Đã lưu kỷ niệm!');
     }
 
@@ -2481,14 +2572,7 @@
       if (!name) { showToast('⚠️ Đặt tên đi nào!'); return; }
       closeModal('modal-edit-ann');
       showToast('⏳ Đang cập nhật...');
-      var payload = {
-        action: 'edit_anniversary',
-        anniversary: {
-          id: appState.editingAnnId,
-          date: date,
-          name: name
-        }
-      };
+      var payload = { action: 'edit_anniversary', anniversary: { id: appState.editingAnnId, date: date, name: name } };
       sendToServer(payload, '🌸 Đã cập nhật kỷ niệm!');
       appState.editingAnnId = null;
     }
@@ -2501,15 +2585,14 @@
       });
     }
 
-    // ===================== ALBUM =====================
+    // ===== ALBUM =====
     function renderAlbum() {
       var container = document.getElementById('album-body');
-      var entriesWithImages = appState.data.entries.filter(function(e) {
-        return e.images && e.images.length > 0;
-      }).slice();
+      var entriesWithImages = appState.data.entries.filter(function(e) { return e.images && e.images.length > 0; }).slice();
 
       if (!entriesWithImages.length) {
-        container.innerHTML = '<div class="album-empty">📷 Chưa có ảnh nào trong nhật ký~<br><span style="font-size:0.72rem;">Thêm ảnh khi viết bài để hiện ở đây!</span></div>';
+        container.innerHTML =
+          '<div class="album-empty">📷 Chưa có ảnh nào trong nhật ký~<br><span style="font-size:0.72rem;">Thêm ảnh khi viết bài để hiện ở đây!</span></div>';
         return;
       }
 
@@ -2575,17 +2658,11 @@
       appState.data.entries.forEach(function(entry) {
         if (entry.images && entry.images.length) {
           entry.images.forEach(function(img) {
-            allImages.push({
-              url: img.url || img,
-              entryId: entry.id,
-              updatedAt: entry.updatedAt || ''
-            });
+            allImages.push({ url: img.url || img, entryId: entry.id, updatedAt: entry.updatedAt || '' });
           });
         }
       });
-      allImages.sort(function(a, b) {
-        return (b.updatedAt || '').localeCompare(a.updatedAt || '');
-      });
+      allImages.sort(function(a, b) { return (b.updatedAt || '').localeCompare(a.updatedAt || ''); });
 
       if (!allImages.length) {
         container.innerHTML = '<div class="album-empty">📷 Chưa có ảnh nào</div>';
@@ -2647,7 +2724,7 @@
       container.innerHTML = html;
     }
 
-    // ===================== PHOTO VIEWER =====================
+    // ===== PHOTO VIEWER =====
     function openPhotoViewer(entryId, startIndex) {
       var entry = appState.data.entries.find(function(e) { return e.id === entryId; });
       if (!entry || !entry.images || !entry.images.length) return;
@@ -2705,31 +2782,28 @@
       if (!appState.photoViewerImages.length) return;
       var url = appState.photoViewerImages[appState.photoViewerIndex];
       var filename = url.split('/').pop() || 'image.jpg';
-      fetch(url)
-        .then(function(res) {
-          if (!res.ok) throw new Error('Không thể tải ảnh');
-          return res.blob();
-        })
-        .then(function(blob) {
-          var link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = filename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(link.href);
-          showToast('✅ Đã tải xuống ảnh gốc');
-        })
-        .catch(function() {
-          var link = document.createElement('a');
-          link.href = url;
-          link.download = filename;
-          link.target = '_blank';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          showToast('✅ Đã tải xuống ảnh (phương thức dự phòng)');
-        });
+      fetch(url).then(function(res) {
+        if (!res.ok) throw new Error('Không thể tải ảnh');
+        return res.blob();
+      }).then(function(blob) {
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('✅ Đã tải xuống ảnh gốc');
+      }).catch(function() {
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('✅ Đã tải xuống ảnh (phương thức dự phòng)');
+      });
     }
 
     document.addEventListener('keydown', function(e) {
@@ -2744,7 +2818,7 @@
       if (e.target === this) closePhotoViewer();
     });
 
-    // ===================== VIEW ENTRY =====================
+    // ===== VIEW ENTRY =====
     function openEntryView(entryId) {
       var entry = appState.data.entries.find(function(e) { return e.id === entryId; });
       if (!entry) return;
@@ -2755,13 +2829,22 @@
       document.getElementById('view-title').textContent = entry.title || '(Không tiêu đề)';
 
       var authorStr = entry.author || CONFIG.USER1_NAME;
-      var dateStr = formatFullDateTime(entry.createdAt || entry.updatedAt);
       var avatar = authorStr.includes('Ánh') ? '🌻' : '💖';
       document.getElementById('view-author-name').textContent = authorStr;
       document.getElementById('view-avatar').textContent = avatar;
-      document.getElementById('view-date').textContent = dateStr;
 
-      renderEditedNote('view-edited-note', entry);
+      var timeDisplay = '';
+      if (entry.updatedAt && entry.createdAt && entry.updatedAt !== entry.createdAt) {
+        timeDisplay = 'Đã sửa ' + formatFullDateTime(entry.updatedAt);
+      } else {
+        timeDisplay = formatFullDateTime(entry.createdAt || entry.updatedAt);
+      }
+      document.getElementById('view-date').textContent = timeDisplay;
+
+      var editedNote = document.getElementById('view-edited-note');
+      editedNote.classList.add('hidden');
+      editedNote.textContent = '';
+
       document.getElementById('view-content').textContent = entry.content || '';
       renderGallery('view-gallery', entry.images, entry.id);
 
@@ -2780,7 +2863,6 @@
       openModal('modal-view');
     }
 
-    // ===================== GALLERY =====================
     function renderGallery(containerId, images, entryId) {
       var container = document.getElementById(containerId);
       if (!container) return;
@@ -2807,28 +2889,7 @@
       container.innerHTML = html;
     }
 
-    function renderEditedNote(elementId, entry) {
-      var el = document.getElementById(elementId);
-      if (!el) return;
-      var created = entry.createdAt || entry.updatedAt;
-      var updated = entry.updatedAt;
-      if (!created || !updated || created === updated) {
-        el.classList.add('hidden');
-        el.textContent = '';
-        return;
-      }
-      var tCreated = new Date(created).getTime();
-      var tUpdated = new Date(updated).getTime();
-      if (isNaN(tCreated) || isNaN(tUpdated) || Math.abs(tUpdated - tCreated) < 60000) {
-        el.classList.add('hidden');
-        el.textContent = '';
-        return;
-      }
-      el.classList.remove('hidden');
-      el.textContent = '✏️ Sửa lần cuối: ' + formatFullDateTime(updated);
-    }
-
-    // ===================== COMMENTS =====================
+    // ===== COMMENTS =====
     function renderComments() {
       var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
       if (!entry) return;
@@ -2911,7 +2972,7 @@
       document.querySelectorAll('.cmt-dropdown-menu.show').forEach(m => m.classList.remove('show'));
     });
 
-    // ===================== SEND COMMENT (Main) =====================
+    // ===== SEND COMMENT =====
     function sendComment() {
       var input = document.getElementById('comment-input');
       var text = input.value.trim();
@@ -2970,7 +3031,6 @@
       });
     }
 
-    // ===================== SEND COMMENT (Daylist) =====================
     function sendDlComment() {
       var input = document.getElementById('dl-comment-input');
       var text = input.value.trim();
@@ -3032,7 +3092,7 @@
       });
     }
 
-    // ===================== EDIT / DELETE COMMENT (Main) =====================
+    // ===== EDIT / DELETE COMMENT (Main) =====
     function startEditComment(commentId) {
       var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
       if (!entry) return;
@@ -3090,7 +3150,6 @@
       if (menu) menu.classList.remove('show');
     }
 
-    // ===================== EDIT / DELETE COMMENT (Daylist) =====================
     function startEditDlComment(commentId) {
       var entry = appState.dayListEntries[appState.dayListIndex];
       if (!entry) return;
@@ -3149,7 +3208,7 @@
       if (menu) menu.classList.remove('show');
     }
 
-    // ===================== DAY LIST MODAL =====================
+    // ===== DAY LIST MODAL =====
     function openDayList(dateStr) {
       var entries = appState.data.entries.filter(function(e) { return e.date === dateStr; });
       if (!entries.length) return;
@@ -3173,13 +3232,22 @@
 
       document.getElementById('dl-title').textContent = entry.title || '(Không tiêu đề)';
       var authorStr = entry.author || CONFIG.USER1_NAME;
-      var dateStr = formatFullDateTime(entry.createdAt || entry.updatedAt);
       var avatar = authorStr.includes('Ánh') ? '🌻' : '💖';
       document.getElementById('dl-author-name').textContent = authorStr;
       document.getElementById('dl-avatar').textContent = avatar;
-      document.getElementById('dl-date').textContent = dateStr;
 
-      renderEditedNote('dl-edited-note', entry);
+      var timeDisplay = '';
+      if (entry.updatedAt && entry.createdAt && entry.updatedAt !== entry.createdAt) {
+        timeDisplay = 'Đã sửa ' + formatFullDateTime(entry.updatedAt);
+      } else {
+        timeDisplay = formatFullDateTime(entry.createdAt || entry.updatedAt);
+      }
+      document.getElementById('dl-date').textContent = timeDisplay;
+
+      var editedNote = document.getElementById('dl-edited-note');
+      editedNote.classList.add('hidden');
+      editedNote.textContent = '';
+
       document.getElementById('dl-content').textContent = entry.content || '';
       renderGallery('dl-gallery', entry.images, entry.id);
 
@@ -3221,7 +3289,7 @@
       closeModal('modal-daylist');
     }
 
-    // ===================== WRITE / EDIT / DELETE ENTRY =====================
+    // ===== WRITE / EDIT / DELETE ENTRY =====
     function openWriteModal() {
       appState.currentEntryId = null;
       appState.selectedMood = '';
@@ -3281,7 +3349,7 @@
       });
     }
 
-    // ===================== SAVE ENTRY =====================
+    // ===== SAVE ENTRY =====
     function saveEntry() {
       var date = document.getElementById('entry-date').value;
       var title = document.getElementById('entry-title').value.trim();
@@ -3338,7 +3406,7 @@
       document.getElementById('saving-overlay').classList.remove('show');
     }
 
-    // ===================== FONT SIZE =====================
+    // ===== FONT SIZE =====
     function adjustFontSize(delta) {
       appState.fontSize = Math.min(20, Math.max(11, appState.fontSize + delta));
       var textarea = document.getElementById('entry-content');
@@ -3348,7 +3416,7 @@
       document.getElementById('font-size-label').textContent = 'Cỡ chữ: ' + appState.fontSize + 'px';
     }
 
-    // ===================== IMAGE UPLOAD =====================
+    // ===== IMAGE UPLOAD =====
     function handleImagePick(input) {
       var files = Array.from(input.files);
       var remaining = CONFIG.MAX_IMAGES - appState.imageList.length;
@@ -3487,24 +3555,32 @@
       renderImagePreviews();
     }
 
-    // ===================== AUTO RESIZE TEXTAREA =====================
+    // ===== AUTO RESIZE TEXTAREA =====
     function autoResize(el) {
       if (!el) return;
       el.style.height = 'auto';
       el.style.height = (el.scrollHeight) + 'px';
     }
 
-    // ===================== NAVIGATION & LAYOUT =====================
+    // ===== NAVIGATION & LAYOUT =====
     function switchTab(tab) {
       document.querySelectorAll('.drawer-tab').forEach(function(t) {
         t.classList.toggle('active', t.dataset.tab === tab);
       });
 
-      var fab = document.getElementById('fab-wrapper');
+      var scrollBtn = document.getElementById('scroll-top-btn');
+      var fabWrapper = document.getElementById('fab-wrapper');
       if (tab === 'diary') {
-        fab.classList.add('show');
+        fabWrapper.style.display = 'block';
+        var currentScrollY = window.scrollY || window.pageYOffset || 0;
+        if (currentScrollY > 150) {
+          scrollBtn.classList.add('visible');
+        } else {
+          scrollBtn.classList.remove('visible');
+        }
       } else {
-        fab.classList.remove('show');
+        fabWrapper.style.display = 'none';
+        scrollBtn.classList.remove('visible');
       }
 
       if (window.innerWidth < 769) {
@@ -3533,7 +3609,8 @@
           if (!existingAnn) {
             var newAnnCard = document.createElement('div');
             newAnnCard.className = 'card';
-            newAnnCard.innerHTML = '<div class="card-header"><div class="card-title">🌸 Kỷ Niệm</div></div><div class="card-body" id="ann-desktop-body"></div>';
+            newAnnCard.innerHTML =
+              '<div class="card-header"><div class="card-title">🌸 Kỷ Niệm</div></div><div class="card-body" id="ann-desktop-body"></div>';
             rightCol.appendChild(newAnnCard);
           }
         }
@@ -3542,7 +3619,8 @@
           if (!existingAlbum) {
             var newAlbumCard = document.createElement('div');
             newAlbumCard.className = 'card';
-            newAlbumCard.innerHTML = '<div class="card-header"><div class="card-title">🖼 Album Ảnh</div></div><div class="card-body" id="album-desktop-body"></div>';
+            newAlbumCard.innerHTML =
+              '<div class="card-header"><div class="card-title">🖼 Album Ảnh</div></div><div class="card-body" id="album-desktop-body"></div>';
             rightCol.appendChild(newAlbumCard);
           }
         }
@@ -3557,7 +3635,7 @@
       });
     }
 
-    // ===================== MODAL HELPERS =====================
+    // ===== MODAL HELPERS =====
     function openModal(id) {
       document.getElementById(id).classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -3584,7 +3662,7 @@
       }
     });
 
-    // ===================== CONFIRM MODAL =====================
+    // ===== CONFIRM MODAL =====
     function showConfirm(title, message, callback) {
       document.getElementById('confirm-title').textContent = title || 'Xác nhận';
       document.getElementById('confirm-message').textContent = message || 'Bạn có chắc chắn?';
@@ -3599,7 +3677,7 @@
       };
     }
 
-    // ===================== TOAST =====================
+    // ===== TOAST =====
     var toastTimer = null;
 
     function showToast(message) {
@@ -3613,7 +3691,7 @@
       }, 2800);
     }
 
-    // ===================== SYNC BUTTON =====================
+    // ===== SYNC BUTTON =====
     function triggerSync() {
       showToast('⏳ Đang đồng bộ...');
       loadData(function() {
@@ -3626,7 +3704,7 @@
       btn.classList.toggle('syncing', isSyncing);
     }
 
-    console.log('💕 Love Story – Phiên bản 5.0 Stable (Minimal style, tách nút Gửi)');
+    console.log('💕 Love Story – Phiên bản 5.1.7 Stable (Minimal style, dropdown gọn)');
   </script>
 </body>
 </html>
