@@ -5,16 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#e8437e" />
-  <title>💕 Love Story</title>
-  <!-- Fonts -->
+  <title>💕 Love Story v5.2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <style>
     /* ===== CSS Variables & Reset ===== */
@@ -50,16 +47,18 @@
       overflow-x:hidden;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
+    body::-webkit-scrollbar { display: none; }
+    .scrollable::-webkit-scrollbar { width: 4px; }
+    .scrollable::-webkit-scrollbar-track { background: transparent; }
+    .scrollable::-webkit-scrollbar-thumb { background: #d1b8c0; border-radius: 10px; }
+    .scrollable::-webkit-scrollbar-thumb:hover { background: #b89aa6; }
+
     button, input, textarea, select { font-family:inherit; font-size:inherit; color:inherit; }
     button { cursor:pointer; background:none; border:none; -webkit-tap-highlight-color:transparent; }
     img { max-width:100%; display:block; }
-
-    /* ===== Custom Scrollbar ===== */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #d1b8c0; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #b89aa6; }
 
     /* ===== Lock screen ===== */
     #lock-screen {
@@ -118,7 +117,7 @@
     .clock-number { font-size:1.1rem; font-weight:800; color:#fff; line-height:1.2; }
     .clock-label { font-size:0.5rem; color:rgba(255,255,255,0.75); text-transform:uppercase; letter-spacing:0.05em; }
 
-    /* ===== Hamburger (chỉ mobile) ===== */
+    /* ===== Hamburger ===== */
     .hamburger-btn {
       background: none;
       border: none;
@@ -136,7 +135,7 @@
       .hamburger-btn { display: none !important; }
     }
 
-    /* ===== Drawer (chỉ mobile) - điều chỉnh kích thước ===== */
+    /* ===== Drawer ===== */
     #drawer-overlay {
       position:fixed; inset:0; z-index:400;
       background:rgba(0,0,0,0.3);
@@ -194,75 +193,6 @@
     .drawer-tab:active { transform:scale(0.96); }
     .drawer-tab.active { background:rgba(232,67,126,0.10); color:var(--primary); }
 
-    /* ===== Streak ===== */
-    .drawer-streak {
-      background:linear-gradient(135deg, #fff5f7, #fce8f0, #f7dde8);
-      border-radius:16px;
-      padding:14px 12px;
-      margin-top:6px;
-      border:1px solid rgba(232,67,126,0.15);
-      box-shadow:0 4px 16px rgba(232,67,126,0.08);
-      flex-shrink:0;
-      text-align:center;
-    }
-    .drawer-streak .streak-top {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      margin-bottom:2px;
-    }
-    .drawer-streak .streak-fire {
-      font-size:1.8rem;
-      line-height:1;
-    }
-    .drawer-streak .streak-number {
-      font-size:1.8rem;
-      font-weight:900;
-      color:var(--primary);
-      line-height:1.2;
-    }
-    .drawer-streak .streak-label {
-      font-size:0.65rem;
-      color:var(--text-secondary);
-      font-weight:600;
-    }
-    .drawer-streak .streak-progress {
-      margin-top:8px;
-      display:flex;
-      align-items:center;
-      gap:6px;
-    }
-    .drawer-streak .streak-progress .track {
-      flex:1;
-      height:4px;
-      background:rgba(232,67,126,0.12);
-      border-radius:4px;
-      overflow:hidden;
-    }
-    .drawer-streak .streak-progress .track .fill {
-      height:100%;
-      background:linear-gradient(90deg, #f7a1b5, var(--primary));
-      border-radius:4px;
-      transition:width 0.6s ease;
-    }
-    .drawer-streak .streak-progress .milestone-label {
-      font-size:0.55rem;
-      font-weight:700;
-      color:var(--text-secondary);
-      white-space:nowrap;
-    }
-    .drawer-streak .streak-message {
-      font-size:0.7rem;
-      font-weight:700;
-      color:var(--primary-dark);
-      margin-top:6px;
-      padding:2px 10px;
-      background:rgba(255,255,255,0.6);
-      border-radius:20px;
-      display:inline-block;
-    }
-
     /* ===== Search & filter ===== */
     .search-filter { display:flex; align-items:center; gap:8px; padding:4px 14px; margin:0 auto 8px; max-width:1400px; background:rgba(255,255,255,0.2); backdrop-filter:blur(6px); border-radius:16px; border:1px solid rgba(255,255,255,0.2); }
     @media (min-width:769px) { .search-filter { max-width:500px; margin-left:auto; margin-right:auto; justify-content:center; } }
@@ -277,9 +207,9 @@
     .main-layout { max-width:1400px; margin:0 auto; padding:8px 12px 16px; }
     @media (min-width:769px) {
       .main-layout { display:grid; grid-template-columns:280px 1fr 320px; gap:20px; padding:8px 24px 30px; min-height:70vh; }
-      #col-cal { order:1; position:sticky; top:96px; align-self:start; max-height:calc(100vh - 120px); overflow-y:auto; }
+      #col-cal { order:1; position:sticky; top:96px; align-self:start; max-height:calc(100vh - 120px); overflow-y:auto; scrollbar-width: thin; }
       #col-diary { order:2; min-height:400px; }
-      #col-right-desktop { order:3; display:flex !important; flex-direction:column; gap:20px; position:sticky; top:96px; align-self:start; max-height:calc(100vh - 120px); overflow-y:auto; min-width:0; }
+      #col-right-desktop { order:3; display:flex !important; flex-direction:column; gap:20px; position:sticky; top:96px; align-self:start; max-height:calc(100vh - 120px); overflow-y:auto; scrollbar-width: thin; min-width:0; }
       #col-right-desktop .card { flex-shrink:0; }
       #col-ann, #col-album { display:none !important; }
     }
@@ -296,14 +226,16 @@
     .card-body { padding:8px 16px 16px; }
 
     /* ===== Timeline ===== */
-    .entry-mood { display:none; }
-    .entry-author-badge { display:none; }
     .timeline-day { margin-bottom:14px; }
     .timeline-day-header { display:flex; align-items:center; gap:10px; margin-bottom:6px; padding:0 2px; }
     .timeline-day-dot { width:8px; height:8px; border-radius:50%; background:var(--primary); }
     .timeline-day-label { font-size:0.72rem; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.05em; }
     .timeline-day-line { flex:1; height:1px; background:var(--border-color); }
-    .entry-item { background:#fff; border:1px solid var(--border-color); border-radius:16px; padding:12px 14px; margin:10px 0; cursor:pointer; transition:0.2s; box-shadow:0 2px 8px rgba(232,67,126,0.04); }
+
+    .entry-item {
+      background:#fff; border:1px solid var(--border-color); border-radius:16px; padding:12px 14px; margin:10px 0;
+      cursor:pointer; transition:0.2s; box-shadow:0 2px 8px rgba(232,67,126,0.04);
+    }
     .entry-item:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(232,67,126,0.08); }
     .entry-top { display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap; }
     .entry-time { font-size:0.62rem; color:var(--text-secondary); font-weight:600; }
@@ -311,9 +243,50 @@
     .entry-text { flex:1; min-width:0; }
     .entry-title { font-weight:700; font-size:0.9rem; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; }
     .entry-preview { font-size:0.76rem; color:var(--text-secondary); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
-    .entry-thumb { width:44px; height:44px; border-radius:12px; object-fit:cover; flex-shrink:0; }
+
+    /* Grid thumbnail */
+    .entry-thumb-grid {
+      display: grid;
+      gap: 3px;
+      margin-top: 8px;
+      border-radius: 8px;
+      overflow: hidden;
+      max-height: 200px;
+    }
+    .entry-thumb-grid .thumb {
+      aspect-ratio: 1/1;
+      background: #f5dce4;
+      overflow: hidden;
+      position: relative;
+    }
+    .entry-thumb-grid .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .entry-thumb-grid .thumb .more-badge {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 700;
+      backdrop-filter: blur(2px);
+    }
+    .entry-thumb-grid.g1 { grid-template-columns:1fr; max-height: 250px; }
+    .entry-thumb-grid.g1 .thumb { aspect-ratio: auto; }
+    .entry-thumb-grid.g2 { grid-template-columns:1fr 1fr; }
+    .entry-thumb-grid.g3 { grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; }
+    .entry-thumb-grid.g3 .thumb:first-child { grid-row:1/3; grid-column:1/2; }
+    .entry-thumb-grid.g4 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; }
+
     .entry-comment-count { font-size:0.62rem; color:var(--text-secondary); margin-top:4px; display:flex; align-items:center; gap:4px; }
-    @media (min-width:769px) { .entry-item { padding:16px 20px; margin:12px 0; } .entry-title { font-size:1rem; } .entry-preview { font-size:0.82rem; } .entry-thumb { width:56px; height:56px; } }
+    .entry-badge { font-size:0.6rem; background:#e8437e20; color:#e8437e; padding:2px 8px; border-radius:12px; font-weight:700; margin-left:auto; }
+
+    @media (min-width:769px) { .entry-item { padding:16px 20px; margin:12px 0; } .entry-title { font-size:1rem; } .entry-preview { font-size:0.82rem; } }
     .load-more-btn { width:100%; background:rgba(232,67,126,0.06); border:1.5px dashed rgba(232,67,126,0.15); border-radius:16px; padding:10px; font-size:0.76rem; font-weight:700; color:var(--primary); transition:0.18s; margin-top:4px; }
     .load-more-btn:hover { background:rgba(232,67,126,0.12); }
     .empty-hint { text-align:center; color:var(--text-secondary); font-size:0.85rem; padding:30px 0; }
@@ -347,11 +320,7 @@
     .ann-countdown.today { color:#c04060; }
     .ann-countdown.soon { color:var(--primary); }
     .ann-countdown.far { color:var(--text-secondary); }
-    .ann-actions {
-      display:flex;
-      gap:4px;
-      flex-shrink:0;
-    }
+    .ann-actions { display:flex; gap:4px; flex-shrink:0; }
     .ann-actions button {
       width:30px; height:30px;
       border-radius:50%;
@@ -403,9 +372,7 @@
       min-width:90px;
       text-align:center;
     }
-    .calendar-grid {
-      padding:4px 0 6px;
-    }
+    .calendar-grid { padding:4px 0 6px; }
     .calendar-weekdays {
       display:grid;
       grid-template-columns:repeat(7,1fr);
@@ -505,7 +472,7 @@
     .quick-write-icon { font-size:1rem; color:var(--primary); opacity:0.6; transition:0.2s; }
     .quick-write:hover .quick-write-icon { opacity:1; }
 
-    /* ===== FAB và nút scroll top ===== */
+    /* ===== FAB ===== */
     .fab-wrapper {
       position:fixed;
       bottom:30px;
@@ -517,7 +484,6 @@
     @media (min-width:769px) {
       .fab-wrapper { display:none !important; }
     }
-
     .fab-btn {
       width:56px; height:56px;
       border-radius:50%;
@@ -536,43 +502,614 @@
     .fab-btn:active { transform:scale(0.88); }
     .fab-btn:hover { box-shadow:0 8px 32px rgba(232,67,126,0.5); }
 
-    .scroll-top-btn {
-      position:fixed;
-      bottom:94px;
-      right:20px;
-      z-index:299;
-      width:48px; height:48px;
-      border-radius:50%;
-      background:rgba(232,67,126,0.92);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      color:#fff;
-      border:1px solid rgba(255,255,255,0.2);
-      box-shadow:0 4px 20px rgba(0,0,0,0.15);
-      font-size:1.3rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      transition:transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease, visibility 0.35s ease;
-      transform:scale(0.6);
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
+    /* ===== FULLSCREEN PAGE ===== */
+    .fullscreen-page {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: #fff;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideInRight 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .scroll-top-btn.visible {
-      transform:scale(1);
-      opacity:1;
-      visibility:visible;
-      pointer-events:auto;
+    .fullscreen-page.active { display: flex; }
+    .fullscreen-page.closing {
+      animation: slideOutLeft 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-    .scroll-top-btn:active { transform:scale(0.88); }
-    .scroll-top-btn:hover { background:var(--primary); box-shadow:0 6px 24px rgba(232,67,126,0.3); }
-    @media (min-width:769px) {
-      .scroll-top-btn { display:none !important; }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0.6; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutLeft {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0.6; }
     }
 
-    /* ===== Modals ===== */
+    .fs-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      min-height: 52px;
+      flex-shrink: 0;
+      background: #fff;
+      border-bottom: 1px solid #f0d6de;
+    }
+    .fs-header .back-btn {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: #e8437e;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .fs-header .back-btn:hover { background: rgba(232,67,126,0.06); }
+    .fs-header .header-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #1a1a1a;
+      flex: 1;
+      padding: 0 10px;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .fs-header .header-actions {
+      display: flex;
+      gap: 4px;
+    }
+    .fs-header .header-actions button {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      color: #e8437e;
+      padding: 6px 8px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .fs-header .header-actions button:hover { background: rgba(232,67,126,0.06); }
+    .fs-header .header-actions button.hidden { display: none; }
+
+    .fs-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 0 20px;
+      -webkit-overflow-scrolling: touch;
+      background: #fdf6f8;
+      scrollbar-width: thin;
+    }
+    .fs-scroll::-webkit-scrollbar { width: 4px; }
+    .fs-scroll::-webkit-scrollbar-thumb { background: #d1b8c0; border-radius: 10px; }
+
+    .post-card {
+      background: #fff;
+      margin: 0 0 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f5dce4;
+    }
+    .post-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .post-author .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f7a1b5, #e8437e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .post-author .info { display: flex; flex-direction: column; }
+    .post-author .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #2d1a24;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .post-author .time {
+      font-size: 0.6rem;
+      color: #b07a8a;
+    }
+    .post-title {
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: #2d1a24;
+      margin-bottom: 6px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .post-content {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #1a1a1a;
+      margin: 4px 0 10px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .post-gallery {
+      display: grid;
+      gap: 3px;
+      margin: 6px 0 10px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .post-gallery .gimg {
+      aspect-ratio: 1/1;
+      background: #f5dce4;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+    .post-gallery .gimg img { width:100%; height:100%; object-fit:cover; }
+    .post-gallery .gimg .more-badge {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 700;
+      backdrop-filter: blur(2px);
+    }
+    .post-gallery.g1 { grid-template-columns:1fr; }
+    .post-gallery.g2 { grid-template-columns:1fr 1fr; }
+    .post-gallery.g3 { grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; }
+    .post-gallery.g3 .gimg:first-child { grid-row:1/3; grid-column:1/2; }
+    .post-gallery.g4 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; }
+
+    /* ===== Comment section ===== */
+    .comment-section {
+      background: #fff;
+      padding: 10px 16px 12px;
+      margin: 0 0 8px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .comment-header {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #b07a8a;
+      margin-bottom: 8px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .comment-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #f5dce4;
+    }
+    .comment-item:last-child { border-bottom: none; }
+    .comment-item .cmt-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .comment-item .cmt-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f7a1b5, #e8437e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .comment-item .cmt-author {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #2d1a24;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      flex-shrink: 0;
+    }
+    .comment-item .cmt-time {
+      font-size: 0.55rem;
+      color: #b07a8a;
+      flex-shrink: 0;
+      margin-left: 2px;
+    }
+    .comment-item .cmt-dropdown {
+      position: relative;
+      margin-left: auto; /* đẩy sang phải cùng với thời gian */
+      display: flex;
+      align-items: center;
+    }
+    .comment-item .cmt-dropdown-btn {
+      background: none;
+      border: none;
+      font-size: 0.85rem;
+      color: #b07a8a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: 0.15s;
+      line-height: 1;
+    }
+    .comment-item .cmt-dropdown-btn:hover { background: rgba(232,67,126,0.06); }
+    /* Dropdown menu bên trái của dấu 3 chấm */
+    .comment-item .cmt-dropdown-menu {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: calc(100% + 6px);
+      background: #fff;
+      border: 1px solid #f0d6de;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      min-width: 80px;
+      display: none;
+      z-index: 20;
+      padding: 4px 0;
+    }
+    .comment-item .cmt-dropdown-menu.show { display: block; }
+    .comment-item .cmt-dropdown-menu button {
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #2d1a24;
+      cursor: pointer;
+      transition: 0.1s;
+      font-family: inherit;
+    }
+    .comment-item .cmt-dropdown-menu button:hover { background: rgba(232,67,126,0.06); color: #e8437e; }
+    .comment-item .cmt-dropdown-menu button.danger:hover { color: #c04060; background: rgba(200,50,70,0.06); }
+    .comment-item .cmt-text {
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      padding-left: 34px;
+      word-break: break-word;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .comment-item .cmt-text.editing {
+      background: #f5f0f2;
+      border-radius: 8px;
+      padding: 4px 8px;
+      margin-left: 34px;
+      outline: none;
+    }
+    .comment-empty {
+      color: #b07a8a;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 8px 0;
+    }
+
+    .comment-input-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      background: #fdf6f8;
+      border-radius: 24px;
+      padding: 4px 4px 4px 14px;
+      margin-top: 6px;
+      border: 1px solid #f5dce4;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .comment-input-box:focus-within {
+      background: #fff;
+      border-color: #e8437e;
+    }
+    .comment-input-box textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 6px 0;
+      font-size: 0.85rem;
+      resize: none;
+      outline: none;
+      min-height: 32px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.4;
+      overflow: hidden;
+    }
+    .comment-input-box textarea::placeholder { color: #b07a8a; }
+    .comment-input-box textarea::-webkit-resizer { display: none; }
+    .comment-input-box textarea::-webkit-scrollbar { width: 0; }
+    .comment-send-btn {
+      background: #e8437e;
+      border: none;
+      border-radius: 20px;
+      padding: 4px 14px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s;
+      flex-shrink: 0;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      align-self: flex-end;
+      margin-bottom: 2px;
+    }
+    .comment-send-btn:hover { background: #d6336b; }
+    .comment-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ===== WRITE PAGE ===== */
+    .write-page {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      background: #fff;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .write-page.active { display: flex; }
+    .write-page.closing {
+      animation: slideDown 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0.6; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideDown {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(100%); opacity: 0.6; }
+    }
+
+    .write-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      min-height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #f0d6de;
+      flex-shrink: 0;
+    }
+    .write-header .close-btn {
+      background: rgba(232,67,126,0.08);
+      border: 1px solid rgba(232,67,126,0.12);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #b07a8a;
+      cursor: pointer;
+      transition: 0.15s;
+      padding: 0;
+      line-height: 1;
+    }
+    .write-header .close-btn:hover { background: #f7dde8; color: var(--primary); transform: rotate(90deg); }
+
+    .write-header h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #c7306a;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .write-header .write-submit-btn {
+      background: #e8437e;
+      border: none;
+      border-radius: 30px;
+      padding: 6px 18px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.15s;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .write-header .write-submit-btn:hover { background: #d6336b; }
+    .write-header .write-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .write-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 16px 0;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      flex-direction: column;
+      scrollbar-width: thin;
+    }
+    .write-body::-webkit-scrollbar { width: 4px; }
+    .write-body::-webkit-scrollbar-thumb { background: #d1b8c0; border-radius: 10px; }
+
+    .write-body .write-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .write-body .write-user .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f7a1b5, #e8437e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .write-body .write-user .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #2d1a24;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .write-body .write-title-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #2d1a24;
+      padding: 8px 0;
+      margin-bottom: 4px;
+      background: transparent;
+      border-bottom: 1px solid #f5dce4;
+    }
+    .write-body .write-title-input:focus { border-bottom-color: #e8437e; }
+    .write-body .write-title-input::placeholder { color: #b07a8a; }
+
+    .write-editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .write-body .write-content-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-size: 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.6;
+      padding: 8px 0;
+      background: transparent;
+      flex: 1;
+      min-height: 250px;
+    }
+    .write-body .write-content-input::placeholder { color: #b07a8a; }
+
+    /* Gallery ảnh ngay dưới textarea */
+    .write-image-preview {
+      display: grid;
+      gap: 3px;
+      margin: 8px 0 0;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      max-height: 300px;
+      width: 100%;
+    }
+    .write-image-preview .preview-img {
+      aspect-ratio: 1/1;
+      background: #f5dce4;
+      overflow: hidden;
+      position: relative;
+    }
+    .write-image-preview .preview-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .write-image-preview .preview-img .remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: 0.15s;
+    }
+    .write-image-preview .preview-img .remove:hover { background: rgba(200,50,70,0.8); }
+    .write-image-preview .preview-img .more-badge {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 700;
+      backdrop-filter: blur(2px);
+    }
+    .write-image-preview.g1 { grid-template-columns:1fr; max-height: 300px; }
+    .write-image-preview.g1 .preview-img { aspect-ratio: auto; }
+    .write-image-preview.g2 { grid-template-columns:1fr 1fr; }
+    .write-image-preview.g3 { grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; }
+    .write-image-preview.g3 .preview-img:first-child { grid-row:1/3; grid-column:1/2; }
+    .write-image-preview.g4 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; }
+
+    /* Khu vực options - chia đôi bố cục */
+    .write-options-wrapper {
+      margin-top: auto;
+      padding: 12px 0 0;
+      border-top: 1px solid #f5dce4;
+      flex-shrink: 0;
+    }
+    .write-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 8px 0 12px;
+    }
+    .write-options-grid .option-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fdf6f8;
+      border: 1px solid #f5dce4;
+      border-radius: 14px;
+      padding: 8px 14px;
+      transition: 0.15s;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .write-options-grid .option-item:hover { background: #f5dce4; }
+    .write-options-grid .option-item i { font-size: 1.1rem; color: var(--primary); }
+    .write-options-grid .option-item input[type="date"] {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--text-primary);
+      padding: 2px 0;
+      flex: 1;
+      min-width: 0;
+    }
+    .write-options-grid .option-item input[type="file"] { display: none; }
+    .write-options-grid .option-item .file-label-text {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    /* ===== Modals còn lại ===== */
     .modal-overlay {
       position:fixed; inset:0; z-index:500;
       background:rgba(0,0,0,0.25);
@@ -585,7 +1122,7 @@
     }
     .modal-overlay.open { display:flex; }
     .modal-box {
-      background: #ffffff;
+      background: #fdf6f8;
       border-radius:8px;
       box-shadow:0 24px 64px rgba(0,0,0,0.10);
       width:100%;
@@ -623,143 +1160,196 @@
     }
     .modal-close:hover { background:#f7dde8; color:var(--primary); transform:rotate(90deg); }
 
-    /* ===== View Entry - Minimal Style ===== */
-    .view-header {
+    /* ===== Confirm modal ===== */
+    .confirm-modal .modal-box { max-width:400px; text-align:center; }
+    .confirm-modal .modal-title { font-size:1.1rem; margin-bottom:8px; text-align:center; font-family: 'Playfair Display', serif; }
+    .confirm-message { font-size:0.88rem; color:var(--text-secondary); margin-bottom:20px; }
+    .confirm-actions {
       display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:8px;
-      padding-bottom:6px;
-      border-bottom:1px solid #f0d6de;
-      gap:8px;
+      gap:12px;
+      justify-content:center;
+      width:100%;
     }
-    .view-header .author-wrapper {
-      display:flex;
-      flex-direction:column;
-      gap:1px;
+    .confirm-actions .btn-primary,
+    .confirm-actions .btn-secondary {
       flex:1;
-      min-width:0;
+      max-width:140px;
+      padding:10px 20px;
+      text-align:center;
+      justify-content:center;
     }
-    .view-header .author-row {
-      display:flex;
+
+    /* ===== Form ===== */
+    .form-group { margin-bottom:var(--space-sm); }
+    .form-label { display:block; font-size:0.68rem; font-weight:700; color:var(--text-secondary); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em; }
+    .form-input, .form-textarea, .form-select { width:100%; background:rgba(255,255,255,0.8); border:1.5px solid rgba(232,67,126,0.12); border-radius:14px; padding:10px 14px; font-size:16px; color:var(--text-primary); outline:none; transition:border-color 0.2s; -webkit-appearance:none; appearance:none; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color:var(--primary); }
+    .form-textarea { resize:vertical; min-height:120px; line-height:1.7; font-size:16px; }
+    .button-row { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+    .btn-primary { flex:1; background:linear-gradient(135deg, #f7a1b5, var(--primary)); border:none; border-radius:14px; padding:12px; color:#fff; font-size:0.9rem; font-weight:700; transition:0.18s; min-width:80px; }
+    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(232,67,126,0.25); }
+    .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .btn-secondary { background:rgba(232,67,126,0.08); border:1px solid rgba(232,67,126,0.08); border-radius:14px; padding:10px 18px; color:var(--primary); font-size:0.9rem; font-weight:700; transition:0.18s; }
+    .btn-secondary:hover { background:rgba(232,67,126,0.15); }
+    .btn-danger { background:rgba(200,50,70,0.06); border:1px solid rgba(200,50,70,0.1); border-radius:14px; padding:10px 18px; color:#b03050; font-size:0.9rem; font-weight:700; transition:0.18s; }
+    .btn-danger:hover { background:rgba(200,50,70,0.12); }
+
+    /* ===== Toast ===== */
+    #toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(14px); background:rgba(61,31,45,0.88); backdrop-filter:blur(10px); color:#fff; padding:8px 20px; border-radius:24px; font-size:0.76rem; font-weight:600; z-index:9999; opacity:0; pointer-events:none; transition:all 0.26s; white-space:nowrap; max-width:90%; }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    @media (min-width:769px) { #toast { bottom:28px; } }
+
+    /* ===== Saving overlay ===== */
+    #saving-overlay { position:fixed; inset:0; z-index:9500; background:rgba(61,31,45,0.35); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; }
+    #saving-overlay.show { display:flex; }
+    .saving-box { background:rgba(255,248,253,0.92); border-radius:28px; padding:30px 38px; text-align:center; box-shadow:0 20px 50px rgba(120,40,70,0.2); }
+    .saving-heart { font-size:38px; display:block; margin-bottom:10px; animation:heartbeat 1s ease-in-out infinite; }
+    .saving-text { font-size:1rem; font-weight:700; color:var(--primary); }
+
+    .hidden { display:none !important; }
+
+    /* ===== PHOTO VIEWER ===== */
+    #photo-viewer {
+      position:fixed;
+      inset:0;
+      z-index:4000;
+      background:rgba(0,0,0,0.92);
+      backdrop-filter:blur(20px);
+      display:none;
       align-items:center;
-      gap:6px;
+      justify-content:center;
+      flex-direction:column;
+      padding:30px;
+      opacity:0;
+      transition:opacity 0.3s ease;
     }
-    .view-header .author-avatar {
-      font-size:1rem;
-    }
-    .view-header .author-name {
-      font-weight:700;
-      font-size:0.9rem;
-      color:#c7306a;
-    }
-    .view-header .time {
-      font-size:0.6rem;
-      color:#b07a8a;
-      margin-top:1px;
-    }
-    .view-header .view-actions {
-      display:flex;
-      align-items:center;
-      gap:2px;
-      flex-shrink:0;
+    #photo-viewer.open { display:flex; opacity:1; }
+    .photo-viewer-container {
       position:relative;
-    }
-    .view-header .view-actions .menu-btn,
-    .view-header .view-actions .modal-close {
-      background:transparent;
-      border:none;
-      font-size:1rem;
-      color:#b07a8a;
-      padding:4px 6px;
-      border-radius:4px;
-      cursor:pointer;
-      transition:0.15s;
-      line-height:1;
+      max-width:90vw;
+      max-height:85vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      height:34px;
-      width:34px;
     }
-    .view-header .view-actions .menu-btn:hover,
-    .view-header .view-actions .modal-close:hover {
-      background:rgba(232,67,126,0.08);
-      color:#c7306a;
+    .photo-viewer-container img {
+      max-width:100%;
+      max-height:85vh;
+      object-fit:contain;
+      border-radius:16px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.5);
     }
-
-    /* Dropdown cho bài viết - bên trái, căn giữa, 2 chữ Sửa/Xóa dọc */
-    .view-header .dropdown-wrapper {
-      position:relative;
-      display:inline-block;
+    .photo-viewer-top-actions {
+      position:fixed;
+      top:20px;
+      right:30px;
+      display:flex;
+      gap:10px;
+      z-index:10;
     }
-    .view-header .dropdown-menu {
+    .photo-viewer-top-actions button {
+      background:rgba(255,255,255,0.15);
+      border:none;
+      border-radius:50%;
+      width:48px;
+      height:48px;
+      color:#fff;
+      font-size:1.2rem;
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+      transition:0.2s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .photo-viewer-top-actions button:hover {
+      background:rgba(255,255,255,0.25);
+      transform:scale(1.08);
+    }
+    .photo-viewer-top-actions .download-btn {
+      background:rgba(232,67,126,0.3);
+    }
+    .photo-viewer-top-actions .download-btn:hover {
+      background:rgba(232,67,126,0.5);
+    }
+    .photo-nav-btn {
       position:absolute;
-      right:calc(100% + 8px);
       top:50%;
       transform:translateY(-50%);
-      background:#fff;
-      border:1px solid #f0d6de;
-      border-radius:8px;
-      box-shadow:0 8px 30px rgba(0,0,0,0.08);
-      min-width:90px;
-      display:none;
-      z-index:20;
-      padding:4px 0;
-      white-space:nowrap;
-    }
-    .view-header .dropdown-menu.show { display:block; }
-    .view-header .dropdown-menu button {
-      background:transparent;
+      background:rgba(255,255,255,0.1);
       border:none;
-      width:100%;
-      text-align:left;
-      padding:6px 14px;
-      font-size:0.75rem;
-      font-weight:600;
-      color:#2d1a24;
+      border-radius:50%;
+      width:50px;
+      height:50px;
+      color:#fff;
+      font-size:1.5rem;
       cursor:pointer;
-      transition:0.1s;
-      font-family:inherit;
-      display: block !important;
+      backdrop-filter:blur(10px);
+      transition:0.2s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:5;
     }
-    .view-header .dropdown-menu button:hover {
-      background:rgba(232,67,126,0.06);
-      color:#c7306a;
+    .photo-nav-btn:hover {
+      background:rgba(255,255,255,0.2);
+      transform:translateY(-50%) scale(1.05);
     }
-    .view-header .dropdown-menu button.danger:hover {
-      color:#c04060;
-      background:rgba(200,50,70,0.06);
+    .photo-nav-btn.prev { left:20px; }
+    .photo-nav-btn.next { right:20px; }
+    .photo-nav-btn:disabled {
+      opacity:0.3;
+      cursor:not-allowed;
+      transform:translateY(-50%) scale(0.95);
     }
-
-    .view-title {
-      font-family:'Playfair Display', serif;
-      font-size:1.3rem;
-      font-weight:700;
-      color:#c7306a;
-      margin-bottom:6px;
-    }
-    .view-meta { display:none; }
-    .edited-note {
-      font-size:0.65rem;
-      color:#b07a8a;
-      font-style:italic;
-      margin-bottom:6px;
-    }
-
-    .view-content {
-      background:#faf7f8;
-      border-radius:8px;
-      padding:12px 14px;
-      font-size:0.92rem;
-      line-height:1.7;
-      color:#1a1a1a;
-      margin:6px 0 10px;
-      border:1px solid #f5dce4;
-      white-space:pre-wrap;
-      word-break:break-word;
+    .photo-counter {
+      position:fixed;
+      bottom:30px;
+      left:50%;
+      transform:translateX(-50%);
+      color:rgba(255,255,255,0.6);
+      font-size:0.9rem;
+      font-weight:600;
+      background:rgba(0,0,0,0.3);
+      padding:6px 18px;
+      border-radius:20px;
+      backdrop-filter:blur(10px);
+      z-index:5;
     }
 
+    /* ===== Responsive ===== */
+    @media (max-width:600px) {
+      .post-gallery { gap:3px; }
+      .post-title { font-size:1.05rem; }
+      .post-content { font-size:0.9rem; }
+      .comment-input-box textarea { font-size:0.8rem; min-height:28px; }
+      .comment-send-btn { font-size:0.7rem; padding:3px 10px; height:24px; }
+      .write-header { padding:8px 12px; min-height:48px; }
+      .write-header h2 { font-size:1rem; }
+      .write-body .write-title-input { font-size:1.1rem; }
+      .write-body .write-content-input { font-size:0.9rem; min-height:200px; }
+      .write-options-grid { grid-template-columns:1fr; gap:8px; }
+      .write-options-grid .option-item { font-size:0.8rem; padding:6px 12px; }
+      .write-image-preview { max-height:200px; }
+      .write-image-preview .preview-img .remove { width:20px; height:20px; font-size:0.6rem; }
+      .fab-btn { width:48px; height:48px; font-size:1.3rem; }
+      .fab-wrapper { bottom:24px; right:16px; }
+      .modal-box { padding:12px 14px 16px; border-radius:8px; max-width:100%; }
+      .photo-nav-btn { width:40px; height:40px; font-size:1.2rem; }
+      .photo-nav-btn.prev { left:10px; }
+      .photo-nav-btn.next { right:10px; }
+      .photo-viewer-top-actions { top:10px; right:16px; gap:8px; }
+      .photo-viewer-top-actions button { width:40px; height:40px; font-size:1rem; }
+      .write-header .close-btn { width:32px; height:32px; font-size:1rem; }
+    }
+    @media (max-width:400px) {
+      .post-gallery { gap:2px; }
+      .post-gallery .gimg { border-radius:4px; }
+      .modal-box { padding:10px 12px; }
+      .write-body .write-content-input { min-height:150px; }
+    }
+
+    /* CSS cho view-gallery (daylist) */
     .view-gallery {
       display:grid;
       gap:4px;
@@ -805,210 +1395,129 @@
     .view-gallery.count-9,
     .view-gallery.count-10 { grid-template-columns:repeat(3,1fr); }
 
-    /* ===== Comment section - Minimal ===== */
-    .comment-section {
-      margin-top:10px;
-      border-top:1px solid #f0d6de;
-      padding-top:10px;
-    }
-    .comment-header {
-      font-size:0.75rem;
-      font-weight:700;
-      color:#b07a8a;
-      margin-bottom:8px;
+    .view-header {
       display:flex;
+      justify-content:space-between;
       align-items:center;
-      gap:4px;
+      margin-bottom:8px;
+      padding-bottom:6px;
+      border-bottom:1px solid #f0d6de;
+      gap:8px;
     }
-    .comment-list {
+    .view-header .author-wrapper {
       display:flex;
       flex-direction:column;
-      gap:6px;
-      margin-bottom:10px;
-      max-height:300px;
-      overflow-y:auto;
-      padding-right:2px;
+      gap:1px;
+      flex:1;
+      min-width:0;
     }
-    .comment-list::-webkit-scrollbar { width:4px; }
-    .comment-list::-webkit-scrollbar-thumb { background:#d1b8c0; border-radius:10px; }
-
-    .comment-item {
-      background:#faf7f8;
-      border-radius:6px;
-      padding:8px 10px;
-      border:1px solid #f5dce4;
-    }
-    .comment-item .cmt-header-row {
+    .view-header .author-row {
       display:flex;
       align-items:center;
       gap:6px;
-      flex-wrap:nowrap;
-      margin-bottom:2px;
     }
-    .comment-item .cmt-avatar {
-      width:24px;
-      height:24px;
-      border-radius:50%;
-      background:linear-gradient(135deg, #f7a1b5, #e8437e);
+    .view-header .author-avatar { font-size:1rem; }
+    .view-header .author-name {
+      font-weight:700;
+      font-size:0.95rem;
+      color:#c7306a;
+    }
+    .view-header .time {
+      font-size:0.65rem;
+      color:#b07a8a;
+      margin-top:1px;
+    }
+    .view-header .view-actions {
+      display:flex;
+      align-items:center;
+      gap:2px;
+      flex-shrink:0;
+      position:relative;
+    }
+    .view-header .view-actions .menu-btn,
+    .view-header .view-actions .modal-close {
+      background:transparent;
+      border:none;
+      font-size:1rem;
+      color:#b07a8a;
+      padding:4px 6px;
+      border-radius:4px;
+      cursor:pointer;
+      transition:0.15s;
+      line-height:1;
       display:flex;
       align-items:center;
       justify-content:center;
-      color:#fff;
-      font-size:0.6rem;
-      font-weight:700;
-      flex-shrink:0;
+      height:34px;
+      width:34px;
     }
-    .comment-item .cmt-author {
-      font-weight:700;
-      font-size:0.75rem;
-      color:#c7306a;
-      flex-shrink:0;
-    }
-    .comment-item .cmt-time {
-      font-size:0.55rem;
-      color:#b07a8a;
-      margin-left:auto;
-      flex-shrink:0;
-    }
-    .comment-item .cmt-dropdown {
-      position:relative;
-      flex-shrink:0;
-      margin-left:2px;
-    }
-    .comment-item .cmt-dropdown-btn {
-      background:transparent;
-      border:none;
-      color:#b07a8a;
-      font-size:0.8rem;
-      padding:0 4px;
-      cursor:pointer;
-      border-radius:4px;
-      transition:0.15s;
-      line-height:1;
-    }
-    .comment-item .cmt-dropdown-btn:hover {
+    .view-header .view-actions .menu-btn:hover,
+    .view-header .view-actions .modal-close:hover {
       background:rgba(232,67,126,0.08);
       color:#c7306a;
     }
-    .comment-item .cmt-dropdown-menu {
+    .view-header .dropdown-wrapper {
+      position:relative;
+      display:inline-block;
+    }
+    .view-header .dropdown-menu {
       position:absolute;
-      right:calc(100% + 6px);
+      right:calc(100% + 8px);
       top:50%;
       transform:translateY(-50%);
       background:#fff;
       border:1px solid #f0d6de;
-      border-radius:6px;
-      box-shadow:0 4px 16px rgba(0,0,0,0.06);
+      border-radius:8px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.08);
       min-width:80px;
       display:none;
-      z-index:10;
+      z-index:20;
       padding:4px 0;
+      white-space:nowrap;
     }
-    .comment-item .cmt-dropdown-menu.show { display:block; }
-    .comment-item .cmt-dropdown-menu button {
-      background:transparent;
-      border:none;
+    .view-header .dropdown-menu.show { display:block; }
+    .view-header .dropdown-menu button {
+      display:block;
       width:100%;
-      text-align:left;
-      padding:4px 12px;
-      font-size:0.7rem;
+      text-align:center;
+      padding:6px 14px;
+      font-size:0.75rem;
       font-weight:600;
       color:#2d1a24;
       cursor:pointer;
       transition:0.1s;
       font-family:inherit;
+      border:none;
+      background:transparent;
     }
-    .comment-item .cmt-dropdown-menu button:hover {
+    .view-header .dropdown-menu button:hover {
       background:rgba(232,67,126,0.06);
       color:#c7306a;
     }
-    .comment-item .cmt-dropdown-menu button.delete:hover {
+    .view-header .dropdown-menu button.danger:hover {
       color:#c04060;
       background:rgba(200,50,70,0.06);
     }
-    .comment-item .cmt-text {
-      font-size:0.82rem;
+    .view-title {
+      font-family:'Playfair Display', serif;
+      font-size:1.3rem;
+      font-weight:700;
+      color:#c7306a;
+      margin-bottom:6px;
+    }
+    .view-content {
+      background:#ffffff;
+      border-radius:8px;
+      padding:14px 16px;
+      font-size:0.95rem;
+      line-height:1.7;
       color:#1a1a1a;
-      padding-left:30px;
+      margin:6px 0 10px;
+      border:1px solid #f5dce4;
+      box-shadow:0 2px 8px rgba(0,0,0,0.02);
+      white-space:pre-wrap;
       word-break:break-word;
     }
-    .comment-empty {
-      color:#b07a8a;
-      font-size:0.75rem;
-      text-align:center;
-      padding:6px 0;
-    }
-
-    /* Comment input - flex wrap, nút xuống dòng khi cần */
-    .comment-input-row {
-      display:flex;
-      align-items:flex-start;
-      gap:8px;
-      margin-top:6px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .comment-input-row textarea {
-      flex:1 1 200px;
-      min-width:120px;
-      background:#faf7f8;
-      border:1px solid #f0d6de;
-      border-radius:30px;
-      padding:6px 12px;
-      font-size:0.8rem;
-      resize: none;
-      outline:none;
-      min-height:34px;
-      font-family:inherit;
-      color:#1a1a1a;
-      transition:border 0.2s;
-      line-height:1.4;
-      overflow:hidden;
-    }
-    .comment-input-row textarea:focus {
-      border-color:#e8437e;
-    }
-    .comment-input-row textarea::placeholder {
-      color:#b07a8a;
-    }
-    .comment-input-row textarea::-webkit-resizer {
-      display: none;
-    }
-    .comment-input-row textarea::-webkit-scrollbar {
-      width: 0;
-    }
-
-    .comment-send-btn {
-      background:#e8437e;
-      border:none;
-      border-radius:30px;
-      padding:4px 14px;
-      color:#fff;
-      font-weight:700;
-      font-size:0.75rem;
-      cursor:pointer;
-      white-space:nowrap;
-      transition:0.15s;
-      flex-shrink:0;
-      height:34px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      align-self:flex-start;
-      margin-top:0;
-    }
-    .comment-send-btn:hover:not(:disabled) {
-      background:#d6336b;
-    }
-    .comment-send-btn:disabled {
-      opacity:0.4;
-      cursor:not-allowed;
-    }
-    .comment-send-btn:active:not(:disabled) {
-      transform:scale(0.96);
-    }
-
-    /* ===== Daylist nav ===== */
     .daylist-nav {
       display:flex;
       align-items:center;
@@ -1031,208 +1540,47 @@
     .daylist-nav-btn:disabled { opacity:0.4; cursor:not-allowed; }
     .daylist-counter { font-size:0.75rem; color:var(--text-secondary); font-weight:600; }
 
-    /* ===== PHOTO VIEWER ===== */
-    #photo-viewer {
-      position:fixed;
-      inset:0;
-      z-index:1000;
-      background:rgba(0,0,0,0.92);
-      backdrop-filter:blur(20px);
-      display:none;
-      align-items:center;
-      justify-content:center;
+    /* Comment trong daylist và các modal khác (giữ nguyên) */
+    .comment-list {
+      display:flex;
       flex-direction:column;
-      padding:30px;
-      opacity:0;
-      transition:opacity 0.3s ease;
+      gap:6px;
+      margin-bottom:10px;
+      max-height:300px;
+      overflow-y:auto;
+      padding-right:2px;
     }
-    #photo-viewer.open { display:flex; opacity:1; }
-    .photo-viewer-container {
-      position:relative;
-      max-width:90vw;
-      max-height:85vh;
+    .comment-list::-webkit-scrollbar { width:4px; }
+    .comment-list::-webkit-scrollbar-thumb { background:#d1b8c0; border-radius:10px; }
+    .comment-input-row {
       display:flex;
-      align-items:center;
-      justify-content:center;
+      align-items:flex-start;
+      gap:8px;
+      margin-top:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
-    .photo-viewer-container img {
-      max-width:100%;
-      max-height:85vh;
-      object-fit:contain;
-      border-radius:16px;
-      box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    .comment-input-row textarea {
+      flex:1 1 200px;
+      min-width:120px;
+      background:#ffffff;
+      border:1px solid #f0d6de;
+      border-radius:30px;
+      padding:6px 12px;
+      font-size:0.85rem;
+      resize: none;
+      outline:none;
+      min-height:34px;
+      font-family:inherit;
+      color:#1a1a1a;
+      transition:border 0.2s;
+      line-height:1.4;
+      overflow:hidden;
     }
-
-    .photo-viewer-top-actions {
-      position:fixed;
-      top:20px;
-      right:30px;
-      display:flex;
-      gap:10px;
-      z-index:10;
-    }
-    .photo-viewer-top-actions button {
-      background:rgba(255,255,255,0.15);
-      border:none;
-      border-radius:50%;
-      width:48px;
-      height:48px;
-      color:#fff;
-      font-size:1.2rem;
-      cursor:pointer;
-      backdrop-filter:blur(10px);
-      transition:0.2s;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .photo-viewer-top-actions button:hover {
-      background:rgba(255,255,255,0.25);
-      transform:scale(1.08);
-    }
-    .photo-viewer-top-actions .download-btn {
-      background:rgba(232,67,126,0.3);
-    }
-    .photo-viewer-top-actions .download-btn:hover {
-      background:rgba(232,67,126,0.5);
-    }
-
-    .photo-nav-btn {
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      background:rgba(255,255,255,0.1);
-      border:none;
-      border-radius:50%;
-      width:50px;
-      height:50px;
-      color:#fff;
-      font-size:1.5rem;
-      cursor:pointer;
-      backdrop-filter:blur(10px);
-      transition:0.2s;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:5;
-    }
-    .photo-nav-btn:hover {
-      background:rgba(255,255,255,0.2);
-      transform:translateY(-50%) scale(1.05);
-    }
-    .photo-nav-btn.prev { left:20px; }
-    .photo-nav-btn.next { right:20px; }
-    .photo-nav-btn:disabled {
-      opacity:0.3;
-      cursor:not-allowed;
-      transform:translateY(-50%) scale(0.95);
-    }
-
-    .photo-counter {
-      position:fixed;
-      bottom:30px;
-      left:50%;
-      transform:translateX(-50%);
-      color:rgba(255,255,255,0.6);
-      font-size:0.9rem;
-      font-weight:600;
-      background:rgba(0,0,0,0.3);
-      padding:6px 18px;
-      border-radius:20px;
-      backdrop-filter:blur(10px);
-      z-index:5;
-    }
-
-    /* ===== Confirm modal ===== */
-    .confirm-modal .modal-box { max-width:400px; text-align:center; }
-    .confirm-modal .modal-title { font-size:1.1rem; margin-bottom:8px; text-align:center; font-family: 'Playfair Display', serif; }
-    .confirm-message { font-size:0.88rem; color:var(--text-secondary); margin-bottom:20px; }
-    .confirm-actions {
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      width:100%;
-    }
-    .confirm-actions .btn-primary,
-    .confirm-actions .btn-secondary {
-      flex:1;
-      max-width:140px;
-      padding:10px 20px;
-      text-align:center;
-      justify-content:center;
-    }
-
-    /* ===== Form ===== */
-    .form-group { margin-bottom:var(--space-sm); }
-    .form-label { display:block; font-size:0.68rem; font-weight:700; color:var(--text-secondary); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em; }
-    .form-input, .form-textarea, .form-select { width:100%; background:rgba(255,255,255,0.8); border:1.5px solid rgba(232,67,126,0.12); border-radius:14px; padding:10px 14px; font-size:16px; color:var(--text-primary); outline:none; transition:border-color 0.2s; -webkit-appearance:none; appearance:none; }
-    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color:var(--primary); }
-    .form-textarea { resize:vertical; min-height:120px; line-height:1.7; font-size:16px; }
-    .writing-prompt { display:none; }
-    .mood-picker { display:none; }
-
-    .font-size-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-    .font-size-btn { background:rgba(232,67,126,0.08); border:1px solid rgba(232,67,126,0.1); border-radius:8px; width:28px; height:28px; font-size:0.9rem; color:var(--primary); display:flex; align-items:center; justify-content:center; }
-    .font-size-label { font-size:0.7rem; color:var(--text-secondary); font-weight:600; }
-    .image-drop-zone { border:2px dashed rgba(232,67,126,0.15); border-radius:14px; padding:12px; text-align:center; cursor:pointer; background:rgba(255,255,255,0.4); transition:0.18s; font-size:0.82rem; color:var(--text-secondary); }
-    .image-drop-zone:hover { background:rgba(232,67,126,0.06); border-color:var(--primary); }
-    .image-preview-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
-    .image-preview-item { position:relative; width:60px; height:60px; }
-    .image-preview-item img { width:100%; height:100%; object-fit:cover; border-radius:10px; }
-    .image-remove-btn { position:absolute; top:-6px; right:-6px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:0.6rem; display:flex; align-items:center; justify-content:center; }
-    .upload-progress { display:none; background:rgba(232,67,126,0.04); border-radius:10px; padding:6px 12px; margin-top:6px; font-size:0.72rem; color:var(--text-secondary); }
-    .upload-progress.show { display:block; }
-    .upload-progress-bar { width:100%; height:6px; background:rgba(232,67,126,0.1); border-radius:4px; margin-top:4px; overflow:hidden; display:none; }
-    .upload-progress-bar.show { display:block; }
-    .upload-progress-bar .progress-fill { height:100%; width:0%; background:linear-gradient(90deg, #f7a1b5, var(--primary)); border-radius:4px; transition:width 0.3s; }
-    .button-row { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
-    .btn-primary { flex:1; background:linear-gradient(135deg, #f7a1b5, var(--primary)); border:none; border-radius:14px; padding:12px; color:#fff; font-size:0.9rem; font-weight:700; transition:0.18s; min-width:80px; }
-    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(232,67,126,0.25); }
-    .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-    .btn-secondary { background:rgba(232,67,126,0.08); border:1px solid rgba(232,67,126,0.08); border-radius:14px; padding:10px 18px; color:var(--primary); font-size:0.9rem; font-weight:700; transition:0.18s; }
-    .btn-secondary:hover { background:rgba(232,67,126,0.15); }
-    .btn-danger { background:rgba(200,50,70,0.06); border:1px solid rgba(200,50,70,0.1); border-radius:14px; padding:10px 18px; color:#b03050; font-size:0.9rem; font-weight:700; transition:0.18s; }
-    .btn-danger:hover { background:rgba(200,50,70,0.12); }
-
-    /* ===== Toast ===== */
-    #toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(14px); background:rgba(61,31,45,0.88); backdrop-filter:blur(10px); color:#fff; padding:8px 20px; border-radius:24px; font-size:0.76rem; font-weight:600; z-index:9999; opacity:0; pointer-events:none; transition:all 0.26s; white-space:nowrap; max-width:90%; }
-    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-    @media (min-width:769px) { #toast { bottom:28px; } }
-
-    /* ===== Saving overlay ===== */
-    #saving-overlay { position:fixed; inset:0; z-index:9500; background:rgba(61,31,45,0.35); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; }
-    #saving-overlay.show { display:flex; }
-    .saving-box { background:rgba(255,248,253,0.92); border-radius:28px; padding:30px 38px; text-align:center; box-shadow:0 20px 50px rgba(120,40,70,0.2); }
-    .saving-heart { font-size:38px; display:block; margin-bottom:10px; animation:heartbeat 1s ease-in-out infinite; }
-    .saving-text { font-size:1rem; font-weight:700; color:var(--primary); }
-
-    .hidden { display:none !important; }
-
-    /* ===== Responsive ===== */
-    @media (max-width:600px) {
-      .modal-box { padding:12px 14px 16px; border-radius:8px; max-width:100%; }
-      .view-title { font-size:1.2rem; }
-      .view-gallery { gap:3px; }
-      .photo-nav-btn { width:40px; height:40px; font-size:1.2rem; }
-      .photo-nav-btn.prev { left:10px; }
-      .photo-nav-btn.next { right:10px; }
-      .photo-viewer-top-actions { top:10px; right:16px; gap:8px; }
-      .photo-viewer-top-actions button { width:40px; height:40px; font-size:1rem; }
-      .fab-btn { width:48px; height:48px; font-size:1.3rem; }
-      .scroll-top-btn { width:42px; height:42px; font-size:1.1rem; bottom:84px; right:16px; }
-      .comment-send-btn { padding:4px 12px; font-size:0.7rem; height:32px; }
-      .comment-input-row textarea { min-height:32px; font-size:0.75rem; padding:4px 10px; flex:1 1 140px; }
-      .view-header .author-name { font-size:0.8rem; }
-      .view-header .time { font-size:0.55rem; }
-      .view-content { padding:10px 12px; font-size:0.85rem; }
-      .fab-wrapper { bottom:24px; right:16px; }
-    }
-    @media (max-width:400px) {
-      .view-gallery { gap:2px; }
-      .view-gallery .gallery-image { border-radius:4px; }
-      .modal-box { padding:10px 12px; }
-      .comment-input-row textarea { flex:1 1 100px; }
-    }
+    .comment-input-row textarea:focus { border-color:#e8437e; }
+    .comment-input-row textarea::placeholder { color:#b07a8a; }
+    .comment-input-row textarea::-webkit-resizer { display: none; }
+    .comment-input-row textarea::-webkit-scrollbar { width: 0; }
   </style>
 </head>
 <body>
@@ -1289,18 +1637,6 @@
       <button class="drawer-tab" data-tab="album" onclick="switchTab('album'); closeDrawer();">
         <span class="icon">🖼</span> Album
       </button>
-    </div>
-    <div class="drawer-streak">
-      <div class="streak-top">
-        <span class="streak-fire">🔥</span>
-        <span class="streak-number" id="drawer-streak-number">0</span>
-      </div>
-      <div class="streak-label">ngày viết liên tục</div>
-      <div class="streak-progress">
-        <div class="track"><div class="fill" id="streak-progress-fill" style="width:0%"></div></div>
-        <span class="milestone-label" id="streak-next-milestone">7 ngày</span>
-      </div>
-      <div class="streak-message" id="drawer-streak-message">Hãy viết mỗi ngày ✨</div>
     </div>
   </div>
 
@@ -1367,7 +1703,7 @@
       <!-- DIARY COLUMN -->
       <div class="col-panel active" id="col-diary">
         <div id="otd-container"></div>
-        <div class="quick-write" id="quick-write" onclick="openWriteModal()" role="button" tabindex="0">
+        <div class="quick-write" id="quick-write" onclick="openWritePage()" role="button" tabindex="0">
           <div class="quick-write-avatar">🌻</div>
           <div class="quick-write-placeholder">Hôm nay bạn thế nào? ✨</div>
           <span class="quick-write-icon">📝</span>
@@ -1425,101 +1761,120 @@
     </div>
   </div>
 
-  <!-- ===== FAB và nút scroll top (FAB cố định) ===== -->
+  <!-- ===== FAB ===== -->
   <div class="fab-wrapper" id="fab-wrapper">
-    <button class="fab-btn" onclick="openWriteModal()" aria-label="Viết bài mới">
+    <button class="fab-btn" onclick="openWritePage()" aria-label="Viết bài mới">
       <i class="fas fa-plus"></i>
     </button>
   </div>
 
-  <button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollToTop()" aria-label="Lên đầu trang">
-    <i class="fas fa-arrow-up"></i>
-  </button>
+  <!-- ===== FULLSCREEN PAGE ===== -->
+  <div class="fullscreen-page" id="fullscreen-page">
+    <div class="fs-header" id="fs-header">
+      <button class="back-btn" onclick="closeFullscreen()"><i class="fas fa-arrow-left"></i></button>
+      <div class="header-title" id="fs-title"></div>
+      <div class="header-actions">
+        <button id="fs-edit-btn" onclick="editFromFullscreen()"><i class="fas fa-pen"></i></button>
+        <button id="fs-delete-btn" onclick="deleteFromFullscreen()"><i class="fas fa-trash-alt"></i></button>
+      </div>
+    </div>
+    <div class="fs-scroll" id="fs-scroll">
+      <div id="fs-content"></div>
+    </div>
+  </div>
 
-  <!-- ===== MODALS ===== -->
-
-  <!-- WRITE / EDIT MODAL -->
-  <div class="modal-overlay" id="modal-write">
-    <div class="modal-box">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <div class="modal-title" id="write-modal-title" style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:0;">✍️ Viết nhật ký</div>
-        <button class="modal-close" onclick="closeModal('modal-write')" style="position:static;">✕</button>
+  <!-- ===== WRITE PAGE ===== -->
+  <div class="write-page" id="write-page">
+    <div class="write-header">
+      <button class="close-btn" onclick="closeWritePage()"><i class="fas fa-times"></i></button>
+      <h2 id="write-page-title">Tạo bài viết</h2>
+      <button class="write-submit-btn" id="write-submit-btn" onclick="submitWrite()">Đăng</button>
+    </div>
+    <div class="write-body" id="write-body">
+      <div class="write-user">
+        <div class="avatar">🌻</div>
+        <div class="name" id="write-user-name">Ánh Ngọc</div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Ngày viết</label>
-        <input type="date" class="form-input" id="entry-date" />
+      <input class="write-title-input" id="write-title" placeholder="Tiêu đề bài viết..." maxlength="100" />
+      <div class="write-editor">
+        <textarea class="write-content-input" id="write-content" placeholder="Bạn đang nghĩ gì? ✨"></textarea>
+        <div class="write-image-preview" id="write-image-preview"></div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Tiêu đề</label>
-        <input type="text" class="form-input" id="entry-title" placeholder="Hôm nay mình cảm thấy..." maxlength="100" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nội dung</label>
-        <div class="font-size-row">
-          <button class="font-size-btn" onclick="adjustFontSize(-1)">A−</button>
-          <span class="font-size-label" id="font-size-label">Cỡ chữ: 14px</span>
-          <button class="font-size-btn" onclick="adjustFontSize(1)">A+</button>
+      <div class="write-options-wrapper">
+        <div class="write-options-grid">
+          <div class="option-item">
+            <i class="far fa-calendar-alt"></i>
+            <input type="date" id="write-date" />
+          </div>
+          <div class="option-item" onclick="document.getElementById('write-file').click()">
+            <i class="fas fa-image"></i>
+            <span class="file-label-text">Thêm ảnh</span>
+            <input type="file" id="write-file" accept="image/*" multiple onchange="handleWriteImages(this)" />
+          </div>
         </div>
-        <textarea class="form-textarea" id="entry-content" placeholder="Kể hết mọi thứ cho nhật ký nghe nha... 🌸" style="font-size:16px; min-height:130px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ANNIVERSARY MODALS ===== -->
+  <div class="modal-overlay" id="modal-ann">
+    <div class="modal-box" style="max-width:400px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <div class="modal-title" style="font-family:'Playfair Display',serif; font-size:1.2rem; margin:0;">🌸 Thêm Kỷ Niệm</div>
+        <button class="modal-close" onclick="closeModal('modal-ann')" style="position:static;">✕</button>
       </div>
       <div class="form-group">
-        <label class="form-label">Ảnh (tối đa 10)</label>
-        <div class="image-drop-zone" onclick="document.getElementById('image-input').click()">📷 Chọn ảnh từ máy</div>
-        <input type="file" id="image-input" accept="image/*" multiple style="display:none" onchange="handleImagePick(this)" />
-        <div class="upload-progress" id="upload-progress">⏳ Đang xử lý ảnh...</div>
-        <div class="upload-progress-bar" id="upload-progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <div class="image-preview-row" id="image-preview"></div>
+        <label class="form-label">Ngày</label>
+        <input type="date" class="form-input" id="ann-date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tên kỷ niệm</label>
+        <input type="text" class="form-input" id="ann-name" placeholder="Ví dụ: Ngày đầu yêu nhau 💕" maxlength="80" />
       </div>
       <div class="button-row">
-        <button class="btn-secondary" onclick="closeModal('modal-write')">Hủy</button>
-        <button class="btn-primary" id="save-entry-btn" onclick="saveEntry()">💾 Lưu</button>
+        <button class="btn-secondary" onclick="closeModal('modal-ann')">Hủy</button>
+        <button class="btn-primary" onclick="saveAnniversary()">💾 Lưu</button>
       </div>
     </div>
   </div>
 
-  <!-- VIEW ENTRY MODAL - Minimal Style -->
-  <div class="modal-overlay" id="modal-view">
+  <div class="modal-overlay" id="modal-edit-ann">
+    <div class="modal-box" style="max-width:400px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <div class="modal-title" style="font-family:'Playfair Display',serif; font-size:1.2rem; margin:0;">✏️ Sửa Kỷ Niệm</div>
+        <button class="modal-close" onclick="closeModal('modal-edit-ann')" style="position:static;">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ngày</label>
+        <input type="date" class="form-input" id="edit-ann-date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tên kỷ niệm</label>
+        <input type="text" class="form-input" id="edit-ann-name" placeholder="Tên kỷ niệm..." maxlength="80" />
+      </div>
+      <div class="button-row">
+        <button class="btn-secondary" onclick="closeModal('modal-edit-ann')">Hủy</button>
+        <button class="btn-primary" onclick="saveEditAnniversary()">💾 Cập nhật</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONFIRM MODAL ===== -->
+  <div class="modal-overlay confirm-modal" id="modal-confirm">
     <div class="modal-box">
-      <!-- Header -->
-      <div class="view-header">
-        <div class="author-wrapper">
-          <div class="author-row">
-            <span class="author-avatar" id="view-avatar">🌻</span>
-            <span class="author-name" id="view-author-name">Ánh Ngọc</span>
-          </div>
-          <div class="time" id="view-date">ngày 3 tháng 7, 2026 lúc 14:30</div>
-        </div>
-        <div class="view-actions">
-          <div class="dropdown-wrapper">
-            <button class="menu-btn" id="view-menu-btn" onclick="toggleDropdown('view-dropdown')">⋯</button>
-            <div class="dropdown-menu" id="view-dropdown">
-              <button onclick="editCurrentEntry(); closeDropdown('view-dropdown');">Sửa</button>
-              <button class="danger" onclick="deleteCurrentEntry(); closeDropdown('view-dropdown');">Xóa</button>
-            </div>
-          </div>
-          <button class="modal-close" onclick="closeModal('modal-view')">✕</button>
-        </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <div class="modal-title" id="confirm-title" style="text-align:center; font-family:'Playfair Display',serif; font-size:1.1rem; margin:0;">Xác nhận</div>
+        <button class="modal-close" onclick="closeModal('modal-confirm')" style="position:static;">✕</button>
       </div>
-
-      <!-- Tiêu đề & nội dung -->
-      <div class="view-title" id="view-title">Tiêu đề bài viết</div>
-      <div class="edited-note hidden" id="view-edited-note"></div>
-      <div class="view-content" id="view-content"></div>
-      <div class="view-gallery" id="view-gallery"></div>
-
-      <!-- Comment section -->
-      <div class="comment-section">
-        <div class="comment-header">💬 Bình luận <span id="comment-count-label"></span></div>
-        <div class="comment-list" id="comment-list"></div>
-        <div class="comment-input-row">
-          <textarea id="comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter') sendComment()"></textarea>
-          <button class="comment-send-btn" id="comment-send-btn" onclick="sendComment()">Gửi</button>
-        </div>
+      <div class="confirm-message" id="confirm-message">Bạn có chắc chắn?</div>
+      <div class="confirm-actions">
+        <button class="btn-secondary" id="confirm-cancel" onclick="closeModal('modal-confirm')">Hủy</button>
+        <button class="btn-primary" id="confirm-ok">Đồng ý</button>
       </div>
     </div>
   </div>
 
-  <!-- DAY LIST MODAL -->
+  <!-- ===== DAY LIST MODAL ===== -->
   <div class="modal-overlay" id="modal-daylist">
     <div class="modal-box">
       <div class="view-header">
@@ -1561,65 +1916,6 @@
     </div>
   </div>
 
-  <!-- ANNIVERSARY FORM MODAL -->
-  <div class="modal-overlay" id="modal-ann">
-    <div class="modal-box" style="max-width:400px;">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <div class="modal-title" style="font-family:'Playfair Display',serif; font-size:1.2rem; margin:0;">🌸 Thêm Kỷ Niệm</div>
-        <button class="modal-close" onclick="closeModal('modal-ann')" style="position:static;">✕</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ngày</label>
-        <input type="date" class="form-input" id="ann-date" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Tên kỷ niệm</label>
-        <input type="text" class="form-input" id="ann-name" placeholder="Ví dụ: Ngày đầu yêu nhau 💕" maxlength="80" />
-      </div>
-      <div class="button-row">
-        <button class="btn-secondary" onclick="closeModal('modal-ann')">Hủy</button>
-        <button class="btn-primary" onclick="saveAnniversary()">💾 Lưu</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- EDIT ANNIVERSARY MODAL -->
-  <div class="modal-overlay" id="modal-edit-ann">
-    <div class="modal-box" style="max-width:400px;">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <div class="modal-title" style="font-family:'Playfair Display',serif; font-size:1.2rem; margin:0;">✏️ Sửa Kỷ Niệm</div>
-        <button class="modal-close" onclick="closeModal('modal-edit-ann')" style="position:static;">✕</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ngày</label>
-        <input type="date" class="form-input" id="edit-ann-date" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Tên kỷ niệm</label>
-        <input type="text" class="form-input" id="edit-ann-name" placeholder="Tên kỷ niệm..." maxlength="80" />
-      </div>
-      <div class="button-row">
-        <button class="btn-secondary" onclick="closeModal('modal-edit-ann')">Hủy</button>
-        <button class="btn-primary" onclick="saveEditAnniversary()">💾 Cập nhật</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONFIRM MODAL -->
-  <div class="modal-overlay confirm-modal" id="modal-confirm">
-    <div class="modal-box">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <div class="modal-title" id="confirm-title" style="text-align:center; font-family:'Playfair Display',serif; font-size:1.1rem; margin:0;">Xác nhận</div>
-        <button class="modal-close" onclick="closeModal('modal-confirm')" style="position:static;">✕</button>
-      </div>
-      <div class="confirm-message" id="confirm-message">Bạn có chắc chắn?</div>
-      <div class="confirm-actions">
-        <button class="btn-secondary" id="confirm-cancel" onclick="closeModal('modal-confirm')">Hủy</button>
-        <button class="btn-primary" id="confirm-ok">Đồng ý</button>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== PHOTO VIEWER ===== -->
   <div id="photo-viewer">
     <div class="photo-viewer-top-actions">
@@ -1642,10 +1938,10 @@
     <div class="photo-counter" id="pv-counter">1 / 1</div>
   </div>
 
-  <!-- TOAST -->
+  <!-- ===== TOAST ===== -->
   <div id="toast"></div>
 
-  <!-- SAVING OVERLAY -->
+  <!-- ===== SAVING OVERLAY ===== -->
   <div id="saving-overlay">
     <div class="saving-box">
       <span class="saving-heart">💌</span>
@@ -1673,7 +1969,6 @@
       calendarYear: new Date().getFullYear(),
       calendarMonth: new Date().getMonth(),
       currentEntryId: null,
-      selectedMood: '',
       imageList: [],
       fontSize: 14,
       currentPage: 1,
@@ -1691,10 +1986,11 @@
       searchQuery: '',
       monthFilter: '',
       scrollY: 0,
-      editingAnnId: null
+      editingAnnId: null,
+      currentFullscreenId: null,
+      writeImages: [],
+      writeEditId: null
     };
-
-    var ALL_MILESTONES = [7, 14, 30, 60, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
     // ===================== UTILITY FUNCTIONS =====================
     function escapeHtml(str) {
@@ -1763,7 +2059,6 @@
       drawer.classList.add('open');
       overlay.classList.add('open');
       document.body.style.overflow = 'hidden';
-      updateDrawerStreak();
     }
 
     function closeDrawer() {
@@ -1772,68 +2067,6 @@
       drawer.classList.remove('open');
       overlay.classList.remove('open');
       document.body.style.overflow = '';
-    }
-
-    function updateDrawerStreak() {
-      var entries = appState.data.entries;
-      var streak = 0;
-      if (entries && entries.length > 0) {
-        var dateSet = new Set();
-        entries.forEach(function(entry) { if (entry.date) dateSet.add(entry.date); });
-        var today = getTodayString();
-        var yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        var yesterdayStr = formatDate(yesterday);
-        var currentDate = new Date();
-        if (dateSet.has(today)) {
-          streak = 1;
-        } else if (dateSet.has(yesterdayStr)) {
-          streak = 1;
-          currentDate.setDate(currentDate.getDate() - 1);
-        } else {
-          streak = 0;
-        }
-        if (streak > 0) {
-          while (true) {
-            currentDate.setDate(currentDate.getDate() - 1);
-            var dateStr = formatDate(currentDate);
-            if (dateSet.has(dateStr)) { streak++; } else { break; }
-          }
-        }
-      }
-      document.getElementById('drawer-streak-number').textContent = streak;
-
-      var nextMilestone = ALL_MILESTONES.find(function(m) { return m > streak; });
-      if (nextMilestone) {
-        var progress = (streak / nextMilestone) * 100;
-        document.getElementById('streak-progress-fill').style.width = Math.min(progress, 100) + '%';
-        document.getElementById('streak-next-milestone').textContent = nextMilestone + ' ngày';
-      } else {
-        document.getElementById('streak-progress-fill').style.width = '100%';
-        document.getElementById('streak-next-milestone').textContent = '🏆 Kỷ lục!';
-      }
-
-      var msg = getStreakMessage(streak);
-      document.getElementById('drawer-streak-message').textContent = msg;
-    }
-
-    function getStreakMessage(streak) {
-      if (streak === 0) return 'Hãy viết một điều nhỏ mỗi ngày 💕';
-      if (streak >= 1000) return '🏆 1000 ngày – con số kỷ lục!';
-      if (streak >= 900) return '🌟 900 ngày – thật phi thường!';
-      if (streak >= 800) return '🔥 800 ngày – tình yêu bền chặt!';
-      if (streak >= 700) return '🎊 700 ngày – một hành trình vĩ đại!';
-      if (streak >= 600) return '💪 600 ngày – thật đáng nể!';
-      if (streak >= 500) return '🎉 500 ngày – nửa chặng đường nghìn ngày!';
-      if (streak >= 400) return '🏆 400 ngày – thật đáng tự hào!';
-      if (streak >= 300) return '🌟 300 ngày – tình yêu bền chặt!';
-      if (streak >= 200) return '🎊 200 ngày – một hành trình đẹp!';
-      if (streak >= 100) return '💯 Trăm ngày – quá đỉnh!';
-      if (streak >= 60) return '🔥 2 tháng – thật tuyệt vời!';
-      if (streak >= 30) return '🎉 Một tháng đầy kỷ niệm!';
-      if (streak >= 14) return '💪 2 tuần – cố lên!';
-      if (streak >= 7) return '🌟 Bắt đầu thói quen tốt!';
-      return '🔥 Cố lên, mỗi ngày một chút yêu thương!';
     }
 
     // ===================== DROPDOWN =====================
@@ -1905,6 +2138,7 @@
       var icon = currentUser === CONFIG.USER1_NAME ? '🌻' : '💖';
       document.getElementById('drawer-username').textContent = currentUser;
       document.getElementById('drawer-avatar').textContent = icon;
+      document.getElementById('write-user-name').textContent = currentUser;
       var lockScreen = document.getElementById('lock-screen');
       lockScreen.classList.add('hiding');
       setTimeout(function() {
@@ -1916,7 +2150,6 @@
         setupDesktopLayout();
         switchTab('diary');
         gsap.from('#app', { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
-        initScrollBehavior();
       }, 500);
     }
 
@@ -1926,37 +2159,6 @@
       if (e.key >= '0' && e.key <= '9') handlePinPress(e.key);
       if (e.key === 'Backspace') handlePinDelete();
     });
-
-    // ===================== SCROLL BEHAVIOR =====================
-    function initScrollBehavior() {
-      var scrollBtn = document.getElementById('scroll-top-btn');
-      var ticking = false;
-
-      function handleScroll() {
-        var currentScrollY = window.scrollY || window.pageYOffset || 0;
-        if (currentScrollY > 150) {
-          scrollBtn.classList.add('visible');
-        } else {
-          scrollBtn.classList.remove('visible');
-        }
-        ticking = false;
-      }
-
-      window.addEventListener('scroll', function() {
-        if (!ticking) {
-          window.requestAnimationFrame(function() {
-            handleScroll();
-          });
-          ticking = true;
-        }
-      }, { passive: true });
-    }
-
-    function scrollToTop() {
-      var btn = document.getElementById('scroll-top-btn');
-      btn.classList.remove('visible');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
 
     // ===================== CLOCK =====================
     function startClock() {
@@ -2030,7 +2232,6 @@
         normalizeEntries(appState.data.entries);
         sortEntries(appState.data.entries);
         renderAll();
-        updateDrawerStreak();
         if (typeof callback === 'function') callback(appState.data);
         cleanup();
       }
@@ -2045,12 +2246,10 @@
           normalizeEntries(appState.data.entries);
           sortEntries(appState.data.entries);
           renderAll();
-          updateDrawerStreak();
           showToast('📶 Đã tải dữ liệu từ bộ nhớ tạm (quá thời gian)');
         } else {
           appState.data = { entries: [], anniversaries: [] };
           renderAll();
-          updateDrawerStreak();
           showToast('⚠️ Không thể kết nối server');
         }
         if (typeof callback === 'function') callback(appState.data);
@@ -2255,7 +2454,6 @@
         renderAnniversaries();
         document.getElementById('col-right-desktop').style.display = 'none';
       }
-      updateDrawerStreak();
     }
 
     function applyFilters() {
@@ -2317,7 +2515,7 @@
       container.innerHTML =
         '<div class="card" style="margin-bottom:12px">' +
         '<div class="card-body" style="padding:6px 16px 12px;">' +
-        '<div class="otd-card" onclick="openEntryView(\'' + match.id + '\')">' +
+        '<div class="otd-card" onclick="openFullscreen(\'' + match.id + '\')">' +
         '<div class="otd-label">⏳ Ngày này năm ' + year + '</div>' +
         '<div class="otd-title">' + escapeHtml(match.title || '(Không tiêu đề)') + '</div>' +
         '<div class="otd-preview">' + escapeHtml((match.content || '').substring(0, 90)) + '...</div>' +
@@ -2380,7 +2578,7 @@
 
         var clickHandler = '';
         if (entries.length === 1) {
-          clickHandler = 'onclick="openEntryView(\'' + entries[0].id + '\')"';
+          clickHandler = 'onclick="openFullscreen(\'' + entries[0].id + '\')"';
         } else if (entries.length > 1) {
           clickHandler = 'onclick="openDayList(\'' + dateStr + '\')"';
         }
@@ -2460,19 +2658,39 @@
 
     function renderEntryItem(entry) {
       var preview = (entry.content || '').replace(/\n/g, ' ').substring(0, 90);
-      var thumb = '';
-      if (entry.images && entry.images.length) {
-        var src = entry.images[0].url || entry.images[0];
-        thumb = '<img class="entry-thumb" src="' + escapeHtml(src) + '" alt="ảnh" ' +
-          'onclick="event.stopPropagation();openPhotoViewer(\'' + entry.id + '\', 0)" loading="lazy" />';
+      var thumbHTML = '';
+      if (entry.images && entry.images.length > 0) {
+        var total = entry.images.length;
+        var display = entry.images.slice(0, 4);
+        var extra = total - 4;
+        var gridClass = 'g' + Math.min(total, 4);
+        if (total === 1) gridClass = 'g1';
+        else if (total === 2) gridClass = 'g2';
+        else if (total === 3) gridClass = 'g3';
+        else if (total >= 4) gridClass = 'g4';
+        var thumbs = display.map(function(img, idx) {
+          var moreBadge = '';
+          if (idx === 3 && extra > 0) {
+            moreBadge = '<div class="more-badge">+' + extra + '</div>';
+          }
+          return '<div class="thumb">' + moreBadge +
+            '<img src="' + escapeHtml(img.url || img) + '" alt="ảnh" loading="lazy" /></div>';
+        }).join('');
+        thumbHTML = '<div class="entry-thumb-grid ' + gridClass + '">' + thumbs + '</div>';
       }
+
       var commentCount = (entry.comments && entry.comments.length) || 0;
       var commentsHtml = commentCount > 0 ?
         '<div class="entry-comment-count">💬 ' + commentCount + ' bình luận</div>' :
         '';
-      return '<div class="entry-item" onclick="openEntryView(\'' + entry.id + '\')">' +
+      var badgeHtml = (entry.author === currentUser) ?
+        '<span class="entry-badge">Của bạn</span>' :
+        '';
+
+      return '<div class="entry-item" onclick="openFullscreen(\'' + entry.id + '\')">' +
         '<div class="entry-top">' +
         '<span class="entry-time">🕐 ' + formatTimeShort(entry.updatedAt) + '</span>' +
+        badgeHtml +
         '</div>' +
         '<div class="entry-body">' +
         '<div class="entry-text">' +
@@ -2480,8 +2698,8 @@
         '<div class="entry-preview">' + escapeHtml(preview) + '</div>' +
         commentsHtml +
         '</div>' +
-        thumb +
         '</div>' +
+        thumbHTML +
         '</div>';
     }
 
@@ -2724,11 +2942,12 @@
       container.innerHTML = html;
     }
 
-    // ===== PHOTO VIEWER =====
+    // ===== PHOTO VIEWER (sửa lại logic) =====
     function openPhotoViewer(entryId, startIndex) {
       var entry = appState.data.entries.find(function(e) { return e.id === entryId; });
       if (!entry || !entry.images || !entry.images.length) return;
 
+      // Lưu danh sách ảnh và chỉ số hiện tại
       appState.photoViewerImages = entry.images.map(function(img) { return img.url || img; });
       appState.photoViewerIndex = startIndex || 0;
 
@@ -2739,6 +2958,7 @@
       document.body.style.overflow = 'hidden';
       updatePhotoViewerUI();
 
+      // Animation
       gsap.fromTo(img, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'power2.out' });
     }
 
@@ -2814,406 +3034,276 @@
       if (e.key === 'ArrowRight') navigatePhoto(1);
     });
 
+    // Đóng photo viewer khi click vào nền đen
     document.getElementById('photo-viewer').addEventListener('click', function(e) {
       if (e.target === this) closePhotoViewer();
     });
 
-    // ===== VIEW ENTRY =====
-    function openEntryView(entryId) {
-      var entry = appState.data.entries.find(function(e) { return e.id === entryId; });
-      if (!entry) return;
-      normalizeEntries([entry]);
-      appState.currentEntryId = entryId;
-      appState.editingCommentId = null;
+    // ===== FULLSCREEN =====
+    function openFullscreen(postId) {
+      var post = appState.data.entries.find(function(e) { return e.id === postId; });
+      if (!post) return;
+      appState.currentFullscreenId = postId;
+      var page = document.getElementById('fullscreen-page');
+      page.classList.remove('closing');
+      renderFullscreenContent(post);
+      page.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('fs-scroll').scrollTop = 0;
+    }
 
-      document.getElementById('view-title').textContent = entry.title || '(Không tiêu đề)';
+    function closeFullscreen() {
+      var page = document.getElementById('fullscreen-page');
+      page.classList.add('closing');
+      setTimeout(function() {
+        page.classList.remove('active', 'closing');
+        document.body.style.overflow = '';
+      }, 500);
+    }
 
-      var authorStr = entry.author || CONFIG.USER1_NAME;
-      var avatar = authorStr.includes('Ánh') ? '🌻' : '💖';
-      document.getElementById('view-author-name').textContent = authorStr;
-      document.getElementById('view-avatar').textContent = avatar;
+    function renderFullscreenContent(post) {
+      document.getElementById('fs-title').textContent = '';
+      var isOwner = (post.author === currentUser);
+      document.getElementById('fs-edit-btn').classList.toggle('hidden', !isOwner);
+      document.getElementById('fs-delete-btn').classList.toggle('hidden', !isOwner);
 
-      var timeDisplay = '';
-      if (entry.updatedAt && entry.createdAt && entry.updatedAt !== entry.createdAt) {
-        timeDisplay = 'Đã sửa ' + formatFullDateTime(entry.updatedAt);
+      var galleryHTML = '';
+      if (post.images && post.images.length > 0) {
+        var total = post.images.length;
+        var display = post.images.slice(0, 4);
+        var extra = total - 4;
+        var gridClass = 'g' + Math.min(total, 4);
+        if (total === 1) gridClass = 'g1';
+        else if (total === 2) gridClass = 'g2';
+        else if (total === 3) gridClass = 'g3';
+        else if (total >= 4) gridClass = 'g4';
+        var imgs = display.map(function(img, idx) {
+          var moreBadge = '';
+          if (idx === 3 && extra > 0) {
+            moreBadge = '<div class="more-badge">+' + extra + '</div>';
+          }
+          return '<div class="gimg" onclick="openPhotoViewer(\'' + post.id + '\', ' + idx + ')">' +
+            moreBadge +
+            '<img src="' + escapeHtml(img.url || img) + '" alt="Ảnh" loading="lazy" /></div>';
+        }).join('');
+        galleryHTML = '<div class="post-gallery ' + gridClass + '">' + imgs + '</div>';
+      }
+
+      var avatar = post.author.includes('Ánh') ? '🌻' : '💖';
+      var timeDisplay = formatFullDateTime(post.updatedAt);
+
+      var commentsHTML = '';
+      if (post.comments && post.comments.length > 0) {
+        commentsHTML = post.comments.map(function(c) {
+          var isCmtOwner = (c.author === currentUser);
+          var cmtAvatar = c.author.includes('Ánh') ? '🌻' : c.author.charAt(0).toUpperCase();
+          return '<div class="comment-item" data-id="' + c.id + '">' +
+            '<div class="cmt-top">' +
+            '<div class="cmt-avatar">' + cmtAvatar + '</div>' +
+            '<span class="cmt-author">' + escapeHtml(c.author) + '</span>' +
+            '<span class="cmt-time">' + formatTimeShort(c.time) + '</span>' +
+            (isCmtOwner ? '<div class="cmt-dropdown">' +
+              '<button class="cmt-dropdown-btn" onclick="toggleCmtDropdownFs(\'' + c.id + '\')">' +
+              '<i class="fas fa-ellipsis-v"></i></button>' +
+              '<div class="cmt-dropdown-menu" id="cmt-dropdown-fs-' + c.id + '">' +
+              '<button onclick="startEditCommentFs(\'' + post.id + '\', \'' + c.id + '\')">Sửa</button>' +
+              '<button class="danger" onclick="deleteCommentFs(\'' + post.id + '\', \'' + c.id + '\')">Xóa</button>' +
+              '</div></div>' : '') +
+            '</div>' +
+            '<div class="cmt-text" id="cmt-text-fs-' + c.id + '">' + escapeHtml(c.text) + '</div>' +
+            '</div>';
+        }).join('');
       } else {
-        timeDisplay = formatFullDateTime(entry.createdAt || entry.updatedAt);
+        commentsHTML = '<div class="comment-empty">💬 Chưa có bình luận nào</div>';
       }
-      document.getElementById('view-date').textContent = timeDisplay;
 
-      var editedNote = document.getElementById('view-edited-note');
-      editedNote.classList.add('hidden');
-      editedNote.textContent = '';
+      var html = '<div class="post-card">' +
+        '<div class="post-author">' +
+        '<div class="avatar">' + avatar + '</div>' +
+        '<div class="info">' +
+        '<div class="name">' + escapeHtml(post.author) + '</div>' +
+        '<div class="time">' + timeDisplay + '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="post-title">' + escapeHtml(post.title || '(Không tiêu đề)') + '</div>' +
+        '<div class="post-content">' + escapeHtml(post.content || '') + '</div>' +
+        galleryHTML +
+        '</div>' +
+        '<div class="comment-section">' +
+        '<div class="comment-header">💬 Bình luận (' + post.comments.length + ')</div>' +
+        commentsHTML +
+        '<div class="comment-input-box">' +
+        '<textarea id="fs-comment-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key===\'Enter\' && !event.shiftKey) { event.preventDefault(); sendCommentFs(\'' + post.id + '\'); }"></textarea>' +
+        '<button class="comment-send-btn" id="fs-comment-send" onclick="sendCommentFs(\'' + post.id + '\')">Gửi</button>' +
+        '</div>' +
+        '</div>';
 
-      document.getElementById('view-content').textContent = entry.content || '';
-      renderGallery('view-gallery', entry.images, entry.id);
-
-      var isOwner = (entry.author === currentUser);
-      var menuBtn = document.getElementById('view-menu-btn');
-      if (isOwner) {
-        menuBtn.style.display = 'flex';
-      } else {
-        menuBtn.style.display = 'none';
-      }
-      closeDropdown('view-dropdown');
-
-      renderComments();
-      document.getElementById('comment-input').value = '';
-      autoResize(document.getElementById('comment-input'));
-      openModal('modal-view');
+      document.getElementById('fs-content').innerHTML = html;
     }
 
-    function renderGallery(containerId, images, entryId) {
-      var container = document.getElementById(containerId);
-      if (!container) return;
-
-      if (!images || images.length === 0) {
-        container.innerHTML = '';
-        container.className = 'view-gallery';
-        return;
-      }
-
-      var count = images.length;
-      var className = 'view-gallery count-' + Math.min(count, 10);
-      container.className = className;
-
-      var html = '';
-      var displayImages = images.slice(0, 10);
-      displayImages.forEach(function(img, index) {
-        var src = img.url || img;
-        html += '<div class="gallery-image" onclick="openPhotoViewer(\'' + entryId + '\', ' + index + ')">' +
-          '<img src="' + escapeHtml(src) + '" alt="ảnh" loading="lazy" />' +
-          '<div class="gallery-overlay"><i class="fas fa-expand"></i></div>' +
-          '</div>';
-      });
-      container.innerHTML = html;
-    }
-
-    // ===== COMMENTS =====
-    function renderComments() {
-      var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-      if (!entry) return;
-      normalizeEntries([entry]);
-      var listEl = document.getElementById('comment-list');
-      var countEl = document.getElementById('comment-count-label');
-      countEl.textContent = entry.comments.length ? '(' + entry.comments.length + ')' : '';
-
-      if (!entry.comments.length) {
-        listEl.innerHTML = '<div class="comment-empty">💬 Chưa có bình luận nào</div>';
-        return;
-      }
-
-      listEl.innerHTML = entry.comments.map(function(c) {
-        return renderCommentItem(c);
-      }).join('');
-      listEl.scrollTop = listEl.scrollHeight;
-    }
-
-    function renderDlComments() {
-      var entry = appState.dayListEntries[appState.dayListIndex];
-      if (!entry) return;
-      normalizeEntries([entry]);
-      var listEl = document.getElementById('dl-comment-list');
-      var countEl = document.getElementById('dl-comment-count-label');
-      countEl.textContent = entry.comments.length ? '(' + entry.comments.length + ')' : '';
-      if (!entry.comments.length) {
-        listEl.innerHTML = '<div class="comment-empty">💬 Chưa có bình luận nào</div>';
-        return;
-      }
-      listEl.innerHTML = entry.comments.map(function(c) {
-        return renderCommentItem(c);
-      }).join('');
-      listEl.scrollTop = listEl.scrollHeight;
-    }
-
-    function renderCommentItem(comment) {
-      var isOwner = (comment.author === currentUser);
-      var avatar = comment.author.includes('Ánh') ? '🌻' : comment.author.charAt(0).toUpperCase();
-
-      var actionsHtml = '';
-      if (isOwner) {
-        actionsHtml = `
-          <div class="cmt-dropdown">
-            <button class="cmt-dropdown-btn" onclick="toggleCmtDropdown(event, '${comment.id}')">
-              <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <div class="cmt-dropdown-menu" id="cmt-dropdown-${comment.id}">
-              <button class="edit-cmt" data-id="${comment.id}">Sửa</button>
-              <button class="delete-cmt" data-id="${comment.id}">Xóa</button>
-            </div>
-          </div>
-        `;
-      }
-
-      return `
-        <div class="comment-item" data-cmt-id="${comment.id}">
-          <div class="cmt-header-row">
-            <div class="cmt-avatar">${avatar}</div>
-            <span class="cmt-author">${escapeHtml(comment.author)}</span>
-            <span class="cmt-time">${formatTimeShort(comment.time)}</span>
-            ${actionsHtml}
-          </div>
-          <div class="cmt-text">${escapeHtml(comment.text)}</div>
-        </div>
-      `;
-    }
-
-    function toggleCmtDropdown(event, commentId) {
-      event.stopPropagation();
-      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+    // ===== COMMENT trong Fullscreen =====
+    function toggleCmtDropdownFs(commentId) {
+      var menu = document.getElementById('cmt-dropdown-fs-' + commentId);
       if (!menu) return;
-      document.querySelectorAll('.cmt-dropdown-menu.show').forEach(m => {
-        if (m.id !== `cmt-dropdown-${commentId}`) m.classList.remove('show');
+      document.querySelectorAll('.cmt-dropdown-menu.show').forEach(function(el) {
+        if (el.id !== 'cmt-dropdown-fs-' + commentId) el.classList.remove('show');
       });
       menu.classList.toggle('show');
     }
 
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.cmt-dropdown-menu.show').forEach(m => m.classList.remove('show'));
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.cmt-dropdown')) {
+        document.querySelectorAll('.cmt-dropdown-menu.show').forEach(function(el) {
+          el.classList.remove('show');
+        });
+      }
     });
 
-    // ===== SEND COMMENT =====
-    function sendComment() {
-      var input = document.getElementById('comment-input');
+    function sendCommentFs(postId) {
+      var input = document.getElementById('fs-comment-input');
       var text = input.value.trim();
-      if (!text) { showToast('⚠️ Viết gì đó để bình luận nhé!'); return; }
-      if (!appState.currentEntryId) return;
-
-      var btn = document.getElementById('comment-send-btn');
-      if (btn.disabled) return;
+      if (!text) { showToast('⚠️ Vui lòng nhập nội dung'); return; }
+      var btn = document.getElementById('fs-comment-send');
       btn.disabled = true;
       btn.textContent = '⏳';
 
-      var editingId = appState.editingCommentId;
-
-      if (editingId) {
-        var payload = {
-          action: 'edit_comment',
-          entryId: appState.currentEntryId,
-          commentId: editingId,
-          text: text,
-          author: currentUser
-        };
-        sendCommentToServer(payload, function(result) {
-          var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-          if (entry && result && result.comments) {
-            entry.comments = result.comments;
-          }
-          appState.editingCommentId = null;
-          input.value = '';
-          autoResize(input);
-          btn.disabled = false;
-          btn.textContent = 'Gửi';
-          renderComments();
-          renderTimeline();
-        });
-        return;
-      }
-
       var payload = {
         action: 'add_comment',
-        entryId: appState.currentEntryId,
+        entryId: postId,
         author: currentUser,
         text: text
       };
       sendCommentToServer(payload, function(result) {
-        var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-        if (entry && result && result.comments) {
-          entry.comments = result.comments;
+        var post = appState.data.entries.find(function(e) { return e.id === postId; });
+        if (post && result && result.comments) {
+          post.comments = result.comments;
         }
         input.value = '';
         autoResize(input);
         btn.disabled = false;
         btn.textContent = 'Gửi';
-        renderComments();
+        renderFullscreenContent(post);
         renderTimeline();
         showToast('💬 Đã bình luận!');
       });
     }
 
-    function sendDlComment() {
-      var input = document.getElementById('dl-comment-input');
-      var text = input.value.trim();
-      if (!text) { showToast('⚠️ Viết gì đó để bình luận nhé!'); return; }
-      var entry = appState.dayListEntries[appState.dayListIndex];
-      if (!entry) return;
-
-      var btn = document.getElementById('dl-comment-send-btn');
-      if (btn.disabled) return;
-      btn.disabled = true;
-      btn.textContent = '⏳';
-
-      var editingId = appState.editingDlCommentId;
-
-      if (editingId) {
-        var payload = {
-          action: 'edit_comment',
-          entryId: entry.id,
-          commentId: editingId,
-          text: text,
-          author: currentUser
-        };
-        sendCommentToServer(payload, function(result) {
-          var master = appState.data.entries.find(function(e) { return e.id === entry.id; });
-          if (result && result.comments) {
-            entry.comments = result.comments;
-            if (master) master.comments = result.comments;
-          }
-          appState.editingDlCommentId = null;
-          input.value = '';
-          autoResize(input);
-          btn.disabled = false;
-          btn.textContent = 'Gửi';
-          renderDlComments();
-          renderTimeline();
-        });
+    function deleteCommentFs(postId, commentId) {
+      var menu = document.getElementById('cmt-dropdown-fs-' + commentId);
+      if (menu) menu.classList.remove('show');
+      if (!confirm('Xóa bình luận này?')) return;
+      var post = appState.data.entries.find(function(e) { return e.id === postId; });
+      if (!post) return;
+      var comment = post.comments.find(function(c) { return c.id === commentId; });
+      if (!comment) return;
+      if (comment.author !== currentUser) {
+        showToast('⚠️ Bạn không có quyền xóa bình luận này');
         return;
       }
-
       var payload = {
-        action: 'add_comment',
-        entryId: entry.id,
-        author: currentUser,
-        text: text
+        action: 'delete_comment',
+        entryId: postId,
+        commentId: commentId,
+        author: currentUser
       };
       sendCommentToServer(payload, function(result) {
-        var master = appState.data.entries.find(function(e) { return e.id === entry.id; });
         if (result && result.comments) {
-          entry.comments = result.comments;
-          if (master) master.comments = result.comments;
+          post.comments = result.comments;
         }
-        input.value = '';
-        autoResize(input);
-        btn.disabled = false;
-        btn.textContent = 'Gửi';
-        renderDlComments();
+        renderFullscreenContent(post);
         renderTimeline();
-        showToast('💬 Đã bình luận!');
+        showToast('🗑 Đã xóa bình luận');
       });
     }
 
-    // ===== EDIT / DELETE COMMENT (Main) =====
-    function startEditComment(commentId) {
-      var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-      if (!entry) return;
-      var comment = entry.comments.find(function(c) { return c.id === commentId; });
+    function startEditCommentFs(postId, commentId) {
+      var menu = document.getElementById('cmt-dropdown-fs-' + commentId);
+      if (menu) menu.classList.remove('show');
+      var post = appState.data.entries.find(function(e) { return e.id === postId; });
+      if (!post) return;
+      var comment = post.comments.find(function(c) { return c.id === commentId; });
       if (!comment) return;
       if (comment.author !== currentUser) {
-        showToast('⚠️ Bạn chỉ có thể sửa bình luận của mình!');
+        showToast('⚠️ Bạn không có quyền sửa bình luận này');
         return;
       }
-      appState.editingCommentId = commentId;
-      var input = document.getElementById('comment-input');
-      input.value = comment.text;
-      autoResize(input);
-      input.focus();
-      document.getElementById('comment-send-btn').textContent = '✓';
-      showToast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
-      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
-      if (menu) menu.classList.remove('show');
+      var textEl = document.getElementById('cmt-text-fs-' + commentId);
+      if (!textEl) return;
+      var oldText = comment.text;
+      textEl.contentEditable = true;
+      textEl.classList.add('editing');
+      textEl.focus();
+      var range = document.createRange();
+      range.selectNodeContents(textEl);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      var saveEdit = function() {
+        var newText = textEl.textContent.trim();
+        if (newText && newText !== oldText) {
+          var payload = {
+            action: 'edit_comment',
+            entryId: postId,
+            commentId: commentId,
+            text: newText,
+            author: currentUser
+          };
+          sendCommentToServer(payload, function(result) {
+            if (result && result.comments) {
+              post.comments = result.comments;
+            }
+            renderFullscreenContent(post);
+            renderTimeline();
+            showToast('✅ Đã cập nhật bình luận');
+          });
+        } else if (!newText) {
+          textEl.textContent = oldText;
+        }
+        textEl.contentEditable = false;
+        textEl.classList.remove('editing');
+      };
+
+      textEl.onkeydown = function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          textEl.blur();
+        }
+      };
+      textEl.onblur = saveEdit;
     }
 
-    function deleteComment(commentId) {
-      var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-      if (!entry) return;
-      var comment = entry.comments.find(function(c) { return c.id === commentId; });
-      if (!comment) return;
-      if (comment.author !== currentUser) {
-        showToast('⚠️ Bạn chỉ có thể xóa bình luận của mình!');
+    // ===== EDIT / DELETE từ fullscreen =====
+    function editFromFullscreen() {
+      if (!appState.currentFullscreenId) return;
+      closeFullscreen();
+      setTimeout(function() {
+        openWritePage(appState.currentFullscreenId);
+      }, 300);
+    }
+
+    function deleteFromFullscreen() {
+      if (!appState.currentFullscreenId) return;
+      var post = appState.data.entries.find(function(e) { return e.id === appState.currentFullscreenId; });
+      if (!post) return;
+      if (post.author !== currentUser) {
+        showToast('⚠️ Bạn không có quyền xóa bài này');
         return;
       }
-      showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?', function(ok) {
+      showConfirm('🗑 Xóa bài viết', 'Bạn có chắc muốn xóa bài này? Không thể khôi phục!', function(ok) {
         if (!ok) return;
-        var payload = {
-          action: 'delete_comment',
-          entryId: appState.currentEntryId,
-          commentId: commentId,
-          author: currentUser
-        };
-        sendCommentToServer(payload, function(result) {
-          var entry2 = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-          if (entry2 && result && result.comments) {
-            entry2.comments = result.comments;
-          }
-          if (appState.editingCommentId === commentId) {
-            appState.editingCommentId = null;
-            document.getElementById('comment-input').value = '';
-            autoResize(document.getElementById('comment-input'));
-            document.getElementById('comment-send-btn').textContent = 'Gửi';
-          }
-          renderComments();
-          renderTimeline();
-          showToast('🗑 Đã xóa bình luận');
-        });
+        var payload = { action: 'delete_entry', id: appState.currentFullscreenId };
+        sendToServer(payload, '🗑 Đã xóa!');
+        closeFullscreen();
       });
-      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
-      if (menu) menu.classList.remove('show');
     }
 
-    function startEditDlComment(commentId) {
-      var entry = appState.dayListEntries[appState.dayListIndex];
-      if (!entry) return;
-      var comment = entry.comments.find(function(c) { return c.id === commentId; });
-      if (!comment) return;
-      if (comment.author !== currentUser) {
-        showToast('⚠️ Bạn chỉ có thể sửa bình luận của mình!');
-        return;
-      }
-      appState.editingDlCommentId = commentId;
-      var input = document.getElementById('dl-comment-input');
-      input.value = comment.text;
-      autoResize(input);
-      input.focus();
-      document.getElementById('dl-comment-send-btn').textContent = '✓';
-      showToast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
-      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
-      if (menu) menu.classList.remove('show');
-    }
-
-    function deleteDlComment(commentId) {
-      var entry = appState.dayListEntries[appState.dayListIndex];
-      if (!entry) return;
-      var comment = entry.comments.find(function(c) { return c.id === commentId; });
-      if (!comment) return;
-      if (comment.author !== currentUser) {
-        showToast('⚠️ Bạn chỉ có thể xóa bình luận của mình!');
-        return;
-      }
-      showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?', function(ok) {
-        if (!ok) return;
-        var payload = {
-          action: 'delete_comment',
-          entryId: entry.id,
-          commentId: commentId,
-          author: currentUser
-        };
-        sendCommentToServer(payload, function(result) {
-          var master = appState.data.entries.find(function(e) { return e.id === entry.id; });
-          if (result && result.comments) {
-            entry.comments = result.comments;
-            if (master) master.comments = result.comments;
-          }
-          if (appState.editingDlCommentId === commentId) {
-            appState.editingDlCommentId = null;
-            document.getElementById('dl-comment-input').value = '';
-            autoResize(document.getElementById('dl-comment-input'));
-            document.getElementById('dl-comment-send-btn').textContent = 'Gửi';
-          }
-          renderDlComments();
-          renderTimeline();
-          showToast('🗑 Đã xóa bình luận');
-        });
-      });
-      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
-      if (menu) menu.classList.remove('show');
-    }
-
-    // ===== DAY LIST MODAL =====
+    // ===== DAY LIST =====
     function openDayList(dateStr) {
       var entries = appState.data.entries.filter(function(e) { return e.date === dateStr; });
       if (!entries.length) return;
       if (entries.length === 1) {
-        openEntryView(entries[0].id);
+        openFullscreen(entries[0].id);
         return;
       }
       entries = entries.slice();
@@ -3281,281 +3371,408 @@
 
     function editFromDayList() {
       closeModal('modal-daylist');
-      editCurrentEntry();
+      if (appState.currentEntryId) {
+        openWritePage(appState.currentEntryId);
+      }
     }
 
     function deleteFromDayList() {
-      deleteCurrentEntry();
-      closeModal('modal-daylist');
-    }
-
-    // ===== WRITE / EDIT / DELETE ENTRY =====
-    function openWriteModal() {
-      appState.currentEntryId = null;
-      appState.selectedMood = '';
-      appState.imageList = [];
-      document.getElementById('write-modal-title').textContent = '✍️ Viết nhật ký';
-      document.getElementById('entry-date').value = getTodayString();
-      document.getElementById('entry-title').value = '';
-      document.getElementById('entry-content').value = '';
-      document.getElementById('image-preview').innerHTML = '';
-      document.getElementById('upload-progress').classList.remove('show');
-      document.getElementById('upload-progress-bar').classList.remove('show');
-      openModal('modal-write');
-    }
-
-    function editCurrentEntry() {
-      if (!appState.currentEntryId) return;
-      var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-      if (!entry) return;
-      if (entry.author !== currentUser) {
-        showToast('⚠️ Bạn chỉ có thể sửa bài của mình!');
-        return;
-      }
-      closeModal('modal-view');
-      normalizeEntries([entry]);
-      appState.selectedMood = entry.mood || '';
-      appState.imageList = entry.images ? entry.images.slice() : [];
-      document.getElementById('write-modal-title').textContent = '✏️ Chỉnh sửa nhật ký';
-      document.getElementById('entry-date').value = entry.date;
-      document.getElementById('entry-title').value = entry.title || '';
-      document.getElementById('entry-content').value = entry.content || '';
-      renderImagePreviews();
-      document.getElementById('upload-progress').classList.remove('show');
-      document.getElementById('upload-progress-bar').classList.remove('show');
-      openModal('modal-write');
-    }
-
-    function deleteCurrentEntry() {
-      if (!appState.currentEntryId) return;
-      var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
-      if (entry.author !== currentUser) {
-        showToast('⚠️ Bạn chỉ có thể xóa bài của mình!');
-        return;
-      }
-      showConfirm('🗑 Xóa bài viết', 'Bạn có chắc muốn xóa bài này? Không thể khôi phục!', function(ok) {
-        if (!ok) return;
-        closeModal('modal-view');
-        showToast('⏳ Đang xóa...');
-        var driveIds = [];
-        if (entry && entry.images) {
-          entry.images.forEach(function(img) {
-            if (img.driveId) driveIds.push(img.driveId);
+      if (appState.currentEntryId) {
+        var entry = appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; });
+        if (entry && entry.author === currentUser) {
+          showConfirm('🗑 Xóa bài viết', 'Bạn có chắc muốn xóa bài này?', function(ok) {
+            if (!ok) return;
+            var payload = { action: 'delete_entry', id: appState.currentEntryId };
+            sendToServer(payload, '🗑 Đã xóa!');
+            closeModal('modal-daylist');
           });
+        } else {
+          showToast('⚠️ Bạn không có quyền xóa bài này');
         }
-        var payload = { action: 'delete_entry', id: appState.currentEntryId, driveIds: driveIds };
-        sendToServer(payload, '🗑 Đã xóa!');
-        appState.currentEntryId = null;
-      });
-    }
-
-    // ===== SAVE ENTRY =====
-    function saveEntry() {
-      var date = document.getElementById('entry-date').value;
-      var title = document.getElementById('entry-title').value.trim();
-      var content = document.getElementById('entry-content').value.trim();
-      if (!date) { showToast('⚠️ Chọn ngày viết nhé!'); return; }
-      if (!content) { showToast('⚠️ Viết vài dòng đi nào~ 🌸'); return; }
-
-      if (document.getElementById('upload-progress').classList.contains('show')) {
-        showToast('⏳ Ảnh đang xử lý, chờ xíu nhé!');
-        return;
       }
-      if (appState.isSaving) return;
-
-      var existing = appState.currentEntryId ?
-        appState.data.entries.find(function(e) { return e.id === appState.currentEntryId; }) : null;
-      if (existing) normalizeEntries([existing]);
-
-      var now = new Date().toISOString();
-      var isNew = !appState.currentEntryId;
-      var entry = {
-        id: appState.currentEntryId || ('e_' + Date.now()),
-        date: date,
-        title: title || ('Ngày ' + formatDateVN(date)),
-        content: content,
-        mood: appState.selectedMood,
-        author: currentUser,
-        images: appState.imageList.slice(),
-        comments: existing && existing.comments ? existing.comments.slice() : [],
-        createdAt: existing ? (existing.createdAt || existing.updatedAt || now) : now,
-        updatedAt: now
-      };
-
-      closeModal('modal-write');
-      showSavingOverlay(isNew ? 'Đang lưu nhật ký...' : 'Đang cập nhật...');
-      appState.isSaving = true;
-
-      sendToServer({ action: 'save_entry', entry: entry }, null, function(result) {
-        appState.isSaving = false;
-        hideSavingOverlay();
-        showToast(isNew ? '💾 Đã lưu nhật ký!' : '💾 Đã cập nhật!');
-        var savedId = (result && result.entry && result.entry.id) ? result.entry.id : entry.id;
-        setTimeout(function() {
-          openEntryView(savedId);
-        }, 200);
-      });
     }
 
-    function showSavingOverlay(message) {
-      document.getElementById('saving-text').textContent = message || 'Đang lưu nhật ký...';
-      document.getElementById('saving-overlay').classList.add('show');
-    }
+    // ===== WRITE PAGE =====
+    function openWritePage(entryId) {
+      var page = document.getElementById('write-page');
+      page.classList.remove('closing');
+      page.classList.add('active');
+      document.body.style.overflow = 'hidden';
 
-    function hideSavingOverlay() {
-      document.getElementById('saving-overlay').classList.remove('show');
-    }
+      var titleInput = document.getElementById('write-title');
+      var contentInput = document.getElementById('write-content');
+      var dateInput = document.getElementById('write-date');
+      var submitBtn = document.getElementById('write-submit-btn');
 
-    // ===== FONT SIZE =====
-    function adjustFontSize(delta) {
-      appState.fontSize = Math.min(20, Math.max(11, appState.fontSize + delta));
-      var textarea = document.getElementById('entry-content');
-      if (textarea) {
-        textarea.style.fontSize = appState.fontSize + 'px';
+      if (entryId) {
+        var entry = appState.data.entries.find(function(e) { return e.id === entryId; });
+        if (entry) {
+          document.getElementById('write-page-title').textContent = '✏️ Chỉnh sửa bài viết';
+          titleInput.value = entry.title || '';
+          contentInput.value = entry.content || '';
+          dateInput.value = entry.date || getTodayString();
+          appState.writeImages = entry.images ? entry.images.slice() : [];
+          appState.writeEditId = entryId;
+        } else {
+          document.getElementById('write-page-title').textContent = 'Tạo bài viết';
+          titleInput.value = '';
+          contentInput.value = '';
+          dateInput.value = getTodayString();
+          appState.writeImages = [];
+          appState.writeEditId = null;
+        }
+      } else {
+        document.getElementById('write-page-title').textContent = 'Tạo bài viết';
+        titleInput.value = '';
+        contentInput.value = '';
+        dateInput.value = getTodayString();
+        appState.writeImages = [];
+        appState.writeEditId = null;
       }
-      document.getElementById('font-size-label').textContent = 'Cỡ chữ: ' + appState.fontSize + 'px';
+      renderWritePreview();
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Đăng';
+      setTimeout(function() { titleInput.focus(); }, 300);
     }
 
-    // ===== IMAGE UPLOAD =====
-    function handleImagePick(input) {
+    function closeWritePage() {
+      var page = document.getElementById('write-page');
+      page.classList.add('closing');
+      setTimeout(function() {
+        page.classList.remove('active', 'closing');
+        document.body.style.overflow = '';
+      }, 400);
+    }
+
+    function handleWriteImages(input) {
       var files = Array.from(input.files);
-      var remaining = CONFIG.MAX_IMAGES - appState.imageList.length;
+      if (files.length === 0) return;
+      var remaining = CONFIG.MAX_IMAGES - appState.writeImages.length;
       if (files.length > remaining) {
-        showToast('⚠️ Tối đa ' + CONFIG.MAX_IMAGES + ' ảnh mỗi bài!');
-        files = files.slice(0, remaining);
+        showToast('⚠️ Chỉ được thêm tối đa ' + remaining + ' ảnh');
+        files.splice(remaining);
       }
-      if (!files.length) return;
-
-      var progressEl = document.getElementById('upload-progress');
-      var barEl = document.getElementById('upload-progress-bar');
-      var fillEl = document.getElementById('progress-fill');
-      progressEl.classList.add('show');
-      barEl.classList.add('show');
-      fillEl.style.width = '0%';
-      document.getElementById('save-entry-btn').disabled = true;
-
-      var dateForFolder = document.getElementById('entry-date').value || getTodayString();
-      var total = files.length;
-      var completed = 0;
-      var processing = 0;
-      var maxConcurrent = 3;
-      var queue = files.slice();
-
-      function processNext() {
-        if (queue.length === 0 && processing === 0) {
+      files.forEach(function(file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          appState.writeImages.push(e.target.result);
+          renderWritePreview();
           setTimeout(function() {
-            progressEl.classList.remove('show');
-            barEl.classList.remove('show');
-            document.getElementById('save-entry-btn').disabled = false;
-            renderImagePreviews();
-          }, 300);
-          return;
-        }
-        while (processing < maxConcurrent && queue.length > 0) {
-          var file = queue.shift();
-          processing++;
-          compressImage(file, function(base64) {
-            uploadImageToServer(base64, file.name, dateForFolder, function(result) {
-              if (result) {
-                appState.imageList.push({ url: result.url, driveId: result.driveId });
-              } else {
-                showToast('⚠️ Không thể upload ảnh: ' + file.name);
-              }
-              completed++;
-              processing--;
-              var percent = Math.round((completed / total) * 100);
-              fillEl.style.width = percent + '%';
-              processNext();
-            });
-          });
-        }
-      }
-      processNext();
+            document.getElementById('write-body').scrollTop = document.getElementById('write-body').scrollHeight;
+          }, 100);
+        };
+        reader.readAsDataURL(file);
+      });
       input.value = '';
     }
 
-    function compressImage(file, callback) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var img = new Image();
-        img.onload = function() {
-          var canvas = document.createElement('canvas');
-          var maxSize = 800;
-          var w = img.width,
-            h = img.height;
-          if (w > maxSize || h > maxSize) {
-            if (w > h) { h = Math.round(h * maxSize / w);
-              w = maxSize; } else { w = Math.round(w * maxSize / h);
-              h = maxSize; }
-          }
-          canvas.width = w;
-          canvas.height = h;
-          var ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          callback(canvas.toDataURL('image/jpeg', 0.7));
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+    function renderWritePreview() {
+      var preview = document.getElementById('write-image-preview');
+      var total = appState.writeImages.length;
+      if (total === 0) {
+        preview.innerHTML = '';
+        preview.className = 'write-image-preview';
+        return;
+      }
+      var display = appState.writeImages.slice(0, 4);
+      var extra = total - 4;
+      var gridClass = 'g' + Math.min(total, 4);
+      if (total === 1) gridClass = 'g1';
+      else if (total === 2) gridClass = 'g2';
+      else if (total === 3) gridClass = 'g3';
+      else if (total >= 4) gridClass = 'g4';
+
+      var imgs = display.map(function(src, idx) {
+        var moreBadge = '';
+        if (idx === 3 && extra > 0) {
+          moreBadge = '<div class="more-badge">+' + extra + '</div>';
+        }
+        return '<div class="preview-img">' + moreBadge +
+          '<img src="' + escapeHtml(src) + '" alt="Ảnh đã chọn" />' +
+          '<button class="remove" onclick="removeWriteImage(' + idx + ')">✕</button>' +
+          '</div>';
+      }).join('');
+      preview.className = 'write-image-preview ' + gridClass;
+      preview.innerHTML = imgs;
     }
 
-    function uploadImageToServer(base64, filename, dateStr, callback) {
-      var parts = base64.split(',');
-      var data = parts[1] || parts[0];
-      var mimeType = (base64.indexOf('png') > -1) ? 'image/png' : 'image/jpeg';
+    function removeWriteImage(idx) {
+      appState.writeImages.splice(idx, 1);
+      renderWritePreview();
+    }
 
-      if (data.length > 1.2 * 1024 * 1024) {
-        showToast('⚠️ Ảnh quá lớn sau nén, bỏ qua');
-        callback(null);
+    function submitWrite() {
+      var title = document.getElementById('write-title').value.trim() || 'Bài viết mới';
+      var content = document.getElementById('write-content').value.trim();
+      if (!content) { showToast('⚠️ Vui lòng nhập nội dung'); return; }
+      var date = document.getElementById('write-date').value;
+      if (!date) { showToast('⚠️ Chọn ngày viết'); return; }
+
+      var submitBtn = document.getElementById('write-submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳';
+
+      var now = new Date().toISOString();
+      var entry = {
+        id: appState.writeEditId || ('e_' + Date.now()),
+        date: date,
+        title: title,
+        content: content,
+        author: currentUser,
+        images: appState.writeImages.slice(),
+        comments: [],
+        createdAt: now,
+        updatedAt: now
+      };
+
+      if (appState.writeEditId) {
+        var old = appState.data.entries.find(function(e) { return e.id === appState.writeEditId; });
+        if (old) {
+          entry.comments = old.comments || [];
+          entry.createdAt = old.createdAt || now;
+        }
+      }
+
+      sendToServer({ action: 'save_entry', entry: entry }, null, function(result) {
+        showToast(appState.writeEditId ? '💾 Đã cập nhật!' : '💾 Đã đăng bài!');
+        closeWritePage();
+        loadData();
+      });
+    }
+
+    // ===== MODAL =====
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        if (e.target === el) closeModal(el.id);
+      });
+    });
+
+    function showConfirm(title, message, callback) {
+      document.getElementById('confirm-title').textContent = title || 'Xác nhận';
+      document.getElementById('confirm-message').textContent = message || 'Bạn có chắc chắn?';
+      openModal('modal-confirm');
+      document.getElementById('confirm-ok').onclick = function() {
+        closeModal('modal-confirm');
+        if (callback) callback(true);
+      };
+      document.getElementById('confirm-cancel').onclick = function() {
+        closeModal('modal-confirm');
+        if (callback) callback(false);
+      };
+    }
+
+    // ===== Các hàm hỗ trợ daylist =====
+    function renderGallery(containerId, images, entryId) {
+      var container = document.getElementById(containerId);
+      if (!container) return;
+      if (!images || images.length === 0) {
+        container.innerHTML = '';
+        container.className = 'view-gallery';
+        return;
+      }
+      var count = images.length;
+      var className = 'view-gallery count-' + Math.min(count, 10);
+      container.className = className;
+      var html = '';
+      var displayImages = images.slice(0, 10);
+      displayImages.forEach(function(img, index) {
+        var src = img.url || img;
+        html += '<div class="gallery-image" onclick="openPhotoViewer(\'' + entryId + '\', ' + index + ')">' +
+          '<img src="' + escapeHtml(src) + '" alt="ảnh" loading="lazy" />' +
+          '<div class="gallery-overlay"><i class="fas fa-expand"></i></div>' +
+          '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function renderDlComments() {
+      var entry = appState.dayListEntries[appState.dayListIndex];
+      if (!entry) return;
+      normalizeEntries([entry]);
+      var listEl = document.getElementById('dl-comment-list');
+      var countEl = document.getElementById('dl-comment-count-label');
+      countEl.textContent = entry.comments.length ? '(' + entry.comments.length + ')' : '';
+      if (!entry.comments.length) {
+        listEl.innerHTML = '<div class="comment-empty">💬 Chưa có bình luận nào</div>';
+        return;
+      }
+      listEl.innerHTML = entry.comments.map(function(c) {
+        return renderCommentItem(c);
+      }).join('');
+      listEl.scrollTop = listEl.scrollHeight;
+    }
+
+    function renderCommentItem(comment) {
+      var isOwner = (comment.author === currentUser);
+      var avatar = comment.author.includes('Ánh') ? '🌻' : comment.author.charAt(0).toUpperCase();
+      var actionsHtml = '';
+      if (isOwner) {
+        actionsHtml = `
+          <div class="cmt-dropdown">
+            <button class="cmt-dropdown-btn" onclick="toggleCmtDropdown(event, '${comment.id}')">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="cmt-dropdown-menu" id="cmt-dropdown-${comment.id}">
+              <button class="edit-cmt" data-id="${comment.id}">Sửa</button>
+              <button class="delete-cmt" data-id="${comment.id}">Xóa</button>
+            </div>
+          </div>
+        `;
+      }
+      return `
+        <div class="comment-item" data-cmt-id="${comment.id}">
+          <div class="cmt-header-row">
+            <div class="cmt-avatar">${avatar}</div>
+            <span class="cmt-author">${escapeHtml(comment.author)}</span>
+            <span class="cmt-time">${formatTimeShort(comment.time)}</span>
+            ${actionsHtml}
+          </div>
+          <div class="cmt-text">${escapeHtml(comment.text)}</div>
+        </div>
+      `;
+    }
+
+    function toggleCmtDropdown(event, commentId) {
+      event.stopPropagation();
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (!menu) return;
+      document.querySelectorAll('.cmt-dropdown-menu.show').forEach(m => {
+        if (m.id !== `cmt-dropdown-${commentId}`) m.classList.remove('show');
+      });
+      menu.classList.toggle('show');
+    }
+
+    // Comment cho daylist
+    function sendDlComment() {
+      var input = document.getElementById('dl-comment-input');
+      var text = input.value.trim();
+      if (!text) { showToast('⚠️ Viết gì đó để bình luận nhé!'); return; }
+      var entry = appState.dayListEntries[appState.dayListIndex];
+      if (!entry) return;
+
+      var btn = document.getElementById('dl-comment-send-btn');
+      if (btn.disabled) return;
+      btn.disabled = true;
+      btn.textContent = '⏳';
+
+      var editingId = appState.editingDlCommentId;
+
+      if (editingId) {
+        var payload = {
+          action: 'edit_comment',
+          entryId: entry.id,
+          commentId: editingId,
+          text: text,
+          author: currentUser
+        };
+        sendCommentToServer(payload, function(result) {
+          var master = appState.data.entries.find(function(e) { return e.id === entry.id; });
+          if (result && result.comments) {
+            entry.comments = result.comments;
+            if (master) master.comments = result.comments;
+          }
+          appState.editingDlCommentId = null;
+          input.value = '';
+          autoResize(input);
+          btn.disabled = false;
+          btn.textContent = 'Gửi';
+          renderDlComments();
+          renderTimeline();
+        });
         return;
       }
 
       var payload = {
-        action: 'upload_image',
-        imageData: data,
-        mimeType: mimeType,
-        filename: filename || ('photo_' + Date.now() + '.jpg'),
-        dateStr: dateStr
+        action: 'add_comment',
+        entryId: entry.id,
+        author: currentUser,
+        text: text
       };
-
-      fetch(CONFIG.BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        })
-        .then(function(response) { return response.json(); })
-        .then(function(result) {
-          if (result && result.url) callback(result);
-          else callback(null);
-        })
-        .catch(function() { callback(null); });
+      sendCommentToServer(payload, function(result) {
+        var master = appState.data.entries.find(function(e) { return e.id === entry.id; });
+        if (result && result.comments) {
+          entry.comments = result.comments;
+          if (master) master.comments = result.comments;
+        }
+        input.value = '';
+        autoResize(input);
+        btn.disabled = false;
+        btn.textContent = 'Gửi';
+        renderDlComments();
+        renderTimeline();
+        showToast('💬 Đã bình luận!');
+      });
     }
 
-    function renderImagePreviews() {
-      var container = document.getElementById('image-preview');
-      container.innerHTML = appState.imageList.map(function(img, i) {
-        var src = img.url || img;
-        return '<div class="image-preview-item">' +
-          '<img src="' + escapeHtml(src) + '" alt="preview" />' +
-          '<button class="image-remove-btn" onclick="removeImage(' + i + ')">✕</button>' +
-          '</div>';
-      }).join('');
-    }
-
-    function removeImage(index) {
-      var img = appState.imageList[index];
-      if (img && img.driveId) {
-        fetch(CONFIG.BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'delete_image', driveId: img.driveId })
-        }).catch(function() {});
+    function startEditDlComment(commentId) {
+      var entry = appState.dayListEntries[appState.dayListIndex];
+      if (!entry) return;
+      var comment = entry.comments.find(function(c) { return c.id === commentId; });
+      if (!comment) return;
+      if (comment.author !== currentUser) {
+        showToast('⚠️ Bạn chỉ có thể sửa bình luận của mình!');
+        return;
       }
-      appState.imageList.splice(index, 1);
-      renderImagePreviews();
+      appState.editingDlCommentId = commentId;
+      var input = document.getElementById('dl-comment-input');
+      input.value = comment.text;
+      autoResize(input);
+      input.focus();
+      document.getElementById('dl-comment-send-btn').textContent = '✓';
+      showToast('✏️ Đang sửa bình luận, gửi lại để lưu nhé!');
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (menu) menu.classList.remove('show');
     }
 
-    // ===== AUTO RESIZE TEXTAREA =====
+    function deleteDlComment(commentId) {
+      var entry = appState.dayListEntries[appState.dayListIndex];
+      if (!entry) return;
+      var comment = entry.comments.find(function(c) { return c.id === commentId; });
+      if (!comment) return;
+      if (comment.author !== currentUser) {
+        showToast('⚠️ Bạn chỉ có thể xóa bình luận của mình!');
+        return;
+      }
+      showConfirm('🗑 Xóa bình luận', 'Bạn có chắc muốn xóa bình luận này?', function(ok) {
+        if (!ok) return;
+        var payload = {
+          action: 'delete_comment',
+          entryId: entry.id,
+          commentId: commentId,
+          author: currentUser
+        };
+        sendCommentToServer(payload, function(result) {
+          var master = appState.data.entries.find(function(e) { return e.id === entry.id; });
+          if (result && result.comments) {
+            entry.comments = result.comments;
+            if (master) master.comments = result.comments;
+          }
+          if (appState.editingDlCommentId === commentId) {
+            appState.editingDlCommentId = null;
+            document.getElementById('dl-comment-input').value = '';
+            autoResize(document.getElementById('dl-comment-input'));
+            document.getElementById('dl-comment-send-btn').textContent = 'Gửi';
+          }
+          renderDlComments();
+          renderTimeline();
+          showToast('🗑 Đã xóa bình luận');
+        });
+      });
+      const menu = document.getElementById(`cmt-dropdown-${commentId}`);
+      if (menu) menu.classList.remove('show');
+    }
+
+    // ===== AUTO RESIZE =====
     function autoResize(el) {
       if (!el) return;
       el.style.height = 'auto';
@@ -3568,19 +3785,11 @@
         t.classList.toggle('active', t.dataset.tab === tab);
       });
 
-      var scrollBtn = document.getElementById('scroll-top-btn');
       var fabWrapper = document.getElementById('fab-wrapper');
       if (tab === 'diary') {
         fabWrapper.style.display = 'block';
-        var currentScrollY = window.scrollY || window.pageYOffset || 0;
-        if (currentScrollY > 150) {
-          scrollBtn.classList.add('visible');
-        } else {
-          scrollBtn.classList.remove('visible');
-        }
       } else {
         fabWrapper.style.display = 'none';
-        scrollBtn.classList.remove('visible');
       }
 
       if (window.innerWidth < 769) {
@@ -3635,48 +3844,6 @@
       });
     }
 
-    // ===== MODAL HELPERS =====
-    function openModal(id) {
-      document.getElementById(id).classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    document.querySelectorAll('.modal-overlay').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        if (e.target === el) closeModal(el.id);
-      });
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
-          closeModal(m.id);
-        });
-        closePhotoViewer();
-        closeDrawer();
-      }
-    });
-
-    // ===== CONFIRM MODAL =====
-    function showConfirm(title, message, callback) {
-      document.getElementById('confirm-title').textContent = title || 'Xác nhận';
-      document.getElementById('confirm-message').textContent = message || 'Bạn có chắc chắn?';
-      openModal('modal-confirm');
-      document.getElementById('confirm-ok').onclick = function() {
-        closeModal('modal-confirm');
-        if (callback) callback(true);
-      };
-      document.getElementById('confirm-cancel').onclick = function() {
-        closeModal('modal-confirm');
-        if (callback) callback(false);
-      };
-    }
-
     // ===== TOAST =====
     var toastTimer = null;
 
@@ -3704,7 +3871,8 @@
       btn.classList.toggle('syncing', isSyncing);
     }
 
-    console.log('💕 Love Story – Phiên bản 5.1.7 Stable (Minimal style, dropdown gọn)');
+    // ===== KHỞI TẠO =====
+    console.log('💕 Love Story – Phiên bản 5.2 (Đã sửa dropdown comment, thời gian, xem ảnh)');
   </script>
 </body>
 </html>
