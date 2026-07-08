@@ -1063,7 +1063,7 @@
     .write-image-preview.g3 .preview-img:first-child { grid-row:1/3; grid-column:1/2; }
     .write-image-preview.g4 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; }
 
-    /* Khu vực options - chia đôi bố cục */
+    /* Khu vực options - chia đôi bố cục, chỉ ẩn ô chọn ngày, giữ nguyên thêm ảnh */
     .write-options-wrapper {
       margin-top: auto;
       padding: 12px 0 0;
@@ -1107,6 +1107,10 @@
     .write-options-grid .option-item .file-label-text {
       flex: 1;
       cursor: pointer;
+    }
+    /* Ẩn ô chọn ngày khi cần */
+    #write-date-wrapper.hidden {
+      display: none;
     }
 
     /* ===== Modals còn lại ===== */
@@ -1160,7 +1164,10 @@
     }
     .modal-close:hover { background:#f7dde8; color:var(--primary); transform:rotate(90deg); }
 
-    /* ===== Confirm modal - z-index cao nhất ===== */
+    /* ===== Confirm modal ===== */
+    #modal-confirm {
+      z-index: 6000 !important;
+    }
     .confirm-modal .modal-box { max-width:400px; text-align:center; }
     .confirm-modal .modal-title { font-size:1.1rem; margin-bottom:8px; text-align:center; font-family: 'Playfair Display', serif; }
     .confirm-message { font-size:0.88rem; color:var(--text-secondary); margin-bottom:20px; }
@@ -1581,11 +1588,6 @@
     .comment-input-row textarea::placeholder { color:#b07a8a; }
     .comment-input-row textarea::-webkit-resizer { display: none; }
     .comment-input-row textarea::-webkit-scrollbar { width: 0; }
-
-    /* ===== Confirm modal - tăng z-index ===== */
-    #modal-confirm {
-      z-index: 6000 !important;
-    }
   </style>
 </head>
 <body>
@@ -1807,7 +1809,7 @@
       </div>
       <div class="write-options-wrapper">
         <div class="write-options-grid">
-          <div class="option-item">
+          <div class="option-item" id="write-date-wrapper">
             <i class="far fa-calendar-alt"></i>
             <input type="date" id="write-date" />
           </div>
@@ -1864,7 +1866,7 @@
     </div>
   </div>
 
-  <!-- ===== CONFIRM MODAL - z-index cao ===== -->
+  <!-- ===== CONFIRM MODAL ===== -->
   <div class="modal-overlay confirm-modal" id="modal-confirm" style="z-index:6000;">
     <div class="modal-box">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
@@ -3141,6 +3143,16 @@
         '</div>';
 
       document.getElementById('fs-content').innerHTML = html;
+
+      // Fix scroll comment trên mobile
+      var fsCommentInput = document.getElementById('fs-comment-input');
+      if (fsCommentInput) {
+        fsCommentInput.addEventListener('focus', function() {
+          setTimeout(function() {
+            this.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          }.bind(this), 300);
+        });
+      }
     }
 
     // ===== COMMENT trong Fullscreen =====
@@ -3361,6 +3373,16 @@
       document.getElementById('dl-comment-input').value = '';
       autoResize(document.getElementById('dl-comment-input'));
       openModal('modal-daylist');
+
+      // Fix scroll comment trên mobile
+      var dlCommentInput = document.getElementById('dl-comment-input');
+      if (dlCommentInput) {
+        dlCommentInput.addEventListener('focus', function() {
+          setTimeout(function() {
+            this.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          }.bind(this), 300);
+        });
+      }
     }
 
     function navigateDayList(delta) {
@@ -3395,7 +3417,6 @@
     }
 
     // ===== WRITE PAGE =====
-    // Sửa lại logic upload ảnh
     function handleWriteImages(input) {
       var files = Array.from(input.files);
       if (files.length === 0) return;
@@ -3410,7 +3431,6 @@
       files.forEach(function(file) {
         var reader = new FileReader();
         reader.onload = function(e) {
-          // Nén ảnh trước khi upload
           compressImage(file, function(base64) {
             uploadImageToServer(base64, file.name, dateForFolder, function(result) {
               if (result && result.url) {
@@ -3517,7 +3537,6 @@
     }
 
     function removeWriteImage(idx) {
-      // Nếu có driveId thì xóa trên server
       var img = appState.writeImages[idx];
       if (img && img.driveId) {
         fetch(CONFIG.BACKEND_URL, {
@@ -3540,18 +3559,20 @@
       var contentInput = document.getElementById('write-content');
       var dateInput = document.getElementById('write-date');
       var submitBtn = document.getElementById('write-submit-btn');
+      var dateWrapper = document.getElementById('write-date-wrapper');
 
       if (entryId) {
+        // Sửa bài: hiện ô chọn ngày
+        dateWrapper.classList.remove('hidden');
+        document.getElementById('write-page-title').textContent = '✏️ Chỉnh sửa bài viết';
         var entry = appState.data.entries.find(function(e) { return e.id === entryId; });
         if (entry) {
-          document.getElementById('write-page-title').textContent = '✏️ Chỉnh sửa bài viết';
           titleInput.value = entry.title || '';
           contentInput.value = entry.content || '';
           dateInput.value = entry.date || getTodayString();
           appState.writeImages = entry.images ? entry.images.slice() : [];
           appState.writeEditId = entryId;
         } else {
-          document.getElementById('write-page-title').textContent = 'Tạo bài viết';
           titleInput.value = '';
           contentInput.value = '';
           dateInput.value = getTodayString();
@@ -3559,10 +3580,12 @@
           appState.writeEditId = null;
         }
       } else {
+        // Tạo mới: ẩn ô chọn ngày
+        dateWrapper.classList.add('hidden');
         document.getElementById('write-page-title').textContent = 'Tạo bài viết';
         titleInput.value = '';
         contentInput.value = '';
-        dateInput.value = getTodayString();
+        dateInput.value = getTodayString(); // vẫn set nhưng ẩn đi
         appState.writeImages = [];
         appState.writeEditId = null;
       }
@@ -3586,7 +3609,7 @@
       var content = document.getElementById('write-content').value.trim();
       if (!content) { showToast('⚠️ Vui lòng nhập nội dung'); return; }
       var date = document.getElementById('write-date').value;
-      if (!date) { showToast('⚠️ Chọn ngày viết'); return; }
+      if (!date) { showToast('⚠️ Lỗi ngày viết'); return; }
 
       var submitBtn = document.getElementById('write-submit-btn');
       submitBtn.disabled = true;
@@ -3952,7 +3975,7 @@
     }
 
     // ===== KHỞI TẠO =====
-    console.log('💕 Love Story – Phiên bản 5.2 (Đã sửa upload ảnh và z-index confirm)');
+    console.log('💕 Love Story – Phiên bản 5.2 (Đã tách riêng ô chọn ngày, giữ nguyên thêm ảnh)');
   </script>
 </body>
 </html>
