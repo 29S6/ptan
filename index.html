@@ -731,7 +731,7 @@
     }
     .comment-item .cmt-dropdown {
       position: relative;
-      margin-left: auto; /* đẩy sang phải cùng với thời gian */
+      margin-left: auto;
       display: flex;
       align-items: center;
     }
@@ -1160,7 +1160,7 @@
     }
     .modal-close:hover { background:#f7dde8; color:var(--primary); transform:rotate(90deg); }
 
-    /* ===== Confirm modal ===== */
+    /* ===== Confirm modal - z-index cao nhất ===== */
     .confirm-modal .modal-box { max-width:400px; text-align:center; }
     .confirm-modal .modal-title { font-size:1.1rem; margin-bottom:8px; text-align:center; font-family: 'Playfair Display', serif; }
     .confirm-message { font-size:0.88rem; color:var(--text-secondary); margin-bottom:20px; }
@@ -1581,6 +1581,11 @@
     .comment-input-row textarea::placeholder { color:#b07a8a; }
     .comment-input-row textarea::-webkit-resizer { display: none; }
     .comment-input-row textarea::-webkit-scrollbar { width: 0; }
+
+    /* ===== Confirm modal - tăng z-index ===== */
+    #modal-confirm {
+      z-index: 6000 !important;
+    }
   </style>
 </head>
 <body>
@@ -1859,8 +1864,8 @@
     </div>
   </div>
 
-  <!-- ===== CONFIRM MODAL ===== -->
-  <div class="modal-overlay confirm-modal" id="modal-confirm">
+  <!-- ===== CONFIRM MODAL - z-index cao ===== -->
+  <div class="modal-overlay confirm-modal" id="modal-confirm" style="z-index:6000;">
     <div class="modal-box">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
         <div class="modal-title" id="confirm-title" style="text-align:center; font-family:'Playfair Display',serif; font-size:1.1rem; margin:0;">Xác nhận</div>
@@ -2942,12 +2947,11 @@
       container.innerHTML = html;
     }
 
-    // ===== PHOTO VIEWER (sửa lại logic) =====
+    // ===== PHOTO VIEWER =====
     function openPhotoViewer(entryId, startIndex) {
       var entry = appState.data.entries.find(function(e) { return e.id === entryId; });
       if (!entry || !entry.images || !entry.images.length) return;
 
-      // Lưu danh sách ảnh và chỉ số hiện tại
       appState.photoViewerImages = entry.images.map(function(img) { return img.url || img; });
       appState.photoViewerIndex = startIndex || 0;
 
@@ -2958,7 +2962,6 @@
       document.body.style.overflow = 'hidden';
       updatePhotoViewerUI();
 
-      // Animation
       gsap.fromTo(img, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'power2.out' });
     }
 
@@ -3034,7 +3037,6 @@
       if (e.key === 'ArrowRight') navigatePhoto(1);
     });
 
-    // Đóng photo viewer khi click vào nền đen
     document.getElementById('photo-viewer').addEventListener('click', function(e) {
       if (e.target === this) closePhotoViewer();
     });
@@ -3393,6 +3395,141 @@
     }
 
     // ===== WRITE PAGE =====
+    // Sửa lại logic upload ảnh
+    function handleWriteImages(input) {
+      var files = Array.from(input.files);
+      if (files.length === 0) return;
+      var remaining = CONFIG.MAX_IMAGES - appState.writeImages.length;
+      if (files.length > remaining) {
+        showToast('⚠️ Chỉ được thêm tối đa ' + remaining + ' ảnh');
+        files = files.slice(0, remaining);
+      }
+
+      var dateForFolder = document.getElementById('write-date').value || getTodayString();
+
+      files.forEach(function(file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          // Nén ảnh trước khi upload
+          compressImage(file, function(base64) {
+            uploadImageToServer(base64, file.name, dateForFolder, function(result) {
+              if (result && result.url) {
+                appState.writeImages.push({ url: result.url, driveId: result.driveId || '' });
+                renderWritePreview();
+                showToast('📷 Đã thêm ảnh');
+              } else {
+                showToast('⚠️ Không thể tải ảnh: ' + file.name);
+              }
+            });
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+      input.value = '';
+    }
+
+    function compressImage(file, callback) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var maxSize = 800;
+          var w = img.width,
+            h = img.height;
+          if (w > maxSize || h > maxSize) {
+            if (w > h) { h = Math.round(h * maxSize / w);
+              w = maxSize; } else { w = Math.round(w * maxSize / h);
+              h = maxSize; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function uploadImageToServer(base64, filename, dateStr, callback) {
+      var parts = base64.split(',');
+      var data = parts[1] || parts[0];
+      var mimeType = (base64.indexOf('png') > -1) ? 'image/png' : 'image/jpeg';
+
+      if (data.length > 1.2 * 1024 * 1024) {
+        showToast('⚠️ Ảnh quá lớn sau nén, bỏ qua');
+        callback(null);
+        return;
+      }
+
+      var payload = {
+        action: 'upload_image',
+        imageData: data,
+        mimeType: mimeType,
+        filename: filename || ('photo_' + Date.now() + '.jpg'),
+        dateStr: dateStr
+      };
+
+      fetch(CONFIG.BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(result) {
+          if (result && result.url) callback(result);
+          else callback(null);
+        })
+        .catch(function() { callback(null); });
+    }
+
+    function renderWritePreview() {
+      var preview = document.getElementById('write-image-preview');
+      var total = appState.writeImages.length;
+      if (total === 0) {
+        preview.innerHTML = '';
+        preview.className = 'write-image-preview';
+        return;
+      }
+      var display = appState.writeImages.slice(0, 4);
+      var extra = total - 4;
+      var gridClass = 'g' + Math.min(total, 4);
+      if (total === 1) gridClass = 'g1';
+      else if (total === 2) gridClass = 'g2';
+      else if (total === 3) gridClass = 'g3';
+      else if (total >= 4) gridClass = 'g4';
+
+      var imgs = display.map(function(imgObj, idx) {
+        var src = imgObj.url || imgObj;
+        var moreBadge = '';
+        if (idx === 3 && extra > 0) {
+          moreBadge = '<div class="more-badge">+' + extra + '</div>';
+        }
+        return '<div class="preview-img">' + moreBadge +
+          '<img src="' + escapeHtml(src) + '" alt="Ảnh đã chọn" />' +
+          '<button class="remove" onclick="removeWriteImage(' + idx + ')">✕</button>' +
+          '</div>';
+      }).join('');
+      preview.className = 'write-image-preview ' + gridClass;
+      preview.innerHTML = imgs;
+    }
+
+    function removeWriteImage(idx) {
+      // Nếu có driveId thì xóa trên server
+      var img = appState.writeImages[idx];
+      if (img && img.driveId) {
+        fetch(CONFIG.BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'delete_image', driveId: img.driveId })
+        }).catch(function() {});
+      }
+      appState.writeImages.splice(idx, 1);
+      renderWritePreview();
+    }
+
     function openWritePage(entryId) {
       var page = document.getElementById('write-page');
       page.classList.remove('closing');
@@ -3442,63 +3579,6 @@
         page.classList.remove('active', 'closing');
         document.body.style.overflow = '';
       }, 400);
-    }
-
-    function handleWriteImages(input) {
-      var files = Array.from(input.files);
-      if (files.length === 0) return;
-      var remaining = CONFIG.MAX_IMAGES - appState.writeImages.length;
-      if (files.length > remaining) {
-        showToast('⚠️ Chỉ được thêm tối đa ' + remaining + ' ảnh');
-        files.splice(remaining);
-      }
-      files.forEach(function(file) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          appState.writeImages.push(e.target.result);
-          renderWritePreview();
-          setTimeout(function() {
-            document.getElementById('write-body').scrollTop = document.getElementById('write-body').scrollHeight;
-          }, 100);
-        };
-        reader.readAsDataURL(file);
-      });
-      input.value = '';
-    }
-
-    function renderWritePreview() {
-      var preview = document.getElementById('write-image-preview');
-      var total = appState.writeImages.length;
-      if (total === 0) {
-        preview.innerHTML = '';
-        preview.className = 'write-image-preview';
-        return;
-      }
-      var display = appState.writeImages.slice(0, 4);
-      var extra = total - 4;
-      var gridClass = 'g' + Math.min(total, 4);
-      if (total === 1) gridClass = 'g1';
-      else if (total === 2) gridClass = 'g2';
-      else if (total === 3) gridClass = 'g3';
-      else if (total >= 4) gridClass = 'g4';
-
-      var imgs = display.map(function(src, idx) {
-        var moreBadge = '';
-        if (idx === 3 && extra > 0) {
-          moreBadge = '<div class="more-badge">+' + extra + '</div>';
-        }
-        return '<div class="preview-img">' + moreBadge +
-          '<img src="' + escapeHtml(src) + '" alt="Ảnh đã chọn" />' +
-          '<button class="remove" onclick="removeWriteImage(' + idx + ')">✕</button>' +
-          '</div>';
-      }).join('');
-      preview.className = 'write-image-preview ' + gridClass;
-      preview.innerHTML = imgs;
-    }
-
-    function removeWriteImage(idx) {
-      appState.writeImages.splice(idx, 1);
-      renderWritePreview();
     }
 
     function submitWrite() {
@@ -3872,7 +3952,7 @@
     }
 
     // ===== KHỞI TẠO =====
-    console.log('💕 Love Story – Phiên bản 5.2 (Đã sửa dropdown comment, thời gian, xem ảnh)');
+    console.log('💕 Love Story – Phiên bản 5.2 (Đã sửa upload ảnh và z-index confirm)');
   </script>
 </body>
 </html>
