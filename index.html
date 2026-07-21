@@ -1429,30 +1429,53 @@ function saveCroppedAvatar(){
   var parts=compressed.split(',');var rawData=parts[1]||parts[0];
   if(rawData.length>300*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh quá lớn');return}
   showToast('<i class="fas fa-spinner fa-pulse"></i> Đang tải ảnh lên...');
-  var payload={action:'upload_avatar',pin:appState.currentPin,imageData:rawData};
-  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
-  .then(function(r){return r.json()}).then(function(result){
-    if(result&&result.url){
-      loadUserProfiles();
-      userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
-      userProfiles[appState.currentPin].avatar=result.url;
-      saveUserProfiles();
-      updateUserUI();
-      syncProfileToBackend();
-      closeModal('modal-edit-avatar');
-      avatarCropReset();
-      showToast('<i class="fas fa-check-circle"></i> Đã cập nhật ảnh đại diện');
-    }else{
-      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh lên, lưu tạm thời');
-      loadUserProfiles();
-      userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
-      userProfiles[appState.currentPin].avatar=compressed;
-      saveUserProfiles();
-      updateUserUI();
-      closeModal('modal-edit-avatar');
-      avatarCropReset();
-    }
+  uploadAvatarOrFallback(compressed,rawData);
+}
+function uploadAvatarOrFallback(compressed,rawData){
+  // Xóa ảnh đại diện cũ trên Drive trước
+  loadUserProfiles();
+  var oldUrl=userProfiles[appState.currentPin]&&userProfiles[appState.currentPin].avatar||'';
+  var match=oldUrl.match(/id=([^&]+)/);
+  var oldDriveId=match?match[1]:null;
+  var deletePromise=oldDriveId?
+    fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete_image',driveId:oldDriveId})})
+    .catch(function(){}):Promise.resolve();
+  deletePromise.then(function(){
+    var payload={action:'upload_avatar',pin:appState.currentPin,imageData:rawData};
+    return fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json()}).then(function(result){
+      if(result&&result.url){
+        avatarUploadDone(result);
+      }else if(result&&result.error&&result.error.indexOf('Hành động không hợp lệ')>=0){
+        return uploadImage(compressed,'avatar_'+appState.currentPin+'.jpg','avatars',avatarUploadDone);
+      }else{
+        avatarUploadFail(compressed,result&&result.error?result.error:'Lỗi tải ảnh lên, lưu tạm thời');
+      }
+    });
+  }).catch(function(err){
+    avatarUploadFail(compressed,'Lỗi mạng, lưu tạm thời');
   });
+}
+function avatarUploadDone(r){
+  loadUserProfiles();
+  userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
+  userProfiles[appState.currentPin].avatar=r.url;
+  saveUserProfiles();
+  updateUserUI();
+  syncProfileToBackend();
+  closeModal('modal-edit-avatar');
+  avatarCropReset();
+  showToast('<i class="fas fa-check-circle"></i> Đã cập nhật ảnh đại diện');
+}
+function avatarUploadFail(compressed,msg){
+  showToast('<i class="fas fa-exclamation-triangle"></i> '+escHtml(msg));
+  loadUserProfiles();
+  userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
+  userProfiles[appState.currentPin].avatar=compressed;
+  saveUserProfiles();
+  updateUserUI();
+  closeModal('modal-edit-avatar');
+  avatarCropReset();
 }
 
 function avatarCropReset(){avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};var img=document.getElementById('avatar-crop-img');if(img){img.style.left='';img.style.top='';img.style.width='';img.style.height='';img.src=''}var s=document.getElementById('avatar-zoom-slider');if(s)s.value='1'}
