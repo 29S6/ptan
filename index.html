@@ -1176,7 +1176,7 @@ function getRecentActivities(){
   var acts=[];
   var cutoff=new Date(Date.now()-7*86400000).toISOString();
   entries.forEach(function(e){
-    var eTime=e.updatedAt||(e.date?e.date+'T00:00:00.000Z':'');
+    var eTime=e.createdAt||e.updatedAt||(e.date?e.date+'T00:00:00.000Z':'');
     if(eTime&&eTime>cutoff){
       var t=(e.title||'')+(e.title&&e.content?' - ':'')+(e.content||'');
       acts.push({type:'post',entryId:e.id,authorPin:getPinForUser(e.author),time:eTime,preview:t.substring(0,120)});
@@ -1589,7 +1589,7 @@ function normalizeData(){
     if(!e.author)e.author=CONFIG.USER1_NAME;
     if(!e.comments||!Array.isArray(e.comments))e.comments=[];
     if(!e.images||!Array.isArray(e.images))e.images=[];
-    if(!e.updatedAt)e.updatedAt=e.date?e.date+'T00:00:00.000Z':new Date().toISOString();
+    if(!e.updatedAt)e.updatedAt=e.date?e.date+'T00:00:00.000Z':e.createdAt||new Date().toISOString();
     if(!e.createdAt)e.createdAt=e.updatedAt;
   })
 }
@@ -1907,7 +1907,7 @@ function renderActivity(){
     var isNew=!seen||a.time>seen;
     var authorName=getDisplayName(a.authorPin)||'Ai đó';
     var name=authorName.replace(/ [\w💖🌻]+$/g,'');
-    var label=a.type==='post'?'Bài viết mới':'Bình luận';
+    var label=a.type==='post'?'đã thêm bài viết mới':'đã bình luận';
     var preview=a.preview?esc(a.preview).substring(0,100):'';
     return '<div class="activity-item'+(isNew?' activity-new':'')+'" onclick="openPostDetail(\''+a.entryId+'\')">'+
       '<div class="activity-avatar">'+(a.type==='post'?'<i class="fas fa-file-lines"></i>':'<i class="fa-regular fa-comment"></i>')+'</div>'+
@@ -2109,17 +2109,23 @@ function renderPdImages(entry){
     return
   }
   var total=entry.images.length;
+  var isMobile=window.innerWidth<768;
   var imgs=entry.images.map(function(img,idx){
-    return '<img class="pd-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" onclick="openPhotoViewer(\''+entry.id+'\','+idx+')" loading="lazy" />'
+    return '<img class="pd-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" loading="lazy" />'
   }).join('');
   var dots=entry.images.map(function(_,idx){return '<span class="pd-carousel-dot'+(idx===0?' active':'')+'" onclick="pdGoTo('+idx+')"></span>'}).join('');
-  var carouselHtml='<div class="pd-carousel"><div class="pd-carousel-inner" id="pd-carousel-inner">'+imgs+'</div>';
+  var carouselHtml='<div class="pd-carousel" data-entry="'+entry.id+'"><div class="pd-carousel-inner" id="pd-carousel-inner">'+imgs+'</div>';
   if(total>1){
     carouselHtml+='<button class="pd-carousel-nav prev" onclick="pdPrev()" id="pd-prev"><i class="fas fa-chevron-left"></i></button><button class="pd-carousel-nav next" onclick="pdNext()" id="pd-next"><i class="fas fa-chevron-right"></i></button><span class="pd-carousel-count" id="pd-count">1/'+total+'</span><div class="pd-carousel-dots">'+dots+'</div>';
   }
   carouselHtml+='</div>';
-  document.getElementById('pd-images').innerHTML=carouselHtml;
-  document.getElementById('pd-scroll-images').innerHTML='';
+  if(isMobile){
+    document.getElementById('pd-images').innerHTML='';
+    document.getElementById('pd-scroll-images').innerHTML=carouselHtml;
+  }else{
+    document.getElementById('pd-images').innerHTML=carouselHtml;
+    document.getElementById('pd-scroll-images').innerHTML='';
+  }
   updatePdNav();
 }
 
@@ -2257,6 +2263,14 @@ function togglePdMenu(){
 document.addEventListener('click',function(e){
   var wrap=e.target.closest('.pd-author-actions');
   if(!wrap){var dd=document.getElementById('pd-dropdown');if(dd)dd.classList.remove('show')}
+});
+// Carousel image click delegation (works on mobile inside scroll container)
+document.getElementById('post-overlay').addEventListener('click',function(e){
+  var img=e.target.closest('.pd-carousel-img');
+  if(img&&!e.target.closest('.pd-carousel-dot')&&!e.target.closest('.pd-carousel-nav')){
+    var carousel=img.closest('.pd-carousel');
+    if(carousel){var entryId=carousel.dataset.entry;var idx=parseInt(img.dataset.index)||0;openPhotoViewer(entryId,idx)}
+  }
 });
 
 function editFromPostDetail(){
