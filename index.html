@@ -678,24 +678,9 @@ a { color: var(--text-link); text-decoration:none; }
 /* Sidebar labels visibility */
 .sidebar-item .label { display:inline; }
 
-/* Calendar popover in modal */
-.calendar-content { padding:10px 0; }
-.cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-.cal-nav-btn { background:var(--hover-bg); border:none; border-radius:6px; width:30px; height:30px; font-size:0.9rem; color:var(--text-primary); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.15s; }
-.cal-nav-btn:hover { background:#e0e0e0; }
-.cal-month-label { font-weight:600; font-size:0.9rem; }
-.cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:0.6rem; font-weight:600; color:var(--text-secondary); margin-bottom:4px; }
-.cal-days { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
-.cal-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.72rem; font-weight:500; color:var(--text-primary); border-radius:6px; transition:0.1s; cursor:default; }
-.cal-day.today { background:var(--text-link); color:#fff; font-weight:700; }
-.cal-day.has-entry { cursor:pointer; background:#f0f8ff; }
-.cal-day.has-entry:hover { background:#d0ebff; }
-.cal-day .dot { width:4px; height:4px; border-radius:50%; background:var(--text-link); margin-top:1px; }
-.cal-day.today .dot { background:#fff; }
-.cal-day .multi-badge { font-size:0.45rem; font-weight:700; background:var(--text-link); color:#fff; border-radius:3px; padding:0 4px; line-height:1.2; margin-top:1px; }
-.cal-day.today .multi-badge { background:#fff; color:var(--text-link); }
 
-/* Anniversaries in modal (IG style) */
+
+/* Anniversaries in modal */
 .ann-list { display:flex; flex-direction:column; gap:6px; }
 .ann-item { display:flex; align-items:center; gap:14px; padding:14px 14px; border:1px solid var(--border-light); border-radius:12px; transition:0.15s; position:relative; overflow:hidden; font-family:'Roboto',Arial,sans-serif; }
 .ann-item:hover { border-color:#c9c9c9; background:#fafafa; }
@@ -777,10 +762,6 @@ a { color: var(--text-link); text-decoration:none; }
       </div>
       <div class="sidebar-item" data-page="profile" onclick="switchPage('profile')">
         <i class="fas fa-user"></i><span class="label">Hồ sơ</span>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border-light);margin:8px 12px;">
-      <div class="sidebar-item" onclick="openCalendarModal()">
-        <i class="fas fa-calendar"></i><span class="label">Lịch</span>
       </div>
       <div class="sidebar-item" onclick="openAnnModal()">
         <i class="fas fa-gift"></i><span class="label">Kỷ niệm</span>
@@ -944,23 +925,7 @@ a { color: var(--text-link); text-decoration:none; }
 </div>
 
 <!-- ===== CALENDAR MODAL ===== -->
-<div class="modal-overlay" id="modal-calendar">
-  <div class="modal-box" style="max-width:380px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-      <div class="modal-title"><i class="fas fa-calendar-alt" style="margin-right:6px;color:var(--text-secondary);"></i> Lịch</div>
-      <button class="modal-close" onclick="closeModal('modal-calendar')"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="calendar-content">
-      <div class="cal-nav">
-        <button class="cal-nav-btn" onclick="changeCalMonth(-1)">‹</button>
-        <div class="cal-month-label" id="cal-month-label"></div>
-        <button class="cal-nav-btn" onclick="changeCalMonth(1)">›</button>
-      </div>
-      <div class="cal-weekdays"><span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span></div>
-      <div class="cal-days" id="cal-days"></div>
-    </div>
-  </div>
-</div>
+
 
 <!-- ===== ANNIVERSARY MODAL ===== -->
 <div class="modal-overlay" id="modal-ann">
@@ -1129,8 +1094,6 @@ var appState = {
   pinCode: '',
   currentPin: '',
   currentPage: 'feed',
-  calYear: new Date().getFullYear(),
-  calMonth: new Date().getMonth(),
   writeImages: [],
   writeEditId: null,
   photoImages: [],
@@ -1570,7 +1533,7 @@ function loadData(callback){
   function handleResponse(data){
     if(isDone)return;isDone=true;clearTimeout(timeout);if(btn)btn.classList.remove('sync-spin');
     hideLoadingScreen();hideLoadingBar();
-    if(data&&data.entries&&data.anniversaries){
+    if(data&&data.entries){
       appState.data=data;saveLocal(data);
       // Merge profiles from backend into localStorage
       if(data.profiles){
@@ -1889,7 +1852,10 @@ function fcCarouselGoTo(entryId,index){
 }
 
 // ==================== EXPLORE ====================
+var _exploreImages=[];
+
 function renderExplore(){
+  _exploreImages=[];
   var entries=(appState.data.entries||[]).slice();
   sortEntries(entries);
   var allImages=[];
@@ -1906,10 +1872,22 @@ function renderExplore(){
   if(q){
     allImages=allImages.filter(function(i){return(i.title||'').toLowerCase().includes(q)||(i.date||'').includes(q)})
   }
-  var html=allImages.map(function(img){
-    return '<div class="explore-item" onclick="openPhotoViewer(\''+img.entryId+'\','+img.index+')"><img src="'+esc(img.url)+'" loading="lazy" /></div>'
+  _exploreImages=allImages;
+  var html=allImages.map(function(img,idx){
+    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(img.url)+'" loading="lazy" /></div>'
   }).join('');
   container.innerHTML=html||'<div class="explore-empty"><i class="fas fa-search" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Không tìm thấy ảnh nào</div>';
+}
+
+function openExploreViewer(index){
+  if(!_exploreImages.length)return;
+  appState.photoImages=_exploreImages.slice();
+  appState.photoIndex=index;
+  var viewer=document.getElementById('photo-viewer');
+  viewer.classList.add('open');document.body.style.overflow='hidden';
+  updatePhotoViewer();
+  gsap.killTweensOf(document.getElementById('pv-image'));
+  gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.3,ease:'power2.out'})
 }
 
 function searchExplore(q){appState.exploreQuery=q.toLowerCase().trim();renderExplore()}
@@ -2337,7 +2315,9 @@ function navigatePhoto(d){
   var ni=appState.photoIndex+d;
   if(ni<0||ni>=appState.photoImages.length)return;
   var img=document.getElementById('pv-image');
-  gsap.to(img,{x:-d*50,opacity:0,duration:0.12,ease:'power2.in',onComplete:function(){appState.photoIndex=ni;updatePhotoViewer();gsap.fromTo(img,{x:d*50,opacity:0},{x:0,opacity:1,duration:0.18,ease:'power2.out'})}})
+  gsap.killTweensOf(img);
+  appState.photoIndex=ni;
+  updatePhotoViewer();
 }
 function closePhotoViewer(){document.getElementById('photo-viewer').classList.remove('open');document.body.style.overflow='';appState.photoImages=[];appState.photoIndex=0}
 function downloadCurrentPhoto(){
@@ -2476,86 +2456,7 @@ function submitCreatePost(){
   })
 }
 
-// ==================== CALENDAR ====================
-function openCalendarModal(){
-  appState.calYear=new Date().getFullYear();appState.calMonth=new Date().getMonth();
-  renderCalendarModal();openModal('modal-calendar')
-}
 
-function renderCalendarModal(){
-  document.getElementById('cal-month-label').textContent='Tháng '+(appState.calMonth+1)+', '+appState.calYear;
-  var today=new Date();
-  var firstDay=new Date(appState.calYear,appState.calMonth,1).getDay();
-  var daysInMonth=new Date(appState.calYear,appState.calMonth+1,0).getDate();
-  var entryMap={};(appState.data.entries||[]).forEach(function(e){if(e.date){if(!entryMap[e.date])entryMap[e.date]=[];entryMap[e.date].push(e)}});
-  var html='';
-  for(var i=0;i<firstDay;i++)html+='<div class="cal-day"></div>';
-  for(var d=1;d<=daysInMonth;d++){
-    var dateStr=appState.calYear+'-'+pad(appState.calMonth+1)+'-'+pad(d);
-    var isToday=(d===today.getDate()&&appState.calMonth===today.getMonth()&&appState.calYear===today.getFullYear());
-    var entries=entryMap[dateStr]||[];
-    var cls='cal-day';if(isToday)cls+=' today';if(entries.length)cls+=' has-entry';
-    var inner='<span>'+d+'</span>';
-    if(entries.length===1)inner+='<div class="dot"></div>';
-    else if(entries.length>1)inner+='<span class="multi-badge">'+entries.length+'</span>';
-    var click=entries.length?'onclick="closeModal(\'modal-calendar\');openPostDetail(\''+entries[0].id+'\')"':'';
-    html+='<div class="'+cls+'" '+click+'>'+inner+'</div>'
-  }
-  document.getElementById('cal-days').innerHTML=html
-}
-
-function changeCalMonth(d){appState.calMonth+=d;if(appState.calMonth<0){appState.calMonth=11;appState.calYear--}else if(appState.calMonth>11){appState.calMonth=0;appState.calYear++}renderCalendarModal()}
-
-// ==================== ANNIVERSARIES ====================
-function openAnnModal(){
-  renderAnnList();openModal('modal-ann')
-}
-function renderAnnList(){
-  var container=document.getElementById('ann-list');
-  var anns=appState.data.anniversaries||[];
-  if(!anns.length){container.innerHTML='<div style="text-align:center;padding:30px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-gift" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có kỷ niệm nào</div>';return}
-  var today=new Date();today.setHours(0,0,0,0);
-  anns.sort(function(a,b){return new Date(a.date)-new Date(b.date)});
-  container.innerHTML=anns.map(function(a){
-    var countdown=getCountdown(a,today);
-    var cls=countdown.days===0?'today':countdown.days<=30?'soon':'far';
-    var icon='fa-gift';if(a.name.toLowerCase().includes('yêu'))icon='fa-heart';else if(a.name.toLowerCase().includes('cưới'))icon='fa-ring';else if(a.name.toLowerCase().includes('sinh'))icon='fa-cake-candles';
-    return '<div class="ann-item '+cls+'"><div class="ann-icon"><i class="fas '+icon+'"></i></div><div class="ann-info"><div class="ann-name">'+esc(a.name)+'</div><div class="ann-date">'+formatDateVN(a.date)+'</div><div class="ann-countdown '+cls+'">'+countdown.text+'</div></div><div class="ann-actions"><button onclick="editAnn(\''+a.id+'\')"><i class="fas fa-pen"></i></button><button class="del" onclick="deleteAnn(\''+a.id+'\')"><i class="fas fa-trash-alt"></i></button></div></div>'
-  }).join('')
-}
-
-function getCountdown(ann,today){
-  if(!ann.date)return{days:999,text:''};
-  var p=ann.date.split('-');var next=new Date(today.getFullYear(),parseInt(p[1])-1,parseInt(p[2]));
-  if(next<today)next.setFullYear(next.getFullYear()+1);
-  var days=Math.round((next-today)/86400000);
-  var text;if(days===0)text='Hôm nay!';else if(days===1)text='Còn 1 ngày nữa';else if(days<=7)text='Còn '+days+' ngày nữa';else text='Còn '+days+' ngày';
-  return{days:days,text:text}
-}
-
-function openAnnForm(){
-  document.getElementById('ann-form-date').value='';document.getElementById('ann-form-name').value='';appState.editingAnnId=null;
-  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-plus-circle" style="margin-right:6px;color:var(--text-secondary);"></i> Thêm kỷ niệm';openModal('modal-ann-form')
-}
-function editAnn(id){
-  var ann=(appState.data.anniversaries||[]).find(function(a){return a.id===id});
-  if(!ann)return;
-  appState.editingAnnId=id;
-  document.getElementById('ann-form-date').value=ann.date;
-  document.getElementById('ann-form-name').value=ann.name;
-  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-pen" style="margin-right:6px;color:var(--text-secondary);"></i> Sửa kỷ niệm';openModal('modal-ann-form')
-}
-function saveAnnForm(){
-  var date=document.getElementById('ann-form-date').value;
-  var name=document.getElementById('ann-form-name').value.trim();
-  if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chọn ngày');return}if(!name){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập tên');return}
-  closeModal('modal-ann-form');
-  if(appState.editingAnnId){sendPayload({action:'edit_anniversary',anniversary:{id:appState.editingAnnId,date:date,name:name}},'<i class="fas fa-save"></i> Đã cập nhật!');return}
-  sendPayload({action:'save_anniversary',anniversary:{id:'ann_'+Date.now(),date:date,name:name}},'<i class="fas fa-save"></i> Đã thêm kỷ niệm!')
-}
-function deleteAnn(id){
-  showConfirm('Xóa kỷ niệm?','',function(ok){if(!ok)return;sendPayload({action:'delete_anniversary',id:id},'Đã xóa!')})
-}
 
 // ==================== SETTINGS ====================
 function openSettings(){
@@ -2577,6 +2478,55 @@ function showDataInfo(){
     '• Kỷ niệm: '+anns.length+'<br>'+
     '• Người dùng: '+escHtml(currentUser);
   openModal('modal-data-info')
+}
+
+// ==================== ANNIVERSARIES ====================
+function openAnnModal(){
+  renderAnnList();openModal('modal-ann')
+}
+function renderAnnList(){
+  var container=document.getElementById('ann-list');
+  var anns=appState.data.anniversaries||[];
+  if(!anns.length){container.innerHTML='<div style="text-align:center;padding:30px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-gift" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có kỷ niệm nào</div>';return}
+  var today=new Date();today.setHours(0,0,0,0);
+  anns.sort(function(a,b){return new Date(a.date)-new Date(b.date)});
+  container.innerHTML=anns.map(function(a){
+    var countdown=getCountdown(a,today);
+    var cls=countdown.days===0?'today':countdown.days<=30?'soon':'far';
+    var icon='fa-gift';if(a.name.toLowerCase().includes('yêu'))icon='fa-heart';else if(a.name.toLowerCase().includes('cưới'))icon='fa-ring';else if(a.name.toLowerCase().includes('sinh'))icon='fa-cake-candles';
+    return '<div class="ann-item '+cls+'"><div class="ann-icon"><i class="fas '+icon+'"></i></div><div class="ann-info"><div class="ann-name">'+esc(a.name)+'</div><div class="ann-date">'+formatDateVN(a.date)+'</div><div class="ann-countdown '+cls+'">'+countdown.text+'</div></div><div class="ann-actions"><button onclick="editAnn(\''+a.id+'\')"><i class="fas fa-pen"></i></button><button class="del" onclick="deleteAnn(\''+a.id+'\')"><i class="fas fa-trash-alt"></i></button></div></div>'
+  }).join('')
+}
+function getCountdown(ann,today){
+  if(!ann.date)return{days:999,text:''};
+  var p=ann.date.split('-');var next=new Date(today.getFullYear(),parseInt(p[1])-1,parseInt(p[2]));
+  if(next<today)next.setFullYear(next.getFullYear()+1);
+  var days=Math.round((next-today)/86400000);
+  var text;if(days===0)text='Hôm nay!';else if(days===1)text='Còn 1 ngày nữa';else if(days<=7)text='Còn '+days+' ngày nữa';else text='Còn '+days+' ngày';
+  return{days:days,text:text}
+}
+function openAnnForm(){
+  document.getElementById('ann-form-date').value='';document.getElementById('ann-form-name').value='';appState.editingAnnId=null;
+  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-plus-circle" style="margin-right:6px;color:var(--text-secondary);"></i> Thêm kỷ niệm';openModal('modal-ann-form')
+}
+function editAnn(id){
+  var ann=(appState.data.anniversaries||[]).find(function(a){return a.id===id});
+  if(!ann)return;
+  appState.editingAnnId=id;
+  document.getElementById('ann-form-date').value=ann.date;
+  document.getElementById('ann-form-name').value=ann.name;
+  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-pen" style="margin-right:6px;color:var(--text-secondary);"></i> Sửa kỷ niệm';openModal('modal-ann-form')
+}
+function saveAnnForm(){
+  var date=document.getElementById('ann-form-date').value;
+  var name=document.getElementById('ann-form-name').value.trim();
+  if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chọn ngày');return}if(!name){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập tên');return}
+  closeModal('modal-ann-form');
+  if(appState.editingAnnId){sendPayload({action:'save_anniversary',anniversary:{id:appState.editingAnnId,date:date,name:name}},'<i class="fas fa-save"></i> Đã cập nhật!');return}
+  sendPayload({action:'save_anniversary',anniversary:{id:'ann_'+Date.now(),date:date,name:name}},'<i class="fas fa-save"></i> Đã thêm kỷ niệm!')
+}
+function deleteAnn(id){
+  showConfirm('Xóa kỷ niệm?','',function(ok){if(!ok)return;sendPayload({action:'delete_anniversary',id:id},'Đã xóa!')})
 }
 
 // ==================== PROFILE MENU ====================
