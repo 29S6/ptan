@@ -30,6 +30,7 @@
   --sidebar-w: 244px;
   --nav-h: 50px;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --loading-bar: linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#cc2366,#dc2743,#e6683c,#f09433);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -42,6 +43,12 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+/* Loading bar */
+#loading-bar { position:fixed; top:0; left:0; width:100%; height:3px; z-index:99999; pointer-events:none; opacity:0; transition:opacity 0.3s; }
+#loading-bar.active { opacity:1; }
+#loading-bar .bar { height:100%; width:0%; border-radius:0 2px 2px 0; background:var(--loading-bar); background-size:200% 100%; animation:loadingShimmer 1.2s linear infinite; box-shadow:0 0 8px rgba(220,39,67,0.5); }
+@keyframes loadingShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
 button, input, textarea, select { font-family:inherit; font-size:inherit; }
 button { cursor:pointer; background:none; border:none; -webkit-tap-highlight-color:transparent; }
 img { max-width:100%; display:block; }
@@ -718,6 +725,7 @@ a { color: var(--text-link); text-decoration:none; }
 </style>
 </head>
 <body>
+<div id="loading-bar"><div class="bar" id="loading-bar-inner"></div></div>
 
 <!-- ===== LOCK SCREEN ===== -->
 <div id="lock-screen">
@@ -1276,7 +1284,7 @@ function initApp(){
   updateActivityBadge();
 }
 function updateUserUI(){
-  var ava = getEffectiveAvatar(appState.currentPin);
+  var ava = getDisplayAvatar(appState.currentPin);
   var displayName = getEffectiveName(currentUser);
   var plainName = displayName.replace(/ [\w💖🌻]+$/g,'');
   var fallbackHtml='<i class="fas fa-user-circle" style="font-size:2.4rem;color:#ccc;"></i>';
@@ -1319,9 +1327,13 @@ function saveDisplayName(){
 
 function syncProfileToBackend(){
   loadUserProfiles();
-  var profile=userProfiles[appState.currentPin];
-  if(!profile)return;
-  sendPayload({action:'save_profile',pin:appState.currentPin,name:profile.name,avatar:profile.avatar||'',theme:profile.theme||'auto'});
+  var pin=appState.currentPin;
+  if(!pin)return;
+  if(!userProfiles[pin])userProfiles[pin]={name:'',avatar:'',theme:'auto'};
+  if(!userProfiles[pin].name)userProfiles[pin].name=pin===CONFIG.PIN_USER1?CONFIG.USER1_NAME:CONFIG.USER2_NAME;
+  if(!userProfiles[pin].theme)userProfiles[pin].theme='auto';
+  saveUserProfiles();
+  sendPayload({action:'save_profile',pin:pin,name:userProfiles[pin].name,avatar:userProfiles[pin].avatar||'',theme:userProfiles[pin].theme||'auto'});
 }
 
 // ==================== AVATAR CROP ====================
@@ -1378,7 +1390,7 @@ function openEditAvatar(){
 function handleAvatarFile(e){
   var file=e.target.files[0];
   if(!file)return;
-  if(file.size>2*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh tối đa 2MB');return}
+  if(file.size>5*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh tối đa 5MB');return}
   var reader=new FileReader();
   reader.onload=function(ev){
     var dataUrl=ev.target.result;
@@ -1414,11 +1426,10 @@ function saveCroppedAvatar(){
   var t=(ch-dispH)/2+dy;
   ctx.drawImage(img,Math.max(0,-l/(scale*zoom)),Math.max(0,-t/(scale*zoom)),Math.min(avatarCrop.imgW+l/(scale*zoom),cw/(scale*zoom)),Math.min(avatarCrop.imgH+t/(scale*zoom),ch/(scale*zoom)),0,0,size,size);
   var compressed=c.toDataURL('image/jpeg',0.85);
-  var parts=compressed.split(',');var data=parts[1]||parts[0];
-  showToast('<i class="fas fa-spinner fa-pulse"></i> Đang lưu ảnh...');
-  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'upload_avatar',pin:appState.currentPin,imageData:data,mimeType:'image/jpeg'})})
-  .then(function(r){return r.json()})
-  .then(function(result){
+  var parts=compressed.split(',');var rawData=parts[1]||parts[0];
+  if(rawData.length>300*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh quá lớn');return}
+  showToast('<i class="fas fa-spinner fa-pulse"></i> Đang tải ảnh lên...');
+  uploadImage(compressed,'avatar_'+appState.currentPin+'.jpg','',function(result){
     if(result&&result.url){
       loadUserProfiles();
       userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
@@ -1426,22 +1437,19 @@ function saveCroppedAvatar(){
       saveUserProfiles();
       updateUserUI();
       syncProfileToBackend();
-    } else {
-      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh lên');return
+      closeModal('modal-edit-avatar');
+      avatarCropReset();
+      showToast('<i class="fas fa-check-circle"></i> Đã cập nhật ảnh đại diện');
+    }else{
+      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh lên, lưu tạm thời');
+      loadUserProfiles();
+      userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
+      userProfiles[appState.currentPin].avatar=compressed;
+      saveUserProfiles();
+      updateUserUI();
+      closeModal('modal-edit-avatar');
+      avatarCropReset();
     }
-    closeModal('modal-edit-avatar');
-    avatarCropReset();
-    showToast('<i class="fas fa-check-circle"></i> Đã cập nhật ảnh đại diện');
-  })
-  .catch(function(){
-    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi kết nối, lưu tạm thời');
-    loadUserProfiles();
-    userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
-    userProfiles[appState.currentPin].avatar=compressed;
-    saveUserProfiles();
-    updateUserUI();
-    closeModal('modal-edit-avatar');
-    avatarCropReset();
   });
 }
 
@@ -1529,13 +1537,14 @@ function escHtml(s){if(typeof s!=='string')return'';return s.replace(/&/g,'&amp;
 function showToast(m){if(!m)return;var el=document.getElementById('toast');el.innerHTML=m;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2600)}
 
 function loadData(callback){
+  showLoadingBar();
   var btn=document.getElementById('sync-header-btn');if(btn)btn.classList.add('sync-spin');
   var cbName='jcb_'+Date.now()+'_'+Math.random().toString(36).substr(2,4);
   var scriptTag,isDone=false,timeout;
 
   function handleResponse(data){
     if(isDone)return;isDone=true;clearTimeout(timeout);if(btn)btn.classList.remove('sync-spin');
-    hideLoadingScreen();
+    hideLoadingScreen();hideLoadingBar();
     if(data&&data.entries&&data.anniversaries){
       appState.data=data;saveLocal(data);
       // Merge profiles from backend into localStorage
@@ -1564,7 +1573,7 @@ function loadData(callback){
     }
     normalizeData();sortEntries();renderAll();updateActivityBadge();cleanup();if(callback)callback(appState.data)
   }
-  function handleTimeout(){if(isDone)return;isDone=true;clearTimeout(timeout);if(btn)btn.classList.remove('sync-spin');hideLoadingScreen();var local=loadLocal();if(local){appState.data=local;normalizeData();sortEntries();renderAll();showToast('<i class="fas fa-wifi"></i> Đã tải dữ liệu từ bộ nhớ tạm')}else{appState.data={entries:[],anniversaries:[]};renderAll()}updateActivityBadge();if(callback)callback(appState.data);cleanup()}
+  function handleTimeout(){if(isDone)return;isDone=true;clearTimeout(timeout);if(btn)btn.classList.remove('sync-spin');hideLoadingScreen();hideLoadingBar();var local=loadLocal();if(local){appState.data=local;normalizeData();sortEntries();renderAll();showToast('<i class="fas fa-wifi"></i> Đã tải dữ liệu từ bộ nhớ tạm')}else{appState.data={entries:[],anniversaries:[]};renderAll()}updateActivityBadge();if(callback)callback(appState.data);cleanup()}
 
   timeout=setTimeout(handleTimeout,12000);
   window[cbName]=function(d){handleResponse(d)};
@@ -1769,8 +1778,8 @@ function renderFeed(){
 function buildFeedCard(entry){
   var effectiveAuthor=getEffectiveName(entry.author);
   var authorPin=getPinForUser(entry.author);
-  var avatarHtml=getEffectiveAvatar(authorPin);
-  var avatar=avatarHtml?'<img src="'+esc(avatarHtml)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:#ccc;"></i>';
+  var ava=getDisplayAvatar(authorPin);
+  var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:#ccc;"></i>';
   var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
   var isOwner=getEffectiveName(entry.author)===getEffectiveName(currentUser);
   var timeDisplay=timeAgo(entry.updatedAt);
@@ -2570,7 +2579,9 @@ function showConfirm(title,msg,callback){
 }
 
 // ==================== SYNC ====================
-function triggerSync(){showToast('<i class="fas fa-spinner fa-spin"></i> Đang đồng bộ...');loadData(function(){showToast('<i class="fas fa-check-circle"></i> Đã đồng bộ!')})}
+function showLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.add('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 8s linear';i.style.width='70%'}}
+function hideLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.remove('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 0.4s ease';i.style.width='100%';setTimeout(function(){if(i)i.style.width='0%';if(i)i.style.transition='none'},500)}}
+function triggerSync(){showLoadingBar();showToast('<i class="fas fa-spinner fa-spin"></i> Đang đồng bộ...');loadData(function(){hideLoadingBar();showToast('<i class="fas fa-check-circle"></i> Đã đồng bộ!')})}
 
 // ==================== KEYBOARD SHORTCUTS ====================
 document.addEventListener('keydown',function(e){
