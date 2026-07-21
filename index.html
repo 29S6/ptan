@@ -449,16 +449,21 @@ a { color: var(--text-link); text-decoration:none; }
 }
 
 .pd-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:8px 12px; min-height:48px; border-bottom:1px solid var(--border-light); flex-shrink:0;
+  display:flex; align-items:center;
+  padding:4px 8px; min-height:44px; border-bottom:1px solid var(--border-light); flex-shrink:0;
   background:#fff; z-index:10;
 }
-.pd-header .pd-back { font-size:1.3rem; color:var(--text-primary); padding:4px 8px; cursor:pointer; background:none; border:none; }
-.pd-header .pd-title { font-size:0.9rem; font-weight:600; }
-.pd-header .pd-actions { display:flex; gap:4px; }
-.pd-header .pd-actions button { font-size:0.9rem; color:var(--text-secondary); padding:6px 8px; cursor:pointer; background:none; border:none; border-radius:6px; transition:0.15s; }
-.pd-header .pd-actions button:hover { background:var(--hover-bg); color:var(--text-primary); }
-.pd-header .pd-actions button.danger:hover { color:var(--text-danger); }
+.pd-header .pd-back { font-size:1.2rem; color:var(--text-primary); padding:8px 8px; cursor:pointer; background:none; border:none; }
+.pd-header .pd-header-center { flex:1; }
+.pd-header .pd-header-right { min-width:36px; }
+.pd-header .pd-close-btn { font-size:1.2rem; color:var(--text-secondary); padding:8px 10px; cursor:pointer; background:none; border:none; }
+.pd-author-actions { position:relative; margin-left:auto; }
+.pd-dropdown { position:absolute; right:0; top:100%; background:#fff; border:1px solid var(--border-light); border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.1); z-index:100; min-width:130px; padding:4px; display:none; margin-top:4px; }
+.pd-dropdown.show { display:flex; flex-direction:column; }
+.pd-dropdown button { display:flex; align-items:center; gap:8px; width:100%; padding:8px 12px; font-size:0.82rem; font-weight:500; color:var(--text-primary); background:none; border:none; border-radius:6px; cursor:pointer; transition:0.12s; }
+.pd-dropdown button:hover { background:var(--hover-bg); }
+.pd-dropdown button.danger { color:var(--text-danger); }
+.pd-dropdown button i { font-size:0.8rem; }
 /* Post images in detail - carousel */
 .pd-images {
   background:#000; position:relative; overflow:hidden;
@@ -568,7 +573,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== PHOTO VIEWER ===== */
 #photo-viewer {
-  position:fixed; inset:0; z-index:700; background:rgba(0,0,0,0.92);
+  position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.92);
   display:none; align-items:center; justify-content:center; flex-direction:column;
   backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
 }
@@ -697,7 +702,7 @@ a { color: var(--text-link); text-decoration:none; }
 .ann-info { flex:1; min-width:0; }
 .ann-name { font-weight:600; font-size:0.9rem; color:var(--text-primary); letter-spacing:-0.2px; }
 .ann-date { font-size:0.68rem; color:var(--text-secondary); margin-top:2px; }
-.ann-countdown { font-size:0.72rem; font-weight:500; margin-top:4px; display:inline-block; padding:3px 12px; border-radius:10px; line-height:1.3; }
+.ann-countdown { font-size:0.72rem; font-weight:500; margin-top:4px; display:inline-block; padding:3px 12px; border-radius:10px; line-height:1.3; font-family:'Roboto',Arial,sans-serif; letter-spacing:0.3px; }
 .ann-countdown.today { color:#ed4956; background:#fff0f0; }
 .ann-countdown.soon { color:#e67e22; background:#fff4e6; }
 .ann-countdown.far { color:var(--text-secondary); background:#f5f5f5; }
@@ -894,11 +899,8 @@ a { color: var(--text-link); text-decoration:none; }
   <div class="pd-modal">
     <div class="pd-header">
       <button class="pd-back" onclick="closePostDetail()"><i class="fas fa-arrow-left"></i></button>
-      <div class="pd-title">Bài viết</div>
-      <div class="pd-actions" id="pd-actions">
-        <button class="pd-edit-btn" id="pd-edit-btn" onclick="editFromPostDetail()" style="display:none;"><i class="fas fa-pen"></i></button>
-        <button class="pd-del-btn danger" id="pd-del-btn" onclick="deleteFromPostDetail()" style="display:none;"><i class="fas fa-trash-alt"></i></button>
-      </div>
+      <div class="pd-header-center"></div>
+      <div class="pd-header-right"><button class="pd-close-btn" onclick="closePostDetail()"><i class="fas fa-times"></i></button></div>
     </div>
     <div class="pd-modal-inner">
       <div class="pd-images" id="pd-images"></div>
@@ -1412,17 +1414,38 @@ function saveCroppedAvatar(){
   var t=(ch-dispH)/2+dy;
   ctx.drawImage(img,Math.max(0,-l/(scale*zoom)),Math.max(0,-t/(scale*zoom)),Math.min(avatarCrop.imgW+l/(scale*zoom),cw/(scale*zoom)),Math.min(avatarCrop.imgH+t/(scale*zoom),ch/(scale*zoom)),0,0,size,size);
   var compressed=c.toDataURL('image/jpeg',0.85);
-  loadUserProfiles();
-  userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
-  userProfiles[appState.currentPin].avatar=compressed;
-  saveUserProfiles();
-  updateUserUI();
-  syncProfileToBackend();
-  closeModal('modal-edit-avatar');
-  avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
-  showToast('<i class="fas fa-check-circle"></i> Đã cập nhật ảnh đại diện');
+  var parts=compressed.split(',');var data=parts[1]||parts[0];
+  showToast('<i class="fas fa-spinner fa-pulse"></i> Đang lưu ảnh...');
+  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'upload_avatar',pin:appState.currentPin,imageData:data,mimeType:'image/jpeg'})})
+  .then(function(r){return r.json()})
+  .then(function(result){
+    if(result&&result.url){
+      loadUserProfiles();
+      userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
+      userProfiles[appState.currentPin].avatar=result.url;
+      saveUserProfiles();
+      updateUserUI();
+      syncProfileToBackend();
+    } else {
+      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh lên');return
+    }
+    closeModal('modal-edit-avatar');
+    avatarCropReset();
+    showToast('<i class="fas fa-check-circle"></i> Đã cập nhật ảnh đại diện');
+  })
+  .catch(function(){
+    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi kết nối, lưu tạm thời');
+    loadUserProfiles();
+    userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
+    userProfiles[appState.currentPin].avatar=compressed;
+    saveUserProfiles();
+    updateUserUI();
+    closeModal('modal-edit-avatar');
+    avatarCropReset();
+  });
 }
 
+function avatarCropReset(){avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};var img=document.getElementById('avatar-crop-img');if(img){img.style.left='';img.style.top='';img.style.width='';img.style.height='';img.src=''}var s=document.getElementById('avatar-zoom-slider');if(s)s.value='1'}
 function avatarCropCleanup(){
   avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
   var img=document.getElementById('avatar-crop-img');
@@ -2044,19 +2067,19 @@ function renderPostDetail(){
   var authorPin=getPinForUser(entry.author);
   var avaUrl=getDisplayAvatar(authorPin);
   var isOwner=effectiveAuthor===getEffectiveName(currentUser);
-  document.getElementById('pd-edit-btn').style.display=isOwner?'inline-flex':'none';
-  document.getElementById('pd-del-btn').style.display=isOwner?'inline-flex':'none';
 
   // Images
-  renderPdImages(entry, window.innerWidth < 768);
+  renderPdImages(entry);
 
-  // Author
+  // Author row with three-dot menu
   var avatarHtml=avaUrl?'<img src="'+esc(avaUrl)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:#ccc;"></i>';
   var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
   var timeDisplay=formatFull(entry.updatedAt);
+  var menuHtml=isOwner?'<div class="pd-author-actions"><button class="pd-menu-btn" onclick="event.stopPropagation();togglePdMenu()"><i class="fas fa-ellipsis-h"></i></button><div class="pd-dropdown" id="pd-dropdown"><button onclick="editFromPostDetail()"><i class="fas fa-pen"></i> Sửa</button><button class="danger" onclick="deleteFromPostDetail()"><i class="fas fa-trash-alt"></i> Xóa</button></div></div>':'';
   document.getElementById('pd-author').innerHTML=
     '<div class="pd-author-avatar"><div class="inner">'+avatarHtml+'</div></div>'+
-    '<div class="pd-author-info"><div class="pd-author-name">'+esc(username)+'</div><div class="pd-author-time">'+esc(timeDisplay)+'</div></div>';
+    '<div class="pd-author-info"><div class="pd-author-name">'+esc(username)+'</div><div class="pd-author-time">'+esc(timeDisplay)+'</div></div>'+
+    menuHtml;
 
   // Caption
   document.getElementById('pd-caption').innerHTML=
@@ -2069,7 +2092,7 @@ function renderPostDetail(){
 
 var pdCarouselIndex = 0;
 
-function renderPdImages(entry, isMobile){
+function renderPdImages(entry){
   pdCarouselIndex = 0;
   if(!entry.images||!entry.images.length){
     document.getElementById('pd-images').innerHTML='';
@@ -2086,13 +2109,8 @@ function renderPdImages(entry, isMobile){
     carouselHtml+='<button class="pd-carousel-nav prev" onclick="pdPrev()" id="pd-prev"><i class="fas fa-chevron-left"></i></button><button class="pd-carousel-nav next" onclick="pdNext()" id="pd-next"><i class="fas fa-chevron-right"></i></button><span class="pd-carousel-count" id="pd-count">1/'+total+'</span><div class="pd-carousel-dots">'+dots+'</div>';
   }
   carouselHtml+='</div>';
-  if(isMobile){
-    document.getElementById('pd-images').innerHTML='';
-    document.getElementById('pd-scroll-images').innerHTML=carouselHtml;
-  }else{
-    document.getElementById('pd-images').innerHTML=carouselHtml;
-    document.getElementById('pd-scroll-images').innerHTML='';
-  }
+  document.getElementById('pd-images').innerHTML=carouselHtml;
+  document.getElementById('pd-scroll-images').innerHTML='';
   updatePdNav();
 }
 
@@ -2222,6 +2240,15 @@ function deletePdComment(id){
     })
   })
 }
+
+function togglePdMenu(){
+  var dd=document.getElementById('pd-dropdown');
+  dd.classList.toggle('show');
+}
+document.addEventListener('click',function(e){
+  var wrap=e.target.closest('.pd-author-actions');
+  if(!wrap){var dd=document.getElementById('pd-dropdown');if(dd)dd.classList.remove('show')}
+});
 
 function editFromPostDetail(){
   var id=pdEntryId;
