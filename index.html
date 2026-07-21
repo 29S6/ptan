@@ -1429,7 +1429,9 @@ function saveCroppedAvatar(){
   var parts=compressed.split(',');var rawData=parts[1]||parts[0];
   if(rawData.length>300*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh quá lớn');return}
   showToast('<i class="fas fa-spinner fa-pulse"></i> Đang tải ảnh lên...');
-  uploadImage(compressed,'avatar_'+appState.currentPin+'.jpg','',function(result){
+  var payload={action:'upload_avatar',pin:appState.currentPin,imageData:rawData};
+  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+  .then(function(r){return r.json()}).then(function(result){
     if(result&&result.url){
       loadUserProfiles();
       userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
