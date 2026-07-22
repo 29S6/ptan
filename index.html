@@ -2079,7 +2079,7 @@ function renderProfile(){
   var userEntries=entries.filter(function(e){return getEffectiveName(e.author)===getEffectiveName(currentUser)});
   var photoCount=0;
   userEntries.forEach(function(e){if(e.images)photoCount+=e.images.length});
-  document.getElementById('profile-post-count').textContent=entries.length;
+  document.getElementById('profile-post-count').textContent=userEntries.length;
   document.getElementById('profile-photo-count').textContent=photoCount;
   document.getElementById('profile-ann-count').textContent=(appState.data.anniversaries||[]).length;
   renderProfileContent();
