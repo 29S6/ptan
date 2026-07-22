@@ -8,7 +8,7 @@
   <title>Love Story</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
@@ -31,7 +31,8 @@
   --radius-sm: 8px;
   --sidebar-w: 244px;
   --nav-h: 50px;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --loading-bar: linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#cc2366,#dc2743,#e6683c,#f09433);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --placeholder-bg: #f0f0f0;
@@ -177,8 +178,8 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .nav-item {
   flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:6px 0; color:var(--text-secondary); transition:0.15s; cursor:pointer;
-  font-size:0.55rem; font-weight:500; gap:1px;
+  padding:6px 0; color:var(--text-secondary); transition:color 0.2s ease; cursor:pointer;
+  font-size:0.55rem; font-weight:500; gap:1px; position:relative;
 }
 .nav-item i { font-size:1.35rem; }
 .nav-item.active { color:var(--text-primary); }
@@ -198,9 +199,18 @@ a { color: var(--text-link); text-decoration:none; }
   #main-content { padding-bottom:0; }
 }
 
-.page { display:none; min-height:calc(100vh - 80px); animation:fadeUp 0.35s ease; }
-.page.active { display:block; }
+.page { display:none; min-height:calc(100vh - 80px); }
+.page.active { display:block; animation:pageIn 0.35s cubic-bezier(0.22,1,0.36,1); }
+@keyframes pageIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes scaleIn { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
+@keyframes slideUp { from { opacity:0; transform:translateY(100%); } to { opacity:1; transform:translateY(0); } }
+@keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
+@keyframes heartPop { 0%{transform:scale(1)} 25%{transform:scale(1.3)} 50%{transform:scale(0.95)} 100%{transform:scale(1)} }
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes ripple { to { transform:scale(4); opacity:0; } }
 
 /* ===== FEED ===== */
 .feed-header {
@@ -229,6 +239,7 @@ a { color: var(--text-link); text-decoration:none; }
 .stories-container::-webkit-scrollbar { display:none; }
 .story-item { display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; flex-shrink:0; }
 .story-avatar { width:64px; height:64px; border-radius:50%; padding:3px; background:var(--story-gradient); display:flex; align-items:center; justify-content:center; }
+.story-item .story-avatar.seen { background:var(--border-light); }
 .story-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; font-size:1.8rem; overflow:hidden; }
 .story-avatar .inner img { width:100%; height:100%; object-fit:cover; }
 .story-name { font-size:0.7rem; color:var(--text-secondary); max-width:64px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -237,8 +248,9 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-posts { max-width:630px; margin:0 auto; padding:12px 0; }
 .feed-card {
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
-  margin-bottom:16px; position:relative;
+  margin-bottom:16px; position:relative; animation:feedCardIn 0.4s cubic-bezier(0.22,1,0.36,1) both;
 }
+@keyframes feedCardIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 .feed-card-images { border-radius:0; overflow:hidden; }
 .feed-card-header {
   display:flex; align-items:center; justify-content:space-between;
@@ -248,7 +260,7 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-card-avatar { width:36px; height:36px; border-radius:50%; background:var(--story-gradient); padding:2px; display:flex; align-items:center; justify-content:center; }
 .feed-card-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; font-size:0.9rem; }
 .feed-card-avatar .inner img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-.feed-card-username { font-size:0.9rem; font-weight:600; color:var(--text-primary); }
+.feed-card-username { font-size:0.9rem; font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:4px; }
 .feed-card-time { font-size:0.75rem; color:var(--text-secondary); margin-top:-1px; }
 .feed-card-actions { position:relative; }
 .feed-card-menu-btn { font-size:1.1rem; color:var(--text-secondary); padding:4px 8px; border-radius:8px; transition:0.15s; }
@@ -292,9 +304,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* Feed card content */
 .feed-card-content { padding:2px 14px 12px; }
-.feed-card-title { font-size:1rem; font-weight:600; margin-bottom:4px; }
 .feed-card-caption { font-size:0.95rem; line-height:1.5; }
-.feed-card-caption .username { font-weight:600; margin-right:4px; }
 .feed-card-caption-expand { color:var(--text-secondary); font-size:0.85rem; cursor:pointer; margin-top:2px; }
 .feed-card-comments { font-size:0.88rem; color:var(--text-secondary); margin-top:4px; cursor:pointer; }
 .feed-card-comments:hover { color:var(--text-primary); }
@@ -315,20 +325,24 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== PROFILE PAGE ===== */
 .profile-header-sticky { background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10; }
-.profile-header { max-width:630px; margin:0 auto; padding:20px 16px 16px; }
-.profile-top { display:flex; align-items:center; gap:24px; }
-.profile-avatar { width:80px; height:80px; border-radius:50%; background:var(--story-gradient); padding:3px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.profile-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; font-size:2.4rem; }
+.profile-header { max-width:630px; margin:0 auto; padding:28px 16px 16px; }
+.profile-top { display:flex; align-items:center; gap:28px; }
+.profile-avatar { width:86px; height:86px; border-radius:50%; background:var(--story-gradient); padding:3px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.profile-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; font-size:2.6rem; overflow:hidden; }
+.profile-avatar .inner img { width:100%; height:100%; object-fit:cover; }
 .profile-info { flex:1; min-width:0; }
-.profile-username { font-size:1.2rem; font-weight:600; }
-.profile-stats { display:flex; gap:20px; margin-top:8px; }
+.profile-username { font-size:1.3rem; font-weight:700; display:flex; align-items:center; gap:5px; margin-bottom:14px; }
+.verified-badge { color:#0095f6; font-size:0.9rem; line-height:1; transform:translateY(1px); display:inline-block; }
+.profile-username .verified-badge { font-size:1.1rem; transform:translateY(1.5px); }
+.profile-stats { display:flex; gap:28px; margin-bottom:12px; }
 .profile-stat { text-align:center; }
-.profile-stat-num { font-weight:700; font-size:0.9rem; }
-.profile-stat-label { font-size:0.7rem; color:var(--text-secondary); }
-.profile-bio { margin-top:10px; font-size:0.8rem; line-height:1.5; }
-.profile-bio .name { font-weight:600; }
-.profile-clock { margin-top:6px; font-size:0.78rem; color:var(--text-secondary); display:flex; align-items:center; gap:4px; }
-.profile-viewing { margin-top:6px; font-size:0.78rem; color:var(--text-secondary); display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+.profile-stat-num { font-weight:800; font-size:1.15rem; line-height:1.3; }
+.profile-stat-label { font-size:0.78rem; color:var(--text-secondary); margin-top:1px; }
+.profile-clock { font-size:0.88rem; color:var(--text-primary); line-height:1.5; display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+.profile-clock .num-days { font-weight:700; color:var(--text-primary); }
+.profile-clock .partner-link { color:var(--text-primary); font-weight:600; text-decoration:none; cursor:pointer; }
+.profile-clock .partner-link:hover { text-decoration:underline; }
+.profile-viewing { margin-top:8px; font-size:0.72rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px; flex-wrap:wrap; background:var(--hover-bg); border-radius:8px; padding:6px 10px; border:1px solid var(--border-light); }
 
 /* ===== PROFILE MORE MENU (mobile) ===== */
 .profile-more-container { position:relative; align-self:flex-start; margin-left:auto; }
@@ -369,17 +383,23 @@ a { color: var(--text-link); text-decoration:none; }
 .profile-tab.active { color:var(--text-primary); border-top-color:var(--text-primary); }
 
 .profile-posts { max-width:630px; margin:0 auto; padding:4px; }
-.profile-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
-.profile-grid-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:var(--placeholder-bg); border-radius:2px; }
+.profile-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; }
+.profile-grid-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:var(--placeholder-bg); }
 .profile-grid-item img { width:100%; height:100%; object-fit:cover; }
-.profile-grid-item .overlay { position:absolute; inset:0; background:rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; color:#fff; gap:10px; font-size:0.8rem; font-weight:600; opacity:0; transition:0.2s; }
+.profile-grid-item .overlay { position:absolute; inset:0; background:rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:#fff; gap:10px; font-size:0.85rem; font-weight:600; opacity:0; transition:opacity 0.15s; backdrop-filter:blur(2px); }
 .profile-grid-item:hover .overlay { opacity:1; }
-.profile-grid-item .overlay i { font-size:0.9rem; }
+.profile-grid-item .overlay i { font-size:1rem; }
 
 /* Threads-style profile posts */
 .threads-list { max-width:600px; margin:0 auto; }
 .threads-item { padding:16px 0; border-bottom:1px solid var(--border-light); cursor:pointer; transition:0.15s; }
 .threads-item:hover { background:var(--hover-bg); margin:0 -16px; padding:16px; border-radius:4px; }
+.threads-author { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.85rem; }
+.threads-author strong { display:flex; align-items:center; gap:3px; color:var(--text-primary); }
+.threads-avatar { width:32px; height:32px; border-radius:50%; background:var(--story-gradient); padding:2px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.threads-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.threads-avatar .inner img { width:100%; height:100%; object-fit:cover; }
+.threads-time { font-size:0.7rem; color:var(--text-secondary); }
 .threads-img { margin-bottom:12px; border-radius:8px; overflow:hidden; }
 .threads-img img { width:100%; max-height:400px; object-fit:contain; display:block; background:var(--input-bg); }
 .threads-content { font-size:0.92rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; margin-bottom:10px; color:var(--text-primary); }
@@ -450,7 +470,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .create-user-row .create-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
 .create-user-row .create-avatar i { font-size:1.6rem; color:var(--text-secondary); }
-.create-user-row .create-username { font-size:0.88rem; font-weight:600; color:var(--text-primary); }
+.create-user-row .create-username { font-size:0.88rem; font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:4px; }
 
 /* Threads-style textarea - clean, no border */
 .create-content-input {
@@ -497,11 +517,13 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== POST DETAIL ===== */
 #post-overlay {
   position:fixed; inset:0; z-index:2000;
-  background:var(--card-bg); display:none; flex-direction:column;
-  opacity:0;
+  background:var(--card-bg); display:flex; flex-direction:column;
+  opacity:0; pointer-events:none; transition:opacity 0.25s cubic-bezier(0.22,1,0.36,1);
 }
-#post-overlay.open { display:flex; }
-#post-overlay.open.anim-in { opacity:1; }
+#post-overlay.open { opacity:1; pointer-events:auto; }
+
+/* ===== GLOBAL TRANSITIONS ===== */
+* { -webkit-tap-highlight-color:transparent; }
 
 /* Post detail - mobile first (column layout) */
 .pd-modal { display:flex; flex-direction:column; flex:1; min-height:0; }
@@ -606,7 +628,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-author-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; font-size:0.9rem; }
 .pd-author-info { flex:1; min-width:0; }
 .pd-author-name-row { display:flex; align-items:center; gap:6px; width:100%; }
-.pd-author-name { font-size:0.92rem; font-weight:600; color:var(--text-primary); }
+.pd-author-name { font-size:0.92rem; font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:4px; }
 .pd-author-time { font-size:0.72rem; color:var(--text-secondary); }
 /* Caption/content */
 .pd-caption { padding:4px 16px 8px; }
@@ -618,7 +640,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-comment-item { display:flex; gap:10px; padding:6px 0; }
 .pd-comment-avatar { width:32px; height:32px; border-radius:50%; background:var(--border-light); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:600; flex-shrink:0; }
 .pd-comment-body { flex:1; min-width:0; }
-.pd-comment-user { font-size:0.88rem; font-weight:600; }
+.pd-comment-user { font-size:0.88rem; font-weight:600; display:flex; align-items:center; gap:4px; }
 .pd-comment-text { font-size:0.88rem; line-height:1.4; margin-top:1px; word-break:break-word; }
 .pd-comment-text.editing { background:var(--input-bg); border-radius:6px; padding:2px 6px; }
 .pd-comment-time { font-size:0.65rem; color:var(--text-secondary); margin-top:2px; }
@@ -675,13 +697,61 @@ a { color: var(--text-link); text-decoration:none; }
   .pd-input-fixed { border-left:1px solid var(--border-light); }
   #pd-scroll-images { display:none !important; }
 }
-#post-overlay, .pd-modal { will-change:transform,opacity; }
-.pd-modal { transition:opacity 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.25s cubic-bezier(0.22,1,0.36,1); transform:translateZ(0); }
-#post-overlay { transition:opacity 0.2s ease; }
-#post-overlay.open { opacity:1; }
-@media (max-width:767px) {
-  #post-overlay { transform:translateZ(0); transition:opacity 0.25s cubic-bezier(0.22,1,0.36,1); }
+
+/* ===== COMMENT BOTTOM SHEET (mobile) ===== */
+#comment-sheet-overlay {
+  position:fixed; inset:0; z-index:2200; background:rgba(0,0,0,0.5);
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.3s ease;
 }
+#comment-sheet-overlay.open { opacity:1; pointer-events:auto; }
+#comment-sheet {
+  width:100%; max-width:500px; background:var(--card-bg);
+  border-radius:20px 20px 0 0; max-height:85vh; display:flex;
+  flex-direction:column; transform:translateY(100%); transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  box-shadow:0 -8px 30px rgba(0,0,0,0.12);
+}
+#comment-sheet-overlay.open #comment-sheet { transform:translateY(0); }
+.cs-handle {
+  width:36px; height:4px; border-radius:2px; background:var(--border-light);
+  margin:8px auto 0; flex-shrink:0;
+}
+.cs-header {
+  display:flex; align-items:center; justify-content:center; padding:10px 16px 8px;
+  border-bottom:1px solid var(--border-light); flex-shrink:0; position:relative;
+}
+.cs-title { font-size:0.95rem; font-weight:600; color:var(--text-primary); }
+.cs-close {
+  position:absolute; right:12px; top:50%; transform:translateY(-50%);
+  width:32px; height:32px; border-radius:50%; border:none; background:var(--hover-bg);
+  color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:0.85rem; transition:0.12s;
+}
+.cs-close:hover { background:var(--border-light); color:var(--text-primary); }
+.cs-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:8px 16px 4px; }
+.cs-input-wrap {
+  border-top:1px solid var(--border-light); padding:8px 12px 12px; flex-shrink:0;
+  background:var(--card-bg);
+}
+.cs-input-row { display:flex; align-items:flex-end; gap:8px; }
+.cs-input-row textarea {
+  flex:1; border:1px solid var(--border-light); border-radius:20px; padding:8px 14px; font-size:0.92rem;
+  resize:none; outline:none; min-height:36px; max-height:120px; line-height:1.4;
+  font-family:var(--font); overflow-y:auto; background:var(--input-bg); color:var(--text-primary);
+}
+.cs-input-row textarea:focus { border-color:var(--text-secondary); }
+.cs-send-btn { color:var(--text-link); font-size:0.9rem; font-weight:600; padding:6px 10px; cursor:pointer; background:none; border:none; transition:0.15s; }
+.cs-send-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.cs-comment-item {
+  display:flex; gap:10px; padding:8px 0;
+}
+.cs-comment-avatar { width:32px; height:32px; border-radius:50%; background:var(--border-light); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:600; overflow:hidden; }
+.cs-comment-avatar img { width:100%; height:100%; object-fit:cover; }
+.cs-comment-body { flex:1; min-width:0; }
+.cs-comment-user { font-size:0.88rem; font-weight:600; display:flex; align-items:center; gap:4px; }
+.cs-comment-text { font-size:0.88rem; line-height:1.4; margin-top:1px; word-break:break-word; }
+.cs-comment-time { font-size:0.65rem; color:var(--text-secondary); margin-top:2px; }
+.cs-empty { text-align:center; color:var(--text-secondary); font-size:0.85rem; padding:24px 0; }
 
 /* ===== PHOTO VIEWER ===== */
 #photo-viewer {
@@ -705,14 +775,15 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== MODALS ===== */
 .modal-overlay {
   position:fixed; inset:0; z-index:800; background:var(--overlay-bg);
-  display:none; align-items:center; justify-content:center; padding:16px;
+  display:flex; align-items:center; justify-content:center; padding:16px;
   backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+  opacity:0; pointer-events:none; transition:opacity 0.25s ease;
 }
-.modal-overlay.open { display:flex; }
+.modal-overlay.open { opacity:1; pointer-events:auto; }
 .modal-box {
   background:var(--card-bg); border-radius:var(--radius); max-width:500px; width:100%;
   max-height:85vh; overflow-y:auto; padding:20px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.08);
-  animation:fadeUp 0.25s ease;
+  animation:scaleIn 0.25s cubic-bezier(0.22,1,0.36,1);
 }
 .modal-box::-webkit-scrollbar { width:4px; }
 .modal-box::-webkit-scrollbar-thumb { background:var(--border-light); border-radius:10px; }
@@ -734,7 +805,7 @@ a { color: var(--text-link); text-decoration:none; }
   position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(14px);
   background:var(--toast-bg); color:var(--toast-text); padding:10px 24px; border-radius:30px;
   font-size:0.8rem; font-weight:500; z-index:9999; opacity:0; pointer-events:none;
-  transition:all 0.25s; white-space:nowrap; max-width:90%; box-shadow:0 4px 20px rgba(0,0,0,0.15);
+  transition:all 0.35s cubic-bezier(0.22,1,0.36,1); white-space:nowrap; max-width:90%; box-shadow:0 4px 20px rgba(0,0,0,0.15);
 }
 #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 @media (min-width:1024px) { #toast { bottom:30px; } }
@@ -742,9 +813,9 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== SAVING OVERLAY ===== */
 #saving-overlay {
   position:fixed; inset:0; z-index:9500; background:var(--overlay-bg); backdrop-filter:blur(6px);
-  display:none; align-items:center; justify-content:center;
+  display:none; align-items:center; justify-content:center; opacity:0; transition:opacity 0.25s ease;
 }
-#saving-overlay.show { display:flex; }
+#saving-overlay.show { display:flex; opacity:1; }
 .saving-box { text-align:center; }
 .saving-spinner { width:48px; height:48px; border:4px solid var(--border-light); border-top-color:var(--text-link); border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto 12px; }
 .saving-text { font-size:0.9rem; font-weight:500; color:var(--text-primary); }
@@ -772,7 +843,13 @@ a { color: var(--text-link); text-decoration:none; }
   .feed-posts { padding:0; }
   .profile-avatar { width:64px; height:64px; }
   .profile-avatar .inner { font-size:1.8rem; }
-  .profile-stats { gap:12px; }
+  .profile-top { gap:20px; }
+  .profile-username { font-size:1.1rem; margin-bottom:10px; }
+  .profile-stats { gap:16px; margin-bottom:8px; }
+  .profile-stat-num { font-size:1rem; }
+  .profile-stat-label { font-size:0.7rem; }
+  .profile-clock { font-size:0.82rem; }
+  .profile-header { padding:20px 16px 12px; }
   .explore-grid { gap:3px; padding:3px; }
   .profile-grid { gap:3px; }
   .profile-grid-item { border-radius:1px; }
@@ -918,13 +995,12 @@ a { color: var(--text-link); text-decoration:none; }
           <div class="profile-top">
             <div class="profile-avatar"><div class="inner" id="profile-avatar-inner"><i class="fas fa-user-circle" style="font-size:2.4rem;color:var(--text-secondary);"></i></div></div>
             <div class="profile-info">
-              <div class="profile-username" id="profile-username">Ánh Ngọc</div>
+              <div class="profile-username" id="profile-username">Ánh Ngọc <i class="fas fa-check-circle verified-badge"></i></div>
               <div class="profile-stats">
                 <div class="profile-stat"><div class="profile-stat-num" id="profile-post-count">0</div><div class="profile-stat-label">bài viết</div></div>
                 <div class="profile-stat"><div class="profile-stat-num" id="profile-photo-count">0</div><div class="profile-stat-label">ảnh</div></div>
-                <div class="profile-stat"><div class="profile-stat-num" id="profile-ann-count">0</div><div class="profile-stat-label">kỷ niệm</div></div>
+                <div class="profile-stat"><div class="profile-stat-num" id="profile-comment-count">0</div><div class="profile-stat-label">bình luận</div></div>
               </div>
-              <div class="profile-bio"><span class="name" id="profile-bio-name">Ánh Ngọc</span> — Nhật ký tình yêu của chúng mình</div>
               <div class="profile-clock" id="profile-clock"></div>
               <div class="profile-viewing" id="profile-viewing" style="display:none;"></div>
             </div>
@@ -1009,6 +1085,24 @@ a { color: var(--text-link); text-decoration:none; }
             <button class="pd-send-btn" id="pd-send-btn" onclick="sendPdComment()">Gửi</button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMMENT BOTTOM SHEET (mobile) ===== -->
+<div id="comment-sheet-overlay">
+  <div id="comment-sheet">
+    <div class="cs-handle"></div>
+    <div class="cs-header">
+      <span class="cs-title">Bình luận</span>
+      <button class="cs-close" onclick="closeCommentSheet()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cs-scroll" id="cs-scroll"></div>
+    <div class="cs-input-wrap">
+      <div class="cs-input-row">
+        <textarea id="cs-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCsComment()}"></textarea>
+        <button class="cs-send-btn" id="cs-send-btn" onclick="sendCsComment()">Gửi</button>
       </div>
     </div>
   </div>
@@ -1425,11 +1519,10 @@ function updateUserUI(){
   var plainName = displayName.replace(/ [\w💖🌻]+$/g,'');
   var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.6rem;color:var(--text-secondary);"></i>';
   document.getElementById('create-user-avatar').innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
-  document.getElementById('create-user-name').textContent = plainName;
-  document.getElementById('settings-user').textContent = displayName;
+  document.getElementById('create-user-name').innerHTML = esc(plainName)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.75rem;"></i>';
+  document.getElementById('settings-user').innerHTML = esc(displayName)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.8rem;"></i>';
   document.getElementById('profile-avatar-inner').innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
-  document.getElementById('profile-bio-name').textContent = displayName;
-  document.getElementById('profile-username').textContent = plainName;
+  document.getElementById('profile-username').innerHTML = esc(plainName)+' <i class="fas fa-check-circle verified-badge"></i>';
   var sa = document.getElementById('settings-avatar-preview');
   if (sa) sa.innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
   // Re-render any visible content that shows names
@@ -1681,12 +1774,15 @@ document.addEventListener('touchend',function(){avatarCrop.isDragging=false});
 function startClock(){
   var start=new Date(CONFIG.LOVE_START+'T00:00:00');
   function tick(){
-    if(window.profileViewUser)return;
+    var viewingPin=profileViewUser||appState.currentPin;
+    var partnerPin=viewingPin===CONFIG.PIN_USER1?CONFIG.PIN_USER2:CONFIG.PIN_USER1;
+    var otherName=partnerPin===CONFIG.PIN_USER1?getEffectiveName(CONFIG.USER1_NAME):getEffectiveName(CONFIG.USER2_NAME);
     var diff=Math.max(0,Date.now()-start.getTime());
-    var d=Math.floor(diff/86400000),h=Math.floor(diff/3600000)%24,m=Math.floor(diff/60000)%60,s=Math.floor(diff/1000)%60;
-    document.getElementById('profile-clock').innerHTML='<i class="far fa-clock"></i> Bên nhau đã <strong>'+d+'</strong> ngày <strong>'+pad(h)+'</strong>:'+pad(m)+':'+pad(s);
+    var d=Math.floor(diff/86400000);
+    document.getElementById('profile-clock').innerHTML='Đã ở bên <a class="partner-link" href="javascript:void(0)" onclick="renderProfileForUser(\''+partnerPin+'\')">'+esc(otherName)+'</a> được <span class="num-days">'+d+'</span> ngày';
   }
-  tick();setInterval(tick,1000);
+  tick();setInterval(tick,3600000);
+  window.updateClock=tick;
 }
 
 // ==================== DATA LOADING ====================
@@ -1824,7 +1920,7 @@ function uploadImage(base64,filename,dateStr,callback){
 }
 
 // ==================== NAVIGATION ====================
-function goHome(){switchPage('feed');smoothScroll(document.getElementById('main-content'),0,350)}
+function goHome(){switchPage('feed');setTimeout(function(){smoothScroll(document.getElementById('main-content'),0,350)},0)}
 function smoothScroll(el,to,dur){
   if(!el)return;
   var start=el.scrollTop,startTime=null;
@@ -1840,7 +1936,9 @@ function smoothScroll(el,to,dur){
 function switchPage(page){
   appState.currentPage=page;
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
-  document.getElementById('page-'+page).classList.add('active');
+  var target=document.getElementById('page-'+page);
+  void target.offsetHeight;
+  target.classList.add('active');
   document.querySelectorAll('.sidebar-item[data-page]').forEach(function(i){i.classList.toggle('active',i.dataset.page===page)});
   document.querySelectorAll('.nav-item[data-page]').forEach(function(i){i.classList.toggle('active',i.dataset.page===page)});
   if(page==='feed')renderFeed();
@@ -1899,44 +1997,25 @@ function renderProfileForUser(pin){
   var plainName=displayName.replace(/ [\w💖🌻]+$/g,'');
   function imgHtml(){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:2.4rem;color:var(--text-secondary);"></i>';}
   document.getElementById('profile-avatar-inner').innerHTML=imgHtml();
-  document.getElementById('profile-bio-name').textContent=displayName;
-  document.getElementById('profile-username').textContent=plainName;
+  document.getElementById('profile-username').innerHTML=esc(plainName)+' <i class="fas fa-check-circle verified-badge"></i>';
   var entries=(appState.data.entries||[]).filter(function(e){return getEffectiveName(e.author)===displayName});
-  var photoCount=0;entries.forEach(function(e){if(e.images)photoCount+=e.images.length});
+  var photoCount=0;var commentCount=0;
+  entries.forEach(function(e){if(e.images)photoCount+=e.images.length;if(e.comments)commentCount+=e.comments.length});
   document.getElementById('profile-post-count').textContent=entries.length;
   document.getElementById('profile-photo-count').textContent=photoCount;
-  document.getElementById('profile-ann-count').textContent=(appState.data.anniversaries||[]).length;
-  document.getElementById('profile-clock').style.display='none';
+  document.getElementById('profile-comment-count').textContent=commentCount;
   document.getElementById('profile-viewing').style.display='flex';
-  document.getElementById('profile-viewing').innerHTML='<i class="far fa-clock"></i> Đang xem trang của <strong>'+esc(plainName)+'</strong> <a href="javascript:void(0)" onclick="resetProfileView()" style="color:var(--text-link);font-weight:600;font-size:0.75rem;white-space:nowrap;margin-left:auto;">Về trang của tôi</a>';
+  document.getElementById('profile-viewing').innerHTML='<i class="fas fa-eye"></i> Đang xem <strong>'+esc(plainName)+'</strong> <a href="javascript:void(0)" onclick="resetProfileView()" style="color:var(--text-link);font-weight:600;font-size:0.75rem;white-space:nowrap;margin-left:auto;">Về trang của tôi</a>';
   renderProfileContent();
+  if(window.updateClock)updateClock();
 }
 
 function resetProfileView(){
   profileViewUser=null;
   document.getElementById('profile-viewing').style.display='none';
-  document.getElementById('profile-clock').style.display='flex';
   updateUserUI();
   renderProfile();
-}
-
-function renderProfileContentForUser(entries){
-  var container=document.getElementById('profile-posts');
-  if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào</div>';return}
-  if(appState.profileTab==='posts'){
-    var withImages=entries.filter(function(e){return e.images&&e.images.length>0});
-    if(!withImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
-    container.innerHTML='<div class="profile-grid">'+withImages.map(function(e){
-      return '<div class="profile-grid-item" onclick="openPostDetail(\''+e.id+'\')"><img src="'+esc(e.images[0].url||e.images[0])+'" loading="lazy" /></div>'
-    }).join('')+'</div>'
-  }else{
-    var allImages=[];
-    entries.forEach(function(e){if(e.images&&e.images.length){e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i})})}});
-    if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
-    container.innerHTML='<div class="profile-grid">'+allImages.map(function(img){
-      return '<div class="profile-grid-item" onclick="openPhotoViewer(\''+img.entryId+'\','+img.index+')"><img src="'+esc(img.url)+'" loading="lazy" /></div>'
-    }).join('')+'</div>'
-  }
+  if(window.updateClock)updateClock();
 }
 
 // ==================== FEED ====================
@@ -1952,7 +2031,7 @@ function renderFeed(){
   if(feedObserver){feedObserver.disconnect();feedObserver=null}
   if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào<br><span style="font-size:0.75rem;">Hãy viết nhật ký đầu tiên nhé!</span></div>';feedRenderCount=0;return}
   feedRenderCount=Math.min(entries.length,FEED_INIT);
-  container.innerHTML=entries.slice(0,feedRenderCount).map(function(e){return buildFeedCard(e)}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
+  container.innerHTML=entries.slice(0,feedRenderCount).map(function(e,i){return '<div style="animation-delay:'+(i*0.06)+'s">'+buildFeedCard(e)+'</div>'}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
   observeFeed();
 }
 function observeFeed(){
@@ -2005,18 +2084,16 @@ function buildFeedCard(entry){
     '<div class="feed-card-header">'+
       '<div class="feed-card-user">'+
         '<div class="feed-card-avatar"><div class="inner">'+avatar+'</div></div>'+
-        '<div><div class="feed-card-username">'+esc(username)+'</div><div class="feed-card-time">'+timeDisplay+'</div></div>'+
+        '<div><div class="feed-card-username">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></div><div class="feed-card-time">'+timeDisplay+'</div></div>'+
       '</div>'+
       (isOwner?'<div class="feed-card-actions"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+entry.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+entry.id+'"><button onclick="event.stopPropagation();editPost(\''+entry.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+entry.id+'\')">Xóa bài</button></div></div>':'')+
     '</div>'+
     imgGrid+
     '<div class="feed-card-content">'+
-      (entry.title?'<div class="feed-card-title">'+esc(entry.title)+'</div>':'')+
-      '<div class="feed-card-caption">'+
-        '<span class="username">'+esc(username)+'</span>'+esc(captionShort)+
+      '<div class="feed-card-caption">'+esc(captionShort)+
         (hasMore?'<div class="feed-card-caption-expand">Xem thêm</div>':'')+
       '</div>'+
-      (commentCount>0?'<div class="feed-card-comments">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments">Thêm bình luận...</div>')+
+      (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Thêm bình luận...</div>')+
       '<div class="feed-card-timestamp">'+timeAgo(entry.updatedAt)+'</div>'+
     '</div>'+
   '</div>';
@@ -2205,7 +2282,7 @@ function renderActivity(){
     return '<div class="activity-item'+(isNew?' activity-new':'')+'" onclick="openPostDetail(\''+a.entryId+'\')">'+
       '<div class="activity-avatar">'+(a.type==='post'?'<i class="fas fa-file-lines"></i>':'<i class="fa-regular fa-comment"></i>')+'</div>'+
       '<div style="flex:1;min-width:0;">'+
-        '<div class="activity-text"><strong>'+esc(name)+'</strong> '+label+'</div>'+
+        '<div class="activity-text"><strong>'+esc(name)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.75rem;"></i></strong> '+label+'</div>'+
         (preview?'<div class="activity-preview">'+preview+'</div>':'')+
         '<div class="activity-time">'+fmtTime(a.time)+'</div>'+
       '</div>'+
@@ -2220,11 +2297,11 @@ function renderProfile(){
   if(profileViewUser){resetProfileView();return}
   var entries=(appState.data.entries||[]).slice();
   var userEntries=entries.filter(function(e){return getEffectiveName(e.author)===getEffectiveName(currentUser)});
-  var photoCount=0;
-  userEntries.forEach(function(e){if(e.images)photoCount+=e.images.length});
+  var photoCount=0;var commentCount=0;
+  userEntries.forEach(function(e){if(e.images)photoCount+=e.images.length;if(e.comments)commentCount+=e.comments.length});
   document.getElementById('profile-post-count').textContent=userEntries.length;
   document.getElementById('profile-photo-count').textContent=photoCount;
-  document.getElementById('profile-ann-count').textContent=(appState.data.anniversaries||[]).length;
+  document.getElementById('profile-comment-count').textContent=commentCount;
   renderProfileContent();
 }
 
@@ -2241,13 +2318,19 @@ function renderProfileContent(){
       var commentCount=e.comments?e.comments.length:0;
       var imgHtml='';
       if(e.images&&e.images.length>0){
-        imgHtml='<div class="threads-img" onclick="event.stopPropagation();openPostDetail(\''+e.id+'\')"><img src="'+esc(e.images[0].url||e.images[0])+'" loading="lazy" /></div>';
+        imgHtml='<div class="threads-img"><img src="'+esc(e.images[0].url||e.images[0])+'" loading="lazy" /></div>';
       }
-      return '<div class="threads-item" onclick="openPostDetail(\''+e.id+'\')">'+
+      var uname=getEffectiveName(e.author).replace(/ [\w💖🌻]+$/g,'');
+      var authorPin=getPinForUser(e.author);
+      var ava=getDisplayAvatar(authorPin);
+      var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
+      var isOwner=getEffectiveName(e.author)===getEffectiveName(currentUser);
+      return '<div class="threads-item" onclick="openCommentSheet(\''+e.id+'\')">'+
+        '<div class="threads-author"><div class="threads-avatar"><div class="inner">'+avatar+'</div></div><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong>'+(isOwner?'<div class="feed-card-actions" style="margin-left:auto;"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+e.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+e.id+'"><button onclick="event.stopPropagation();editPost(\''+e.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+e.id+'\')">Xóa bài</button></div></div>':'')+'</div>'+
         imgHtml+
         '<div class="threads-content">'+esc(e.content||'')+'</div>'+
         '<div class="threads-meta">'+
-          (commentCount>0?'<span><i class="fa-regular fa-comment"></i> '+commentCount+' bình luận</span><span class="dot-sep"></span>':'')+
+          (commentCount>0?'<span onclick="event.stopPropagation();if(window.innerWidth<768){openCommentSheet(\''+e.id+'\')}else{openPostDetail(\''+e.id+'\')}" style="cursor:pointer;"><i class="fa-regular fa-comment"></i> '+commentCount+' bình luận</span><span class="dot-sep"></span>':'')+
           '<span>'+timeAgo(e.updatedAt)+'</span>'+
         '</div>'+
       '</div>'
@@ -2256,12 +2339,13 @@ function renderProfileContent(){
     var allImages=[];
     userEntries.forEach(function(e){
       if(e.images&&e.images.length){
-        e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i})})
+        e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i,commentCount:e.comments?e.comments.length:0})})
       }
     });
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
-    container.innerHTML='<div class="profile-grid">'+allImages.map(function(img){
-      return '<div class="profile-grid-item" onclick="openPhotoViewer(\''+img.entryId+'\','+img.index+')"><img src="'+esc(img.url)+'" loading="lazy" /></div>'
+    var imagesJson=esc(JSON.stringify(allImages));
+    container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
+      return '<div class="profile-grid-item" onclick="openPhotoViewer(\''+img.entryId+'\','+idx+','+imagesJson+')"><img src="'+esc(img.url)+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -2274,23 +2358,25 @@ function renderProfileContentForUser(entries){
       var commentCount=e.comments?e.comments.length:0;
       var imgHtml='';
       if(e.images&&e.images.length>0){
-        imgHtml='<div class="threads-img" onclick="event.stopPropagation();openPostDetail(\''+e.id+'\')"><img src="'+esc(e.images[0].url||e.images[0])+'" loading="lazy" /></div>';
+        imgHtml='<div class="threads-img"><img src="'+esc(e.images[0].url||e.images[0])+'" loading="lazy" /></div>';
       }
-      return '<div class="threads-item" onclick="openPostDetail(\''+e.id+'\')">'+
+      var uname=getEffectiveName(e.author).replace(/ [\w💖🌻]+$/g,'');
+      return '<div class="threads-item" onclick="openCommentSheet(\''+e.id+'\')">'+
+        '<div class="threads-author"><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong></div>'+
         imgHtml+
         '<div class="threads-content">'+esc(e.content||'')+'</div>'+
         '<div class="threads-meta">'+
-          (commentCount>0?'<span><i class="fa-regular fa-comment"></i> '+commentCount+' bình luận</span><span class="dot-sep"></span>':'')+
+          (commentCount>0?'<span onclick="event.stopPropagation();if(window.innerWidth<768){openCommentSheet(\''+e.id+'\')}else{openPostDetail(\''+e.id+'\')}" style="cursor:pointer;"><i class="fa-regular fa-comment"></i> '+commentCount+' bình luận</span><span class="dot-sep"></span>':'')+
           '<span>'+timeAgo(e.updatedAt)+'</span>'+
         '</div>'+
       '</div>';
     }).join('')+'</div>'
   }else{
     var allImages=[];
-    entries.forEach(function(e){if(e.images&&e.images.length){e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i})})}});
+    entries.forEach(function(e){if(e.images&&e.images.length){e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i,commentCount:e.comments?e.comments.length:0})})}});
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img){
-      return '<div class="profile-grid-item" onclick="openPhotoViewer(\''+img.entryId+'\','+img.index+')"><img src="'+esc(img.url)+'" loading="lazy" /></div>'
+      return '<div class="profile-grid-item" onclick="openPhotoViewer(\''+img.entryId+'\','+img.index+')"><img src="'+esc(img.url)+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -2311,25 +2397,8 @@ function openPostDetail(entryId){
   var scrollEl=document.getElementById('pd-scroll');
   if(scrollEl)scrollEl.scrollTop=0;
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
-  var modal=overlay.querySelector('.pd-modal')||{style:{}};
-  modal.style.transform='translateZ(0)';modal.style.opacity='0';
-  overlay.style.opacity='0';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
   overlay.classList.add('open');
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      if(window.innerWidth<768){
-        overlay.style.transition='opacity 0.25s cubic-bezier(0.22,1,0.36,1)';
-        overlay.style.opacity='1';
-        modal.style.opacity='1';
-      }else{
-        overlay.style.transition='opacity 0.2s ease';
-        overlay.style.opacity='1';
-        modal.style.transition='opacity 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.25s cubic-bezier(0.22,1,0.36,1)';
-        modal.style.opacity='1';
-        modal.style.transform='translateZ(0) scale(1)';
-      }
-    });
-  });
 }
 
 function closePostDetail(){
@@ -2337,27 +2406,8 @@ function closePostDetail(){
   pdEntryId=null;
   pdEditingCommentId=null;
   document.documentElement.style.overflow='';document.body.style.overflow='';
-  var modal=overlay.querySelector('.pd-modal')||{style:{}};
-  var onfinish=function(){
-    overlay.classList.remove('open');
-    overlay.style.transition='';
-    overlay.style.opacity='';
-    modal.style.transition='';
-    modal.style.transform='';
-    modal.style.opacity='';
-  };
-  if(window.innerWidth<768){
-    overlay.style.transition='opacity 0.2s cubic-bezier(0.55,0,1,0.45)';
-    overlay.style.opacity='0';
-    setTimeout(onfinish,200);
-  }else{
-    overlay.style.transition='opacity 0.15s ease';
-    overlay.style.opacity='0';
-    modal.style.transition='opacity 0.2s cubic-bezier(0.55,0,1,0.45), transform 0.2s cubic-bezier(0.55,0,1,0.45)';
-    modal.style.opacity='0';
-    modal.style.transform='translateZ(0) scale(0.97) translateY(10px)';
-    setTimeout(onfinish,200);
-  }
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
+  overlay.classList.remove('open');
 }
 
 function renderPostDetail(){
@@ -2382,7 +2432,7 @@ function renderPostDetail(){
     '<div class="pd-author-avatar"><div class="inner">'+avatarHtml+'</div></div>'+
     '<div class="pd-author-info">'+
       '<div class="pd-author-name-row">'+
-        '<span class="pd-author-name">'+esc(username)+'</span>'+
+        '<span class="pd-author-name">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></span>'+
         '<span class="pd-author-time">· '+esc(timeDisplay)+'</span>'+
         (isOwner?menuHtml:'')+
       '</div>'+
@@ -2472,7 +2522,7 @@ function renderPdComments(){
         '<div class="pd-comment-avatar">'+cavatar+'</div>'+
         '<div class="pd-comment-body">'+
           '<div style="display:flex;align-items:center;gap:6px;width:100%;">'+
-            '<div class="pd-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+'</div>'+
+            '<div class="pd-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+
             (isOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCommentMenu(\''+c.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cmt-dropdown-'+c.id+'"><button onclick="editPdComment(\''+c.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdComment(\''+c.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+
           '</div>'+
           '<div class="pd-comment-text'+(pdEditingCommentId===c.id?' editing':'')+'" id="pd-cmt-'+c.id+'">'+esc(c.text)+'</div>'+
@@ -2612,14 +2662,99 @@ function deleteFromPostDetail(){
   })
 }
 
-// ==================== PHOTO VIEWER ====================
-function openPhotoViewer(entryId,index){
+// ==================== COMMENT BOTTOM SHEET ====================
+var csEntryId = null;
+
+function openCommentSheet(entryId){
   var entry=appState.data.entries.find(function(e){return e.id===entryId});
-  if(!entry||!entry.images||!entry.images.length)return;
-  appState.photoImages=entry.images.map(function(i){return{url:i.url||i,entryId:entryId}});
-  appState.photoIndex=index||0;
+  if(!entry)return;
+  csEntryId=entryId;
+  renderCommentSheet(entry);
+  var overlay=document.getElementById('comment-sheet-overlay');
+  overlay.classList.add('open');
+  document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
+}
+
+function closeCommentSheet(){
+  var overlay=document.getElementById('comment-sheet-overlay');
+  var sheet=document.getElementById('comment-sheet');
+  sheet.style.transition='none';
+  overlay.classList.remove('open');
+  csEntryId=null;
+  document.documentElement.style.overflow='';document.body.style.overflow='';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
+  requestAnimationFrame(function(){sheet.style.transition=''});
+}
+
+function renderCommentSheet(entry){
+  var comments=entry.comments||[];
+  var container=document.getElementById('cs-scroll');
+  var html='';
+  if(!comments.length){
+    html='<div class="cs-empty">Chưa có bình luận nào</div>';
+  }else{
+    html=comments.map(function(c){
+      var ceffective=getEffectiveName(c.author);
+      var cpin=getPinForUser(c.author);
+      var cava=getDisplayAvatar(cpin);
+      var cavatar=cava?'<img src="'+esc(cava)+'">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
+      return '<div class="cs-comment-item">'+
+        '<div class="cs-comment-avatar">'+cavatar+'</div>'+
+        '<div class="cs-comment-body">'+
+          '<div class="cs-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+
+          '<div class="cs-comment-text">'+esc(c.text)+'</div>'+
+          '<div class="cs-comment-time">'+timeAgo(c.time)+'</div>'+
+        '</div>'+
+      '</div>'
+    }).join('');
+  }
+  container.innerHTML=html;
+  document.getElementById('cs-input').value='';
+  autoResize(document.getElementById('cs-input'));
+}
+
+function sendCsComment(){
+  var input=document.getElementById('cs-input');
+  var text=input.value.trim();
+  if(!text){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
+  if(!csEntryId)return;
+  var btn=document.getElementById('cs-send-btn');
+  btn.disabled=true;
+  sendPayload({
+    action:'add_comment',
+    entryId:csEntryId,
+    text:text,
+    author:currentUser
+  },'Đã bình luận!',function(){
+    input.value='';autoResize(input);btn.disabled=false;
+    renderCommentSheet(appState.data.entries.find(function(e){return e.id===csEntryId}));
+    renderFeed();
+  })
+}
+
+// Overlay click to close
+document.addEventListener('DOMContentLoaded',function(){
+  var csOverlay=document.getElementById('comment-sheet-overlay');
+  if(csOverlay)csOverlay.addEventListener('click',function(e){
+    if(e.target===csOverlay)closeCommentSheet();
+  });
+});
+
+// ==================== PHOTO VIEWER ====================
+function openPhotoViewer(entryId,index,allImages){
+  if(allImages&&allImages.length){
+    appState.photoImages=allImages;
+    appState.photoIndex=index||0;
+  }else{
+    var entry=appState.data.entries.find(function(e){return e.id===entryId});
+    if(!entry||!entry.images||!entry.images.length)return;
+    appState.photoImages=entry.images.map(function(i){return{url:i.url||i,entryId:entryId}});
+    appState.photoIndex=index||0;
+  }
   var viewer=document.getElementById('photo-viewer');
   viewer.classList.add('open');document.body.style.overflow='hidden';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
   updatePhotoViewer();
   gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.3,ease:'power2.out'})
 }
@@ -2641,7 +2776,12 @@ function navigatePhoto(d){
     gsap.fromTo(img,{opacity:0,x:d*40,scale:0.95},{opacity:1,x:0,scale:1,duration:0.25,ease:'power2.out'});
   }});
 }
-function closePhotoViewer(){document.getElementById('photo-viewer').classList.remove('open');document.body.style.overflow='';appState.photoImages=[];appState.photoIndex=0}
+function closePhotoViewer(){
+  document.getElementById('photo-viewer').classList.remove('open');
+  document.body.style.overflow='';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
+  appState.photoImages=[];appState.photoIndex=0
+}
 function downloadCurrentPhoto(){
   if(!appState.photoImages.length)return;
   var url=appState.photoImages[appState.photoIndex].url;
@@ -2774,8 +2914,6 @@ function submitCreatePost(){
   })
 }
 
-
-
 // ==================== SETTINGS ====================
 function openSettings(){
   updateUserUI();
@@ -2873,8 +3011,18 @@ function showLogoutConfirm(){
 }
 
 // ==================== MODAL ====================
-function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
-function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+  var mc=document.getElementById('main-content');
+  if(mc)mc.style.overflow='hidden';
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+  var mc=document.getElementById('main-content');
+  if(mc)mc.style.overflow='';
+}
 document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventListener('click',function(e){if(e.target!==el)return;closeModal(el.id);if(el.id==='modal-edit-avatar')avatarCropCleanup()})})
 
 function showConfirm(title,msg,callback){
