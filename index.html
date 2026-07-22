@@ -120,6 +120,20 @@ a { color: var(--text-link); text-decoration:none; }
 .pin-key.empty { visibility:hidden; }
 .lock-error { color:var(--text-danger); font-size:0.78rem; min-height:20px; margin-top:10px; font-weight:500; }
 
+/* ===== SKELETON LOADING ===== */
+@keyframes shimmer { 0%{opacity:0.3} 50%{opacity:0.7} 100%{opacity:0.3} }
+.feed-skeleton { padding:12px 16px; }
+.feed-skeleton .sk-card { background:var(--card-bg); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+.feed-skeleton .sk-card > * { animation:shimmer 1.5s ease-in-out infinite; }
+.feed-skeleton .sk-header { display:flex; align-items:center; gap:10px; padding:12px 14px; }
+.feed-skeleton .sk-avatar { width:36px; height:36px; border-radius:50%; background:var(--hover-bg); flex-shrink:0; }
+.feed-skeleton .sk-lines { flex:1; display:flex; flex-direction:column; gap:6px; }
+.feed-skeleton .sk-line { height:10px; border-radius:5px; background:var(--hover-bg); }
+.feed-skeleton .sk-line.w60 { width:60%; }
+.feed-skeleton .sk-line.w40 { width:40%; }
+.feed-skeleton .sk-img { width:100%; height:200px; background:var(--hover-bg); }
+.feed-skeleton .sk-body { padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+
 /* ===== LOADING SCREEN ===== */
 
 /* ===== APP LAYOUT ===== */
@@ -1384,6 +1398,15 @@ function unlockApp(){
   },500);
 }
 function hideLoadingScreen(){}
+function showFeedSkeleton(){
+  var c=document.getElementById('feed-posts');
+  if(!c)return;
+  var html='';
+  for(var i=0;i<5;i++){
+    html+='<div class="sk-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-img"></div><div class="sk-body"><div class="sk-line w60"></div><div class="sk-line w40"></div><div class="sk-line w60"></div></div></div>';
+  }
+  c.innerHTML='<div class="feed-skeleton">'+html+'</div>';
+}
 document.addEventListener('keydown',function(e){var ls=document.getElementById('lock-screen');if(ls.style.display==='none'||ls.classList.contains('hiding'))return;if(e.key>='0'&&e.key<='9')handlePinPress(e.key);if(e.key==='Backspace')handlePinDelete()})
 
 // ==================== INIT ====================
@@ -1391,6 +1414,7 @@ function initApp(){
   updateUserUI();
   loadOfflineQueue();
   startClock();
+  showFeedSkeleton();
   loadData();
   updateActivityBadge();
 }
@@ -1800,7 +1824,19 @@ function uploadImage(base64,filename,dateStr,callback){
 }
 
 // ==================== NAVIGATION ====================
-function goHome(){switchPage('feed');document.getElementById('main-content').scrollTo({top:0,behavior:'smooth'})}
+function goHome(){switchPage('feed');smoothScroll(document.getElementById('main-content'),0,350)}
+function smoothScroll(el,to,dur){
+  if(!el)return;
+  var start=el.scrollTop,startTime=null;
+  function step(time){
+    if(!startTime)startTime=time;
+    var p=Math.min((time-startTime)/dur,1);
+    var ease=1-Math.pow(1-p,3);
+    el.scrollTop=start+(to-start)*ease;
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
 function switchPage(page){
   appState.currentPage=page;
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
@@ -1953,7 +1989,7 @@ function buildFeedCard(entry){
   if(hasImages){
     var total=entry.images.length;
     var imgs=entry.images.map(function(img,idx){
-      return '<img class="fc-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" loading="lazy"'+(idx===0?' onload="fcFitImg(this)"':'')+' />'
+      return '<img class="fc-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'"'+(idx===0?' onload="fcFitImg(this)"':'')+' />'
     }).join('');
     var dots=total>1?entry.images.map(function(_,idx){return '<span class="fc-dot'+(idx===0?' active':'')+'" onclick="event.stopPropagation();fcCarouselGoTo(\''+entry.id+'\','+idx+')"></span>'}).join(''):'';
     var nav=total>1?'<button class="fc-carousel-nav prev" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',-1)"><i class="fas fa-chevron-left"></i></button><button class="fc-carousel-nav next" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',1)"><i class="fas fa-chevron-right"></i></button><span class="fc-carousel-count">1/'+total+'</span>':'';
@@ -2374,7 +2410,7 @@ function renderPdImages(entry){
   var total=entry.images.length;
   var isMobile=window.innerWidth<768;
   var imgs=entry.images.map(function(img,idx){
-    return '<img class="pd-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" loading="lazy" />'
+    return '<img class="pd-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" />'
   }).join('');
   var dots=entry.images.map(function(_,idx){return '<span class="pd-carousel-dot'+(idx===0?' active':'')+'" onclick="pdGoTo('+idx+')"></span>'}).join('');
   var carouselHtml='<div class="pd-carousel" data-entry="'+entry.id+'" data-current="0"><div class="pd-carousel-inner" id="pd-carousel-inner">'+imgs+'</div>';
