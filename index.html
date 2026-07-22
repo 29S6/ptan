@@ -209,7 +209,6 @@ a { color: var(--text-link); text-decoration:none; }
 @keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
 @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
 @keyframes heartPop { 0%{transform:scale(1)} 25%{transform:scale(1.3)} 50%{transform:scale(0.95)} 100%{transform:scale(1)} }
-@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
 @keyframes ripple { to { transform:scale(4); opacity:0; } }
 
 /* ===== FEED ===== */
@@ -1281,7 +1280,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 <script>
 // ==================== SYSTEM THEME (before app init) ====================
-if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)document.body.classList.add('dark');
+if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.body.classList.add('dark');
 // ==================== CONFIG ====================
 var CONFIG = {
   BACKEND_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
@@ -1388,7 +1387,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',func
 
 // ==================== ACTIVITIES ====================
 function getSeenAt(){
-  return appState.data.profiles?.[appState.currentPin]?.lastSeenAt||null;
+  return (appState.data.profiles&&appState.data.profiles[appState.currentPin]&&appState.data.profiles[appState.currentPin].lastSeenAt)||null;
 }
 function getRecentActivities(){
   var entries=appState.data.entries||[];
@@ -1848,8 +1847,8 @@ function normalizeData(){
     if(!e.createdAt)e.createdAt=e.updatedAt;
   })
 }
-function sortEntries(){
-  appState.data.entries.sort(function(a,b){
+function sortEntries(arr){
+  (arr||appState.data.entries).sort(function(a,b){
     var da=a.date||'',db=b.date||'';
     if(da!==db)return db.localeCompare(da);
     var ua=a.updatedAt||(a.date?a.date+'T00:00:00.000Z':''),ub=b.updatedAt||(b.date?b.date+'T00:00:00.000Z':'');
@@ -1871,8 +1870,7 @@ function processOfflineQueue(){
       if(!(r&&r.success))addQueue(a);
       processNext(i+1);
     }
-    if(a.type==='save_entry'){sendPayload(a.payload,null,handler)}
-    else{sendPayload(a.payload,null,handler)}
+    sendPayload(a.payload,null,handler)
   }
   processNext(0);
 }
@@ -2220,6 +2218,7 @@ function fcFitImg(img){
 
 // ==================== EXPLORE ====================
 var _exploreImages=[];
+var _profileImages=[];
 
 function renderExplore(){
   _exploreImages=[];
@@ -2325,7 +2324,7 @@ function renderProfileContent(){
       var ava=getDisplayAvatar(authorPin);
       var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var isOwner=getEffectiveName(e.author)===getEffectiveName(currentUser);
-      return '<div class="threads-item" onclick="openCommentSheet(\''+e.id+'\')">'+
+      return '<div class="threads-item" onclick="if(window.innerWidth<768){openCommentSheet(\''+e.id+'\')}else{openPostDetail(\''+e.id+'\')}">'+
         '<div class="threads-author"><div class="threads-avatar"><div class="inner">'+avatar+'</div></div><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong>'+(isOwner?'<div class="feed-card-actions" style="margin-left:auto;"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+e.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+e.id+'"><button onclick="event.stopPropagation();editPost(\''+e.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+e.id+'\')">Xóa bài</button></div></div>':'')+'</div>'+
         imgHtml+
         '<div class="threads-content">'+esc(e.content||'')+'</div>'+
@@ -2343,9 +2342,9 @@ function renderProfileContent(){
       }
     });
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
-    var imagesJson=esc(JSON.stringify(allImages));
+    _profileImages=allImages;
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
-      return '<div class="profile-grid-item" onclick="openPhotoViewer(\''+img.entryId+'\','+idx+','+imagesJson+')"><img src="'+esc(img.url)+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
+      return '<div class="profile-grid-item" onclick="openProfilePhotoViewer('+idx+')"><img src="'+esc(img.url)+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -2361,7 +2360,7 @@ function renderProfileContentForUser(entries){
         imgHtml='<div class="threads-img"><img src="'+esc(e.images[0].url||e.images[0])+'" loading="lazy" /></div>';
       }
       var uname=getEffectiveName(e.author).replace(/ [\w💖🌻]+$/g,'');
-      return '<div class="threads-item" onclick="openCommentSheet(\''+e.id+'\')">'+
+      return '<div class="threads-item" onclick="if(window.innerWidth<768){openCommentSheet(\''+e.id+'\')}else{openPostDetail(\''+e.id+'\')}">'+
         '<div class="threads-author"><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong></div>'+
         imgHtml+
         '<div class="threads-content">'+esc(e.content||'')+'</div>'+
@@ -2742,6 +2741,16 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 // ==================== PHOTO VIEWER ====================
+function openProfilePhotoViewer(index){
+  if(!_profileImages||!_profileImages.length)return;
+  appState.photoImages=_profileImages.slice();
+  appState.photoIndex=index||0;
+  var viewer=document.getElementById('photo-viewer');
+  viewer.classList.add('open');document.body.style.overflow='hidden';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
+  updatePhotoViewer();
+  gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.3,ease:'power2.out'})
+}
 function openPhotoViewer(entryId,index,allImages){
   if(allImages&&allImages.length){
     appState.photoImages=allImages;
@@ -2839,7 +2848,7 @@ function closeCreatePage(){
 }
 
 function handleCreateImages(input){
-  var files=Array.from(input.files);
+  var files=[].slice.call(input.files);
   if(!files.length)return;
   var remaining=CONFIG.MAX_IMAGES-appState.writeImages.length;
   if(files.length>remaining){showToast('<i class="fas fa-exclamation-triangle"></i> Chỉ thêm tối đa '+remaining+' ảnh');files=files.slice(0,remaining)}
@@ -2910,7 +2919,7 @@ function submitCreatePost(){
   }
   sendPayload({action:'save_entry',entry:entry},null,function(){
     showToast(appState.writeEditId?'<i class="fas fa-save"></i> Đã cập nhật!':'<i class="fas fa-save"></i> Đã đăng bài!');
-    closeCreatePage();loadData()
+    closeCreatePage()
   })
 }
 
