@@ -1207,7 +1207,8 @@ var appState = {
   confirmCallback: null,
   syncTimer: null
 };
-var FEED_BATCH = 15;
+var FEED_INIT = 30;
+var FEED_MORE = 20;
 var feedRenderCount = 0;
 var feedObserver = null;
 
@@ -1799,7 +1800,7 @@ function uploadImage(base64,filename,dateStr,callback){
 }
 
 // ==================== NAVIGATION ====================
-function goHome(){switchPage('feed');loadData();document.getElementById('main-content').scrollTop=0}
+function goHome(){switchPage('feed');document.getElementById('main-content').scrollTo({top:0,behavior:'smooth'})}
 function switchPage(page){
   appState.currentPage=page;
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
@@ -1914,7 +1915,7 @@ function renderFeed(){
   var container=document.getElementById('feed-posts');
   if(feedObserver){feedObserver.disconnect();feedObserver=null}
   if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào<br><span style="font-size:0.75rem;">Hãy viết nhật ký đầu tiên nhé!</span></div>';feedRenderCount=0;return}
-  feedRenderCount=Math.min(entries.length,FEED_BATCH);
+  feedRenderCount=Math.min(entries.length,FEED_INIT);
   container.innerHTML=entries.slice(0,feedRenderCount).map(function(e){return buildFeedCard(e)}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
   observeFeed();
 }
@@ -1930,7 +1931,7 @@ function observeFeed(){
 function loadMoreFeed(){
   var entries=getFeedEntries();
   if(feedRenderCount>=entries.length)return;
-  var add=Math.min(entries.length-feedRenderCount,FEED_BATCH);
+  var add=Math.min(entries.length-feedRenderCount,FEED_MORE);
   if(add<=0)return;
   feedRenderCount+=add;
   var container=document.getElementById('feed-posts');
