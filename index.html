@@ -242,16 +242,19 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* Feed card carousel */
 .feed-card-images { position:relative; background:var(--input-bg); }
-.fc-carousel { position:relative; width:100%; overflow:hidden; background:var(--input-bg); display:flex; align-items:center; justify-content:center; min-height:150px; }
+.fc-carousel { position:relative; width:100%; overflow:hidden; background:var(--input-bg); }
 .fc-carousel-inner { display:flex; width:100%; transition:transform 0.3s cubic-bezier(0.25,0.1,0.25,1); }
-.fc-carousel-img { width:100%; flex-shrink:0; object-fit:contain; max-height:500px; cursor:pointer; background:var(--input-bg); }
+.fc-carousel-img { width:100%; flex-shrink:0; object-fit:cover; aspect-ratio:3/4; cursor:pointer; background:var(--input-bg); }
+.fc-carousel-img.ratio-1x1 { aspect-ratio:1/1; }
+.fc-carousel-img.ratio-4x3 { aspect-ratio:4/3; }
 .fc-carousel-nav {
   position:absolute; top:50%; transform:translateY(-50%); z-index:3;
   background:var(--carousel-nav-bg); border:none; border-radius:50%;
   width:30px; height:30px; font-size:0.8rem; color:var(--carousel-nav-text);
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer; transition:0.15s; opacity:0; pointer-events:none;
+  cursor:pointer; transition:0.15s;
   box-shadow:0 1px 4px rgba(0,0,0,0.08);
+  opacity:0; pointer-events:none;
 }
 .fc-carousel:hover .fc-carousel-nav { opacity:1; pointer-events:auto; }
 .fc-carousel-nav:hover { background:var(--card-bg); transform:translateY(-50%) scale(1.05); }
@@ -579,7 +582,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 /* Mobile: always show PD carousel nav (no hover on touch) */
 @media (max-width:767px) {
-  #pd-scroll-images .pd-carousel-nav { opacity:1; pointer-events:auto; }
+  .fc-carousel-nav, .pd-carousel-nav { display:none; }
 }
 /* Author row in detail */
 .pd-author {
@@ -1924,7 +1927,7 @@ function buildFeedCard(entry){
   if(hasImages){
     var total=entry.images.length;
     var imgs=entry.images.map(function(img,idx){
-      return '<img class="fc-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" loading="lazy" />'
+      return '<img class="fc-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" loading="lazy"'+(idx===0?' onload="fcFitImg(this)"':'')+' />'
     }).join('');
     var dots=total>1?entry.images.map(function(_,idx){return '<span class="fc-dot'+(idx===0?' active':'')+'" onclick="event.stopPropagation();fcCarouselGoTo(\''+entry.id+'\','+idx+')"></span>'}).join(''):'';
     var nav=total>1?'<button class="fc-carousel-nav prev" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',-1)"><i class="fas fa-chevron-left"></i></button><button class="fc-carousel-nav next" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',1)"><i class="fas fa-chevron-right"></i></button><span class="fc-carousel-count">1/'+total+'</span>':'';
@@ -1997,6 +2000,70 @@ function fcCarouselGoTo(entryId,index){
   var count=carousel.querySelector('.fc-carousel-count');
   if(count)count.textContent=(index+1)+'/'+total;
 }
+
+// ===== Detect image orientation & set aspect ratio =====
+function fcFitImg(img){
+  var carousel=img.closest('.fc-carousel');
+  if(!carousel||carousel.dataset.fitted)return;
+  carousel.dataset.fitted='1';
+  var w=img.naturalWidth,h=img.naturalHeight;
+  if(!w||!h)return;
+  var r=w/h;
+  carousel.querySelectorAll('.fc-carousel-img').forEach(function(el){
+    el.classList.remove('ratio-1x1','ratio-4x3');
+    if(r>1.2) el.classList.add('ratio-4x3');
+    else if(r>0.85) el.classList.add('ratio-1x1');
+  });
+}
+
+// ===== Carousel swipe (mobile) =====
+(function(){
+  var sx=0,dx=0,swiping=false,currentEl=null,sLen=0,lastSwipe=0;
+  document.addEventListener('touchstart',function(e){
+    var el=e.target.closest('.fc-carousel,.pd-carousel');
+    if(!el)return;
+    var inner=el.querySelector('.fc-carousel-inner,.pd-carousel-inner');
+    if(!inner||inner.children.length<=1)return;
+    var img=e.target.closest('.fc-carousel-img,.pd-carousel-img');
+    if(!img)return;
+    sx=e.touches[0].clientX;sLen=e.touches.length;dx=0;swiping=true;currentEl=el;
+    inner.style.transition='none';
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(!swiping||!currentEl||e.touches.length!==sLen)return;
+    dx=e.touches[0].clientX-sx;
+    var inner=currentEl.querySelector('.fc-carousel-inner,.pd-carousel-inner');
+    if(!inner)return;
+    var current=parseInt(currentEl.dataset.current||'0');
+    var w=currentEl.offsetWidth;
+    if(!w)return;
+    inner.style.transform='translateX('+((-current+(dx/w))*100)+'%)';
+  },{passive:true});
+  document.addEventListener('touchend',function(){
+    if(!swiping||!currentEl){swiping=false;return}
+    var inner=currentEl.querySelector('.fc-carousel-inner,.pd-carousel-inner');
+    if(!inner){swiping=false;currentEl=null;return}
+    inner.style.transition='';
+    var threshold=currentEl.offsetWidth*0.2;
+    if(Math.abs(dx)>threshold){
+      lastSwipe=Date.now();
+      var dir=dx>0?-1:1;
+      if(currentEl.classList.contains('fc-carousel')){
+        fcCarouselNav(currentEl.dataset.id,dir);
+      }else{
+        pdGoTo((parseInt(currentEl.dataset.current||'0'))+dir);
+      }
+    }else{
+      var current=parseInt(currentEl.dataset.current||'0');
+      inner.style.transform='translateX(-'+(current*100)+'%)';
+    }
+    swiping=false;currentEl=null;dx=0;
+  },{passive:true});
+  // Prevent click after swipe
+  document.addEventListener('click',function(e){
+    if(Date.now()-lastSwipe<400){e.stopPropagation()}
+  },true);
+})();
 
 // ==================== EXPLORE ====================
 var _exploreImages=[];
@@ -2270,7 +2337,7 @@ function renderPdImages(entry){
     return '<img class="pd-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" loading="lazy" />'
   }).join('');
   var dots=entry.images.map(function(_,idx){return '<span class="pd-carousel-dot'+(idx===0?' active':'')+'" onclick="pdGoTo('+idx+')"></span>'}).join('');
-  var carouselHtml='<div class="pd-carousel" data-entry="'+entry.id+'"><div class="pd-carousel-inner" id="pd-carousel-inner">'+imgs+'</div>';
+  var carouselHtml='<div class="pd-carousel" data-entry="'+entry.id+'" data-current="0"><div class="pd-carousel-inner" id="pd-carousel-inner">'+imgs+'</div>';
   if(total>1){
     carouselHtml+='<button class="pd-carousel-nav prev" onclick="pdPrev()" id="pd-prev"><i class="fas fa-chevron-left"></i></button><button class="pd-carousel-nav next" onclick="pdNext()" id="pd-next"><i class="fas fa-chevron-right"></i></button><span class="pd-carousel-count" id="pd-count">1/'+total+'</span><div class="pd-carousel-dots">'+dots+'</div>';
   }
@@ -2287,6 +2354,8 @@ function renderPdImages(entry){
 
 function pdGoTo(idx){
   var inner=document.getElementById('pd-carousel-inner');
+  var carousel=inner?inner.closest('.pd-carousel'):null;
+  if(carousel)carousel.dataset.current=idx;
   var dots=document.querySelectorAll('.pd-carousel-dot');
   if(!inner)return;
   var total=inner.children.length;
