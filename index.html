@@ -34,6 +34,18 @@
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --loading-bar: linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#cc2366,#dc2743,#e6683c,#f09433);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --placeholder-bg: #f0f0f0;
+  --toast-bg: #262626;
+  --toast-text: #fff;
+  --carousel-nav-bg: rgba(255,255,255,0.85);
+  --carousel-nav-text: #262626;
+  --ann-today-bg: #fff0f0;
+  --ann-soon-bg: #fff4e6;
+  --ann-today-text: #ed4956;
+  --ann-soon-text: #e67e22;
+  --shadow-dropdown: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-modal: 0 20px 60px rgba(0,0,0,0.15);
+  --overlay-bg: rgba(0,0,0,0.35);
 }
 body.dark {
   --bg: #121212;
@@ -49,6 +61,18 @@ body.dark {
   --sticky-bg: #1e1e1e;
   --shadow: 0 1px 3px rgba(255,255,255,0.04);
   --shadow-lg: 0 4px 16px rgba(255,255,255,0.06);
+  --placeholder-bg: #2a2a2a;
+  --toast-bg: #3a3a3a;
+  --toast-text: #e4e4e4;
+  --carousel-nav-bg: rgba(50,50,50,0.85);
+  --carousel-nav-text: #e4e4e4;
+  --ann-today-bg: #3a2020;
+  --ann-soon-bg: #3a2e1a;
+  --ann-today-text: #ff6b7a;
+  --ann-soon-text: #f0a050;
+  --shadow-dropdown: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-modal: 0 20px 60px rgba(0,0,0,0.5);
+  --overlay-bg: rgba(0,0,0,0.5);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
@@ -176,7 +200,7 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-header .logo i { font-size:1.1rem; background:var(--story-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 .feed-header-actions { display:flex; gap:14px; align-items:center; }
 .feed-header-actions button { font-size:1.2rem; color:var(--text-primary); padding:4px; position:relative; }
-.feed-header-actions .sync-spin i { animation:spin 0.8s linear infinite; }
+
 @media (max-width:767px) {
   .feed-header-actions button:first-child { display:none !important; }
 }
@@ -213,7 +237,7 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-card-username { font-size:0.9rem; font-weight:600; color:var(--text-primary); }
 .feed-card-time { font-size:0.75rem; color:var(--text-secondary); margin-top:-1px; }
 .feed-card-actions { position:relative; }
-.feed-card-menu-btn { font-size:1.1rem; color:var(--text-secondary); padding:4px 8px; border-radius:50%; transition:0.15s; }
+.feed-card-menu-btn { font-size:1.1rem; color:var(--text-secondary); padding:4px 8px; border-radius:8px; transition:0.15s; }
 .feed-card-menu-btn:hover { background:var(--hover-bg); }
 
 /* Feed card carousel */
@@ -223,8 +247,8 @@ a { color: var(--text-link); text-decoration:none; }
 .fc-carousel-img { width:100%; flex-shrink:0; object-fit:contain; max-height:500px; cursor:pointer; background:var(--input-bg); }
 .fc-carousel-nav {
   position:absolute; top:50%; transform:translateY(-50%); z-index:3;
-  background:rgba(255,255,255,0.85); border:none; border-radius:50%;
-  width:30px; height:30px; font-size:0.8rem; color:#262626;
+  background:var(--carousel-nav-bg); border:none; border-radius:50%;
+  width:30px; height:30px; font-size:0.8rem; color:var(--carousel-nav-text);
   display:flex; align-items:center; justify-content:center;
   cursor:pointer; transition:0.15s; opacity:0; pointer-events:none;
   box-shadow:0 1px 4px rgba(0,0,0,0.08);
@@ -266,7 +290,7 @@ a { color: var(--text-link); text-decoration:none; }
 .explore-search input { flex:1; border:none; outline:none; background:transparent; font-size:0.85rem; padding:4px 0; min-width:0; }
 .explore-search input::placeholder { color:var(--text-secondary); }
 .explore-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; padding:4px; }
-.explore-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:#f0f0f0; border-radius:2px; }
+.explore-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:var(--placeholder-bg); border-radius:2px; }
 .explore-item img { width:100%; height:100%; object-fit:cover; transition:0.2s; }
 .explore-item:hover img { transform:scale(1.02); }
 .explore-item .multi-icon { position:absolute; top:6px; right:6px; color:#fff; font-size:0.8rem; text-shadow:0 1px 4px rgba(0,0,0,0.4); }
@@ -294,13 +318,13 @@ a { color: var(--text-link); text-decoration:none; }
 .profile-more-btn {
   background:none; border:none; font-size:1.3rem; color:var(--text-primary);
   width:40px; height:40px; display:flex; align-items:center; justify-content:center;
-  border-radius:50%; cursor:pointer; transition:0.15s;
+  border-radius:8px; cursor:pointer; transition:0.15s;
 }
 .profile-more-btn:hover { background:var(--hover-bg); }
 .profile-dropdown {
   position:absolute; top:44px; right:0; z-index:200; min-width:220px;
-  background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm);
-  box-shadow:0 4px 16px rgba(0,0,0,0.12); padding:4px 0; display:none; overflow:hidden;
+  background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-dropdown); padding:4px 0; display:none; overflow:hidden;
 }
 .profile-dropdown.open { display:block; animation:fadeUp 0.2s ease; }
 .profile-dropdown button {
@@ -329,7 +353,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 .profile-posts { max-width:630px; margin:0 auto; padding:4px; }
 .profile-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
-.profile-grid-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:#f0f0f0; border-radius:2px; }
+.profile-grid-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:var(--placeholder-bg); border-radius:2px; }
 .profile-grid-item img { width:100%; height:100%; object-fit:cover; }
 .profile-grid-item .overlay { position:absolute; inset:0; background:rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; color:#fff; gap:10px; font-size:0.8rem; font-weight:600; opacity:0; transition:0.2s; }
 .profile-grid-item:hover .overlay { opacity:1; }
@@ -378,12 +402,11 @@ a { color: var(--text-link); text-decoration:none; }
   padding:12px 16px; min-height:52px; border-bottom:1px solid var(--border-light); flex-shrink:0;
   background:var(--card-bg);
 }
-.create-header .back-btn { font-size:1.2rem; color:var(--text-primary); padding:6px; border-radius:50%; transition:0.15s; }
+.create-header .back-btn { font-size:1.2rem; color:var(--text-primary); padding:6px 10px; border-radius:8px; background:none; border:none; cursor:pointer; transition:0.15s; }
 .create-header .back-btn:hover { background:var(--hover-bg); }
-.create-header h2 { font-size:0.95rem; font-weight:600; color:var(--text-primary); }
 /* Desktop: create page as modal */
 @media (min-width:768px) {
-  #create-page { background:rgba(0,0,0,0.5); align-items:center; justify-content:center; }
+  #create-page { background:var(--overlay-bg); align-items:center; justify-content:center; }
   #create-page .create-inner { background:var(--card-bg); border-radius:var(--radius); max-width:600px; width:100%; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.15); }
   #create-page.open { display:flex; opacity:0; transition:opacity 0.2s ease; }
   #create-page.open.anim-in { opacity:1; }
@@ -394,51 +417,55 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .create-header .submit-btn {
   background:var(--text-link); color:#fff; border:none; border-radius:10px;
-  padding:7px 20px; font-size:0.8rem; font-weight:600; transition:0.15s; letter-spacing:0.01em;
+  padding:7px 20px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:0.15s;
 }
 .create-header .submit-btn:disabled { opacity:0.4; cursor:not-allowed; }
 .create-header .submit-btn:hover:not(:disabled) { background:#0080e0; }
 .create-inner { display:flex; flex-direction:column; flex:1; min-height:0; }
-.create-body { flex:1; overflow-y:auto; padding:16px 20px 100px; }
-.create-user { display:flex; align-items:center; gap:12px; margin-bottom:16px; padding:10px 14px; background:var(--hover-bg); border-radius:var(--radius-sm); }
-.create-user .avatar { width:38px; height:38px; border-radius:50%; background:var(--story-gradient); padding:2px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.create-user .avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; font-size:0.95rem; }
-.create-user .name { font-size:0.9rem; font-weight:600; color:var(--text-primary); }
-.create-title-input { width:100%; border:1px solid var(--border-light); outline:none; font-size:1.05rem; font-weight:600; padding:12px 14px; margin-bottom:8px; background:var(--input-bg); border-radius:var(--radius-sm); transition:0.2s; color:var(--text-primary); }
-.create-title-input:focus { border-color:var(--text-secondary); background:var(--card-bg); }
-.create-title-input::placeholder { color:var(--text-secondary); }
-.create-content-input { width:100%; border:1px solid var(--border-light); outline:none; resize:none; font-size:0.92rem; line-height:1.7; padding:12px 14px; background:var(--input-bg); border-radius:var(--radius-sm); flex:1; min-height:200px; transition:0.2s; color:var(--text-primary); }
-.create-content-input:focus { border-color:var(--text-secondary); background:var(--card-bg); }
+.create-body { flex:1; overflow-y:auto; padding:12px 16px 100px; }
+/* Threads-style user row */
+.create-user-row {
+  display:flex; align-items:center; gap:10px; margin-bottom:8px; padding:0 2px;
+}
+.create-user-row .create-avatar {
+  width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.create-user-row .create-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.create-user-row .create-avatar i { font-size:1.6rem; color:var(--text-secondary); }
+.create-user-row .create-username { font-size:0.88rem; font-weight:600; color:var(--text-primary); }
+
+/* Threads-style textarea - clean, no border */
+.create-content-input {
+  width:100%; border:none; outline:none; resize:none;
+  font-size:1.05rem; line-height:1.6; padding:4px 2px; min-height:180px;
+  background:transparent; color:var(--text-primary); font-family:inherit;
+}
 .create-content-input::placeholder { color:var(--text-secondary); }
-.create-options { display:flex; gap:10px; padding:10px 0 4px; flex-wrap:wrap; position:sticky; bottom:0; background:var(--card-bg); }
-.create-opt-btn {
-  display:flex; align-items:center; gap:8px; background:var(--hover-bg); border:1px solid var(--border-light);
-  border-radius:var(--radius-sm); padding:10px 16px; font-size:0.82rem; color:var(--text-secondary); font-weight:500; transition:0.15s; cursor:pointer; flex:1; justify-content:center;
+
+/* Threads-style toolbar */
+.create-toolbar {
+  display:flex; gap:4px; padding:10px 0 4px; position:sticky; bottom:0;
+  background:var(--card-bg); border-top:1px solid var(--border-light); margin-top:8px;
 }
-.create-opt-btn:hover { background:var(--border-light); border-color:var(--border); color:var(--text-primary); }
-.create-opt-btn i { font-size:1.1rem; color:var(--text-link); }
-.create-opt-btn input[type="file"] { display:none; }
-.create-opt-btn input[type="date"] { border:none; background:transparent; outline:none; font-size:0.82rem; color:var(--text-primary); width:auto; padding:0; }
-.create-upload-btn {
-  display:inline-flex; align-items:center; gap:6px; padding:8px 18px;
-  background:var(--hover-bg); border:1px solid var(--border); border-radius:20px;
-  font-size:0.85rem; font-weight:500; color:var(--text-secondary); cursor:pointer;
-  transition:0.15s; margin-bottom:10px;
+.create-tool-btn {
+  width:36px; height:36px; border-radius:8px; display:flex;
+  align-items:center; justify-content:center; background:none; border:none;
+  color:var(--text-secondary); cursor:pointer; transition:0.15s; font-size:1.15rem; position:relative;
 }
-.create-upload-btn:hover { background:var(--border-light); color:var(--text-primary); }
-.create-upload-btn:hover { background:#e8e8e8; border-color:#ccc; }
-.create-upload-btn i { font-size:1rem; color:var(--text-link); }
+.create-tool-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
+.create-tool-btn input[type="date"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
 .create-image-preview {
   display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 10px;
 }
 .create-image-preview .pimg {
   width:80px; height:80px; border-radius:8px; overflow:hidden; position:relative;
-  background:#f0f0f0; border:1px solid #efefef; flex-shrink:0;
+  background:var(--placeholder-bg); border:1px solid var(--border-light); flex-shrink:0;
 }
 .create-image-preview .pimg img { width:100%; height:100%; object-fit:contain; }
 .create-image-preview .pimg .remove-btn {
   position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.6); color:#fff; border:none;
-  border-radius:50%; width:18px; height:18px; font-size:0.45rem; cursor:pointer;
+  border-radius:4px; width:18px; height:18px; font-size:0.45rem; cursor:pointer;
   display:flex; align-items:center; justify-content:center; z-index:2; transition:0.15s;
 }
 .create-image-preview .pimg .remove-btn:hover { background:rgba(200,50,70,0.9); }
@@ -480,13 +507,11 @@ a { color: var(--text-link); text-decoration:none; }
   padding:4px 8px; min-height:44px; border-bottom:1px solid var(--border-light); flex-shrink:0;
   background:var(--card-bg); z-index:10;
 }
-.pd-header .pd-back { font-size:1.2rem; color:var(--text-primary); padding:8px 8px; cursor:pointer; background:none; border:none; }
-.pd-header .pd-header-center { flex:1; }
-.pd-header .pd-header-right { min-width:36px; }
-.pd-header .pd-close-btn { font-size:1.2rem; color:var(--text-secondary); padding:8px 10px; cursor:pointer; background:none; border:none; }
+.pd-header .pd-back { font-size:1.2rem; color:var(--text-primary); padding:8px 8px; border-radius:8px; cursor:pointer; background:none; border:none; }
+.pd-header-title { flex:1; text-align:center; font-size:0.95rem; font-weight:600; color:var(--text-primary); padding:0 8px; }
 .pd-author-actions { position:relative; margin-left:auto; }
 .pd-menu-btn {
-  width:32px; height:32px; border-radius:50%; display:flex;
+  width:32px; height:32px; border-radius:8px; display:flex;
   align-items:center; justify-content:center; color:var(--text-secondary);
   transition:0.15s; background:none; border:none; cursor:pointer;
 }
@@ -494,7 +519,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-dropdown {
   position:absolute; right:0; top:calc(100% + 4px);
   background:var(--card-bg); border:1px solid var(--border);
-  border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.12);
+  border-radius:12px; box-shadow:var(--shadow-modal);
   z-index:100; min-width:150px; padding:6px; display:none;
   animation:pdDropFade 0.15s ease;
 }
@@ -582,18 +607,19 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-comment-time { font-size:0.65rem; color:var(--text-secondary); margin-top:2px; }
 .pd-comment-actions { position:relative; margin-top:1px; margin-left:auto; }
 .pd-comment-menu-btn {
-  width:28px; height:28px; border-radius:50%; display:flex;
+  width:28px; height:28px; border-radius:6px; display:flex;
   align-items:center; justify-content:center; color:var(--text-secondary);
   transition:0.12s; background:none; border:none; cursor:pointer; font-size:0.85rem;
 }
 .pd-comment-menu-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
 .pd-comment-dropdown {
-  position:absolute; right:0; top:calc(100% + 2px);
+  position:absolute; right:calc(100% + 4px); bottom:0; top:auto;
   background:var(--card-bg); border:1px solid var(--border);
-  border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.1);
-  z-index:100; min-width:140px; padding:4px; display:none;
+  border-radius:10px; box-shadow:var(--shadow-dropdown);
+  z-index:100; min-width:120px; padding:4px; display:none;
   animation:pdDropFade 0.12s ease;
 }
+.pd-comment-dropdown.up { top:0; bottom:auto; }
 .pd-comment-dropdown.show { display:flex; flex-direction:column; }
 .pd-comment-dropdown button {
   display:flex; align-items:center; gap:8px; width:100%;
@@ -623,7 +649,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-input-row .pd-send-btn:disabled { opacity:0.3; cursor:not-allowed; }
 
 @media (min-width:768px) {
-  #post-overlay { background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); align-items:center; justify-content:center; }
+  #post-overlay { background:var(--overlay-bg); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); align-items:center; justify-content:center; }
   .pd-modal { background:var(--card-bg); border-radius:var(--radius); max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.15); will-change:transform,opacity; transform:translateZ(0); }
   .pd-modal-inner { flex-direction:row; }
   .pd-images { width:calc(100% - 380px); flex:none; background:#000; min-height:400px; max-height:80vh; }
@@ -648,7 +674,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 #photo-viewer.open { display:flex; }
 .pv-top { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; padding:14px 16px; }
-.pv-top button { color:#fff; font-size:1.2rem; padding:6px 10px; background:rgba(255,255,255,0.1); border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center; transition:0.15s; }
+.pv-top button { color:#fff; font-size:1.2rem; padding:6px 10px; background:rgba(255,255,255,0.1); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; transition:0.15s; }
 .pv-top button:hover { background:rgba(255,255,255,0.2); }
 .pv-container { position:relative; max-width:90vw; max-height:80vh; display:flex; align-items:center; justify-content:center; }
 .pv-container img { max-width:100%; max-height:80vh; object-fit:contain; border-radius:6px; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
@@ -661,7 +687,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== MODALS ===== */
 .modal-overlay {
-  position:fixed; inset:0; z-index:800; background:rgba(0,0,0,0.35);
+  position:fixed; inset:0; z-index:800; background:var(--overlay-bg);
   display:none; align-items:center; justify-content:center; padding:16px;
   backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
 }
@@ -672,7 +698,7 @@ a { color: var(--text-link); text-decoration:none; }
   animation:fadeUp 0.25s ease;
 }
 .modal-box::-webkit-scrollbar { width:4px; }
-.modal-box::-webkit-scrollbar-thumb { background:#ddd; border-radius:10px; }
+.modal-box::-webkit-scrollbar-thumb { background:var(--border-light); border-radius:10px; }
 .modal-close { font-size:1.1rem; color:var(--text-secondary); padding:4px; }
 .modal-title { font-size:1.05rem; font-weight:700; }
 .form-group { margin-bottom:12px; }
@@ -689,7 +715,7 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== TOAST ===== */
 #toast {
   position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(14px);
-  background:#262626; color:#fff; padding:10px 24px; border-radius:30px;
+  background:var(--toast-bg); color:var(--toast-text); padding:10px 24px; border-radius:30px;
   font-size:0.8rem; font-weight:500; z-index:9999; opacity:0; pointer-events:none;
   transition:all 0.25s; white-space:nowrap; max-width:90%; box-shadow:0 4px 20px rgba(0,0,0,0.15);
 }
@@ -698,7 +724,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== SAVING OVERLAY ===== */
 #saving-overlay {
-  position:fixed; inset:0; z-index:9500; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px);
+  position:fixed; inset:0; z-index:9500; background:var(--overlay-bg); backdrop-filter:blur(6px);
   display:none; align-items:center; justify-content:center;
 }
 #saving-overlay.show { display:flex; }
@@ -710,7 +736,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dropdown-menu {
   position:absolute; top:100%; right:0; z-index:50;
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
-  box-shadow:0 4px 16px rgba(0,0,0,0.08); min-width:140px; display:none; padding:4px 0;
+  box-shadow:var(--shadow-dropdown); min-width:140px; display:none; padding:4px 0;
 }
 .dropdown-menu.show { display:block; }
 .dropdown-menu button {
@@ -746,27 +772,27 @@ a { color: var(--text-link); text-decoration:none; }
 /* Anniversaries in modal */
 .ann-list { display:flex; flex-direction:column; gap:6px; }
 .ann-item { display:flex; align-items:center; gap:14px; padding:14px 14px; border:1px solid var(--border-light); border-radius:12px; transition:0.15s; position:relative; overflow:hidden; font-family:'Roboto',Arial,sans-serif; }
-.ann-item:hover { border-color:#c9c9c9; background:var(--hover-bg); }
+.ann-item:hover { border-color:var(--border); background:var(--hover-bg); }
 .ann-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:0 2px 2px 0; }
 .ann-item.today::before { background:#ed4956; }
 .ann-item.soon::before { background:#e67e22; }
-.ann-item.far::before { background:#ccc; }
+.ann-item.far::before { background:var(--border); }
 .ann-icon { width:42px; height:42px; border-radius:50%; background:var(--hover-bg); display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:var(--text-secondary); flex-shrink:0; }
-.ann-item.today .ann-icon { background:#fff0f0; color:#ed4956; }
-.ann-item.soon .ann-icon { background:#fff4e6; color:#e67e22; }
+.ann-item.today .ann-icon { background:var(--ann-today-bg); color:var(--ann-today-text); }
+.ann-item.soon .ann-icon { background:var(--ann-soon-bg); color:var(--ann-soon-text); }
 .ann-info { flex:1; min-width:0; }
 .ann-name { font-weight:600; font-size:0.9rem; color:var(--text-primary); letter-spacing:-0.2px; }
 .ann-date { font-size:0.68rem; color:var(--text-secondary); margin-top:2px; }
 .ann-countdown { font-size:0.72rem; font-weight:500; margin-top:4px; display:inline-block; padding:3px 12px; border-radius:10px; line-height:1.3; font-family:'Roboto',Arial,sans-serif; letter-spacing:0.3px; }
-.ann-countdown.today { color:#ed4956; background:#fff0f0; }
-.ann-countdown.soon { color:#e67e22; background:#fff4e6; }
+.ann-countdown.today { color:var(--ann-today-text); background:var(--ann-today-bg); }
+.ann-countdown.soon { color:var(--ann-soon-text); background:var(--ann-soon-bg); }
 .ann-countdown.far { color:var(--text-secondary); background:var(--hover-bg); }
 .ann-actions { display:flex; gap:2px; flex-shrink:0; align-self:flex-start; }
-.ann-actions button { width:30px; height:30px; border-radius:50%; background:transparent; border:none; color:var(--text-secondary); font-size:0.75rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.15s; }
+.ann-actions button { width:30px; height:30px; border-radius:6px; background:transparent; border:none; color:var(--text-secondary); font-size:0.75rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.15s; }
 .ann-actions button:hover { background:var(--border-light); color:var(--text-primary); }
-.ann-actions button.del:hover { color:#ed4956; background:#fff0f0; }
-.add-ann-btn { width:100%; background:transparent; border:1px dashed #dbdbdb; border-radius:12px; padding:12px; font-size:0.8rem; font-weight:500; color:var(--text-secondary); cursor:pointer; transition:0.15s; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'Roboto',Arial,sans-serif; }
-.add-ann-btn:hover { background:var(--hover-bg); color:var(--text-primary); border-color:#c9c9c9; }
+.ann-actions button.del:hover { color:var(--ann-today-text); background:var(--ann-today-bg); }
+.add-ann-btn { width:100%; background:transparent; border:1px dashed var(--border); border-radius:12px; padding:12px; font-size:0.8rem; font-weight:500; color:var(--text-secondary); cursor:pointer; transition:0.15s; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'Roboto',Arial,sans-serif; }
+.add-ann-btn:hover { background:var(--hover-bg); color:var(--text-primary); border-color:var(--text-secondary); }
 
 /* Hidden utility */
 .hidden { display:none !important; }
@@ -873,7 +899,7 @@ a { color: var(--text-link); text-decoration:none; }
       <div class="profile-header-sticky">
         <div class="profile-header">
           <div class="profile-top">
-            <div class="profile-avatar"><div class="inner" id="profile-avatar-inner"><i class="fas fa-user-circle" style="font-size:2.4rem;color:#ccc;"></i></div></div>
+            <div class="profile-avatar"><div class="inner" id="profile-avatar-inner"><i class="fas fa-user-circle" style="font-size:2.4rem;color:var(--text-secondary);"></i></div></div>
             <div class="profile-info">
               <div class="profile-username" id="profile-username">Ánh Ngọc</div>
               <div class="profile-stats">
@@ -918,31 +944,28 @@ a { color: var(--text-link); text-decoration:none; }
 <!-- ===== CREATE PAGE ===== -->
 <div id="create-page">
   <div class="create-inner">
-  <div class="create-header">
-    <button class="back-btn" onclick="closeCreatePage()"><i class="fas fa-arrow-left"></i></button>
-    <h2 id="create-page-title">Bài viết mới</h2>
-    <button class="submit-btn" id="create-submit-btn" onclick="submitCreatePost()">Đăng</button>
-  </div>
-  <div class="create-body">
-    <div class="create-user">
-      <div class="avatar"><div class="inner" id="create-user-avatar"><i class="fas fa-user-circle" style="font-size:2.4rem;color:#ccc;"></i></div></div>
-      <div class="name" id="create-user-name"></div>
+    <div class="create-header">
+      <button class="back-btn" onclick="closeCreatePage()"><i class="fas fa-arrow-left"></i></button>
+      <button class="submit-btn" id="create-submit-btn" onclick="submitCreatePost()">Đăng</button>
     </div>
-    <input class="create-title-input" id="create-title" placeholder="Tiêu đề" maxlength="100" />
-    <textarea class="create-content-input" id="create-content" placeholder="Viết gì đó..." style="min-height:180px;"></textarea>
-    <div class="create-image-preview" id="create-image-preview"></div>
-    <div class="create-upload-btn" onclick="document.getElementById('create-file-input').click()">
-      <i class="fas fa-image"></i> Thêm ảnh
-      <span style="font-weight:400;font-size:0.72rem;color:var(--text-secondary);margin-left:4px;">(tối đa 10 ảnh)</span>
-    </div>
-    <input type="file" id="create-file-input" accept="image/*" multiple onchange="handleCreateImages(this)" style="display:none;" />
-    <div class="create-options">
-      <div class="create-opt-btn create-date-wrapper" id="create-date-wrapper">
-        <i class="far fa-calendar-alt"></i>
-        <input type="date" id="create-date" />
+    <div class="create-body">
+      <div class="create-user-row">
+        <div class="create-avatar" id="create-user-avatar"><i class="fas fa-user-circle"></i></div>
+        <span class="create-username" id="create-user-name"></span>
       </div>
+      <textarea class="create-content-input" id="create-content" placeholder="Viết gì đó..." autofocus></textarea>
+      <div class="create-image-preview" id="create-image-preview"></div>
+      <div class="create-toolbar">
+        <button class="create-tool-btn" onclick="document.getElementById('create-file-input').click()" title="Thêm ảnh">
+          <i class="fas fa-image"></i>
+        </button>
+        <div class="create-tool-btn create-date-wrapper" id="create-date-wrapper">
+          <i class="far fa-calendar-alt"></i>
+          <input type="date" id="create-date" />
+        </div>
+      </div>
+      <input type="file" id="create-file-input" accept="image/*" multiple onchange="handleCreateImages(this)" style="display:none;" />
     </div>
-  </div>
   </div>
 </div>
 
@@ -951,15 +974,14 @@ a { color: var(--text-link); text-decoration:none; }
   <div class="pd-modal">
     <div class="pd-header">
       <button class="pd-back" onclick="closePostDetail()"><i class="fas fa-arrow-left"></i></button>
-      <div class="pd-header-center"></div>
-      <div class="pd-header-right"><button class="pd-close-btn" onclick="closePostDetail()"><i class="fas fa-times"></i></button></div>
+      <div class="pd-header-title">Bài viết</div>
     </div>
     <div class="pd-modal-inner">
       <div class="pd-images" id="pd-images"></div>
       <div class="pd-side">
         <div class="pd-scroll" id="pd-scroll">
-          <div class="pd-scroll-images" id="pd-scroll-images"></div>
           <div class="pd-author" id="pd-author"></div>
+          <div class="pd-scroll-images" id="pd-scroll-images"></div>
           <div class="pd-caption" id="pd-caption"></div>
           <div class="pd-comments" id="pd-comments"></div>
         </div>
@@ -1025,7 +1047,7 @@ a { color: var(--text-link); text-decoration:none; }
     <div style="display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border-light);">
         <div style="width:40px;height:40px;border-radius:50%;background:var(--story-gradient);padding:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-          <div style="width:100%;height:100%;border-radius:50%;background:var(--card-bg);display:flex;align-items:center;justify-content:center;font-size:1.1rem;overflow:hidden;" id="settings-avatar-preview"><i class="fas fa-user-circle" style="font-size:1.8rem;color:#ccc;"></i></div>
+          <div style="width:100%;height:100%;border-radius:50%;background:var(--card-bg);display:flex;align-items:center;justify-content:center;font-size:1.1rem;overflow:hidden;" id="settings-avatar-preview"><i class="fas fa-user-circle" style="font-size:1.8rem;color:var(--text-secondary);"></i></div>
         </div>
         <div style="flex:1;min-width:0;">
           <div style="font-weight:600;font-size:0.9rem;" id="settings-user">Ánh Ngọc</div>
@@ -1338,7 +1360,7 @@ function formatDateVN(d){if(!d)return'';var p=d.split('-');if(p.length<3)return 
 function formatShortDate(d){if(!d)return'';var p=d.split('-');if(p.length<3)return d;return parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0]}
 function formatTime(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return '';return pad(d.getHours())+':'+pad(d.getMinutes())}catch(e){return ''}}
 function formatFull(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return '';return pad(d.getHours())+':'+pad(d.getMinutes())+' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()}catch(e){return ''}}
-function timeAgo(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return'';var n=Date.now(),diff=Math.floor((n-d)/1000);if(diff<60)return'Vài giây trước';if(diff<3600)return Math.floor(diff/60)+' phút trước';if(diff<86400)return Math.floor(diff/3600)+' giờ trước';if(diff<2592000)return Math.floor(diff/86400)+' ngày trước';return formatShortDate(iso.substring(0,10))}catch(e){return ''}}
+function timeAgo(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return'';var n=Date.now(),diff=Math.floor((n-d)/1000);if(diff<60)return'Vài giây trước';if(diff<3600)return Math.floor(diff/60)+' phút trước';if(diff<86400)return Math.floor(diff/3600)+' giờ trước';return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2)}catch(e){return ''}}
 function autoResize(el){if(!el)return;el.style.height='auto';el.style.height=el.scrollHeight+'px'}
 
 // ==================== LOCK SCREEN ====================
@@ -1370,9 +1392,9 @@ function updateUserUI(){
   var ava = getDisplayAvatar(appState.currentPin);
   var displayName = getEffectiveName(currentUser);
   var plainName = displayName.replace(/ [\w💖🌻]+$/g,'');
-  var fallbackHtml='<i class="fas fa-user-circle" style="font-size:2.4rem;color:#ccc;"></i>';
+  var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.6rem;color:var(--text-secondary);"></i>';
   document.getElementById('create-user-avatar').innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
-  document.getElementById('create-user-name').textContent = displayName;
+  document.getElementById('create-user-name').textContent = plainName;
   document.getElementById('settings-user').textContent = displayName;
   document.getElementById('profile-avatar-inner').innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
   document.getElementById('profile-bio-name').textContent = displayName;
@@ -1405,7 +1427,7 @@ function saveDisplayName(){
   updateUserUI();
   renderFeed();
   syncProfileToBackend();
-  showToast('<i class="fas fa-check-circle"></i> Đã đổi tên thành '+escHtml(newName));
+  showToast('<i class="fas fa-check-circle"></i> Đã đổi tên thành '+esc(newName));
 }
 
 function syncProfileToBackend(){
@@ -1551,7 +1573,7 @@ function avatarUploadDone(r){
   showToast('<i class="fas fa-check-circle"></i> Đã cập nhật ảnh đại diện');
 }
 function avatarUploadFail(compressed,msg){
-  showToast('<i class="fas fa-exclamation-triangle"></i> '+escHtml(msg));
+  showToast('<i class="fas fa-exclamation-triangle"></i> '+esc(msg));
   loadUserProfiles();
   userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
   userProfiles[appState.currentPin].avatar=compressed;
@@ -1641,17 +1663,15 @@ function showSaving(t){document.getElementById('saving-text').textContent=t||'Đ
 function hideSaving(){document.getElementById('saving-overlay').classList.remove('show')}
 
 var toastTimer=null;
-function escHtml(s){if(typeof s!=='string')return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function showToast(m){if(!m)return;var el=document.getElementById('toast');el.innerHTML=m;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2600)}
 
 function loadData(callback){
   showLoadingBar();
-  var btn=document.getElementById('sync-header-btn');if(btn)btn.classList.add('sync-spin');
   var cbName='jcb_'+Date.now()+'_'+Math.random().toString(36).substr(2,4);
   var scriptTag,isDone=false,timeout;
 
   function handleResponse(data){
-    if(isDone)return;isDone=true;clearTimeout(timeout);if(btn)btn.classList.remove('sync-spin');
+    if(isDone)return;isDone=true;clearTimeout(timeout);
     hideLoadingScreen();hideLoadingBar();
     if(data&&data.entries){
       appState.data=data;saveLocal(data);
@@ -1673,7 +1693,7 @@ function loadData(callback){
         }
         updateUserUI();
       }
-      if(!appState.hasWelcomed){appState.hasWelcomed=true;showToast('<i class="fas fa-gem"></i> Xin chào '+escHtml(currentUser)+'!')}
+      if(!appState.hasWelcomed){appState.hasWelcomed=true;showToast('<i class="fas fa-gem"></i> Xin chào '+esc(currentUser)+'!')}
     }else{
       var local=loadLocal();
       if(local){appState.data=local;if(!appState.hasWelcomed){appState.hasWelcomed=true}}
@@ -1681,7 +1701,7 @@ function loadData(callback){
     }
     normalizeData();sortEntries();renderAll();updateActivityBadge();cleanup();if(callback)callback(appState.data)
   }
-  function handleTimeout(){if(isDone)return;isDone=true;clearTimeout(timeout);if(btn)btn.classList.remove('sync-spin');hideLoadingScreen();hideLoadingBar();var local=loadLocal();if(local){appState.data=local;normalizeData();sortEntries();renderAll();showToast('<i class="fas fa-wifi"></i> Đã tải dữ liệu từ bộ nhớ tạm')}else{appState.data={entries:[],anniversaries:[]};renderAll()}updateActivityBadge();if(callback)callback(appState.data);cleanup()}
+  function handleTimeout(){if(isDone)return;isDone=true;clearTimeout(timeout);hideLoadingScreen();hideLoadingBar();var local=loadLocal();if(local){appState.data=local;normalizeData();sortEntries();renderAll();showToast('<i class="fas fa-wifi"></i> Đã tải dữ liệu từ bộ nhớ tạm')}else{appState.data={entries:[],anniversaries:[]};renderAll()}updateActivityBadge();if(callback)callback(appState.data);cleanup()}
 
   timeout=setTimeout(handleTimeout,12000);
   window[cbName]=function(d){handleResponse(d)};
@@ -1717,10 +1737,17 @@ function addQueue(a){appState.offlineQueue.push(a);saveOfflineQueue()}
 function processOfflineQueue(){
   if(!navigator.onLine||!appState.offlineQueue.length)return;
   var q=appState.offlineQueue.slice();appState.offlineQueue=[];saveOfflineQueue();
-  q.forEach(function(a){
-    if(a.type==='save_entry'){sendPayload(a.payload,null,function(r){if(!(r&&r.success)){addQueue(a)}})}
-    else{sendPayload(a.payload,null,function(r){if(!(r&&r.success)){addQueue(a)}})}
-  })
+  function processNext(i){
+    if(i>=q.length)return;
+    var a=q[i];
+    function handler(r){
+      if(!(r&&r.success))addQueue(a);
+      processNext(i+1);
+    }
+    if(a.type==='save_entry'){sendPayload(a.payload,null,handler)}
+    else{sendPayload(a.payload,null,handler)}
+  }
+  processNext(0);
 }
 window.addEventListener('online',function(){appState.isOnline=true;showToast('<i class="fas fa-wifi"></i> Đã kết nối lại');processOfflineQueue();loadData()})
 window.addEventListener('offline',function(){appState.isOnline=false;showToast('<i class="fas fa-wifi"></i> Mất kết nối, dữ liệu sẽ lưu tạm')})
@@ -1805,7 +1832,7 @@ function renderStories(){
   var myAva=getDisplayAvatar(appState.currentPin);
   function avaHtml(ava,fallback){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':fallback;}
   var html='';
-  var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.8rem;color:#ccc;"></i>';
+  var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.8rem;color:var(--text-secondary);"></i>';
   html+='<div class="story-item"><div class="story-avatar"><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Bạn</div></div>';
   html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(otherDisplayName.replace(/ \w+$/g,''))+'</div></div>';
   container.innerHTML=html;
@@ -1815,8 +1842,8 @@ function switchToUserProfile(){
   var otherPin=appState.currentPin===CONFIG.PIN_USER1?CONFIG.PIN_USER2:CONFIG.PIN_USER1;
   var targetUser=getDisplayName(otherPin);
   var entries=(appState.data.entries||[]).filter(function(e){return e.author===targetUser || getEffectiveName(e.author)===targetUser});
-  if(!entries.length){showToast('<i class="fas fa-user-circle"></i> '+escHtml(targetUser)+' chưa có bài viết nào');return}
-  showToast('<i class="fas fa-user-circle"></i> Xem bài viết của '+escHtml(targetUser));
+  if(!entries.length){showToast('<i class="fas fa-user-circle"></i> '+esc(targetUser)+' chưa có bài viết nào');return}
+  showToast('<i class="fas fa-user-circle"></i> Xem bài viết của '+esc(targetUser));
   switchPage('profile');
   renderProfileForUser(otherPin);
 }
@@ -1827,7 +1854,7 @@ function renderProfileForUser(pin){
   var ava=getDisplayAvatar(pin);
   profileViewUser=pin;
   var plainName=displayName.replace(/ [\w💖🌻]+$/g,'');
-  function imgHtml(){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:2.4rem;color:#ccc;"></i>';}
+  function imgHtml(){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:2.4rem;color:var(--text-secondary);"></i>';}
   document.getElementById('profile-avatar-inner').innerHTML=imgHtml();
   document.getElementById('profile-bio-name').textContent=displayName;
   document.getElementById('profile-username').textContent=plainName;
@@ -1887,7 +1914,7 @@ function buildFeedCard(entry){
   var effectiveAuthor=getEffectiveName(entry.author);
   var authorPin=getPinForUser(entry.author);
   var ava=getDisplayAvatar(authorPin);
-  var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:#ccc;"></i>';
+  var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
   var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
   var isOwner=getEffectiveName(entry.author)===getEffectiveName(currentUser);
   var timeDisplay=timeAgo(entry.updatedAt);
@@ -1919,13 +1946,13 @@ function buildFeedCard(entry){
     '</div>'+
     imgGrid+
     '<div class="feed-card-content">'+
-      '<div class="feed-card-title">'+(entry.title?esc(entry.title):'(Không tiêu đề)')+'</div>'+
+      (entry.title?'<div class="feed-card-title">'+esc(entry.title)+'</div>':'')+
       '<div class="feed-card-caption">'+
         '<span class="username">'+esc(username)+'</span>'+esc(captionShort)+
         (hasMore?'<div class="feed-card-caption-expand">Xem thêm</div>':'')+
       '</div>'+
       (commentCount>0?'<div class="feed-card-comments">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments">Thêm bình luận...</div>')+
-      '<div class="feed-card-timestamp">'+formatFull(entry.updatedAt)+'</div>'+
+      '<div class="feed-card-timestamp">'+timeAgo(entry.updatedAt)+'</div>'+
     '</div>'+
   '</div>';
 }
@@ -2204,9 +2231,9 @@ function renderPostDetail(){
   renderPdImages(entry);
 
   // Author row with three-dot menu
-  var avatarHtml=avaUrl?'<img src="'+esc(avaUrl)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:#ccc;"></i>';
+  var avatarHtml=avaUrl?'<img src="'+esc(avaUrl)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
   var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
-  var timeDisplay=formatFull(entry.updatedAt);
+  var timeDisplay=timeAgo(entry.updatedAt);
   var menuHtml=isOwner?'<div class="pd-author-actions"><button class="pd-menu-btn" onclick="event.stopPropagation();togglePdMenu()"><i class="fas fa-ellipsis-h"></i></button><div class="pd-dropdown" id="pd-dropdown"><button onclick="editFromPostDetail()"><i class="fas fa-pen"></i><span>Sửa bài viết</span></button><button class="danger" onclick="deleteFromPostDetail()"><i class="fas fa-trash-alt"></i><span>Xóa bài viết</span></button></div></div>':'';
   document.getElementById('pd-author').innerHTML=
     '<div class="pd-author-avatar"><div class="inner">'+avatarHtml+'</div></div>'+
@@ -2218,10 +2245,11 @@ function renderPostDetail(){
       '</div>'+
     '</div>';
 
-  // Caption
-  document.getElementById('pd-caption').innerHTML=
-    '<div class="pd-caption-title">'+esc(entry.title||'(Không tiêu đề)')+'</div>'+
-    '<div class="pd-caption-text">'+esc(entry.content||'')+'</div>';
+  // Caption - merge title into content
+  var captionHtml='';
+  if(entry.title)captionHtml+='<div class="pd-caption-title">'+esc(entry.title)+'</div>';
+  if(entry.content)captionHtml+='<div class="pd-caption-text">'+esc(entry.content)+'</div>';
+  document.getElementById('pd-caption').innerHTML=captionHtml||'<div class="pd-caption-text"></div>';
 
   // Comments
   renderPdComments();
@@ -2294,13 +2322,13 @@ function renderPdComments(){
       var cpin=getPinForUser(c.author);
       var cava=getDisplayAvatar(cpin);
       var isOwner=ceffective===getEffectiveName(currentUser);
-      var cavatar=cava?'<img src="'+esc(cava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:#ccc;"></i>';
+      var cavatar=cava?'<img src="'+esc(cava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       return '<div class="pd-comment-item" data-id="'+c.id+'">'+
         '<div class="pd-comment-avatar">'+cavatar+'</div>'+
         '<div class="pd-comment-body">'+
           '<div style="display:flex;align-items:center;gap:6px;width:100%;">'+
             '<div class="pd-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+'</div>'+
-            (isOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCommentMenu(\''+c.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cmt-dropdown-'+c.id+'"><button onclick="editPdComment(\''+c.id+'\')"><i class="fas fa-pen"></i>Sửa bình luận</button><button class="danger" onclick="deletePdComment(\''+c.id+'\')"><i class="fas fa-trash-alt"></i>Xóa bình luận</button></div></div>':'')+
+            (isOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCommentMenu(\''+c.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cmt-dropdown-'+c.id+'"><button onclick="editPdComment(\''+c.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdComment(\''+c.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+
           '</div>'+
           '<div class="pd-comment-text'+(pdEditingCommentId===c.id?' editing':'')+'" id="pd-cmt-'+c.id+'">'+esc(c.text)+'</div>'+
           '<div class="pd-comment-time">'+timeAgo(c.time)+'</div>'+
@@ -2392,7 +2420,20 @@ function togglePdMenu(){
 }
 function toggleCommentMenu(id){
   var dd=document.getElementById('cmt-dropdown-'+id);
-  if(dd)dd.classList.toggle('show');
+  if(!dd)return;
+  var isOpen=dd.classList.contains('show');
+  document.querySelectorAll('.pd-comment-dropdown.show').forEach(function(d){d.classList.remove('show')});
+  if(isOpen)return;
+  dd.classList.add('show');
+  dd.classList.remove('up');
+  var rect=dd.getBoundingClientRect();
+  var scroll=document.getElementById('pd-scroll');
+  if(scroll){
+    var sRect=scroll.getBoundingClientRect();
+    if(rect.bottom>sRect.bottom-4||rect.top<sRect.top+4){
+      dd.classList.add('up');
+    }
+  }
 }
 document.addEventListener('click',function(e){
   var wrap=e.target.closest('.pd-author-actions');
@@ -2449,8 +2490,11 @@ function navigatePhoto(d){
   if(ni<0||ni>=appState.photoImages.length)return;
   var img=document.getElementById('pv-image');
   gsap.killTweensOf(img);
-  appState.photoIndex=ni;
-  updatePhotoViewer();
+  gsap.to(img,{opacity:0,x:-d*40,scale:0.95,duration:0.15,ease:'power2.in',onComplete:function(){
+    appState.photoIndex=ni;
+    updatePhotoViewer();
+    gsap.fromTo(img,{opacity:0,x:d*40,scale:0.95},{opacity:1,x:0,scale:1,duration:0.25,ease:'power2.out'});
+  }});
 }
 function closePhotoViewer(){document.getElementById('photo-viewer').classList.remove('open');document.body.style.overflow='';appState.photoImages=[];appState.photoIndex=0}
 function downloadCurrentPhoto(){
@@ -2474,20 +2518,17 @@ function openCreatePage(editId){
     });
   });
 
-  document.getElementById('create-title').value='';
   document.getElementById('create-content').value='';
   document.getElementById('create-date-wrapper').classList.toggle('show',!!editId);
   appState.writeImages=[];
   appState.writeEditId=editId||null;
   renderCreatePreview();
-  document.getElementById('create-page-title').innerHTML=editId?'<i class="fas fa-pen"></i> Chỉnh sửa bài viết':'Bài viết mới';
   document.getElementById('create-submit-btn').disabled=false;
-  document.getElementById('create-submit-btn').textContent='Đăng';
+  document.getElementById('create-submit-btn').textContent=editId?'Cập nhật':'Đăng';
 
   if(editId){
     var entry=appState.data.entries.find(function(e){return e.id===editId});
     if(entry){
-      document.getElementById('create-title').value=entry.title||'';
       document.getElementById('create-content').value=entry.content||'';
       document.getElementById('create-date').value=entry.date||todayStr();
       appState.writeImages=entry.images?entry.images.slice():[];
@@ -2496,7 +2537,7 @@ function openCreatePage(editId){
   }else{
     document.getElementById('create-date').value=todayStr();
   }
-  setTimeout(function(){document.getElementById('create-title').focus()},300)
+  setTimeout(function(){document.getElementById('create-content').focus()},300)
 }
 
 function closeCreatePage(){
@@ -2524,7 +2565,7 @@ function handleCreateImages(input){
       compressImage(file,function(base64){
         uploadImage(base64,file.name,date,function(result){
           if(result&&result.url){appState.writeImages.push({url:result.url,driveId:result.driveId||''});renderCreatePreview();showToast('<i class="fas fa-image"></i> Đã thêm ảnh')}
-          else{showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh: '+escHtml(file.name))}
+          else{showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh: '+esc(file.name))}
         })
       })
     };
@@ -2564,7 +2605,6 @@ function removeCreateImage(idx){
 }
 
 function submitCreatePost(){
-  var title=document.getElementById('create-title').value.trim()||'Bài viết mới';
   var content=document.getElementById('create-content').value.trim();
   if(!content){showToast('<i class="fas fa-exclamation-triangle"></i> Vui lòng nhập nội dung');return}
   var date=document.getElementById('create-date').value;
@@ -2574,14 +2614,14 @@ function submitCreatePost(){
   var now=new Date().toISOString();
   var entry={
     id:appState.writeEditId||('e_'+Date.now()),
-    date:date,title:title,content:content,author:currentUser,
+    date:date,title:'',content:content,author:currentUser,
     images:appState.writeImages.slice(),
     comments:[],
     createdAt:now,updatedAt:now
   };
   if(appState.writeEditId){
     var old=appState.data.entries.find(function(e){return e.id===appState.writeEditId});
-    if(old){entry.comments=old.comments||[];entry.createdAt=old.createdAt||now}
+    if(old){entry.title=old.title||'';entry.comments=old.comments||[];entry.createdAt=old.createdAt||now}
   }
   sendPayload({action:'save_entry',entry:entry},null,function(){
     showToast(appState.writeEditId?'<i class="fas fa-save"></i> Đã cập nhật!':'<i class="fas fa-save"></i> Đã đăng bài!');
@@ -2609,7 +2649,7 @@ function showDataInfo(){
     '• Tổng ảnh: '+totalImages+'<br>'+
     '• Tổng bình luận: '+totalComments+'<br>'+
     '• Kỷ niệm: '+anns.length+'<br>'+
-    '• Người dùng: '+escHtml(currentUser);
+    '• Người dùng: '+esc(currentUser);
   openModal('modal-data-info')
 }
 
@@ -2703,7 +2743,7 @@ function showConfirm(title,msg,callback){
 // ==================== SYNC ====================
 function showLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.add('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 8s linear';i.style.width='70%'}}
 function hideLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.remove('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 0.4s ease';i.style.width='100%';setTimeout(function(){if(i)i.style.width='0%';if(i)i.style.transition='none'},500)}}
-function triggerSync(){showLoadingBar();showToast('<i class="fas fa-spinner fa-spin"></i> Đang đồng bộ...');loadData(function(){hideLoadingBar();showToast('<i class="fas fa-check-circle"></i> Đã đồng bộ!')})}
+function triggerSync(){showLoadingBar();loadData(function(){hideLoadingBar();showToast('<i class="fas fa-check-circle"></i> Đã đồng bộ!')})}
 
 // ==================== KEYBOARD SHORTCUTS ====================
 document.addEventListener('keydown',function(e){
