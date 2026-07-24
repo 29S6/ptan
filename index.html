@@ -938,11 +938,11 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
 #page-direct { display:none; }
 .dm-header {
-  display:flex; align-items:center; justify-content:space-between; padding:10px 16px;
+  display:flex; align-items:center; gap:8px; padding:10px 16px;
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
 }
+.dm-back-btn { font-size:1.2rem; color:var(--text-primary); padding:4px 6px; border:none; background:none; cursor:pointer; }
 .dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; }
-
 
 .dm-messages { flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:6px; }
 .dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
@@ -1132,6 +1132,7 @@ a { color: var(--text-link); text-decoration:none; }
     <!-- ===== DIRECT MESSAGES PAGE ===== -->
     <div class="page" id="page-direct">
       <div class="dm-header">
+        <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
         <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
       </div>
       <div class="dm-messages" id="dm-messages"></div>
@@ -2004,40 +2005,7 @@ function initApp(){
   // Ask notification permission on first interaction
   requestNotifPermission();
 }
-// iOS keyboard handling — keep input visible above keyboard
-if (window.visualViewport) {
-  var _prevVvH = window.visualViewport.height;
-  window.visualViewport.addEventListener('resize', function() {
-    var app = document.getElementById('app');
-    if (!app || app.style.display === 'none') return;
-    var vvH = window.visualViewport.height;
-    if (Math.abs(vvH - _prevVvH) > 50) {
-      // Keyboard opened/closed: adjust app height
-      app.style.height = vvH + 'px';
-      _prevVvH = vvH;
-      // Scroll active input into view
-      var el = document.activeElement;
-      if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT')) {
-        setTimeout(function() { el.scrollIntoView({ block: 'nearest' }); }, 100);
-      }
-    }
-  });
-  // On iOS, keyboard can also trigger visualViewport scroll
-  window.visualViewport.addEventListener('scroll', function() {
-    var el = document.activeElement;
-    if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT')) {
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  });
-  // Reset app height when keyboard hides
-  document.addEventListener('focusout', function(e) {
-    var related = e.relatedTarget;
-    if (!related || (related.tagName !== 'TEXTAREA' && related.tagName !== 'INPUT')) {
-      var app = document.getElementById('app');
-      if (app) app.style.height = '';
-    }
-  });
-}
+
 function updateUserUI(){
   applyTheme();
   var ava = getDisplayAvatar(appState.currentPin);
@@ -3062,6 +3030,8 @@ function smoothScroll(el,to,dur){
 }
 function switchPage(page){
   appState.currentPage=page;
+  var nav=document.getElementById('bottom-nav');if(nav)nav.style.display=page==='direct'?'none':'';
+  var mc=document.getElementById('main-content');if(mc)mc.style.paddingBottom=page==='direct'?'0':'';
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   var target=document.getElementById('page-'+page);
   void target.offsetHeight;
