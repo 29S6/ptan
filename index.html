@@ -2004,6 +2004,10 @@ function initApp(){
   setupPartnerPresenceListener();
   // Ask notification permission on first interaction
   requestNotifPermission();
+  // Fix iOS keyboard gap — reset main-content scroll when DM input loses focus
+  document.getElementById('dm-input').addEventListener('focusout', function() {
+    setTimeout(function() { document.getElementById('main-content').scrollTop = 0; }, 50);
+  });
 }
 
 function updateUserUI(){
@@ -3031,7 +3035,7 @@ function smoothScroll(el,to,dur){
 function switchPage(page){
   appState.currentPage=page;
   var nav=document.getElementById('bottom-nav');if(nav)nav.style.display=page==='direct'?'none':'';
-  var mc=document.getElementById('main-content');if(mc)mc.style.paddingBottom=page==='direct'?'0':'';
+  var mc=document.getElementById('main-content');if(mc){mc.style.paddingBottom=page==='direct'?'0':'';mc.style.overflow=page==='direct'?'hidden':'';}
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   var target=document.getElementById('page-'+page);
   void target.offsetHeight;
