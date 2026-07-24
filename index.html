@@ -236,7 +236,7 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== MAIN CONTENT ===== */
 #main-content {
   height:100vh; height:100dvh; overflow-y:auto; overflow-x:hidden;
-  padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 8px);
+  padding-bottom:var(--nav-h);
   display:flex; flex-direction:column;
 }
 #main-content > .page:not(#page-direct).active { flex-shrink:0; }
@@ -942,17 +942,18 @@ a { color: var(--text-link); text-decoration:none; }
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
 }
 .dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; }
-.dm-header-title i { font-size:1.1rem; background:var(--story-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.dm-header-actions { display:flex; gap:10px; }
-.dm-header-actions button { font-size:1.1rem; color:var(--text-primary); padding:4px; }
+
+
 .dm-messages { flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:6px; }
 .dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
-.dm-msg { display:flex; gap:8px; max-width:85%; animation:msgIn 0.15s ease; }
-@keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-.dm-msg.sent { align-self:flex-end; flex-direction:row-reverse; }
-.dm-msg.received { align-self:flex-start; }
-.dm-msg-avatar { width:28px; height:28px; border-radius:50%; flex-shrink:0; overflow:hidden; background:var(--border-light); display:flex; align-items:center; justify-content:center; font-size:0.7rem; margin-top:4px; }
+.dm-msg { max-width:85%; animation:msgIn 0.15s ease; margin-bottom:2px; }
+.dm-msg.received { display:flex; align-items:flex-end; gap:6px; }
+.dm-msg-avatar { width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0; align-self:flex-end; }
 .dm-msg-avatar img { width:100%; height:100%; object-fit:cover; }
+.dm-header-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+@keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.dm-msg.sent { align-self:flex-end; }
+.dm-msg.received { align-self:flex-start; }
 .dm-msg-bubble { padding:8px 14px; border-radius:18px; font-size:0.9rem; line-height:1.45; word-break:break-word; max-width:100%; position:relative; }
 .dm-msg.sent .dm-msg-bubble { background:var(--text-link); color:#fff; border-bottom-right-radius:4px; }
 .dm-msg.received .dm-msg-bubble { background:var(--hover-bg); color:var(--text-primary); border-bottom-left-radius:4px; }
@@ -964,8 +965,8 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-empty { text-align:center; padding:60px 20px; color:var(--text-secondary); font-size:0.85rem; }
 .dm-empty i { font-size:2.5rem; margin-bottom:12px; display:block; color:var(--border-light); }
 .dm-input-wrap {
-  border-top:1px solid var(--border-light); padding:8px 12px calc(8px + var(--safe-bottom));
-  background:var(--card-bg); flex-shrink:0; position:sticky; bottom:0; z-index:5;
+  border-top:1px solid var(--border-light); padding:6px 12px calc(4px + var(--safe-bottom));
+  background:var(--card-bg); flex-shrink:0;
 }
 .dm-input-row { display:flex; align-items:flex-end; gap:8px; }
 .dm-input-row textarea {
@@ -976,9 +977,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-input-row textarea:focus { border-color:var(--text-secondary); }
 .dm-send-btn { color:var(--text-link); font-size:0.9rem; font-weight:600; padding:6px 10px; cursor:pointer; background:none; border:none; transition:0.07s; }
 .dm-send-btn:disabled { opacity:0.3; cursor:not-allowed; }
-.dm-msg-img { width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0; }
-.dm-msg-img img { width:100%; height:100%; object-fit:cover; }
-.dm-msg-img i { font-size:1.4rem; color:var(--text-secondary); }
+
 .dm-msg-group { display:flex; flex-direction:column; gap:2px; }
 .dm-msg-group .dm-msg:last-child .dm-msg-bubble { margin-bottom:0; }
 .dm-msg-group .dm-msg + .dm-msg { margin-top:1px; }
@@ -1133,10 +1132,7 @@ a { color: var(--text-link); text-decoration:none; }
     <!-- ===== DIRECT MESSAGES PAGE ===== -->
     <div class="page" id="page-direct">
       <div class="dm-header">
-        <div class="dm-header-title"><i class="fab fa-facebook-messenger"></i> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
-        <div class="dm-header-actions">
-          <button onclick="triggerSync()" title="Đồng bộ"><i class="fas fa-sync"></i></button>
-        </div>
+        <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
       </div>
       <div class="dm-messages" id="dm-messages"></div>
       <div class="dm-input-wrap">
@@ -2838,7 +2834,7 @@ function markDmSeen() {
 
 function sendDmMessage() {
   var input = document.getElementById('dm-input');
-  var text = input.value.trim();
+  var text = input.value.trim().replace(/🖕/g, '💖');
   if (!text && !_pendingDmImage) return;
   var btn = document.getElementById('dm-send-btn');
   btn.disabled = true;
@@ -2870,8 +2866,12 @@ function sendDmMessage() {
 function renderDmMessages() {
   var container = document.getElementById('dm-messages');
   var msgs = dmMessagesCache;
+  var partnerPin = getPartnerPin();
   var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
   document.getElementById('dm-partner-name').textContent = partnerName;
+  var partnerAva = getDisplayAvatar(partnerPin);
+  var ha = document.getElementById('dm-header-avatar');
+  if (ha) { ha.src = partnerAva || ''; ha.style.display = partnerAva ? '' : 'none'; }
   if (!msgs.length) {
     container.innerHTML = '<div class="dm-empty"><i class="fab fa-facebook-messenger"></i>Chưa có tin nhắn nào<br><span style="font-size:0.75rem;">Hãy gửi lời nhắn đầu tiên đến '+esc(partnerName)+'</span></div>';
     return;
@@ -2899,20 +2899,17 @@ function renderDmMessages() {
     var seen = isSent && partnerLastSeen && t && t <= partnerLastSeen;
     var statusText = isSent ? (seen ? 'Đã xem' : 'Đã gửi') : '';
     var statusHtml = statusText ? '<span class="dm-msg-status '+(seen?'seen':'sent')+'">'+statusText+'</span>' : '';
-    var partnerAva = getDisplayAvatar(getPartnerPin());
-    var myAva = getDisplayAvatar(appState.currentPin);
-    var avaUrl = isSent ? myAva : partnerAva;
-    var avatarHtml = avaUrl ? '<img src="'+esc(avaUrl)+'">' : '<i class="fas fa-user-circle" style="font-size:1.2rem;color:var(--text-secondary);"></i>';
     var cls = isSent ? 'sent' : 'received';
     var imgHtml = '';
     if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(m.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
+    var avaHtml = '';
+    if (!isSent && partnerAva) avaHtml = '<img class="dm-msg-avatar" src="'+esc(partnerAva)+'" alt="">';
     html += '<div class="dm-msg ' + cls + '">';
-    if (!isSent) html += '<div class="dm-msg-avatar">' + avatarHtml + '</div>';
+    if (!isSent) html += avaHtml;
     html += '<div>';
-    if (m.text) html += '<div class="dm-msg-bubble">' + esc(m.text) + '</div>';
+    if (m.text) html += '<div class="dm-msg-bubble">' + esc(m.text.replace(/🖕/g, '💖')) + '</div>';
     if (imgHtml) html += imgHtml;
     html += '<div class="dm-msg-time">' + fmtTime(t) + statusHtml + '</div></div>';
-    if (isSent) html += '<div class="dm-msg-avatar">' + avatarHtml + '</div>';
     html += '</div>';
   }
   // Preserve scroll position — only auto-scroll if user was near bottom
