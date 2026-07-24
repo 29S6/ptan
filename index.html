@@ -243,8 +243,8 @@ a { color: var(--text-link); text-decoration:none; }
 }
 
 .page { display:none; min-height:calc(100vh - 80px); }
-.page.active { display:block;   animation:pageIn 0.2s cubic-bezier(0.22,1,0.36,1); }
-@keyframes pageIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.page.active { display:block; animation:pageIn 0.15s ease-out; }
+@keyframes pageIn { from { opacity:0; } to { opacity:1; } }
 @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
@@ -1046,6 +1046,7 @@ a { color: var(--text-link); text-decoration:none; }
 .img-preview button:hover { background:var(--text-danger); color:#fff; }
 .dm-msg-img-content, .comment-img-content {
   max-width:180px; max-height:180px; border-radius:8px; margin-top:4px; overflow:hidden;
+  aspect-ratio:1; width:180px;
 }
 .dm-msg-img-content img, .comment-img-content img {
   width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; cursor:pointer;
@@ -1631,17 +1632,24 @@ function loadUserProfiles(force) {
     db.collection('config').doc('profiles').get().then(function(doc) {
       if (doc.exists) {
         var remoteProfiles = doc.data().profiles || {};
+        var changed = false;
         for (var pin in remoteProfiles) {
           if (remoteProfiles[pin]) {
             userProfiles[pin] = userProfiles[pin] || {};
             if (remoteProfiles[pin].name) userProfiles[pin].name = remoteProfiles[pin].name;
-            if (remoteProfiles[pin].avatar) userProfiles[pin].avatar = remoteProfiles[pin].avatar;
+            if (remoteProfiles[pin].avatar) { userProfiles[pin].avatar = remoteProfiles[pin].avatar; changed = true; }
             if (remoteProfiles[pin].theme) userProfiles[pin].theme = remoteProfiles[pin].theme;
           }
         }
         saveUserProfiles();
         updateUserUI();
-        renderFeed();
+        // Update avatars in existing feed cards without full re-render
+        if (changed && appState.currentPage === 'feed') {
+          var newAva = userProfiles[appState.currentPin] && userProfiles[appState.currentPin].avatar;
+          if (newAva) {
+            document.querySelectorAll('.feed-card .fcard-ava').forEach(function(img) { img.src = newAva; });
+          }
+        }
       }
     }).catch(function(err) { console.warn('load profiles from Firestore err:', err); });
   }
@@ -1994,7 +2002,6 @@ function initApp(){
   updateUserUI();
   loadOfflineQueue();
   startClock();
-  showFeedSkeleton();
   loadData();
   loadActivitySeen();
   updateActivityBadge();
@@ -2031,16 +2038,14 @@ function updateUserUI(){
   var ava = getDisplayAvatar(appState.currentPin);
   var displayName = getEffectiveName(currentUser);
   var plainName = displayName.replace(/ [\w💖🌻]+$/g,'');
-  var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.6rem;color:var(--text-secondary);"></i>';
-  document.getElementById('create-user-avatar').innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
+  var avaTag = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : '<i class="fas fa-user-circle" style="font-size:1.6rem;color:var(--text-secondary);"></i>';
+  document.getElementById('create-user-avatar').innerHTML = avaTag;
   document.getElementById('create-user-name').innerHTML = esc(plainName)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.75rem;"></i>';
   document.getElementById('settings-user').innerHTML = esc(displayName)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.8rem;"></i>';
-  document.getElementById('profile-avatar-inner').innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
+  document.getElementById('profile-avatar-inner').innerHTML = avaTag;
   document.getElementById('profile-username').innerHTML = esc(plainName)+' <i class="fas fa-check-circle verified-badge"></i>';
   var sa = document.getElementById('settings-avatar-preview');
-  if (sa) sa.innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
-  // Re-render feed if entries are loaded
-  if (appState.currentPage==='feed' && appState.data.entries && appState.data.entries.length) renderFeed();
+  if (sa) sa.innerHTML = avaTag;
 }
 
 // ==================== EDIT NAME / AVATAR ====================
@@ -2213,6 +2218,7 @@ function avatarUploadDone(r){
   userProfiles[appState.currentPin].avatar=r.url;
   saveUserProfiles();
   updateUserUI();
+  renderFeed();
   syncProfileToBackend();
   closeModal('modal-edit-avatar');
   avatarCropReset();
@@ -2239,6 +2245,7 @@ function removeCustomAvatar(){
   userProfiles[appState.currentPin].avatar='';
   saveUserProfiles();
   updateUserUI();
+  renderFeed();
   syncProfileToBackend();
   closeModal('modal-edit-avatar');
   avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
@@ -2899,8 +2906,10 @@ function renderDmMessages() {
     if (isSent) html += '<div class="dm-msg-avatar">' + avatarHtml + '</div>';
     html += '</div>';
   }
+  // Preserve scroll position — only auto-scroll if user was near bottom
+  var autoScroll = container.scrollTop + container.clientHeight >= container.scrollHeight - 40;
   container.innerHTML = html;
-  container.scrollTop = container.scrollHeight;
+  if (autoScroll) container.scrollTop = container.scrollHeight;
 }
 
 function setupRealtimeEntries() {
@@ -3140,7 +3149,11 @@ function getFeedEntries(){
   return entries;
 }
 
+var _renderFeedPending = false;
 function renderFeed(){
+  if (_renderFeedPending) return;
+  _renderFeedPending = true;
+  setTimeout(function() { _renderFeedPending = false; }, 16);
   var entries=getFeedEntries();
   var container=document.getElementById('feed-posts');
   if(feedObserver){feedObserver.disconnect();feedObserver=null}
@@ -3439,7 +3452,7 @@ function renderProfileContent(){
       var uname=getEffectiveName(e.author).replace(/ [\w💖🌻]+$/g,'');
       var authorPin=getPinForUser(e.author);
       var ava=getDisplayAvatar(authorPin);
-      var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
+  var avatar=ava?'<img class="fcard-ava" src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var isOwner=getEffectiveName(e.author)===getEffectiveName(currentUser);
       return '<div class="threads-item" onclick="if(window.innerWidth<768){openCommentSheet(\''+e.id+'\')}else{openPostDetail(\''+e.id+'\')}">'+
         '<div class="threads-author"><div class="threads-avatar"><div class="inner">'+avatar+'</div></div><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong>'+(isOwner?'<div class="feed-card-actions" style="margin-left:auto;"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+e.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+e.id+'"><button onclick="event.stopPropagation();editPost(\''+e.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+e.id+'\')">Xóa bài</button></div></div>':'')+'</div>'+
