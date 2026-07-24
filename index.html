@@ -11,6 +11,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <style>
 :root {
   --bg: #fafafa;
@@ -887,8 +892,120 @@ a { color: var(--text-link); text-decoration:none; }
 .add-ann-btn { width:100%; background:transparent; border:1px dashed var(--border); border-radius:12px; padding:12px; font-size:0.8rem; font-weight:500; color:var(--text-secondary); cursor:pointer; transition:0.07s; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'Roboto',Arial,sans-serif; }
 .add-ann-btn:hover { background:var(--hover-bg); color:var(--text-primary); border-color:var(--text-secondary); }
 
-/* Hidden utility */
-.hidden { display:none !important; }
+/* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
+#page-direct { display:none; }
+#page-direct.active { display:flex; flex-direction:column; height:100%; }
+.dm-header {
+  display:flex; align-items:center; justify-content:space-between; padding:10px 16px;
+  background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
+}
+.dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; }
+.dm-header-title i { font-size:1.1rem; background:var(--story-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.dm-header-actions { display:flex; gap:10px; }
+.dm-header-actions button { font-size:1.1rem; color:var(--text-primary); padding:4px; }
+.dm-messages { flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:6px; }
+.dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
+.dm-msg { display:flex; gap:8px; max-width:85%; animation:msgIn 0.15s ease; }
+@keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.dm-msg.sent { align-self:flex-end; flex-direction:row-reverse; }
+.dm-msg.received { align-self:flex-start; }
+.dm-msg-avatar { width:28px; height:28px; border-radius:50%; flex-shrink:0; overflow:hidden; background:var(--border-light); display:flex; align-items:center; justify-content:center; font-size:0.7rem; margin-top:4px; }
+.dm-msg-avatar img { width:100%; height:100%; object-fit:cover; }
+.dm-msg-bubble { padding:8px 14px; border-radius:18px; font-size:0.9rem; line-height:1.45; word-break:break-word; max-width:100%; position:relative; }
+.dm-msg.sent .dm-msg-bubble { background:var(--text-link); color:#fff; border-bottom-right-radius:4px; }
+.dm-msg.received .dm-msg-bubble { background:var(--hover-bg); color:var(--text-primary); border-bottom-left-radius:4px; }
+.dm-msg-time { font-size:0.6rem; color:var(--text-secondary); margin-top:2px; padding:0 4px; }
+.dm-msg.sent .dm-msg-time { text-align:right; }
+.dm-msg-status { font-size:0.6rem; margin-left:4px; display:inline-flex; align-items:center; }
+.dm-msg-status.sent { color:var(--text-secondary); }
+.dm-msg-status.seen { color:#0095f6; }
+.dm-empty { text-align:center; padding:60px 20px; color:var(--text-secondary); font-size:0.85rem; }
+.dm-empty i { font-size:2.5rem; margin-bottom:12px; display:block; color:var(--border-light); }
+.dm-input-wrap {
+  border-top:1px solid var(--border-light); padding:8px 12px calc(8px + var(--safe-bottom));
+  background:var(--card-bg); flex-shrink:0;
+}
+.dm-input-row { display:flex; align-items:flex-end; gap:8px; }
+.dm-input-row textarea {
+  flex:1; border:1px solid var(--border-light); border-radius:24px; padding:8px 14px; font-size:0.92rem;
+  resize:none; outline:none; min-height:38px; max-height:120px; line-height:1.4;
+  font-family:var(--font); overflow-y:auto; background:var(--input-bg); color:var(--text-primary);
+}
+.dm-input-row textarea:focus { border-color:var(--text-secondary); }
+.dm-send-btn { color:var(--text-link); font-size:0.9rem; font-weight:600; padding:6px 10px; cursor:pointer; background:none; border:none; transition:0.07s; }
+.dm-send-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.dm-msg-img { width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0; }
+.dm-msg-img img { width:100%; height:100%; object-fit:cover; }
+.dm-msg-img i { font-size:1.4rem; color:var(--text-secondary); }
+.dm-msg-group { display:flex; flex-direction:column; gap:2px; }
+.dm-msg-group .dm-msg:last-child .dm-msg-bubble { margin-bottom:0; }
+.dm-msg-group .dm-msg + .dm-msg { margin-top:1px; }
+.dm-msg-group .dm-msg.sent + .dm-msg.sent .dm-msg-bubble { border-top-right-radius:4px; }
+.dm-msg-group .dm-msg.received + .dm-msg.received .dm-msg-bubble { border-top-left-radius:4px; }
+.dm-msg-group .dm-msg.sent:first-child .dm-msg-bubble { border-top-right-radius:18px; }
+.dm-msg-group .dm-msg.received:first-child .dm-msg-bubble { border-top-left-radius:18px; }
+.dm-msg-group .dm-msg:last-child .dm-msg-bubble { border-bottom-right-radius:18px; border-bottom-left-radius:18px; }
+.dm-msg-group .dm-msg:only-child .dm-msg-bubble { border-radius:18px; }
+.dm-msg-group .dm-msg.sent:last-child .dm-msg-bubble { border-bottom-right-radius:4px; }
+.dm-msg-group .dm-msg.received:last-child .dm-msg-bubble { border-bottom-left-radius:4px; }
+.dm-msg-group .dm-msg.sent:first-child:not(:last-child) .dm-msg-bubble { border-top-right-radius:18px; }
+.dm-msg-group .dm-msg.received:first-child:not(:last-child) .dm-msg-bubble { border-top-left-radius:18px; }
+.dm-msg-group .dm-msg.sent:not(:first-child) .dm-msg-bubble { border-top-right-radius:4px; }
+.dm-msg-group .dm-msg.received:not(:first-child) .dm-msg-bubble { border-top-left-radius:4px; }
+.dm-msg-group .dm-msg.sent:last-child .dm-msg-bubble { border-bottom-right-radius:4px; }
+.dm-msg-group .dm-msg.received:last-child .dm-msg-bubble { border-bottom-left-radius:4px; }
+.dm-msg-group .dm-msg:only-child .dm-msg-bubble { border-radius:18px; }
+.dm-msg-group .dm-msg.sent:only-child .dm-msg-bubble { border-bottom-right-radius:4px; }
+.dm-msg-group .dm-msg.received:only-child .dm-msg-bubble { border-bottom-left-radius:4px; }
+.dm-msg-group .dm-msg.sent:first-child:not(:last-child) .dm-msg-bubble { border-top-right-radius:18px; border-bottom-right-radius:4px; }
+.dm-msg-group .dm-msg.received:first-child:not(:last-child) .dm-msg-bubble { border-top-left-radius:18px; border-bottom-left-radius:4px; }
+.dm-msg-group .dm-msg.sent:last-child:not(:first-child) .dm-msg-bubble { border-top-right-radius:4px; border-bottom-right-radius:18px; }
+.dm-msg-group .dm-msg.received:last-child:not(:first-child) .dm-msg-bubble { border-top-left-radius:4px; border-bottom-left-radius:18px; }
+.dm-msg-group .dm-msg:not(:first-child):not(:last-child) .dm-msg-bubble { border-radius:4px 18px 18px 4px; }
+.dm-msg-group .dm-msg.received:not(:first-child):not(:last-child) .dm-msg-bubble { border-radius:4px 18px 18px 4px; }
+.dm-msg-group .dm-msg.sent:not(:first-child):not(:last-child) .dm-msg-bubble { border-radius:18px 4px 4px 18px; }
+.dm-seen { font-size:0.6rem; color:var(--text-secondary); text-align:right; padding:2px 4px 0; }
+.dm-seen i { margin-left:2px; }
+.dm-seen.read i { color:var(--text-link); }
+.dm-header-user { display:flex; align-items:center; gap:10px; }
+.dm-header-avatar { width:32px; height:32px; border-radius:50%; overflow:hidden; background:var(--story-gradient); padding:2px; display:flex; align-items:center; justify-content:center; }
+.dm-header-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.dm-header-avatar .inner img { width:100%; height:100%; object-fit:cover; }
+.dm-header-avatar .inner i { font-size:1.2rem; color:var(--text-secondary); }
+.dm-header-name { font-size:0.95rem; font-weight:600; }
+.dm-header-status { font-size:0.7rem; color:var(--text-secondary); }
+.dm-unread-badge { background:var(--text-danger); color:#fff; font-size:0.55rem; font-weight:700; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; position:absolute; top:2px; right:-4px; }
+.dm-sidebar-badge { background:var(--text-danger); color:#fff; font-size:0.6rem; font-weight:700; border-radius:10px; min-width:18px; height:18px; display:flex; align-items:center; justify-content:center; margin-left:auto; padding:0 5px; }
+#dm-online-status { font-size:0.65rem; color:var(--text-secondary); white-space:nowrap; display:inline-flex; align-items:center; gap:4px; }
+.online-dot, .offline-dot { display:inline-block; width:8px; height:8px; border-radius:50%; }
+.online-dot { background:#31c24c; }
+.offline-dot { background:#a0a0a0; }
+/* ===== IMAGE BUTTONS & PREVIEWS (DM, comments) ===== */
+.dm-img-btn, .pd-img-btn, .cs-img-btn {
+  width:32px; height:32px; border-radius:50%; display:flex;
+  align-items:center; justify-content:center; color:var(--text-secondary);
+  background:none; border:none; cursor:pointer; transition:0.07s; font-size:1rem;
+  flex-shrink:0;
+}
+.dm-img-btn:hover, .pd-img-btn:hover, .cs-img-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
+.img-preview {
+  display:flex; align-items:center; gap:6px; padding:4px 8px 4px 4px;
+  background:var(--hover-bg); border-radius:8px; margin:4px 0 2px;
+}
+.img-preview img { width:36px; height:36px; object-fit:cover; border-radius:6px; }
+.img-preview .img-preview-name { font-size:0.7rem; color:var(--text-secondary); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.img-preview button {
+  font-size:0.6rem; color:var(--text-secondary); width:20px; height:20px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--border-light); border:none; cursor:pointer; flex-shrink:0; transition:0.07s;
+}
+.img-preview button:hover { background:var(--text-danger); color:#fff; }
+.dm-msg-img-content, .comment-img-content {
+  max-width:180px; max-height:180px; border-radius:8px; margin-top:4px; overflow:hidden;
+}
+.dm-msg-img-content img, .comment-img-content img {
+  width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -939,6 +1056,9 @@ a { color: var(--text-link); text-decoration:none; }
       <div class="sidebar-item" onclick="openCreatePage()">
         <i class="fas fa-square-plus"></i><span class="label">Tạo bài viết</span>
       </div>
+      <div class="sidebar-item" data-page="direct" onclick="switchPage('direct')">
+        <i class="fab fa-facebook-messenger"></i><span class="label">Tin nhắn</span><span class="dm-sidebar-badge" id="dm-sidebar-badge" style="display:none;">0</span>
+      </div>
       <div class="sidebar-item" data-page="activity" onclick="switchPage('activity')">
         <i class="fas fa-heart"></i><span class="label">Hoạt động</span><span class="activity-badge sidebar-badge" style="display:none;">0</span>
       </div>
@@ -963,11 +1083,31 @@ a { color: var(--text-link); text-decoration:none; }
         <div class="logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
         <div class="feed-header-actions">
           <button onclick="openCreatePage()"><i class="far fa-square-plus"></i></button>
-          <button id="sync-header-btn" onclick="triggerSync()"><i class="fas fa-paper-plane"></i></button>
+          <button id="dm-header-btn" onclick="switchPage('direct')" style="position:relative;"><i class="fab fa-facebook-messenger"></i><span class="dm-unread-badge" id="dm-header-badge" style="display:none;">0</span></button>
         </div>
       </div>
       <div id="stories-container" class="stories-container"></div>
       <div class="feed-posts" id="feed-posts"></div>
+    </div>
+
+    <!-- ===== DIRECT MESSAGES PAGE ===== -->
+    <div class="page" id="page-direct">
+      <div class="dm-header">
+        <div class="dm-header-title"><i class="fab fa-facebook-messenger"></i> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
+        <div class="dm-header-actions">
+          <button onclick="triggerSync()" title="Đồng bộ"><i class="fas fa-sync"></i></button>
+        </div>
+      </div>
+      <div class="dm-messages" id="dm-messages"></div>
+      <div class="dm-input-wrap">
+        <div class="dm-input-row">
+          <textarea id="dm-input" placeholder="Nhắn tin..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
+          <button class="dm-img-btn" onclick="document.getElementById('dm-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
+          <button class="dm-send-btn" id="dm-send-btn" onclick="sendDmMessage()">Gửi</button>
+        </div>
+        <div class="img-preview" id="dm-img-preview" style="display:none;"><img id="dm-img-preview-img"><span class="img-preview-name">1 ảnh</span><button onclick="clearDmImage()">✕</button></div>
+        <input type="file" id="dm-file-input" accept="image/*" style="display:none" onchange="handleDmImageFile(this)">
+      </div>
     </div>
 
     <!-- ===== EXPLORE PAGE ===== -->
@@ -1080,9 +1220,12 @@ a { color: var(--text-link); text-decoration:none; }
         <div class="pd-input-fixed">
           <div class="pd-input-row">
             <textarea id="pd-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPdComment()}"></textarea>
+            <button class="pd-img-btn" onclick="document.getElementById('pd-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
             <button class="pd-send-btn" id="pd-cancel-btn" onclick="cancelEditComment()" style="display:none;">Hủy</button>
             <button class="pd-send-btn" id="pd-send-btn" onclick="sendPdComment()">Gửi</button>
           </div>
+          <div class="img-preview" id="pd-img-preview" style="display:none;"><img id="pd-img-preview-img"><span class="img-preview-name">1 ảnh</span><button onclick="clearPdImage()">✕</button></div>
+          <input type="file" id="pd-file-input" accept="image/*" style="display:none" onchange="handlePdImageFile(this)">
         </div>
       </div>
     </div>
@@ -1101,8 +1244,11 @@ a { color: var(--text-link); text-decoration:none; }
     <div class="cs-input-wrap">
       <div class="cs-input-row">
         <textarea id="cs-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCsComment()}"></textarea>
+        <button class="cs-img-btn" onclick="document.getElementById('cs-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
         <button class="cs-send-btn" id="cs-send-btn" onclick="sendCsComment()">Gửi</button>
       </div>
+      <div class="img-preview" id="cs-img-preview" style="display:none;"><img id="cs-img-preview-img"><span class="img-preview-name">1 ảnh</span><button onclick="clearCsImage()">✕</button></div>
+      <input type="file" id="cs-file-input" accept="image/*" style="display:none" onchange="handleCsImageFile(this)">
     </div>
   </div>
 </div>
@@ -1293,11 +1439,34 @@ var CONFIG = {
   PAGE_SIZE: 10
 };
 
+// ==================== FIREBASE INIT ====================
+var firebaseConfig = {
+  apiKey: "AIzaSyDDoeCYCxvKuAQ9CnYKPoE1_6s6htBYY04",
+  authDomain: "ptan2009-92b5a.firebaseapp.com",
+  databaseURL: "https://ptan2009-92b5a-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ptan2009-92b5a",
+  storageBucket: "ptan2009-92b5a.firebasestorage.app",
+  messagingSenderId: "745340137438",
+  appId: "1:745340137438:web:ce45b0ed2d7bc22137774f",
+  measurementId: "G-7DE8711M4Y"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+var storage = firebase.storage();
+var auth = firebase.auth();
+
+// Anonymous auth for cross-device support
+auth.signInAnonymously().catch(function(err) {
+  console.warn('Anonymous auth err:', err);
+});
+
 var currentUser = CONFIG.USER1_NAME;
 var appState = {
   data: { entries: [], anniversaries: [] },
   pinCode: '',
   currentPin: '',
+  currentUid: '',
+  pinMapping: {},
   currentPage: 'feed',
   writeImages: [],
   writeEditId: null,
@@ -1314,6 +1483,14 @@ var appState = {
   confirmCallback: null,
   syncTimer: null
 };
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    appState.currentUid = user.uid;
+    db.collection('config').doc('pin_mapping').get().then(function(doc) {
+      if (doc.exists) appState.pinMapping = doc.data().mapping || {};
+    }).catch(function() {});
+  }
+});
 var FEED_INIT = 30;
 var FEED_MORE = 20;
 var feedRenderCount = 0;
@@ -1386,8 +1563,26 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',func
 });
 
 // ==================== ACTIVITIES ====================
+var _activitySeenMap = {};
+var _activityUnsub = null;
+
+function loadActivitySeen() {
+  if (_activityUnsub) return;
+  _activityUnsub = db.collection('config').doc('activities')
+    .onSnapshot(function(doc) {
+      _activitySeenMap = doc.exists ? (doc.data().seen || {}) : {};
+      // Cache in local for offline fallback
+      for (var p in _activitySeenMap) {
+        localStorage.setItem('love_activity_seen_' + p, _activitySeenMap[p]);
+      }
+      updateActivityBadge();
+    }, function() {});
+}
+
 function getSeenAt(){
-  return (appState.data.profiles&&appState.data.profiles[appState.currentPin]&&appState.data.profiles[appState.currentPin].lastSeenAt)||null;
+  var fromFirestore = _activitySeenMap[appState.currentPin];
+  if (fromFirestore) return fromFirestore;
+  return (appState.data.profiles&&appState.data.profiles[appState.currentPin]&&appState.data.profiles[appState.currentPin].lastSeenAt)||localStorage.getItem('love_activity_seen_' + appState.currentPin)||null;
 }
 function getRecentActivities(){
   var entries=appState.data.entries||[];
@@ -1418,11 +1613,9 @@ function markActivitiesSeen(){
   var pin=appState.currentPin;
   if(!pin)return;
   var now=new Date().toISOString();
-  if(!appState.data.profiles)appState.data.profiles={};
-  if(!appState.data.profiles[pin])appState.data.profiles[pin]={};
-  appState.data.profiles[pin].lastSeenAt=now;
+  _activitySeenMap[pin] = now;
   updateActivityBadge();
-  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'mark_activity_seen',pin:pin}),mode:'cors'}).catch(function(){});
+  db.collection('config').doc('activities').set({ seen: { [pin]: now } }, { merge: true }).catch(function(){});
 }
 function updateActivityBadge(){
   var count=getUnseenCount();
@@ -1477,12 +1670,133 @@ function formatFull(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))re
 function timeAgo(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return'';var n=Date.now(),diff=Math.floor((n-d)/1000);if(diff<60)return'Vài giây trước';if(diff<3600)return Math.floor(diff/60)+' phút trước';if(diff<86400)return Math.floor(diff/3600)+' giờ trước';return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2)}catch(e){return ''}}
 function autoResize(el){if(!el)return;el.style.height='auto';el.style.height=el.scrollHeight+'px'}
 
+// ==================== CLIPBOARD / IMAGE PASTE UTILITY ====================
+var _pendingDmImage = null;
+var _pendingPdImage = null;
+var _pendingCsImage = null;
+
+function compressBlob(blob, maxW, quality, callback) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var c = document.createElement('canvas');
+      var w = img.width, h = img.height;
+      if (w > maxW || h > maxW) {
+        if (w > h) { h = Math.round(h * maxW / w); w = maxW; }
+        else { w = Math.round(w * maxW / h); h = maxW; }
+      }
+      c.width = w; c.height = h;
+      var ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      callback(c.toDataURL('image/jpeg', quality));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(blob);
+}
+
+function setupPasteHandler(textareaId, onImageCallback) {
+  var ta = document.getElementById(textareaId);
+  if (!ta) return;
+  ta.addEventListener('paste', function(e) {
+    var items = e.clipboardData.items;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') === 0) {
+        e.preventDefault();
+        var blob = items[i].getAsFile();
+        if (!blob || blob.size > 10 * 1024 * 1024) return;
+        compressBlob(blob, 800, 0.7, function(base64) {
+          if (onImageCallback) onImageCallback(base64);
+        });
+        return;
+      }
+    }
+  });
+}
+
+// Init paste handlers (script runs at end of body, DOM is ready)
+setupPasteHandler('dm-input', function(base64) {
+  _pendingDmImage = base64;
+  showImgPreview('dm');
+});
+setupPasteHandler('pd-input', function(base64) {
+  _pendingPdImage = base64;
+  showImgPreview('pd');
+});
+setupPasteHandler('cs-input', function(base64) {
+  _pendingCsImage = base64;
+  showImgPreview('cs');
+});
+setupPasteHandler('create-content', function(base64) {
+  var parts = base64.split(',');
+  var rawData = parts[1] || parts[0];
+  if (rawData.length > 1.2 * 1024 * 1024) { showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh quá lớn'); return; }
+  var date = document.getElementById('create-date').value || todayStr();
+  showToast('<i class="fas fa-spinner fa-pulse"></i> Đang tải ảnh lên...');
+  uploadImage(base64, 'paste_' + Date.now() + '.jpg', date, function(result) {
+    if (result && result.url) {
+      appState.writeImages.push({ url: result.url, driveId: result.driveId || '' });
+      renderCreatePreview();
+      showToast('<i class="fas fa-image"></i> Đã thêm ảnh từ clipboard');
+    } else {
+      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh từ clipboard');
+    }
+  });
+});
+
+function showImgPreview(prefix) {
+  var data = { dm: _pendingDmImage, pd: _pendingPdImage, cs: _pendingCsImage }[prefix];
+  var preview = document.getElementById(prefix + '-img-preview');
+  var img = document.getElementById(prefix + '-img-preview-img');
+  if (data) { img.src = data; preview.style.display = 'flex'; }
+  else { preview.style.display = 'none'; }
+}
+
+function clearDmImage() { _pendingDmImage = null; showImgPreview('dm'); }
+function clearPdImage() { _pendingPdImage = null; showImgPreview('pd'); }
+function clearCsImage() { _pendingCsImage = null; showImgPreview('cs'); }
+
+function handleDmImageFile(input) {
+  var file = input.files[0];
+  if (!file) return;
+  compressBlob(file, 800, 0.7, function(base64) {
+    _pendingDmImage = base64;
+    showImgPreview('dm');
+  });
+  input.value = '';
+}
+function handlePdImageFile(input) {
+  var file = input.files[0];
+  if (!file) return;
+  compressBlob(file, 800, 0.7, function(base64) {
+    _pendingPdImage = base64;
+    showImgPreview('pd');
+  });
+  input.value = '';
+}
+function handleCsImageFile(input) {
+  var file = input.files[0];
+  if (!file) return;
+  compressBlob(file, 800, 0.7, function(base64) {
+    _pendingCsImage = base64;
+    showImgPreview('cs');
+  });
+  input.value = '';
+}
+
 // ==================== LOCK SCREEN ====================
 function handlePinPress(d){if(appState.pinCode.length>=4)return;appState.pinCode+=d;updateDots();if(appState.pinCode.length===4)setTimeout(verifyPin,80)}
 function handlePinDelete(){appState.pinCode=appState.pinCode.slice(0,-1);updateDots();document.getElementById('lock-error').textContent=''}
 function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('dot-'+i);d.classList.toggle('active',i<appState.pinCode.length)}}
 function verifyPin(){var p=appState.pinCode;appState.currentPin=p;if(p===CONFIG.PIN_USER1){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}else if(p===CONFIG.PIN_USER2){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}else{document.getElementById('lock-error').textContent='Mật mã không đúng';appState.pinCode='';appState.currentPin='';updateDots()}}
 function unlockApp(){
+  // Link anonymous UID to this PIN
+  if (appState.currentUid && appState.currentPin) {
+    var update = {};
+    update['mapping.' + appState.currentPin] = appState.currentUid;
+    db.collection('config').doc('pin_mapping').set(update, { merge: true }).catch(function() {});
+  }
   document.getElementById('lock-screen').classList.add('hiding');
   setTimeout(function(){
     document.getElementById('lock-screen').style.display='none';
@@ -1509,7 +1823,12 @@ function initApp(){
   startClock();
   showFeedSkeleton();
   loadData();
+  loadActivitySeen();
   updateActivityBadge();
+  setupDmListener();
+  updateDmBadge();
+  setupPresence();
+  setupPartnerPresenceListener();
 }
 function updateUserUI(){
   applyTheme();
@@ -1561,7 +1880,14 @@ function syncProfileToBackend(){
   if(!userProfiles[pin].name)userProfiles[pin].name=pin===CONFIG.PIN_USER1?CONFIG.USER1_NAME:CONFIG.USER2_NAME;
   if(!userProfiles[pin].theme)userProfiles[pin].theme='auto';
   saveUserProfiles();
-  sendPayload({action:'save_profile',pin:pin,name:userProfiles[pin].name,avatar:userProfiles[pin].avatar||'',theme:userProfiles[pin].theme||'auto'});
+  // Save to Firestore
+  var profilesRef = db.collection('config').doc('profiles');
+  profilesRef.get().then(function(doc) {
+    var data = doc.exists ? doc.data() : { profiles: {} };
+    data.profiles = data.profiles || {};
+    data.profiles[pin] = { name: userProfiles[pin].name, avatar: userProfiles[pin].avatar || '', theme: userProfiles[pin].theme || 'auto' };
+    return profilesRef.set(data);
+  }).catch(function(err) { console.warn('syncProfile error:', err); });
 }
 
 // ==================== AVATAR CROP ====================
@@ -1660,7 +1986,6 @@ function saveCroppedAvatar(){
   uploadAvatarOrFallback(compressed,rawData);
 }
 function uploadAvatarOrFallback(compressed,rawData){
-  // Xóa ảnh đại diện cũ trên Drive trước
   loadUserProfiles();
   var oldUrl=userProfiles[appState.currentPin]&&userProfiles[appState.currentPin].avatar||'';
   var match=oldUrl.match(/id=([^&]+)/);
@@ -1793,49 +2118,175 @@ function showToast(m){if(!m)return;var el=document.getElementById('toast');el.in
 
 function loadData(callback){
   showLoadingBar();
-  var cbName='jcb_'+Date.now()+'_'+Math.random().toString(36).substr(2,4);
-  var scriptTag,isDone=false,timeout;
+  // Try Firestore first
+  var entriesArr = [], annsArr = [], profilesObj = {};
+  var loaded = false;
 
-  function handleResponse(data){
-    if(isDone)return;isDone=true;clearTimeout(timeout);
-    hideLoadingScreen();hideLoadingBar();
-    if(data&&data.entries){
-      appState.data=data;saveLocal(data);
-      // Merge profiles from backend into localStorage
-      if(data.profiles){
+  function finalize() {
+    if (loaded) return;
+    loaded = true;
+    hideLoadingScreen(); hideLoadingBar();
+    // If data was already loaded (e.g. from Apps Script migration), keep it
+    if (!appState.data.entries || !appState.data.entries.length) {
+      appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
+    }
+    saveLocal(appState.data);
+    profilesFromData(appState.data.profiles);
+    normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
+    if (!appState.hasWelcomed) { appState.hasWelcomed = true; showToast('<i class="fas fa-gem"></i> Xin chào ' + esc(currentUser) + '!'); }
+    if (callback) callback(appState.data);
+  }
+
+  function profilesFromData(profilesObj) {
+    if (!profilesObj) return;
+    loadUserProfiles();
+    for (var pin in profilesObj) {
+      if (profilesObj[pin] && profilesObj[pin].name) {
+        userProfiles[pin] = userProfiles[pin] || { name: '', avatar: '', theme: 'auto' };
+        if (profilesObj[pin].name) userProfiles[pin].name = profilesObj[pin].name;
+        if (profilesObj[pin].avatar) userProfiles[pin].avatar = profilesObj[pin].avatar;
+        if (profilesObj[pin].theme) userProfiles[pin].theme = profilesObj[pin].theme;
+      }
+    }
+    saveUserProfiles();
+    if (userProfiles[appState.currentPin] && userProfiles[appState.currentPin].name) {
+      currentUser = userProfiles[appState.currentPin].name;
+    }
+    updateUserUI();
+  }
+
+  // Try loading from Firestore
+  db.collection('entries').get().then(function(snap) {
+    if (!snap.empty) {
+      snap.forEach(function(doc) { entriesArr.push(doc.data()); });
+      return db.collection('anniversaries').get();
+    } else {
+      return Promise.reject('empty');
+    }
+  }).then(function(snap2) {
+    snap2.forEach(function(doc) { annsArr.push(doc.data()); });
+    return db.collection('config').doc('profiles').get();
+  }).then(function(profDoc) {
+    if (profDoc.exists) profilesObj = profDoc.data().profiles || {};
+    finalize();
+  }).catch(function(err) {
+    if (err === 'empty') {
+      loadFromAppsScript(function() { finalize(); });
+    } else {
+      console.warn('Firestore error:', err);
+      loadFromAppsScript(function() { finalize(); });
+    }
+  });
+
+  setTimeout(function() {
+    if (!loaded) {
+      if (entriesArr.length) { finalize(); return; }
+      var local = loadLocal();
+      if (local) { appState.data = local; normalizeData(); sortEntries(); renderAll(); showToast('<i class="fas fa-wifi"></i> Đã tải từ bộ nhớ tạm'); updateActivityBadge(); if (callback) callback(appState.data); }
+    }
+  }, 12000);
+}
+
+function loadFromAppsScript(callback) {
+  var cbName = 'jcb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+  var scriptTag, isDone = false, timeout;
+
+  function handleResponse(data) {
+    if (isDone) return; isDone = true; clearTimeout(timeout);
+    if (data && data.entries) {
+      appState.data = data; saveLocal(data);
+      if (data.profiles) {
         loadUserProfiles();
-        for(var pin in data.profiles){
-          if(data.profiles[pin]&&data.profiles[pin].name){
-            userProfiles[pin]=userProfiles[pin]||{name:'',avatar:'',theme:'auto'};
-            if(data.profiles[pin].name)userProfiles[pin].name=data.profiles[pin].name;
-            if(data.profiles[pin].avatar)userProfiles[pin].avatar=data.profiles[pin].avatar;
-            if(data.profiles[pin].theme)userProfiles[pin].theme=data.profiles[pin].theme;
+        for (var pin in data.profiles) {
+          if (data.profiles[pin] && data.profiles[pin].name) {
+            userProfiles[pin] = userProfiles[pin] || { name: '', avatar: '', theme: 'auto' };
+            if (data.profiles[pin].name) userProfiles[pin].name = data.profiles[pin].name;
+            if (data.profiles[pin].avatar) userProfiles[pin].avatar = data.profiles[pin].avatar;
+            if (data.profiles[pin].theme) userProfiles[pin].theme = data.profiles[pin].theme;
           }
         }
         saveUserProfiles();
-        // Update currentUser if profile exists for currentPin
-        if(userProfiles[appState.currentPin]&&userProfiles[appState.currentPin].name){
-          currentUser=userProfiles[appState.currentPin].name;
-        }
+        if (userProfiles[appState.currentPin] && userProfiles[appState.currentPin].name) { currentUser = userProfiles[appState.currentPin].name; }
         updateUserUI();
       }
-      if(!appState.hasWelcomed){appState.hasWelcomed=true;showToast('<i class="fas fa-gem"></i> Xin chào '+esc(currentUser)+'!')}
-    }else{
-      var local=loadLocal();
-      if(local){appState.data=local;if(!appState.hasWelcomed){appState.hasWelcomed=true}}
-      else{appState.data={entries:[],anniversaries:[]}}
+      // Migrate to Firestore
+      migrateDataToFirestore(data);
+    } else {
+      var local = loadLocal();
+      if (local) { appState.data = local; } else { appState.data = { entries: [], anniversaries: [] }; }
     }
-    normalizeData();sortEntries();renderAll();updateActivityBadge();cleanup();if(callback)callback(appState.data)
+    if (callback) callback();
+    cleanup();
   }
-  function handleTimeout(){if(isDone)return;isDone=true;clearTimeout(timeout);hideLoadingScreen();hideLoadingBar();var local=loadLocal();if(local){appState.data=local;normalizeData();sortEntries();renderAll();showToast('<i class="fas fa-wifi"></i> Đã tải dữ liệu từ bộ nhớ tạm')}else{appState.data={entries:[],anniversaries:[]};renderAll()}updateActivityBadge();if(callback)callback(appState.data);cleanup()}
-
-  timeout=setTimeout(handleTimeout,12000);
-  window[cbName]=function(d){handleResponse(d)};
-  scriptTag=document.createElement('script');
-  scriptTag.src=CONFIG.BACKEND_URL+'?callback='+cbName+'&_='+Date.now();
-  scriptTag.onerror=function(){handleTimeout()};
+  function handleTimeout() {
+    if (isDone) return; isDone = true; clearTimeout(timeout);
+    var local = loadLocal();
+    if (local) { appState.data = local; } else { appState.data = { entries: [], anniversaries: [] }; }
+    if (callback) callback();
+    cleanup();
+  }
+  timeout = setTimeout(handleTimeout, 12000);
+  window[cbName] = function(d) { handleResponse(d); };
+  scriptTag = document.createElement('script');
+  scriptTag.src = CONFIG.BACKEND_URL + '?callback=' + cbName + '&_=' + Date.now();
+  scriptTag.onerror = function() { handleTimeout(); };
   document.head.appendChild(scriptTag);
-  function cleanup(){if(scriptTag&&scriptTag.parentNode)scriptTag.parentNode.removeChild(scriptTag);delete window[cbName]}
+  function cleanup() { if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag); delete window[cbName]; }
+}
+
+function migrateDataToFirestore(data) {
+  var batchSize = 500;
+  // Migrate entries
+  var entries = data.entries || [];
+  if (entries.length) {
+    for (var i = 0; i < entries.length; i += batchSize) {
+      var batch = db.batch();
+      var chunk = entries.slice(i, i + batchSize);
+      chunk.forEach(function(e) {
+        // Clean up old fields
+        var clean = {
+          id: e.id, date: e.date || '', title: e.title || '', content: e.content || '',
+          author: e.author || CONFIG.USER1_NAME,
+          images: (e.images || []).map(function(img) {
+            return typeof img === 'string' ? { url: img } : { url: img.url || '', driveId: img.driveId || '' };
+          }),
+          comments: (e.comments || []).map(function(c) {
+            return { id: c.id, author: c.author, text: c.text, time: c.time || new Date().toISOString(), image: c.image || '' };
+          }),
+          createdAt: e.createdAt || e.date + 'T00:00:00.000Z' || new Date().toISOString(),
+          updatedAt: e.updatedAt || e.createdAt || e.date + 'T00:00:00.000Z' || new Date().toISOString()
+        };
+        batch.set(db.collection('entries').doc(e.id), clean);
+      });
+      batch.commit().catch(function(err) { console.warn('Migrate entries batch err:', err); });
+    }
+  }
+  // Migrate anniversaries
+  var anns = data.anniversaries || [];
+  if (anns.length) {
+    var batchA = db.batch();
+    anns.forEach(function(a) {
+      batchA.set(db.collection('anniversaries').doc(a.id), { id: a.id, date: a.date, name: a.name });
+    });
+    batchA.commit().catch(function(err) { console.warn('Migrate anns err:', err); });
+  }
+  // Migrate profiles
+  if (data.profiles) {
+    db.collection('config').doc('profiles').set({ profiles: data.profiles }).catch(function(err) { console.warn('Migrate profiles err:', err); });
+  }
+  // Migrate DM messages
+  if (data.dmMessages) {
+    for (var chatId in data.dmMessages) {
+      var msgs = data.dmMessages[chatId];
+      if (msgs && msgs.length) {
+        var batchM = db.batch();
+        msgs.forEach(function(m) {
+          batchM.set(db.collection('messages').doc(chatId).collection('messages').doc(m.id), m);
+        });
+        batchM.commit().catch(function(err) { console.warn('Migrate DMs err:', err); });
+      }
+    }
+  }
 }
 
 function normalizeData(){
@@ -1878,36 +2329,147 @@ window.addEventListener('online',function(){appState.isOnline=true;showToast('<i
 window.addEventListener('offline',function(){appState.isOnline=false;showToast('<i class="fas fa-wifi"></i> Mất kết nối, dữ liệu sẽ lưu tạm')})
 
 // ==================== SERVER ====================
-function sendPayload(payload,successMsg,callback){
-  var clean=JSON.parse(JSON.stringify(payload));
-  if(clean.entry&&clean.entry.images)clean.entry.images=clean.entry.images.map(function(i){return{url:i.url||'',driveId:i.driveId||''}});
-  var body=JSON.stringify(clean);
-  if(body.length>45*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Dung lượng quá lớn!');if(callback)callback(null);return}
-  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body,mode:'cors'})
-  .then(function(r){return r.json().catch(function(){return null})})
-  .then(function(result){
-    if(successMsg)showToast(successMsg);
-    if(result&&result.success){
-      loadData(function(){if(callback)callback(result)})
-    }else{
-      addQueue({type:'save_entry',payload:clean});showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ sau');
-      if(callback)callback(null)
-    }
-  })
-  .catch(function(){
-    addQueue({type:'save_entry',payload:clean});showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ sau');
-    if(callback)callback(null)
-  })
+function sendPayload(payload, successMsg, callback) {
+  var action = payload.action;
+  var p = showSaving('Đang xử lý...');
+
+  function done(msg) {
+    hideSaving();
+    if (msg) showToast(msg);
+    renderAll();
+    if (callback) callback({ success: true });
+  }
+
+  function fail(msg) {
+    hideSaving();
+    showToast('<i class="fas fa-exclamation-triangle"></i> ' + (msg || 'Lỗi, đã lưu tạm'));
+    if (callback) callback(null);
+  }
+
+  if (action === 'save_entry') {
+    var entry = payload.entry;
+    if (!entry || !entry.id) { fail('Thiếu dữ liệu'); return; }
+    db.collection('entries').doc(entry.id).set(entry).then(function() {
+      // Update local data
+      var idx = -1;
+      (appState.data.entries || []).forEach(function(e, i) { if (e.id === entry.id) idx = i; });
+      if (idx >= 0) appState.data.entries[idx] = entry;
+      else appState.data.entries.push(entry);
+      saveLocal(appState.data);
+      done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
+    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+    return;
+  }
+
+  if (action === 'delete_entry') {
+    db.collection('entries').doc(payload.id).delete().then(function() {
+      appState.data.entries = (appState.data.entries || []).filter(function(e) { return e.id !== payload.id; });
+      saveLocal(appState.data);
+      done(successMsg || 'Đã xóa!');
+    }).catch(function(err) { fail('Lỗi xóa'); });
+    return;
+  }
+
+  if (action === 'save_anniversary') {
+    var ann = payload.anniversary;
+    if (!ann || !ann.id) { fail('Thiếu dữ liệu'); return; }
+    db.collection('anniversaries').doc(ann.id).set(ann).then(function() {
+      var idx = -1;
+      (appState.data.anniversaries || []).forEach(function(a, i) { if (a.id === ann.id) idx = i; });
+      if (idx >= 0) appState.data.anniversaries[idx] = ann;
+      else appState.data.anniversaries.push(ann);
+      saveLocal(appState.data);
+      done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
+    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+    return;
+  }
+
+  if (action === 'delete_anniversary') {
+    db.collection('anniversaries').doc(payload.id).delete().then(function() {
+      appState.data.anniversaries = (appState.data.anniversaries || []).filter(function(a) { return a.id !== payload.id; });
+      saveLocal(appState.data);
+      done(successMsg || 'Đã xóa!');
+    }).catch(function(err) { fail('Lỗi xóa'); });
+    return;
+  }
+
+  if (action === 'add_comment' || action === 'edit_comment' || action === 'delete_comment') {
+    return handleCommentAction(payload, successMsg, callback);
+  }
+
+  if (action === 'save_profile') {
+    var profilesRef = db.collection('config').doc('profiles');
+    profilesRef.get().then(function(doc) {
+      var data = doc.exists ? doc.data() : { profiles: {} };
+      data.profiles = data.profiles || {};
+      data.profiles[payload.pin] = { name: payload.name, avatar: payload.avatar || '', theme: payload.theme || 'auto' };
+      return profilesRef.set(data);
+    }).then(function() {
+      done(successMsg || '<i class="fas fa-check-circle"></i> Đã lưu!');
+    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+    return;
+  }
+
+  if (action === 'mark_activity_seen') {
+    db.collection('config').doc('activities').set({
+      seen: { [payload.pin]: new Date().toISOString() }
+    }, { merge: true }).catch(function() {});
+    done();
+    return;
+  }
+
+  // Unknown action — try old method as fallback
+  var clean = JSON.parse(JSON.stringify(payload));
+  if (clean.entry && clean.entry.images) clean.entry.images = clean.entry.images.map(function(i) { return { url: i.url || '', driveId: i.driveId || '' }; });
+  var body = JSON.stringify(clean);
+  if (body.length > 45 * 1024 * 1024) { showToast('<i class="fas fa-exclamation-triangle"></i> Dung lượng quá lớn!'); if (callback) callback(null); return; }
+  fetch(CONFIG.BACKEND_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body, mode: 'cors' })
+    .then(function(r) { return r.json().catch(function() { return null; }); })
+    .then(function(result) {
+      if (successMsg && result && result.success) showToast(successMsg);
+      if (callback) callback(result);
+    }).catch(function() { if (callback) callback(null); });
 }
 
-function sendCommentPayload(payload,callback){
-  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),mode:'cors'})
-  .then(function(r){return r.json()})
-  .then(function(result){
-    if(result&&result.success){if(callback)callback(result);showToast('<i class="fa-regular fa-comment"></i> Đã bình luận!')}
-    else{addQueue({type:'comment',payload:payload});showToast('<i class="fas fa-save"></i> Đã lưu tạm');if(callback)callback(null)}
-  })
-  .catch(function(){addQueue({type:'comment',payload:payload});showToast('<i class="fas fa-save"></i> Đã lưu tạm');if(callback)callback(null)})
+function handleCommentAction(payload, successMsg, callback) {
+  var entryId = payload.entryId;
+  var entryRef = db.collection('entries').doc(entryId);
+
+  entryRef.get().then(function(doc) {
+    if (!doc.exists) { if (callback) callback(null); return; }
+    var entry = doc.data();
+    var comments = entry.comments || [];
+
+    if (payload.action === 'add_comment') {
+      var newComment = {
+        id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        author: payload.author || currentUser,
+        text: payload.text || '',
+        time: new Date().toISOString()
+      };
+      if (payload.image) newComment.image = payload.image;
+      comments.push(newComment);
+    } else if (payload.action === 'edit_comment') {
+      comments.forEach(function(c) { if (c.id === payload.commentId) { c.text = payload.text; c.author = payload.author || c.author; if (payload.image !== undefined) c.image = payload.image || ''; } });
+    } else if (payload.action === 'delete_comment') {
+      comments = comments.filter(function(c) { return c.id !== payload.commentId; });
+    }
+
+    return entryRef.update({ comments: comments }).then(function() {
+      // Update local data
+      var localEntry = null;
+      (appState.data.entries || []).forEach(function(e) { if (e.id === entryId) localEntry = e; });
+      if (localEntry) localEntry.comments = comments;
+      saveLocal(appState.data);
+      var msg = successMsg || (payload.action === 'delete_comment' ? 'Đã xóa bình luận' : '<i class="fa-regular fa-comment"></i> Đã bình luận!');
+      showToast(msg);
+      if (callback) callback({ success: true });
+    });
+  }).catch(function(err) { showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi đồng bộ'); if (callback) callback(null); });
+}
+
+function sendCommentPayload(payload, callback) {
+  handleCommentAction(payload, null, callback);
 }
 
 function uploadImage(base64,filename,dateStr,callback){
@@ -1917,6 +2479,228 @@ function uploadImage(base64,filename,dateStr,callback){
   .then(function(r){return r.json()}).then(function(r){if(r&&r.url)callback(r);else callback(null)}).catch(function(){callback(null)})
 }
 
+// ==================== DIRECT MESSAGES ====================
+function getPartnerPin() {
+  return appState.currentPin === CONFIG.PIN_USER1 ? CONFIG.PIN_USER2 : CONFIG.PIN_USER1;
+}
+function getPartnerName() {
+  return getDisplayName(getPartnerPin());
+}
+// ==================== DM (Firestore Realtime) ====================
+var dmMessagesCache = [];
+var dmUnsubscribe = null;
+var partnerLastSeen = '';
+var _myDmLastSeen = '';
+
+function getChatId() {
+  var pins = [CONFIG.PIN_USER1, CONFIG.PIN_USER2].sort();
+  return 'chat_' + pins[0] + '_' + pins[1];
+}
+
+function getDmUnreadCount() {
+  var lastSeen = _myDmLastSeen || localStorage.getItem('love_dm_seen_' + getChatId() + '_' + appState.currentPin) || '';
+  return dmMessagesCache.filter(function(m) {
+    var t = m.time || m.createdAt || '';
+    return m.sender !== appState.currentPin && t > lastSeen;
+  }).length;
+}
+
+function updateDmBadge() {
+  var count = getDmUnreadCount();
+  var badge1 = document.getElementById('dm-sidebar-badge');
+  var badge2 = document.getElementById('dm-header-badge');
+  if (badge1) { badge1.textContent = count; badge1.style.display = count > 0 ? 'flex' : 'none'; }
+  if (badge2) { badge2.textContent = count; badge2.style.display = count > 0 ? 'flex' : 'none'; }
+}
+
+function markDmSeen() {
+  if (!dmMessagesCache.length) return;
+  var lastT = dmMessagesCache[dmMessagesCache.length - 1];
+  var val = lastT.time || lastT.createdAt || '';
+  _myDmLastSeen = val;
+  if (val) localStorage.setItem('love_dm_seen_' + getChatId() + '_' + appState.currentPin, val);
+  // Sync lastSeen to Firestore for read receipts
+  if (appState.currentPin) {
+    db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
+      .set({ lastSeen: new Date().toISOString() }).catch(function() {});
+  }
+  updateDmBadge();
+}
+
+function sendDmMessage() {
+  var input = document.getElementById('dm-input');
+  var text = input.value.trim();
+  if (!text && !_pendingDmImage) return;
+  var btn = document.getElementById('dm-send-btn');
+  btn.disabled = true;
+  var msg = {
+    sender: appState.currentPin,
+    text: text || '',
+    createdAt: new Date().toISOString()
+  };
+  if (_pendingDmImage) { msg.image = _pendingDmImage; clearDmImage(); }
+  db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
+    input.value = '';
+    autoResize(input);
+    btn.disabled = false;
+  }).catch(function(err) {
+    console.warn('Send DM err:', err);
+    btn.disabled = false;
+  });
+}
+
+function renderDmMessages() {
+  var container = document.getElementById('dm-messages');
+  var msgs = dmMessagesCache;
+  var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
+  document.getElementById('dm-partner-name').textContent = partnerName;
+  if (!msgs.length) {
+    container.innerHTML = '<div class="dm-empty"><i class="fab fa-facebook-messenger"></i>Chưa có tin nhắn nào<br><span style="font-size:0.75rem;">Hãy gửi lời nhắn đầu tiên đến '+esc(partnerName)+'</span></div>';
+    return;
+  }
+  var html = '';
+  var lastDate = '';
+  for (var i = 0; i < msgs.length; i++) {
+    var m = msgs[i];
+    var t = m.time || m.createdAt || '';
+    var d = new Date(t);
+    var dateStr = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+    if (dateStr !== lastDate) {
+      var today = new Date();
+      var todayStr = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate());
+      var yesterday = new Date(today); yesterday.setDate(yesterday.getDate()-1);
+      var yStr = yesterday.getFullYear() + '-' + pad(yesterday.getMonth()+1) + '-' + pad(yesterday.getDate());
+      var label = '';
+      if (dateStr === todayStr) label = 'Hôm nay';
+      else if (dateStr === yStr) label = 'Hôm qua';
+      else { var p = dateStr.split('-'); label = 'Ngày ' + parseInt(p[2]) + ' Tháng ' + parseInt(p[1]) + ', ' + p[0]; }
+      html += '<div class="dm-date-sep">' + label + '</div>';
+      lastDate = dateStr;
+    }
+    var isSent = m.sender === appState.currentPin;
+    var timeStr = pad(d.getHours()) + ':' + pad(d.getMinutes());
+    var seen = isSent && partnerLastSeen && t && t <= partnerLastSeen;
+    var statusHtml = isSent ? '<span class="dm-msg-status '+(seen?'seen':'sent')+'">'+(seen?'&#10003;&#10003;':'&#10003;')+'</span>' : '';
+    var partnerAva = getDisplayAvatar(getPartnerPin());
+    var myAva = getDisplayAvatar(appState.currentPin);
+    var avaUrl = isSent ? myAva : partnerAva;
+    var avatarHtml = avaUrl ? '<img src="'+esc(avaUrl)+'">' : '<i class="fas fa-user-circle" style="font-size:1.2rem;color:var(--text-secondary);"></i>';
+    var cls = isSent ? 'sent' : 'received';
+    var imgHtml = '';
+    if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(m.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
+    html += '<div class="dm-msg ' + cls + '">';
+    if (!isSent) html += '<div class="dm-msg-avatar">' + avatarHtml + '</div>';
+    html += '<div>';
+    if (m.text) html += '<div class="dm-msg-bubble">' + esc(m.text) + '</div>';
+    if (imgHtml) html += imgHtml;
+    html += '<div class="dm-msg-time">' + timeStr + statusHtml + '</div></div>';
+    if (isSent) html += '<div class="dm-msg-avatar">' + avatarHtml + '</div>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+  container.scrollTop = container.scrollHeight;
+}
+
+function setupDmListener() {
+  if (dmUnsubscribe) { dmUnsubscribe(); dmUnsubscribe = null; }
+  dmMessagesCache = [];
+  dmUnsubscribe = db.collection('messages').doc(getChatId()).collection('messages')
+    .onSnapshot(function(snapshot) {
+      dmMessagesCache = [];
+      snapshot.forEach(function(doc) {
+        var m = doc.data();
+        m.id = doc.id;
+        if (!m.createdAt) m.createdAt = m.time || '';
+        dmMessagesCache.push(m);
+      });
+      dmMessagesCache.sort(function(a, b) {
+        return (a.createdAt || '').localeCompare(b.createdAt || '');
+      });
+      if (appState.currentPage === 'direct') {
+        renderDmMessages();
+        markDmSeen();
+      }
+      updateDmBadge();
+    }, function(err) {
+      console.warn('DM listener err:', err);
+    });
+  // Listen to partner's lastSeen for read receipts
+  var partnerPin = getPartnerPin();
+  if (partnerPin) {
+    db.collection('dm_status').doc(getChatId()).collection('status').doc(partnerPin)
+      .onSnapshot(function(snap) {
+        partnerLastSeen = snap.exists ? (snap.data().lastSeen || '') : '';
+        if (appState.currentPage === 'direct') renderDmMessages();
+      }, function() {});
+  }
+  // Listen to own status for online-first unread count
+  if (appState.currentPin) {
+    db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
+      .onSnapshot(function(snap) {
+        _myDmLastSeen = snap.exists ? (snap.data().lastSeen || '') : '';
+        updateDmBadge();
+      }, function() {});
+  }
+}
+
+// ==================== ONLINE PRESENCE ====================
+var partnerPresenceUnsub = null;
+
+function setupPresence() {
+  if (!appState.currentUid || !appState.currentPin) {
+    setTimeout(setupPresence, 500);
+    return;
+  }
+  var ref = db.collection('presence').doc(appState.currentUid);
+  var data = { pin: appState.currentPin, online: true, lastSeen: new Date().toISOString() };
+  ref.set(data).catch(function() {});
+  // Heartbeat every 30s
+  if (appState.presenceHeartbeat) clearInterval(appState.presenceHeartbeat);
+  appState.presenceHeartbeat = setInterval(function() {
+    ref.update({ online: true, lastSeen: new Date().toISOString() }).catch(function() {});
+  }, 30000);
+  window.addEventListener('beforeunload', function() {
+    ref.update({ online: false, lastSeen: new Date().toISOString() }).catch(function() {});
+  });
+}
+
+function setupPartnerPresenceListener() {
+  if (partnerPresenceUnsub) { partnerPresenceUnsub(); partnerPresenceUnsub = null; }
+  var el = document.getElementById('dm-online-status');
+  if (!el) return;
+  var partnerPin = getPartnerPin();
+  if (!partnerPin) return;
+  partnerPresenceUnsub = db.collection('presence')
+    .where('pin', '==', partnerPin)
+    .onSnapshot(function(snapshot) {
+      var isOnline = false;
+      snapshot.forEach(function(doc) {
+        var d = doc.data();
+        if (d.online) {
+          var age = Date.now() - new Date(d.lastSeen || 0).getTime();
+          if (age < 70000) isOnline = true;
+        }
+      });
+      el.innerHTML = isOnline
+        ? '<span class="online-dot"></span> Đang hoạt động'
+        : '<span class="offline-dot"></span> Ngoại tuyến';
+    }, function(err) {
+      console.warn('Presence listener err:', err);
+    });
+}
+
+// Simple image viewer for DM & comment images
+function openImageViewer(src) {
+  var viewer=document.getElementById('photo-viewer');
+  if(viewer.classList.contains('open')){closePhotoViewer();return}
+  appState.photoImages=[{url:src}]; appState.photoIndex=0;
+  viewer.classList.add('open'); document.body.style.overflow='hidden';
+  var mc=document.getElementById('main-content'); if(mc)mc.style.overflow='hidden';
+  document.getElementById('pv-image').src=src;
+  document.getElementById('pv-counter').textContent='1 / 1';
+  document.getElementById('pv-prev').disabled=true; document.getElementById('pv-next').disabled=true;
+  gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out'})
+}
 // ==================== NAVIGATION ====================
 function goHome(){switchPage('feed');setTimeout(function(){smoothScroll(document.getElementById('main-content'),0,250)},0)}
 function smoothScroll(el,to,dur){
@@ -1940,6 +2724,7 @@ function switchPage(page){
   document.querySelectorAll('.sidebar-item[data-page]').forEach(function(i){i.classList.toggle('active',i.dataset.page===page)});
   document.querySelectorAll('.nav-item[data-page]').forEach(function(i){i.classList.toggle('active',i.dataset.page===page)});
   if(page==='feed')renderFeed();
+  else if(page==='direct'){renderDmMessages();markDmSeen();setTimeout(function(){var inp=document.getElementById('dm-input');if(inp)inp.focus()},200)}
   else if(page==='explore')renderExplore();
   else if(page==='activity'){renderActivity();markActivitiesSeen()}
   else if(page==='profile')renderProfile();
@@ -1960,6 +2745,8 @@ function renderAll(){
   renderActivity();
   renderProfile();
   renderStories();
+  renderDmMessages();
+  updateDmBadge();
 }
 
 // ==================== STORIES ====================
@@ -2517,6 +3304,8 @@ function renderPdComments(){
       var cava=getDisplayAvatar(cpin);
       var isOwner=ceffective===getEffectiveName(currentUser);
       var cavatar=cava?'<img src="'+esc(cava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
+      var cimgHtml = '';
+      if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(c.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(c.image)+'\')"></div>';
       return '<div class="pd-comment-item" data-id="'+c.id+'">'+
         '<div class="pd-comment-avatar">'+cavatar+'</div>'+
         '<div class="pd-comment-body">'+
@@ -2524,7 +3313,8 @@ function renderPdComments(){
             '<div class="pd-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+
             (isOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCommentMenu(\''+c.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cmt-dropdown-'+c.id+'"><button onclick="editPdComment(\''+c.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdComment(\''+c.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+
           '</div>'+
-          '<div class="pd-comment-text'+(pdEditingCommentId===c.id?' editing':'')+'" id="pd-cmt-'+c.id+'">'+esc(c.text)+'</div>'+
+          (c.text?'<div class="pd-comment-text'+(pdEditingCommentId===c.id?' editing':'')+'" id="pd-cmt-'+c.id+'">'+esc(c.text)+'</div>':'')+
+          cimgHtml+
           '<div class="pd-comment-time">'+timeAgo(c.time)+'</div>'+
         '</div>'+
       '</div>'
@@ -2536,7 +3326,7 @@ function renderPdComments(){
 function sendPdComment(){
   var input=document.getElementById('pd-input');
   var text=input.value.trim();
-  if(!text){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
+  if(!text && !_pendingPdImage){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
   if(!pdEntryId)return;
   var btn=document.getElementById('pd-send-btn');
   btn.disabled=true;
@@ -2545,25 +3335,56 @@ function sendPdComment(){
     var masterEntry=appState.data.entries.find(function(e){return e.id===pdEntryId});
     var origComment=masterEntry?masterEntry.comments.find(function(c){return c.id===pdEditingCommentId}):null;
     var origAuthor=origComment?origComment.author:currentUser;
-    var payload={action:'edit_comment',entryId:pdEntryId,commentId:pdEditingCommentId,text:text,author:origAuthor};
+    var pdEntryForDate=appState.data.entries.find(function(e){return e.id===pdEntryId});
+    var pdEditDate=pdEntryForDate?pdEntryForDate.date||todayStr():todayStr();
+
+    function finishEdit(imgUrl){
+      var payload={action:'edit_comment',entryId:pdEntryId,commentId:pdEditingCommentId,text:text,author:origAuthor};
+      if(imgUrl!==undefined)payload.image=imgUrl;
+      sendCommentPayload(payload,function(result){
+        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+        if(result&&result.comments){if(master)master.comments=result.comments}
+        pdEditingCommentId=null;_pendingPdImage=null;showImgPreview('pd');
+        input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
+        document.getElementById('pd-cancel-btn').style.display='none';
+        renderPdComments();renderFeed();showToast('<i class="fas fa-check-circle"></i> Đã cập nhật bình luận')
+      });
+    }
+    if(_pendingPdImage&&_pendingPdImage.indexOf('data:')===0){
+      uploadImage(_pendingPdImage,'comment_'+Date.now()+'.jpg',pdEditDate,function(r){
+        finishEdit(r&&r.url?r.url:'');
+      });
+    }else if(_pendingPdImage===null){
+      finishEdit('');
+    }else if(_pendingPdImage){
+      finishEdit(_pendingPdImage);
+    }else{
+      finishEdit(undefined);
+    }
+    return;
+  }
+  function doSend(imgUrl){
+    var payload={action:'add_comment',entryId:pdEntryId,author:currentUser,text:text};
+    if(imgUrl)payload.image=imgUrl;
     sendCommentPayload(payload,function(result){
       var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
       if(result&&result.comments){if(master)master.comments=result.comments}
-      pdEditingCommentId=null;input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
+      input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
       document.getElementById('pd-cancel-btn').style.display='none';
-      renderPdComments();renderFeed();showToast('<i class="fas fa-check-circle"></i> Đã cập nhật bình luận')
-    });
-    return;
+      _pendingPdImage=null;showImgPreview('pd');
+      renderPdComments();renderFeed();
+    })
   }
-
-  var payload={action:'add_comment',entryId:pdEntryId,author:currentUser,text:text};
-  sendCommentPayload(payload,function(result){
-    var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
-    if(result&&result.comments){if(master)master.comments=result.comments}
-    input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
-    document.getElementById('pd-cancel-btn').style.display='none';
-    renderPdComments();renderFeed();
-  })
+  if(_pendingPdImage){
+    var raw=_pendingPdImage.split(',')[1]||_pendingPdImage;
+    var pdEntry=appState.data.entries.find(function(e){return e.id===pdEntryId});
+    var pdDate=pdEntry?pdEntry.date||todayStr():todayStr();
+    uploadImage(_pendingPdImage,'comment_'+Date.now()+'.jpg',pdDate,function(r){
+      doSend(r&&r.url?r.url:null);
+    });
+  }else{
+    doSend(null);
+  }
 }
 
 function editPdComment(id){
@@ -2579,11 +3400,15 @@ function editPdComment(id){
   input.focus();
   input.scrollTop=0;
   document.getElementById('pd-cancel-btn').style.display='';
+  // Show existing image in preview
+  _pendingPdImage = comment.image || null;
+  showImgPreview('pd');
   renderPdComments()
 }
 
 function cancelEditComment(){
   pdEditingCommentId=null;
+  _pendingPdImage=null;showImgPreview('pd');
   var inp=document.getElementById('pd-input');
   inp.value='';inp.classList.remove('edit-mode');
   autoResize(inp);
@@ -2698,11 +3523,14 @@ function renderCommentSheet(entry){
       var cpin=getPinForUser(c.author);
       var cava=getDisplayAvatar(cpin);
       var cavatar=cava?'<img src="'+esc(cava)+'">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
+      var cimgHtml = '';
+      if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(c.image)+'" onclick="openImageViewer(\''+esc(c.image)+'\')"></div>';
       return '<div class="cs-comment-item">'+
         '<div class="cs-comment-avatar">'+cavatar+'</div>'+
         '<div class="cs-comment-body">'+
           '<div class="cs-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+
-          '<div class="cs-comment-text">'+esc(c.text)+'</div>'+
+          (c.text?'<div class="cs-comment-text">'+esc(c.text)+'</div>':'')+
+          cimgHtml+
           '<div class="cs-comment-time">'+timeAgo(c.time)+'</div>'+
         '</div>'+
       '</div>'
@@ -2716,20 +3544,35 @@ function renderCommentSheet(entry){
 function sendCsComment(){
   var input=document.getElementById('cs-input');
   var text=input.value.trim();
-  if(!text){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
+  if(!text && !_pendingCsImage){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
   if(!csEntryId)return;
   var btn=document.getElementById('cs-send-btn');
   btn.disabled=true;
-  sendPayload({
-    action:'add_comment',
-    entryId:csEntryId,
-    text:text,
-    author:currentUser
-  },'Đã bình luận!',function(){
-    input.value='';autoResize(input);btn.disabled=false;
-    renderCommentSheet(appState.data.entries.find(function(e){return e.id===csEntryId}));
-    renderFeed();
-  })
+  function doSend(imgUrl){
+    var payload={
+      action:'add_comment',
+      entryId:csEntryId,
+      text:text||'',
+      author:currentUser
+    };
+    if(imgUrl)payload.image=imgUrl;
+    sendPayload(payload,'Đã bình luận!',function(){
+      input.value='';autoResize(input);btn.disabled=false;
+      _pendingCsImage=null;showImgPreview('cs');
+      renderCommentSheet(appState.data.entries.find(function(e){return e.id===csEntryId}));
+      renderFeed();
+    })
+  }
+  if(_pendingCsImage){
+    var raw=_pendingCsImage.split(',')[1]||_pendingCsImage;
+    var csEntry=appState.data.entries.find(function(e){return e.id===csEntryId});
+    var csDate=csEntry?csEntry.date||todayStr():todayStr();
+    uploadImage(_pendingCsImage,'comment_'+Date.now()+'.jpg',csDate,function(r){
+      doSend(r&&r.url?r.url:null);
+    });
+  }else{
+    doSend(null);
+  }
 }
 
 // Overlay click to close
@@ -2903,9 +3746,7 @@ function renderCreatePreview(){
 }
 
 function removeCreateImage(idx){
-  var img=appState.writeImages[idx];
-  if(img&&img.driveId){fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete_image',driveId:img.driveId})}).catch(function(){})}
-  appState.writeImages.splice(idx,1);renderCreatePreview()
+  appState.writeImages.splice(idx, 1); renderCreatePreview();
 }
 
 function submitCreatePost(){
