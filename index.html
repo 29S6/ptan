@@ -950,7 +950,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-back-btn { font-size:1.2rem; color:var(--text-primary); padding:4px 6px; border:none; background:none; cursor:pointer; }
 .dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; }
 
-.dm-messages { flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:6px; -webkit-overflow-scrolling:touch; }
+.dm-messages { flex:1; overflow-y:auto; padding:12px 16px 4px; display:flex; flex-direction:column; gap:6px; -webkit-overflow-scrolling:touch; }
 .dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
 .dm-msg { max-width:85%; animation:msgIn 0.15s ease; margin-bottom:2px; }
 .dm-msg.received { display:flex; align-items:flex-end; gap:6px; }
@@ -2014,34 +2014,17 @@ function initApp(){
   // Ask notification permission on first interaction
   requestNotifPermission();
 
-  // iOS visualViewport fix: keep input at bottom when keyboard opens/closes
+  // iOS visualViewport fix: force flex layout recalculation when keyboard opens/closes
   if (window.visualViewport) {
-    var _lastVh = window.visualViewport.height;
     window.visualViewport.addEventListener('resize', function() {
       var vh = window.visualViewport.height;
-      var diff = _lastVh - vh;
-      if (Math.abs(diff) > 80) {
-        var app = document.getElementById('app');
-        var mc = document.getElementById('main-content');
-        if (app) app.style.height = vh + 'px';
-        if (mc) mc.style.height = vh + 'px';
-        // On DM page, ensure input stays at bottom
-        if (appState.currentPage === 'direct') {
-          var wrap = document.querySelector('.dm-input-wrap');
-          var msgs = document.getElementById('dm-messages');
-          if (vh < window.innerHeight) {
-            // Keyboard open — fix input at bottom
-            if (wrap) { wrap.style.position = 'fixed'; wrap.style.bottom = '0'; wrap.style.left = '0'; wrap.style.right = '0'; wrap.style.zIndex = '20'; }
-            if (msgs) msgs.style.paddingBottom = '56px';
-          } else {
-            // Keyboard closed — revert to flex layout
-            if (wrap) { wrap.style.position = ''; wrap.style.bottom = ''; wrap.style.left = ''; wrap.style.right = ''; wrap.style.zIndex = ''; }
-            if (msgs) msgs.style.paddingBottom = '';
-          }
-          if (msgs) setTimeout(function() { msgs.scrollTop = msgs.scrollHeight; }, 50);
-        }
+      var el = document.getElementById('app'); if (el) el.style.height = vh + 'px';
+      el = document.getElementById('main-content'); if (el) el.style.height = vh + 'px';
+      // Scroll DM to bottom
+      if (appState.currentPage === 'direct') {
+        var c = document.getElementById('dm-messages');
+        if (c) setTimeout(function() { c.scrollTop = c.scrollHeight; }, 30);
       }
-      _lastVh = vh;
     });
   }
 
