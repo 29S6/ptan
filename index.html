@@ -777,7 +777,7 @@ a { color: var(--text-link); text-decoration:none; }
 .cs-close:hover { background:var(--border-light); color:var(--text-primary); }
 .cs-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:8px 16px 4px; }
 .cs-input-wrap {
-  border-top:1px solid var(--border-light); padding:8px 12px 12px; flex-shrink:0;
+  border-top:1px solid var(--border-light); padding:6px 12px 6px; flex-shrink:0;
   background:var(--card-bg);
 }
 .cs-input-row { display:flex; align-items:flex-end; gap:8px; }
@@ -1487,8 +1487,10 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
-var storage = firebase.storage();
 var auth = firebase.auth();
+db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
+  if (err.code !== 'failed-precondition') console.warn('Persistence err:', err);
+});
 
 // Anonymous auth for cross-device support
 auth.signInAnonymously().catch(function(err) {
@@ -2313,76 +2315,28 @@ function profilesFromData(profilesObj) {
 
 function loadData(callback){
   showLoadingBar();
-  var entriesArr = [], annsArr = [], profilesObj = {};
   var loaded = false;
-
-  // Load profiles from cache for header/sidebar display (don't render feed yet — skeleton stays)
-  var local = loadLocal();
-  if (local && local.profiles) profilesFromData(local.profiles);
-
-  function finalize() {
-    if (loaded) return;
-    loaded = true;
-    hideLoadingScreen(); hideLoadingBar();
-    // Merge Firestore data with local cache — preserve local-only entries that haven't synced
-    if (!entriesArr.length && local && local.entries && local.entries.length) {
-      entriesArr = local.entries;
-      annsArr = local.anniversaries || [];
-      profilesObj = local.profiles || {};
-    } else if (local && local.entries && local.entries.length) {
-      var localIds = {}; local.entries.forEach(function(e) { if (e.id) localIds[e.id] = true; });
-      var fsIds = {}; entriesArr.forEach(function(e) { if (e.id) fsIds[e.id] = true; });
-      local.entries.forEach(function(e) { if (e.id && !fsIds[e.id]) entriesArr.push(e); });
-    }
-    appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
-    saveLocal(appState.data);
-    profilesFromData(appState.data.profiles);
-    normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
-    if (!appState.hasWelcomed) { appState.hasWelcomed = true; showToast('<i class="fas fa-gem"></i> Xin chào ' + esc(currentUser) + '!'); }
-    if (callback) callback(appState.data);
-  }
-
-  // Parallel Firestore reads
   Promise.all([
     db.collection('entries').get(),
     db.collection('anniversaries').get(),
     db.collection('config').doc('profiles').get()
   ]).then(function(results) {
-    var snap = results[0], snap2 = results[1], profDoc = results[2];
-    if (!snap.empty) {
-      snap.forEach(function(doc) { entriesArr.push(doc.data()); });
-    }
-    if (!snap2.empty) {
-      snap2.forEach(function(doc) { annsArr.push(doc.data()); });
-    }
-    if (profDoc.exists) profilesObj = profDoc.data().profiles || {};
-    if (entriesArr.length) {
-      finalize();
-    } else {
-      loadFromAppsScript(function() { finalize(); });
-    }
+    if (loaded) return; loaded = true;
+    hideLoadingScreen(); hideLoadingBar();
+    var entriesArr = [], annsArr = [], profilesObj = {};
+    if (!results[0].empty) results[0].forEach(function(doc) { entriesArr.push(doc.data()); });
+    if (!results[1].empty) results[1].forEach(function(doc) { annsArr.push(doc.data()); });
+    if (results[2].exists) profilesObj = results[2].data().profiles || {};
+    appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
+    profilesFromData(profilesObj);
+    normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
+    if (!appState.hasWelcomed) { appState.hasWelcomed = true; showToast('<i class="fas fa-gem"></i> Xin chào ' + esc(currentUser) + '!'); }
+    if (callback) callback(appState.data);
   }).catch(function(err) {
     console.warn('Firestore error:', err);
-    loadFromAppsScript(function() { finalize(); });
+    hideLoadingScreen(); hideLoadingBar();
+    if (callback) callback(null);
   });
-
-  // Fallback timeout — render cached data if Firestore fails
-  setTimeout(function() {
-    if (!loaded) {
-      if (entriesArr.length) { finalize(); return; }
-      // Fall back to localStorage cache
-      if (local && local.entries && local.entries.length) {
-        entriesArr = local.entries;
-        annsArr = local.anniversaries || [];
-        profilesObj = local.profiles || {};
-        finalize();
-        showToast('<i class="fas fa-wifi"></i> Đã tải từ bộ nhớ tạm');
-      } else {
-        var local2 = loadLocal();
-        if (local2) { appState.data = local2; normalizeData(); sortEntries(); renderAll(); showToast('<i class="fas fa-wifi"></i> Đã tải từ bộ nhớ tạm'); updateActivityBadge(); if (callback) callback(appState.data); }
-      }
-    }
-  }, 5000);
 }
 
 function refreshData(callback){
@@ -2396,20 +2350,11 @@ function refreshData(callback){
     if (!results[0].empty) results[0].forEach(function(doc) { entriesArr.push(doc.data()); });
     if (!results[1].empty) results[1].forEach(function(doc) { annsArr.push(doc.data()); });
     if (results[2].exists) profilesObj = results[2].data().profiles || {};
-      if (entriesArr.length) {
-        appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
-        saveLocal(appState.data);
-      } else if (profilesObj && Object.keys(profilesObj).length) {
-        if (!appState.data.profiles) appState.data.profiles = {};
-        for (var p in profilesObj) { appState.data.profiles[p] = profilesObj[p]; }
-        saveLocal(appState.data);
-      }
-      profilesFromData(profilesObj);
-      if (entriesArr.length) {
-        normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
-        showToast('<i class="fas fa-sync-alt"></i> Đã làm mới dữ liệu');
-      }
-      hideLoadingBar();
+    appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
+    profilesFromData(profilesObj);
+    normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
+    showToast('<i class="fas fa-sync-alt"></i> Đã làm mới dữ liệu');
+    hideLoadingBar();
     if (callback) callback(appState.data);
   }).catch(function(err) {
     console.warn('Refresh error:', err);
@@ -2418,107 +2363,7 @@ function refreshData(callback){
   });
 }
 
-function loadFromAppsScript(callback) {
-  var cbName = 'jcb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
-  var scriptTag, isDone = false, timeout;
 
-  function handleResponse(data) {
-    if (isDone) return; isDone = true; clearTimeout(timeout);
-    if (data && data.entries) {
-      appState.data = data; saveLocal(data);
-      if (data.profiles) {
-        loadUserProfiles();
-        for (var pin in data.profiles) {
-          if (data.profiles[pin] && data.profiles[pin].name) {
-            userProfiles[pin] = userProfiles[pin] || { name: '', avatar: '', theme: 'auto' };
-            if (data.profiles[pin].name) userProfiles[pin].name = data.profiles[pin].name;
-            if (data.profiles[pin].avatar) userProfiles[pin].avatar = data.profiles[pin].avatar;
-            if (data.profiles[pin].theme) userProfiles[pin].theme = data.profiles[pin].theme;
-          }
-        }
-        saveUserProfiles();
-        if (userProfiles[appState.currentPin] && userProfiles[appState.currentPin].name) { currentUser = userProfiles[appState.currentPin].name; }
-        updateUserUI();
-      }
-      // Migrate to Firestore
-      migrateDataToFirestore(data);
-    } else {
-      var local = loadLocal();
-      if (local) { appState.data = local; } else { appState.data = { entries: [], anniversaries: [] }; }
-    }
-    if (callback) callback();
-    cleanup();
-  }
-  function handleTimeout() {
-    if (isDone) return; isDone = true; clearTimeout(timeout);
-    var local = loadLocal();
-    if (local) { appState.data = local; } else { appState.data = { entries: [], anniversaries: [] }; }
-    if (callback) callback();
-    cleanup();
-  }
-  timeout = setTimeout(handleTimeout, 12000);
-  window[cbName] = function(d) { handleResponse(d); };
-  scriptTag = document.createElement('script');
-  scriptTag.src = CONFIG.BACKEND_URL + '?callback=' + cbName + '&_=' + Date.now();
-  scriptTag.onerror = function() { handleTimeout(); };
-  document.head.appendChild(scriptTag);
-  function cleanup() { if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag); delete window[cbName]; }
-}
-
-function migrateDataToFirestore(data) {
-  var batchSize = 500;
-  // Migrate entries
-  var entries = data.entries || [];
-  if (entries.length) {
-    for (var i = 0; i < entries.length; i += batchSize) {
-      var batch = db.batch();
-      var chunk = entries.slice(i, i + batchSize);
-      chunk.forEach(function(e) {
-        // Clean up old fields
-        var clean = {
-          id: e.id, date: e.date || '', title: e.title || '', content: e.content || '',
-          author: e.author || CONFIG.USER1_NAME,
-          images: (e.images || []).map(function(img) {
-            return typeof img === 'string' ? { url: img } : { url: img.url || '', driveId: img.driveId || '' };
-          }),
-          comments: (e.comments || []).map(function(c) {
-            return { id: c.id, author: c.author, text: c.text, time: c.time || new Date().toISOString(), image: c.image || '' };
-          }),
-          createdAt: e.createdAt || e.date + 'T00:00:00.000Z' || new Date().toISOString(),
-          updatedAt: e.updatedAt || e.createdAt || e.date + 'T00:00:00.000Z' || new Date().toISOString()
-        };
-        batch.set(db.collection('entries').doc(e.id), clean);
-      });
-      batch.commit().catch(function(err) { console.warn('Migrate entries batch err:', err); });
-    }
-  }
-  // Migrate anniversaries
-  var anns = data.anniversaries || [];
-  if (anns.length) {
-    var batchA = db.batch();
-    anns.forEach(function(a) {
-      batchA.set(db.collection('anniversaries').doc(a.id), { id: a.id, date: a.date, name: a.name });
-    });
-    batchA.commit().catch(function(err) { console.warn('Migrate anns err:', err); });
-  }
-  // Migrate profiles
-  if (data.profiles) {
-    db.collection('config').doc('profiles').set({ profiles: data.profiles }).catch(function(err) { console.warn('Migrate profiles err:', err); });
-  }
-  // Migrate DM messages
-  if (data.dmMessages) {
-    for (var chatId in data.dmMessages) {
-      var msgs = data.dmMessages[chatId];
-      if (msgs && msgs.length) {
-        var batchM = db.batch();
-        msgs.forEach(function(m) {
-          batchM.set(db.collection('messages').doc(chatId).collection('messages').doc(m.id), m);
-        });
-        batchM.commit().catch(function(err) { console.warn('Migrate DMs err:', err); });
-      }
-    }
-  }
-}
 
 function normalizeData(){
   (appState.data.entries||[]).forEach(function(e){
@@ -2537,8 +2382,6 @@ function sortEntries(arr){
     return ub.localeCompare(ua)
   })
 }
-function saveLocal(d){try{localStorage.setItem('diary_backup',JSON.stringify(d))}catch(e){}}
-function loadLocal(){try{var r=localStorage.getItem('diary_backup');if(r)return JSON.parse(r)}catch(e){}return null}
 function loadOfflineQueue(){try{var r=localStorage.getItem('pending_actions');if(r)appState.offlineQueue=JSON.parse(r)||[]}catch(e){appState.offlineQueue=[]}}
 function saveOfflineQueue(){try{localStorage.setItem('pending_actions',JSON.stringify(appState.offlineQueue))}catch(e){}}
 function addQueue(a){appState.offlineQueue.push(a);saveOfflineQueue()}
@@ -2556,7 +2399,7 @@ function processOfflineQueue(){
   }
   processNext(0);
 }
-window.addEventListener('online',function(){appState.isOnline=true;showToast('<i class="fas fa-wifi"></i> Đã kết nối lại');processOfflineQueue();loadData()})
+window.addEventListener('online',function(){appState.isOnline=true;showToast('<i class="fas fa-wifi"></i> Đã kết nối lại');processOfflineQueue()})
 window.addEventListener('offline',function(){appState.isOnline=false;showToast('<i class="fas fa-wifi"></i> Mất kết nối, dữ liệu sẽ lưu tạm')})
 
 // ==================== SERVER ====================
@@ -2581,12 +2424,6 @@ function sendPayload(payload, successMsg, callback) {
     var entry = payload.entry;
     if (!entry || !entry.id) { fail('Thiếu dữ liệu'); return; }
     db.collection('entries').doc(entry.id).set(entry).then(function() {
-      // Update local data
-      var idx = -1;
-      (appState.data.entries || []).forEach(function(e, i) { if (e.id === entry.id) idx = i; });
-      if (idx >= 0) appState.data.entries[idx] = entry;
-      else appState.data.entries.push(entry);
-      saveLocal(appState.data);
       done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
     }).catch(function(err) { fail('Lỗi đồng bộ'); });
     return;
@@ -2594,8 +2431,6 @@ function sendPayload(payload, successMsg, callback) {
 
   if (action === 'delete_entry') {
     db.collection('entries').doc(payload.id).delete().then(function() {
-      appState.data.entries = (appState.data.entries || []).filter(function(e) { return e.id !== payload.id; });
-      saveLocal(appState.data);
       done(successMsg || 'Đã xóa!');
     }).catch(function(err) { fail('Lỗi xóa'); });
     return;
@@ -2605,11 +2440,6 @@ function sendPayload(payload, successMsg, callback) {
     var ann = payload.anniversary;
     if (!ann || !ann.id) { fail('Thiếu dữ liệu'); return; }
     db.collection('anniversaries').doc(ann.id).set(ann).then(function() {
-      var idx = -1;
-      (appState.data.anniversaries || []).forEach(function(a, i) { if (a.id === ann.id) idx = i; });
-      if (idx >= 0) appState.data.anniversaries[idx] = ann;
-      else appState.data.anniversaries.push(ann);
-      saveLocal(appState.data);
       done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
     }).catch(function(err) { fail('Lỗi đồng bộ'); });
     return;
@@ -2617,8 +2447,6 @@ function sendPayload(payload, successMsg, callback) {
 
   if (action === 'delete_anniversary') {
     db.collection('anniversaries').doc(payload.id).delete().then(function() {
-      appState.data.anniversaries = (appState.data.anniversaries || []).filter(function(a) { return a.id !== payload.id; });
-      saveLocal(appState.data);
       done(successMsg || 'Đã xóa!');
     }).catch(function(err) { fail('Lỗi xóa'); });
     return;
@@ -2666,37 +2494,41 @@ function handleCommentAction(payload, successMsg, callback) {
   var entryId = payload.entryId;
   var entryRef = db.collection('entries').doc(entryId);
 
-  entryRef.get().then(function(doc) {
-    if (!doc.exists) { if (callback) callback(null); return; }
-    var entry = doc.data();
-    var comments = entry.comments || [];
+  db.runTransaction(function(transaction) {
+    return transaction.get(entryRef).then(function(doc) {
+      if (!doc.exists) { if (callback) callback(null); return Promise.reject('DOC_MISSING'); }
+      var comments = (doc.data().comments || []).slice();
 
-    if (payload.action === 'add_comment') {
-      var newComment = {
-        id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-        author: payload.author || currentUser,
-        text: payload.text || '',
-        time: new Date().toISOString()
-      };
-      if (payload.image) newComment.image = payload.image;
-      comments.push(newComment);
-    } else if (payload.action === 'edit_comment') {
-      comments.forEach(function(c) { if (c.id === payload.commentId) { c.text = payload.text; c.author = payload.author || c.author; if (payload.image !== undefined) c.image = payload.image || ''; } });
-    } else if (payload.action === 'delete_comment') {
-      comments = comments.filter(function(c) { return c.id !== payload.commentId; });
-    }
+      if (payload.action === 'add_comment') {
+        var newComment = {
+          id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+          author: payload.author || currentUser,
+          text: payload.text || '',
+          time: new Date().toISOString()
+        };
+        if (payload.image) newComment.image = payload.image;
+        comments.push(newComment);
+      } else if (payload.action === 'edit_comment') {
+        comments.forEach(function(c) { if (c.id === payload.commentId) { c.text = payload.text; c.author = payload.author || c.author; if (payload.image !== undefined) c.image = payload.image || ''; } });
+      } else if (payload.action === 'delete_comment') {
+        comments = comments.filter(function(c) { return c.id !== payload.commentId; });
+      }
 
-    return entryRef.update({ comments: comments }).then(function() {
-      // Update local data
-      var localEntry = null;
-      (appState.data.entries || []).forEach(function(e) { if (e.id === entryId) localEntry = e; });
-      if (localEntry) localEntry.comments = comments;
-      saveLocal(appState.data);
-      var msg = successMsg || (payload.action === 'delete_comment' ? 'Đã xóa bình luận' : '<i class="fa-regular fa-comment"></i> Đã bình luận!');
-      showToast(msg);
-      if (callback) callback({ success: true });
+      transaction.update(entryRef, { comments: comments });
+      return comments;
     });
-  }).catch(function(err) { showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi đồng bộ'); if (callback) callback(null); });
+  }).then(function(comments) {
+    var msg = successMsg || (payload.action === 'delete_comment' ? 'Đã xóa bình luận' : '<i class="fa-regular fa-comment"></i> Đã bình luận!');
+    showToast(msg);
+    // Update in-memory immediately (snapshot will confirm)
+    var master = appState.data.entries.find(function(e) { return e.id === entryId; });
+    if (master) master.comments = comments;
+    if (callback) callback({ success: true, comments: comments });
+  }).catch(function(err) {
+    if (err === 'DOC_MISSING') return;
+    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi đồng bộ');
+    if (callback) callback(null);
+  });
 }
 
 function sendCommentPayload(payload, callback) {
@@ -2900,10 +2732,8 @@ function setupRealtimeEntries() {
     var entriesArr = [];
     snap.forEach(function(doc) { entriesArr.push(doc.data()); });
     if (!entriesArr.length) return;
-    // Merge — keep existing anniversaries, profiles
     appState.data.entries = entriesArr;
-    sortEntries(); saveLocal(appState.data);
-    renderAll(); updateActivityBadge();
+    sortEntries(); renderAll(); updateActivityBadge();
   }, function() {});
 }
 
