@@ -120,13 +120,13 @@ html.dark {
   --overlay-bg: rgba(0,0,0,0.5);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-html { overflow:hidden; height:100%; scroll-behavior:smooth; -webkit-text-size-adjust:100%; overscroll-behavior:none; }
+html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; overscroll-behavior:none; }
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text-primary);
-  height:100%; min-height:100dvh;
-  overflow:hidden;
+  min-height:100vh; min-height:100dvh;
+  overflow-x:hidden;
   -webkit-font-smoothing: antialiased;
   transition: background 0.2s ease, color 0.2s ease;
   overscroll-behavior:none;
@@ -245,7 +245,7 @@ a { color: var(--text-link); text-decoration:none; }
   overscroll-behavior:none; -webkit-overflow-scrolling:touch;
 }
 #main-content > .page:not(#page-direct).active { flex-shrink:0; }
-#page-direct.active { display:flex; flex-direction:column; flex:1; min-height:0; }
+#page-direct.active { display:flex; flex-direction:column; flex:1; min-height:0; position:relative; }
 @media (min-width:1024px) {
   #main-content { padding-bottom:0; }
 }
@@ -943,6 +943,16 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
 #page-direct { display:none; }
+#page-direct.active .dm-input-wrap {
+  position:fixed; bottom:0; left:0; right:0; z-index:20;
+  padding:6px 12px calc(6px + var(--safe-bottom));
+}
+@media (min-width:1024px) {
+  #page-direct.active .dm-input-wrap { left:var(--sidebar-w); }
+}
+#page-direct.active .dm-messages {
+  padding-bottom:56px;
+}
 .dm-header {
   display:flex; align-items:center; gap:8px; padding:10px 16px;
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); flex-shrink:0;
@@ -2014,13 +2024,11 @@ function initApp(){
   // Ask notification permission on first interaction
   requestNotifPermission();
 
-  // iOS visualViewport fix: force flex layout recalculation when keyboard opens/closes
+  // iOS visualViewport fix: keep app height in sync when keyboard opens/closes
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', function() {
-      var vh = window.visualViewport.height;
-      var el = document.getElementById('app'); if (el) el.style.height = vh + 'px';
-      el = document.getElementById('main-content'); if (el) el.style.height = vh + 'px';
-      // Scroll DM to bottom
+      var el = document.getElementById('app'); if (el) el.style.height = window.visualViewport.height + 'px';
+      // Scroll DM to bottom when keyboard changes
       if (appState.currentPage === 'direct') {
         var c = document.getElementById('dm-messages');
         if (c) setTimeout(function() { c.scrollTop = c.scrollHeight; }, 30);
