@@ -2324,10 +2324,15 @@ function loadData(callback){
     if (loaded) return;
     loaded = true;
     hideLoadingScreen(); hideLoadingBar();
+    // Merge Firestore data with local cache — preserve local-only entries that haven't synced
     if (!entriesArr.length && local && local.entries && local.entries.length) {
       entriesArr = local.entries;
       annsArr = local.anniversaries || [];
       profilesObj = local.profiles || {};
+    } else if (local && local.entries && local.entries.length) {
+      var localIds = {}; local.entries.forEach(function(e) { if (e.id) localIds[e.id] = true; });
+      var fsIds = {}; entriesArr.forEach(function(e) { if (e.id) fsIds[e.id] = true; });
+      local.entries.forEach(function(e) { if (e.id && !fsIds[e.id]) entriesArr.push(e); });
     }
     appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
     saveLocal(appState.data);
