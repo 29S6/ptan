@@ -239,7 +239,8 @@ a { color: var(--text-link); text-decoration:none; }
   padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 8px);
   display:flex; flex-direction:column;
 }
-#main-content > .page.active { flex-shrink:0; }
+#main-content > .page:not(#page-direct).active { flex-shrink:0; }
+#page-direct.active { display:flex; flex-direction:column; flex:1; min-height:0; }
 @media (min-width:1024px) {
   #main-content { padding-bottom:0; }
 }
@@ -936,7 +937,6 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
 #page-direct { display:none; }
-#page-direct.active { display:flex; flex-direction:column; flex:1; min-height:0; }
 .dm-header {
   display:flex; align-items:center; justify-content:space-between; padding:10px 16px;
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
@@ -965,7 +965,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-empty i { font-size:2.5rem; margin-bottom:12px; display:block; color:var(--border-light); }
 .dm-input-wrap {
   border-top:1px solid var(--border-light); padding:8px 12px calc(8px + var(--safe-bottom));
-  background:var(--card-bg); flex-shrink:0;
+  background:var(--card-bg); flex-shrink:0; position:sticky; bottom:0; z-index:5;
 }
 .dm-input-row { display:flex; align-items:flex-end; gap:8px; }
 .dm-input-row textarea {
