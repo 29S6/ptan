@@ -120,13 +120,12 @@ html.dark {
   --overlay-bg: rgba(0,0,0,0.5);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; overscroll-behavior:none; }
+html { overflow:hidden; height:100%; scroll-behavior:smooth; -webkit-text-size-adjust:100%; overscroll-behavior:none; }
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text-primary);
-  min-height:100vh; min-height:100dvh;
-  overflow-x:hidden;
+  height:100%; overflow:hidden;
   -webkit-font-smoothing: antialiased;
   transition: background 0.2s ease, color 0.2s ease;
   overscroll-behavior:none;
@@ -185,7 +184,7 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== LOADING SCREEN ===== */
 
 /* ===== APP LAYOUT ===== */
-#app { display:none; height:100vh; height:100dvh; overflow:hidden; }
+#app { display:none; height:100vh; height:100dvh; overflow:hidden; background:var(--bg); }
 
 /* ===== SIDEBAR (desktop only) ===== */
 @media (min-width:1024px) {
@@ -2024,11 +2023,9 @@ function initApp(){
   // Ask notification permission on first interaction
   requestNotifPermission();
 
-  // iOS visualViewport fix: keep app height in sync when keyboard opens/closes
+  // iOS visualViewport fix: scroll DM messages to bottom when keyboard opens
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', function() {
-      var el = document.getElementById('app'); if (el) el.style.height = window.visualViewport.height + 'px';
-      // Scroll DM to bottom when keyboard changes
       if (appState.currentPage === 'direct') {
         var c = document.getElementById('dm-messages');
         if (c) setTimeout(function() { c.scrollTop = c.scrollHeight; }, 30);
