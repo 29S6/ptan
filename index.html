@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
+  <link rel="manifest" href="/manifest.json" />
   <title>Love Story</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,6 +17,41 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+<script>
+// Apply saved/preferred theme immediately to prevent flash
+(function(){
+  try {
+    var stored = localStorage.getItem('love_theme_mode');
+    var dark = stored === 'dark' || (stored !== 'light' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (dark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
+      // Set dark variables inline (highest specificity, no flash)
+      var root = document.documentElement.style;
+      root.setProperty('--bg','#121212');
+      root.setProperty('--card-bg','#1e1e1e');
+      root.setProperty('--text-primary','#e4e4e4');
+      root.setProperty('--text-secondary','#a8a8a8');
+      root.setProperty('--border','#2e2e2e');
+      root.setProperty('--border-light','#2e2e2e');
+      root.setProperty('--hover-bg','#282828');
+      root.setProperty('--input-bg','#282828');
+      root.setProperty('--sticky-bg','#1e1e1e');
+      root.setProperty('--placeholder-bg','#2a2a2a');
+      root.setProperty('--toast-bg','#3a3a3a');
+      root.setProperty('--toast-text','#e4e4e4');
+      root.setProperty('--ann-today-bg','#3a2020');
+      root.setProperty('--ann-soon-bg','#3a2e1a');
+      root.setProperty('--ann-today-text','#ff6b7a');
+      root.setProperty('--ann-soon-text','#f0a050');
+      root.setProperty('--overlay-bg','rgba(0,0,0,0.5)');
+    } else {
+      document.documentElement.style.colorScheme = 'light';
+    }
+  } catch(e) {}
+})();
+</script>
 <style>
 :root {
   --bg: #fafafa;
@@ -53,7 +89,7 @@
   --shadow-modal: 0 20px 60px rgba(0,0,0,0.15);
   --overlay-bg: rgba(0,0,0,0.35);
 }
-body.dark {
+html.dark {
   --bg: #121212;
   --card-bg: #1e1e1e;
   --text-primary: #e4e4e4;
@@ -122,8 +158,10 @@ a { color: var(--text-link); text-decoration:none; }
 .pin-keyboard { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto; }
 .pin-key { background:var(--hover-bg); border:1px solid var(--border); border-radius:14px; padding:16px 0; font-size:1.3rem; font-weight:600; color:var(--text-primary); transition:0.07s; }
 .pin-key:active { transform:scale(0.92); background:var(--border-light); }
+.pin-key.pressed { transform:scale(0.92); background:var(--border-light); }
 .pin-key.delete { color:var(--text-link); font-size:1rem; }
 .pin-key.empty { visibility:hidden; }
+@media (hover:none) and (pointer:coarse) { .pin-key { touch-action:manipulation; } }
 .lock-error { color:var(--text-danger); font-size:0.78rem; min-height:20px; margin-top:10px; font-weight:500; }
 
 /* ===== SKELETON LOADING ===== */
@@ -894,7 +932,10 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
 #page-direct { display:none; }
-#page-direct.active { display:flex; flex-direction:column; height:calc(100vh - var(--nav-h) - var(--safe-bottom) - 8px); }
+#page-direct.active { display:flex; flex-direction:column; }
+@media (max-width:1023px) {
+  #page-direct.active { height:calc(100vh - var(--nav-h) - var(--safe-bottom) - 8px); }
+}
 @media (min-width:1024px) {
   #page-direct.active { height:calc(100vh - 80px); }
 }
@@ -919,7 +960,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-msg.received .dm-msg-bubble { background:var(--hover-bg); color:var(--text-primary); border-bottom-left-radius:4px; }
 .dm-msg-time { font-size:0.6rem; color:var(--text-secondary); margin-top:2px; padding:0 4px; }
 .dm-msg.sent .dm-msg-time { text-align:right; }
-.dm-msg-status { font-size:0.6rem; margin-left:4px; display:inline-flex; align-items:center; }
+.dm-msg-status { font-size:0.6rem; margin-left:6px; display:inline-flex; align-items:center; font-weight:500; }
 .dm-msg-status.sent { color:var(--text-secondary); }
 .dm-msg-status.seen { color:#0095f6; }
 .dm-empty { text-align:center; padding:60px 20px; color:var(--text-secondary); font-size:0.85rem; }
@@ -1025,19 +1066,19 @@ a { color: var(--text-link); text-decoration:none; }
       <div class="pin-dot" id="dot-2"></div>
       <div class="pin-dot" id="dot-3"></div>
     </div>
-    <div class="pin-keyboard">
-      <button class="pin-key" onclick="handlePinPress('1')">1</button>
-      <button class="pin-key" onclick="handlePinPress('2')">2</button>
-      <button class="pin-key" onclick="handlePinPress('3')">3</button>
-      <button class="pin-key" onclick="handlePinPress('4')">4</button>
-      <button class="pin-key" onclick="handlePinPress('5')">5</button>
-      <button class="pin-key" onclick="handlePinPress('6')">6</button>
-      <button class="pin-key" onclick="handlePinPress('7')">7</button>
-      <button class="pin-key" onclick="handlePinPress('8')">8</button>
-      <button class="pin-key" onclick="handlePinPress('9')">9</button>
+    <div class="pin-keyboard" id="pin-keyboard">
+      <button class="pin-key" data-digit="1" onclick="handlePinPress('1')">1</button>
+      <button class="pin-key" data-digit="2" onclick="handlePinPress('2')">2</button>
+      <button class="pin-key" data-digit="3" onclick="handlePinPress('3')">3</button>
+      <button class="pin-key" data-digit="4" onclick="handlePinPress('4')">4</button>
+      <button class="pin-key" data-digit="5" onclick="handlePinPress('5')">5</button>
+      <button class="pin-key" data-digit="6" onclick="handlePinPress('6')">6</button>
+      <button class="pin-key" data-digit="7" onclick="handlePinPress('7')">7</button>
+      <button class="pin-key" data-digit="8" onclick="handlePinPress('8')">8</button>
+      <button class="pin-key" data-digit="9" onclick="handlePinPress('9')">9</button>
       <button class="pin-key empty"></button>
-      <button class="pin-key" onclick="handlePinPress('0')">0</button>
-      <button class="pin-key delete" onclick="handlePinDelete()">⌫</button>
+      <button class="pin-key" data-digit="0" onclick="handlePinPress('0')">0</button>
+      <button class="pin-key delete" data-digit="del" onclick="handlePinDelete()">⌫</button>
     </div>
     <div class="lock-error" id="lock-error"></div>
   </div>
@@ -1428,8 +1469,6 @@ a { color: var(--text-link); text-decoration:none; }
 </div>
 
 <script>
-// ==================== SYSTEM THEME (before app init) ====================
-if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.body.classList.add('dark');
 // ==================== CONFIG ====================
 var CONFIG = {
   BACKEND_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
@@ -1462,6 +1501,74 @@ var auth = firebase.auth();
 auth.signInAnonymously().catch(function(err) {
   console.warn('Anonymous auth err:', err);
 });
+
+// ==================== SERVICE WORKER + PUSH NOTIFICATIONS ====================
+var _fcmToken = null;
+var _notifGranted = false;
+
+function registerSw() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.register('/sw.js').then(function(reg) {
+    console.log('SW registered');
+    // Set up FCM push
+    if ('Notification' in window && firebase.messaging) {
+      try {
+        var msg = firebase.messaging();
+        // Get FCM token and store in Firestore
+        msg.getToken().then(function(token) {
+          _fcmToken = token;
+          storeFcmToken(token);
+        }).catch(function() {});
+        // Listen for foreground messages
+        msg.onMessage(function(payload) {
+          // Foreground push — handled by our onSnapshot already
+        });
+      } catch(e) {}
+    }
+  }).catch(function() {});
+}
+
+function storeFcmToken(token) {
+  if (!token || !appState.currentPin) return;
+  db.collection('config').doc('fcm_tokens').set({
+    tokens: { [appState.currentPin]: token }
+  }, { merge: true }).catch(function() {});
+}
+
+function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'granted') { _notifGranted = true; return; }
+  if (Notification.permission === 'denied') return;
+  Notification.requestPermission().then(function(p) {
+    if (p === 'granted') _notifGranted = true;
+  });
+}
+
+function showBrowserNotification(title, body, tag) {
+  if (!_notifGranted && Notification.permission !== 'granted') return;
+  _notifGranted = true;
+  try {
+    var n = new Notification(title, {
+      body: body,
+      tag: tag || 'dm-' + Date.now(),
+      icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23ed4956\'/%3E%3Ctext x=\'50\' y=\'68\' text-anchor=\'middle\' font-size=\'50\' fill=\'white\'%3E%E2%9D%A4%3C/text%3E%3C/svg%3E',
+      vibrate: [200, 100, 200],
+      requireInteraction: true
+    });
+    n.onclick = function() {
+      this.close();
+      window.focus();
+      switchPage('direct');
+    };
+  } catch(e) {}
+}
+
+// Register SW after page load
+if (document.readyState === 'complete') {
+  registerSw();
+} else {
+  window.addEventListener('load', registerSw);
+}
 
 var currentUser = CONFIG.USER1_NAME;
 var appState = {
@@ -1502,8 +1609,8 @@ var feedObserver = null;
 // ==================== USER PROFILES (custom name & avatar) ====================
 var userProfiles = null;
 
-function loadUserProfiles() {
-  if (userProfiles) return;
+function loadUserProfiles(force) {
+  if (!force && userProfiles) return;
   try {
     var raw = localStorage.getItem('love_user_profiles');
     if (raw) userProfiles = JSON.parse(raw);
@@ -1512,6 +1619,12 @@ function loadUserProfiles() {
     userProfiles = {};
     userProfiles[CONFIG.PIN_USER1] = { name: CONFIG.USER1_NAME, avatar: '', theme: 'auto' };
     userProfiles[CONFIG.PIN_USER2] = { name: CONFIG.USER2_NAME, avatar: '', theme: 'auto' };
+  }
+  // Clean up any base64 avatars stuck from old fallback
+  for (var p in userProfiles) {
+    if (userProfiles[p] && userProfiles[p].avatar && userProfiles[p].avatar.indexOf('data:') === 0) {
+      userProfiles[p].avatar = '';
+    }
   }
 }
 
@@ -1530,13 +1643,22 @@ function getCurrentTheme(){
 function applyTheme(){
   var mode=getCurrentTheme();
   var meta=document.getElementById('meta-theme-color');
+  document.documentElement.style.colorScheme = mode === 'dark' ? 'dark' : 'light';
+  // Clear inline variables set by early script so CSS class takes over
+  var darkVars = ['--bg','--card-bg','--text-primary','--text-secondary','--border','--border-light','--hover-bg','--input-bg','--sticky-bg','--placeholder-bg','--toast-bg','--toast-text','--ann-today-bg','--ann-soon-bg','--ann-today-text','--ann-soon-text','--overlay-bg'];
+  darkVars.forEach(function(v){ try{document.documentElement.style.removeProperty(v)}catch(e){} });
   if(mode==='dark'){
-    document.body.classList.add('dark');
+    document.documentElement.classList.add('dark');
     if(meta)meta.content='#000000';
   }else{
-    document.body.classList.remove('dark');
+    document.documentElement.classList.remove('dark');
     if(meta)meta.content='#ffffff';
   }
+  // Cache only explicit choices to avoid stale auto-detection
+  var pin=appState.currentPin;
+  var userTheme=userProfiles[pin]?userProfiles[pin].theme:'auto';
+  if(userTheme!=='auto'){try{localStorage.setItem('love_theme_mode',mode)}catch(e){}}
+  else{try{localStorage.removeItem('love_theme_mode')}catch(e){}}
   // Update selector UI
   var sel=document.getElementById('theme-selector');
   if(sel){
@@ -1568,6 +1690,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',func
 // ==================== ACTIVITIES ====================
 var _activitySeenMap = {};
 var _activityUnsub = null;
+var _entriesUnsub = null;
 
 function loadActivitySeen() {
   if (_activityUnsub) return;
@@ -1789,17 +1912,35 @@ function handleCsImageFile(input) {
 }
 
 // ==================== LOCK SCREEN ====================
-function handlePinPress(d){if(appState.pinCode.length>=4)return;appState.pinCode+=d;updateDots();if(appState.pinCode.length===4)setTimeout(verifyPin,80)}
+function handlePinPress(d){
+  try {
+    if(!appState){document.getElementById('lock-error').textContent='Lỗi: app chưa khởi tạo';return}
+    if(appState.pinCode.length>=4)return;
+    appState.pinCode+=d;updateDots();
+    if(appState.pinCode.length===4)setTimeout(verifyPin,80);
+  } catch(e){document.getElementById('lock-error').textContent='Lỗi: '+e.message}
+}
 function handlePinDelete(){appState.pinCode=appState.pinCode.slice(0,-1);updateDots();document.getElementById('lock-error').textContent=''}
 function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('dot-'+i);d.classList.toggle('active',i<appState.pinCode.length)}}
-function verifyPin(){var p=appState.pinCode;appState.currentPin=p;if(p===CONFIG.PIN_USER1){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}else if(p===CONFIG.PIN_USER2){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}else{document.getElementById('lock-error').textContent='Mật mã không đúng';appState.pinCode='';appState.currentPin='';updateDots()}}
+function verifyPin(){
+  try {
+    var p=appState.pinCode;appState.currentPin=p;
+    if(p===CONFIG.PIN_USER1){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
+    else if(p===CONFIG.PIN_USER2){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
+    else{document.getElementById('lock-error').textContent='Mật mã không đúng';appState.pinCode='';appState.currentPin='';updateDots()}
+  } catch(e){document.getElementById('lock-error').textContent='Lỗi: '+e.message}
+}
 function unlockApp(){
+  // Apply theme BEFORE fading lock screen so the switch is invisible
+  applyTheme();
   // Link anonymous UID to this PIN
   if (appState.currentUid && appState.currentPin) {
     var update = {};
     update['mapping.' + appState.currentPin] = appState.currentUid;
     db.collection('config').doc('pin_mapping').set(update, { merge: true }).catch(function() {});
   }
+  // Store FCM token for this PIN
+  if (_fcmToken) storeFcmToken(_fcmToken);
   document.getElementById('lock-screen').classList.add('hiding');
   setTimeout(function(){
     document.getElementById('lock-screen').style.display='none';
@@ -1817,10 +1958,20 @@ function showFeedSkeleton(){
   }
   c.innerHTML='<div class="feed-skeleton">'+html+'</div>';
 }
+document.getElementById('pin-keyboard').addEventListener('pointerdown',function(e){
+  try{var btn=e.target.closest('.pin-key');if(btn&&!btn.classList.contains('empty'))btn.classList.add('pressed')}catch(ex){}
+});
+document.getElementById('pin-keyboard').addEventListener('pointerup',function(e){
+  try{var btn=e.target.closest('.pin-key');if(btn)btn.classList.remove('pressed')}catch(ex){}
+});
+document.getElementById('pin-keyboard').addEventListener('pointerleave',function(e){
+  try{var btn=e.target.closest('.pin-key');if(btn)btn.classList.remove('pressed')}catch(ex){}
+});
 document.addEventListener('keydown',function(e){var ls=document.getElementById('lock-screen');if(ls.style.display==='none'||ls.classList.contains('hiding'))return;if(e.key>='0'&&e.key<='9')handlePinPress(e.key);if(e.key==='Backspace')handlePinDelete()})
 
 // ==================== INIT ====================
 function initApp(){
+  showFeedSkeleton();
   updateUserUI();
   loadOfflineQueue();
   startClock();
@@ -1829,19 +1980,30 @@ function initApp(){
   loadActivitySeen();
   updateActivityBadge();
   setupDmListener();
+  setupRealtimeEntries();
   updateDmBadge();
   setupPresence();
   setupPartnerPresenceListener();
+  // Ask notification permission on first interaction
+  requestNotifPermission();
 }
 // Auto-scroll input into view when keyboard opens (especially iOS)
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', function() {
     var el = document.activeElement;
     if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') && el.closest('#page-direct')) {
-      setTimeout(function() {
-        var mc = document.getElementById('main-content');
-        if (mc) mc.scrollTop = mc.scrollHeight;
-      }, 200);
+      var pd = document.getElementById('page-direct');
+      if (pd && pd.classList.contains('active') && window.innerWidth < 1024) {
+        var navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 50;
+        var sBot = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-bottom')) || 0;
+        pd.style.height = (window.visualViewport.height - navH - sBot - 8) + 'px';
+        var msgs = document.getElementById('dm-messages');
+        if (msgs) { setTimeout(function(){ msgs.scrollTop = msgs.scrollHeight; }, 100); }
+      }
+    } else {
+      // Keyboard closed — reset to CSS value
+      var pd = document.getElementById('page-direct');
+      if (pd) pd.style.height = '';
     }
   });
 }
@@ -1858,8 +2020,8 @@ function updateUserUI(){
   document.getElementById('profile-username').innerHTML = esc(plainName)+' <i class="fas fa-check-circle verified-badge"></i>';
   var sa = document.getElementById('settings-avatar-preview');
   if (sa) sa.innerHTML = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : fallbackHtml;
-  // Re-render any visible content that shows names
-  if (appState.currentPage==='feed') renderFeed();
+  // Re-render feed if entries are loaded
+  if (appState.currentPage==='feed' && appState.data.entries && appState.data.entries.length) renderFeed();
 }
 
 // ==================== EDIT NAME / AVATAR ====================
@@ -1894,6 +2056,8 @@ function syncProfileToBackend(){
   if(!userProfiles[pin])userProfiles[pin]={name:'',avatar:'',theme:'auto'};
   if(!userProfiles[pin].name)userProfiles[pin].name=pin===CONFIG.PIN_USER1?CONFIG.USER1_NAME:CONFIG.USER2_NAME;
   if(!userProfiles[pin].theme)userProfiles[pin].theme='auto';
+  // Never sync base64
+  if(userProfiles[pin].avatar&&userProfiles[pin].avatar.indexOf('data:')===0)userProfiles[pin].avatar='';
   saveUserProfiles();
   // Save to Firestore
   var profilesRef = db.collection('config').doc('profiles');
@@ -2017,11 +2181,11 @@ function uploadAvatarOrFallback(compressed,rawData){
       }else if(result&&result.error&&result.error.indexOf('Hành động không hợp lệ')>=0){
         return uploadImage(compressed,'avatar_'+appState.currentPin+'.jpg','avatars',avatarUploadDone);
       }else{
-        avatarUploadFail(compressed,result&&result.error?result.error:'Lỗi tải ảnh lên, lưu tạm thời');
+        avatarUploadFail(compressed,result&&result.error?result.error:'Lỗi tải ảnh lên');
       }
     });
   }).catch(function(err){
-    avatarUploadFail(compressed,'Lỗi mạng, lưu tạm thời');
+    avatarUploadFail(compressed,'Lỗi mạng');
   });
 }
 function avatarUploadDone(r){
@@ -2037,11 +2201,6 @@ function avatarUploadDone(r){
 }
 function avatarUploadFail(compressed,msg){
   showToast('<i class="fas fa-exclamation-triangle"></i> '+esc(msg));
-  loadUserProfiles();
-  userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
-  userProfiles[appState.currentPin].avatar=compressed;
-  saveUserProfiles();
-  updateUserUI();
   closeModal('modal-edit-avatar');
   avatarCropReset();
 }
@@ -2131,17 +2290,42 @@ function hideSaving(){document.getElementById('saving-overlay').classList.remove
 var toastTimer=null;
 function showToast(m){if(!m)return;var el=document.getElementById('toast');el.innerHTML=m;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2000)}
 
+function profilesFromData(profilesObj) {
+  if (!profilesObj) return;
+  loadUserProfiles();
+  for (var pin in profilesObj) {
+    if (profilesObj[pin] && profilesObj[pin].name) {
+      userProfiles[pin] = userProfiles[pin] || { name: '', avatar: '', theme: 'auto' };
+      if (profilesObj[pin].name) userProfiles[pin].name = profilesObj[pin].name;
+      if (profilesObj[pin].avatar) userProfiles[pin].avatar = profilesObj[pin].avatar;
+      if (profilesObj[pin].theme) userProfiles[pin].theme = profilesObj[pin].theme;
+    }
+  }
+  saveUserProfiles();
+  if (userProfiles[appState.currentPin] && userProfiles[appState.currentPin].name) {
+    currentUser = userProfiles[appState.currentPin].name;
+  }
+  updateUserUI();
+}
+
 function loadData(callback){
   showLoadingBar();
-  // Try Firestore first
   var entriesArr = [], annsArr = [], profilesObj = {};
   var loaded = false;
+
+  // Immediately show cached data from localStorage
+  var local = loadLocal();
+  if (local && local.entries && local.entries.length) {
+    appState.data = local;
+    normalizeData(); sortEntries();
+    profilesFromData(local.profiles);
+    renderAll(); updateActivityBadge();
+  }
 
   function finalize() {
     if (loaded) return;
     loaded = true;
     hideLoadingScreen(); hideLoadingBar();
-    // If data was already loaded (e.g. from Apps Script migration), keep it
     if (!appState.data.entries || !appState.data.entries.length) {
       appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
     }
@@ -2152,54 +2336,79 @@ function loadData(callback){
     if (callback) callback(appState.data);
   }
 
-  function profilesFromData(profilesObj) {
-    if (!profilesObj) return;
-    loadUserProfiles();
-    for (var pin in profilesObj) {
-      if (profilesObj[pin] && profilesObj[pin].name) {
-        userProfiles[pin] = userProfiles[pin] || { name: '', avatar: '', theme: 'auto' };
-        if (profilesObj[pin].name) userProfiles[pin].name = profilesObj[pin].name;
-        if (profilesObj[pin].avatar) userProfiles[pin].avatar = profilesObj[pin].avatar;
-        if (profilesObj[pin].theme) userProfiles[pin].theme = profilesObj[pin].theme;
-      }
-    }
-    saveUserProfiles();
-    if (userProfiles[appState.currentPin] && userProfiles[appState.currentPin].name) {
-      currentUser = userProfiles[appState.currentPin].name;
-    }
-    updateUserUI();
-  }
-
-  // Try loading from Firestore
-  db.collection('entries').get().then(function(snap) {
+  // Parallel Firestore reads
+  Promise.all([
+    db.collection('entries').get(),
+    db.collection('anniversaries').get(),
+    db.collection('config').doc('profiles').get()
+  ]).then(function(results) {
+    var snap = results[0], snap2 = results[1], profDoc = results[2];
     if (!snap.empty) {
       snap.forEach(function(doc) { entriesArr.push(doc.data()); });
-      return db.collection('anniversaries').get();
-    } else {
-      return Promise.reject('empty');
     }
-  }).then(function(snap2) {
-    snap2.forEach(function(doc) { annsArr.push(doc.data()); });
-    return db.collection('config').doc('profiles').get();
-  }).then(function(profDoc) {
+    if (!snap2.empty) {
+      snap2.forEach(function(doc) { annsArr.push(doc.data()); });
+    }
     if (profDoc.exists) profilesObj = profDoc.data().profiles || {};
-    finalize();
-  }).catch(function(err) {
-    if (err === 'empty') {
-      loadFromAppsScript(function() { finalize(); });
+    // Only finalize if we got entries (otherwise fall back to Apps Script)
+    if (entriesArr.length) {
+      finalize();
     } else {
-      console.warn('Firestore error:', err);
       loadFromAppsScript(function() { finalize(); });
     }
+  }).catch(function(err) {
+    console.warn('Firestore error:', err);
+    loadFromAppsScript(function() { finalize(); });
   });
 
+  // Fallback timeout reduced to 5s
   setTimeout(function() {
     if (!loaded) {
       if (entriesArr.length) { finalize(); return; }
-      var local = loadLocal();
-      if (local) { appState.data = local; normalizeData(); sortEntries(); renderAll(); showToast('<i class="fas fa-wifi"></i> Đã tải từ bộ nhớ tạm'); updateActivityBadge(); if (callback) callback(appState.data); }
+      // If we already rendered from localStorage, just hide loading
+      if (appState.data.entries && appState.data.entries.length) {
+        hideLoadingScreen(); hideLoadingBar();
+        if (callback) callback(appState.data);
+        loaded = true;
+      } else {
+        var local2 = loadLocal();
+        if (local2) { appState.data = local2; normalizeData(); sortEntries(); renderAll(); showToast('<i class="fas fa-wifi"></i> Đã tải từ bộ nhớ tạm'); updateActivityBadge(); if (callback) callback(appState.data); }
+      }
     }
-  }, 12000);
+  }, 5000);
+}
+
+function refreshData(callback){
+  showLoadingBar();
+  Promise.all([
+    db.collection('entries').get(),
+    db.collection('anniversaries').get(),
+    db.collection('config').doc('profiles').get()
+  ]).then(function(results) {
+    var entriesArr = [], annsArr = [], profilesObj = {};
+    if (!results[0].empty) results[0].forEach(function(doc) { entriesArr.push(doc.data()); });
+    if (!results[1].empty) results[1].forEach(function(doc) { annsArr.push(doc.data()); });
+    if (results[2].exists) profilesObj = results[2].data().profiles || {};
+      if (entriesArr.length) {
+        appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
+        saveLocal(appState.data);
+      } else if (profilesObj && Object.keys(profilesObj).length) {
+        if (!appState.data.profiles) appState.data.profiles = {};
+        for (var p in profilesObj) { appState.data.profiles[p] = profilesObj[p]; }
+        saveLocal(appState.data);
+      }
+      profilesFromData(profilesObj);
+      if (entriesArr.length) {
+        normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
+        showToast('<i class="fas fa-sync-alt"></i> Đã làm mới dữ liệu');
+      }
+      hideLoadingBar();
+    if (callback) callback(appState.data);
+  }).catch(function(err) {
+    console.warn('Refresh error:', err);
+    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi làm mới dữ liệu');
+    hideLoadingBar();
+  });
 }
 
 function loadFromAppsScript(callback) {
@@ -2501,11 +2710,61 @@ function getPartnerPin() {
 function getPartnerName() {
   return getDisplayName(getPartnerPin());
 }
+
+// ==================== SOUNDS ====================
+var _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _audioCtx;
+}
+function playSentSound() {
+  try {
+    var ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    var t = ctx.currentTime;
+    // Short soft pop — sine burst with quick fade
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1100, t);
+    osc.frequency.exponentialRampToValueAtTime(1400, t + 0.06);
+    gain.gain.setValueAtTime(0.18, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.1);
+  } catch(e) {}
+}
+function playIncomingSound() {
+  try {
+    var ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    var t = ctx.currentTime;
+    // Two-note chime: 660Hz (E5) → 880Hz (A5) — like a notification "ding-dong"
+    function chime(freq, start, dur) {
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(freq, t + start);
+      g.gain.setValueAtTime(0.28, t + start + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.start(t + start);
+      o.stop(t + start + dur);
+    }
+    chime(660, 0, 0.12);
+    chime(880, 0.14, 0.22);
+  } catch(e) {}
+}
+
 // ==================== DM (Firestore Realtime) ====================
 var dmMessagesCache = [];
 var dmUnsubscribe = null;
 var partnerLastSeen = '';
 var _myDmLastSeen = '';
+var _prevDmCount = 0;
 
 function getChatId() {
   var pins = [CONFIG.PIN_USER1, CONFIG.PIN_USER2].sort();
@@ -2553,15 +2812,24 @@ function sendDmMessage() {
     text: text || '',
     createdAt: new Date().toISOString()
   };
-  if (_pendingDmImage) { msg.image = _pendingDmImage; clearDmImage(); }
-  db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
-    input.value = '';
-    autoResize(input);
-    btn.disabled = false;
-  }).catch(function(err) {
-    console.warn('Send DM err:', err);
-    btn.disabled = false;
-  });
+  function doSend() {
+    db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
+      input.value = ''; autoResize(input); btn.disabled = false; playSentSound();
+    }).catch(function(err) {
+      console.warn('Send DM err:', err); btn.disabled = false;
+    });
+  }
+  if (_pendingDmImage && _pendingDmImage.indexOf('data:') === 0) {
+    var img = _pendingDmImage; clearDmImage();
+    var today = todayStr();
+    uploadImage(img, 'dm_' + Date.now() + '.jpg', today, function(r) {
+      if (r && r.url) msg.image = r.url;
+      doSend();
+    });
+  } else {
+    if (_pendingDmImage) { msg.image = _pendingDmImage; clearDmImage(); }
+    doSend();
+  }
 }
 
 function renderDmMessages() {
@@ -2593,9 +2861,9 @@ function renderDmMessages() {
       lastDate = dateStr;
     }
     var isSent = m.sender === appState.currentPin;
-    var timeStr = pad(d.getHours()) + ':' + pad(d.getMinutes());
     var seen = isSent && partnerLastSeen && t && t <= partnerLastSeen;
-    var statusHtml = isSent ? '<span class="dm-msg-status '+(seen?'seen':'sent')+'">'+(seen?'&#10003;&#10003;':'&#10003;')+'</span>' : '';
+    var statusText = isSent ? (seen ? 'Đã xem' : 'Đã gửi') : '';
+    var statusHtml = statusText ? '<span class="dm-msg-status '+(seen?'seen':'sent')+'">'+statusText+'</span>' : '';
     var partnerAva = getDisplayAvatar(getPartnerPin());
     var myAva = getDisplayAvatar(appState.currentPin);
     var avaUrl = isSent ? myAva : partnerAva;
@@ -2608,12 +2876,25 @@ function renderDmMessages() {
     html += '<div>';
     if (m.text) html += '<div class="dm-msg-bubble">' + esc(m.text) + '</div>';
     if (imgHtml) html += imgHtml;
-    html += '<div class="dm-msg-time">' + timeStr + statusHtml + '</div></div>';
+    html += '<div class="dm-msg-time">' + fmtTime(t) + statusHtml + '</div></div>';
     if (isSent) html += '<div class="dm-msg-avatar">' + avatarHtml + '</div>';
     html += '</div>';
   }
   container.innerHTML = html;
   container.scrollTop = container.scrollHeight;
+}
+
+function setupRealtimeEntries() {
+  if (_entriesUnsub) return;
+  _entriesUnsub = db.collection('entries').onSnapshot(function(snap) {
+    var entriesArr = [];
+    snap.forEach(function(doc) { entriesArr.push(doc.data()); });
+    if (!entriesArr.length) return;
+    // Merge — keep existing anniversaries, profiles
+    appState.data.entries = entriesArr;
+    sortEntries(); saveLocal(appState.data);
+    renderAll(); updateActivityBadge();
+  }, function() {});
 }
 
 function setupDmListener() {
@@ -2634,7 +2915,22 @@ function setupDmListener() {
       if (appState.currentPage === 'direct') {
         renderDmMessages();
         markDmSeen();
+      } else if (_prevDmCount > 0 && dmMessagesCache.length > _prevDmCount) {
+        for (var j = _prevDmCount; j < dmMessagesCache.length; j++) {
+          if (dmMessagesCache[j].sender !== appState.currentPin) {
+            playIncomingSound();
+            // Show browser notification if page is in background
+            if (document.hidden) {
+              requestNotifPermission();
+              var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
+              var msgText = dmMessagesCache[j].text || (dmMessagesCache[j].image ? 'Đã gửi một ảnh' : '');
+              showBrowserNotification(partnerName, msgText, 'dm-' + dmMessagesCache[j].id);
+            }
+            break;
+          }
+        }
       }
+      _prevDmCount = dmMessagesCache.length;
       updateDmBadge();
     }, function(err) {
       console.warn('DM listener err:', err);
@@ -2717,7 +3013,7 @@ function openImageViewer(src) {
   gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out'})
 }
 // ==================== NAVIGATION ====================
-function goHome(){switchPage('feed');setTimeout(function(){smoothScroll(document.getElementById('main-content'),0,250)},0)}
+function goHome(){switchPage('feed');setTimeout(function(){smoothScroll(document.getElementById('main-content'),0,250)},0);refreshData()}
 function smoothScroll(el,to,dur){
   if(!el)return;
   var start=el.scrollTop,startTime=null;
@@ -3599,16 +3895,6 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 // ==================== PHOTO VIEWER ====================
-function openProfilePhotoViewer(index){
-  if(!_profileImages||!_profileImages.length)return;
-  appState.photoImages=_profileImages.slice();
-  appState.photoIndex=index||0;
-  var viewer=document.getElementById('photo-viewer');
-  viewer.classList.add('open');document.body.style.overflow='hidden';
-  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
-  updatePhotoViewer();
-  gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out'})
-}
 function openProfilePhotoViewer(index){
   if(!_profileImages||!_profileImages.length)return;
   appState.photoImages=_profileImages.slice();
