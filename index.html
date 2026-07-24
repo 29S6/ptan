@@ -894,7 +894,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
 #page-direct { display:none; }
-#page-direct.active { display:flex; flex-direction:column; height:100%; }
+#page-direct.active { display:flex; flex-direction:column; min-height:calc(100vh - 80px); height:auto; }
 .dm-header {
   display:flex; align-items:center; justify-content:space-between; padding:10px 16px;
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
@@ -1829,6 +1829,18 @@ function initApp(){
   updateDmBadge();
   setupPresence();
   setupPartnerPresenceListener();
+}
+// Auto-scroll input into view when keyboard opens (especially iOS)
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', function() {
+    var el = document.activeElement;
+    if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') && el.closest('#page-direct')) {
+      setTimeout(function() {
+        var mc = document.getElementById('main-content');
+        if (mc) mc.scrollTop = mc.scrollHeight;
+      }, 200);
+    }
+  });
 }
 function updateUserUI(){
   applyTheme();
