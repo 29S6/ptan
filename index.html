@@ -181,7 +181,7 @@ a { color: var(--text-link); text-decoration:none; }
 /* ===== LOADING SCREEN ===== */
 
 /* ===== APP LAYOUT ===== */
-#app { display:none; height:100vh; overflow:hidden; }
+#app { display:none; height:100vh; height:100dvh; overflow:hidden; }
 
 /* ===== SIDEBAR (desktop only) ===== */
 @media (min-width:1024px) {
@@ -235,14 +235,16 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== MAIN CONTENT ===== */
 #main-content {
-  height:100vh; overflow-y:auto; overflow-x:hidden;
-  padding-bottom: calc(var(--nav-h) + var(--safe-bottom) + 8px);
+  height:100vh; height:100dvh; overflow-y:auto; overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 8px);
+  display:flex; flex-direction:column;
 }
+#main-content > .page.active { flex-shrink:0; }
 @media (min-width:1024px) {
   #main-content { padding-bottom:0; }
 }
 
-.page { display:none; min-height:calc(100vh - 80px); }
+.page { display:none; }
 .page.active { display:block; animation:pageIn 0.15s ease-out; }
 @keyframes pageIn { from { opacity:0; } to { opacity:1; } }
 @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
@@ -560,7 +562,8 @@ a { color: var(--text-link); text-decoration:none; }
 #post-overlay {
   position:fixed; inset:0; z-index:2000;
   background:var(--card-bg); display:flex; flex-direction:column;
-  opacity:0; pointer-events:none; transition:opacity 0.15s cubic-bezier(0.22,1,0.36,1);
+  opacity:0; pointer-events:none; transition:opacity 0.15s ease;
+  will-change:opacity;
 }
 #post-overlay.open { opacity:1; pointer-events:auto; }
 
@@ -744,16 +747,17 @@ a { color: var(--text-link); text-decoration:none; }
 #comment-sheet-overlay {
   position:fixed; inset:0; z-index:2200; background:rgba(0,0,0,0.5);
   display:flex; align-items:flex-end; justify-content:center;
-  opacity:0; pointer-events:none; transition:opacity 0.2s ease;
+  opacity:0; pointer-events:none; transition:opacity 0.15s ease;
 }
 #comment-sheet-overlay.open { opacity:1; pointer-events:auto; }
 #comment-sheet {
   width:100%; max-width:500px; background:var(--card-bg);
   border-radius:20px 20px 0 0; max-height:85vh; display:flex;
-  flex-direction:column; transform:translateY(100%); transition:transform 0.25s cubic-bezier(0.22,1,0.36,1);
-  box-shadow:0 -8px 30px rgba(0,0,0,0.12);
+  flex-direction:column; transform:translateY(100%); transition:transform 0.2s cubic-bezier(0.22,1,0.36,1);
+  box-shadow:0 -8px 30px rgba(0,0,0,0.12); will-change:transform;
 }
 #comment-sheet-overlay.open #comment-sheet { transform:translateY(0); }
+#cs-scroll { contain:layout; }
 .cs-handle {
   width:36px; height:4px; border-radius:2px; background:var(--border-light);
   margin:8px auto 0; flex-shrink:0;
@@ -932,13 +936,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
 #page-direct { display:none; }
-#page-direct.active { display:flex; flex-direction:column; }
-@media (max-width:1023px) {
-  #page-direct.active { height:calc(100vh - var(--nav-h) - var(--safe-bottom) - 8px); }
-}
-@media (min-width:1024px) {
-  #page-direct.active { height:calc(100vh - 80px); }
-}
+#page-direct.active { display:flex; flex-direction:column; flex:1; min-height:0; }
 .dm-header {
   display:flex; align-items:center; justify-content:space-between; padding:10px 16px;
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
@@ -1044,13 +1042,10 @@ a { color: var(--text-link); text-decoration:none; }
   background:var(--border-light); border:none; cursor:pointer; flex-shrink:0; transition:0.07s;
 }
 .img-preview button:hover { background:var(--text-danger); color:#fff; }
-.dm-msg-img-content, .comment-img-content {
-  max-width:180px; max-height:180px; border-radius:8px; margin-top:4px; overflow:hidden;
-  aspect-ratio:1; width:180px;
-}
-.dm-msg-img-content img, .comment-img-content img {
-  width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; cursor:pointer;
-}
+.dm-msg-img-content { max-width:180px; max-height:180px; border-radius:8px; margin-top:4px; overflow:hidden; aspect-ratio:1; width:180px; }
+.dm-msg-img-content img { width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; cursor:pointer; }
+.comment-img-content { max-width:180px; max-height:180px; border-radius:8px; margin-top:4px; overflow:hidden; }
+.comment-img-content img { width:100%; height:auto; max-height:180px; border-radius:8px; display:block; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -2013,23 +2008,37 @@ function initApp(){
   // Ask notification permission on first interaction
   requestNotifPermission();
 }
-// Auto-scroll input into view when keyboard opens (especially iOS)
+// iOS keyboard handling — keep input visible above keyboard
 if (window.visualViewport) {
+  var _prevVvH = window.visualViewport.height;
   window.visualViewport.addEventListener('resize', function() {
-    var el = document.activeElement;
-    if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') && el.closest('#page-direct')) {
-      var pd = document.getElementById('page-direct');
-      if (pd && pd.classList.contains('active') && window.innerWidth < 1024) {
-        var navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 50;
-        var sBot = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-bottom')) || 0;
-        pd.style.height = (window.visualViewport.height - navH - sBot - 8) + 'px';
-        var msgs = document.getElementById('dm-messages');
-        if (msgs) { setTimeout(function(){ msgs.scrollTop = msgs.scrollHeight; }, 100); }
+    var app = document.getElementById('app');
+    if (!app || app.style.display === 'none') return;
+    var vvH = window.visualViewport.height;
+    if (Math.abs(vvH - _prevVvH) > 50) {
+      // Keyboard opened/closed: adjust app height
+      app.style.height = vvH + 'px';
+      _prevVvH = vvH;
+      // Scroll active input into view
+      var el = document.activeElement;
+      if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT')) {
+        setTimeout(function() { el.scrollIntoView({ block: 'nearest' }); }, 100);
       }
-    } else {
-      // Keyboard closed — reset to CSS value
-      var pd = document.getElementById('page-direct');
-      if (pd) pd.style.height = '';
+    }
+  });
+  // On iOS, keyboard can also trigger visualViewport scroll
+  window.visualViewport.addEventListener('scroll', function() {
+    var el = document.activeElement;
+    if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT')) {
+      el.scrollIntoView({ block: 'nearest' });
+    }
+  });
+  // Reset app height when keyboard hides
+  document.addEventListener('focusout', function(e) {
+    var related = e.relatedTarget;
+    if (!related || (related.tagName !== 'TEXTAREA' && related.tagName !== 'INPUT')) {
+      var app = document.getElementById('app');
+      if (app) app.style.height = '';
     }
   });
 }
@@ -3525,6 +3534,8 @@ function openPostDetail(entryId){
   renderPostDetail();
   var scrollEl=document.getElementById('pd-scroll');
   if(scrollEl)scrollEl.scrollTop=0;
+  // Force layout commit before opening
+  void overlay.offsetHeight;
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
   overlay.classList.add('open');
@@ -3838,6 +3849,8 @@ function openCommentSheet(entryId){
   csEntryId=entryId;
   renderCommentSheet(entry);
   var overlay=document.getElementById('comment-sheet-overlay');
+  // Force layout commit before opening to prevent flicker
+  void overlay.offsetHeight;
   overlay.classList.add('open');
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
@@ -3845,13 +3858,10 @@ function openCommentSheet(entryId){
 
 function closeCommentSheet(){
   var overlay=document.getElementById('comment-sheet-overlay');
-  var sheet=document.getElementById('comment-sheet');
-  sheet.style.transition='none';
   overlay.classList.remove('open');
   csEntryId=null;
   document.documentElement.style.overflow='';document.body.style.overflow='';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
-  requestAnimationFrame(function(){sheet.style.transition=''});
 }
 
 function renderCommentSheet(entry){
