@@ -719,7 +719,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-comment-empty { text-align:center; color:var(--text-secondary); font-size:0.85rem; padding:12px 0; }
 /* Fixed input */
 .pd-input-fixed {
-  border-top:1px solid var(--border-light); padding:6px 12px; flex-shrink:0;
+  border-top:1px solid var(--border-light); padding:6px 12px 6px; flex-shrink:0;
   background:var(--card-bg);
 }
 .pd-input-row { display:flex; align-items:flex-end; gap:8px; }
@@ -965,7 +965,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-empty { text-align:center; padding:60px 20px; color:var(--text-secondary); font-size:0.85rem; }
 .dm-empty i { font-size:2.5rem; margin-bottom:12px; display:block; color:var(--border-light); }
 .dm-input-wrap {
-  border-top:1px solid var(--border-light); padding:6px 12px 3px;
+  border-top:1px solid var(--border-light); padding:6px 12px 6px;
   background:var(--card-bg); flex-shrink:0;
 }
 .dm-input-row { display:flex; align-items:flex-end; gap:8px; }
@@ -2316,22 +2316,20 @@ function loadData(callback){
   var entriesArr = [], annsArr = [], profilesObj = {};
   var loaded = false;
 
-  // Immediately show cached data from localStorage
+  // Load profiles from cache for header/sidebar display (don't render feed yet — skeleton stays)
   var local = loadLocal();
-  if (local && local.entries && local.entries.length) {
-    appState.data = local;
-    normalizeData(); sortEntries();
-    profilesFromData(local.profiles);
-    renderAll(); updateActivityBadge();
-  }
+  if (local && local.profiles) profilesFromData(local.profiles);
 
   function finalize() {
     if (loaded) return;
     loaded = true;
     hideLoadingScreen(); hideLoadingBar();
-    if (!appState.data.entries || !appState.data.entries.length) {
-      appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
+    if (!entriesArr.length && local && local.entries && local.entries.length) {
+      entriesArr = local.entries;
+      annsArr = local.anniversaries || [];
+      profilesObj = local.profiles || {};
     }
+    appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
     saveLocal(appState.data);
     profilesFromData(appState.data.profiles);
     normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
@@ -2353,7 +2351,6 @@ function loadData(callback){
       snap2.forEach(function(doc) { annsArr.push(doc.data()); });
     }
     if (profDoc.exists) profilesObj = profDoc.data().profiles || {};
-    // Only finalize if we got entries (otherwise fall back to Apps Script)
     if (entriesArr.length) {
       finalize();
     } else {
@@ -2364,15 +2361,17 @@ function loadData(callback){
     loadFromAppsScript(function() { finalize(); });
   });
 
-  // Fallback timeout reduced to 5s
+  // Fallback timeout — render cached data if Firestore fails
   setTimeout(function() {
     if (!loaded) {
       if (entriesArr.length) { finalize(); return; }
-      // If we already rendered from localStorage, just hide loading
-      if (appState.data.entries && appState.data.entries.length) {
-        hideLoadingScreen(); hideLoadingBar();
-        if (callback) callback(appState.data);
-        loaded = true;
+      // Fall back to localStorage cache
+      if (local && local.entries && local.entries.length) {
+        entriesArr = local.entries;
+        annsArr = local.anniversaries || [];
+        profilesObj = local.profiles || {};
+        finalize();
+        showToast('<i class="fas fa-wifi"></i> Đã tải từ bộ nhớ tạm');
       } else {
         var local2 = loadLocal();
         if (local2) { appState.data = local2; normalizeData(); sortEntries(); renderAll(); showToast('<i class="fas fa-wifi"></i> Đã tải từ bộ nhớ tạm'); updateActivityBadge(); if (callback) callback(appState.data); }
