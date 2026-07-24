@@ -1626,6 +1626,25 @@ function loadUserProfiles(force) {
       userProfiles[p].avatar = '';
     }
   }
+  // When force=true and PIN is set, sync FROM Firestore
+  if (force && appState.currentPin) {
+    db.collection('config').doc('profiles').get().then(function(doc) {
+      if (doc.exists) {
+        var remoteProfiles = doc.data().profiles || {};
+        for (var pin in remoteProfiles) {
+          if (remoteProfiles[pin]) {
+            userProfiles[pin] = userProfiles[pin] || {};
+            if (remoteProfiles[pin].name) userProfiles[pin].name = remoteProfiles[pin].name;
+            if (remoteProfiles[pin].avatar) userProfiles[pin].avatar = remoteProfiles[pin].avatar;
+            if (remoteProfiles[pin].theme) userProfiles[pin].theme = remoteProfiles[pin].theme;
+          }
+        }
+        saveUserProfiles();
+        updateUserUI();
+        renderFeed();
+      }
+    }).catch(function(err) { console.warn('load profiles from Firestore err:', err); });
+  }
 }
 
 function saveUserProfiles() {
