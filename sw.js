@@ -1,8 +1,8 @@
 var CACHE = 'love-story-v1';
 var ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json'
+  './',
+  'index.html',
+  'manifest.json'
 ];
 
 self.addEventListener('install', function(e) {
@@ -47,7 +47,7 @@ self.addEventListener('fetch', function(e) {
         return resp;
       });
     }).catch(function() {
-      return caches.match('/');
+      return caches.match('index.html');
     })
   );
 });
@@ -84,21 +84,12 @@ messaging.onBackgroundMessage(function(payload) {
 
 self.addEventListener('notificationclick', function(e) {
   e.notification.close();
-  var urlToOpen = '/';
-  if (e.notification.data && e.notification.data.url) {
-    urlToOpen = e.notification.data.url;
-  }
   e.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
       for (var i = 0; i < clientList.length; i++) {
-        var c = clientList[i];
-        if (c.url && c.navigate) {
-          c.focus();
-          if (urlToOpen !== '/') c.navigate(urlToOpen);
-          return;
-        }
+        if (clientList[i].focus) { clientList[i].focus(); return; }
       }
-      clients.openWindow(urlToOpen);
+      if (clients.openWindow) clients.openWindow(self.location.origin + self.location.pathname);
     })
   );
 });
