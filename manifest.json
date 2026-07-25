@@ -2,6 +2,7 @@
   "name": "Love Story",
   "short_name": "Love Story",
   "description": "Nhật ký tình yêu của chúng mình",
+  "id": "love-story",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fafafa",
