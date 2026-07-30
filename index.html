@@ -1364,11 +1364,11 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <div class="dm-msg-overlay" id="dm-msg-overlay" onclick="unfocusDmMessage()"></div>
       <div class="dm-msg-menu" id="dm-msg-menu">
         <div class="dm-menu-reactions" id="dm-menu-reactions">
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'❤️');closeDmMenu()">❤️</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😂');closeDmMenu()">😂</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😢');closeDmMenu()">😢</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😮');closeDmMenu()">😮</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😡');closeDmMenu()">😡</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'❤️');unfocusDmMessage()">❤️</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😂');unfocusDmMessage()">😂</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😢');unfocusDmMessage()">😢</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😮');unfocusDmMessage()">😮</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😡');unfocusDmMessage()">😡</span>
         </div>
         <div class="dm-menu-divider"></div>
         <button onclick="replyToMessage(document.getElementById('dm-msg-menu')._msgId)"><i class="fas fa-reply"></i> Trả lời</button>
@@ -3048,14 +3048,10 @@ function closeDmMenu() {
   var menu = document.getElementById('dm-msg-menu');
   if (menu) { menu.classList.remove('open'); menu._msgId = null; }
 }
-var _dmFocusFromTouch = null;
 function focusDmMessage(msgId) {
   if (!msgId) return;
-  if (_dmFocusFromTouch === msgId) { _dmFocusFromTouch = null; return; }
-  closeDmMenu();
   var overlay = document.getElementById('dm-msg-overlay');
   if (!overlay) return;
-  if (overlay.classList.contains('open')) { unfocusDmMessage(); return; }
   document.querySelectorAll('.dm-msg-focused').forEach(function(el){el.classList.remove('dm-msg-focused')});
   var el = document.querySelector('.dm-msg[data-msg-id="'+msgId+'"]');
   if (!el) return;
@@ -3066,6 +3062,7 @@ function unfocusDmMessage() {
   var overlay = document.getElementById('dm-msg-overlay');
   if (overlay) overlay.classList.remove('open');
   document.querySelectorAll('.dm-msg-focused').forEach(function(el){el.classList.remove('dm-msg-focused')});
+  closeDmMenu();
 }
 function copyDmMessage() {
   var menu = document.getElementById('dm-msg-menu');
@@ -3099,7 +3096,7 @@ function clearDmSwipe() {
   document.querySelectorAll('.dm-msg.swiped').forEach(function(el){el.classList.remove('swiped');el.style.transform='';el.style.opacity='';el.style.transition=''});
 }
 function replyToMessage(msgId) {
-  closeDmMenu(); unfocusDmMessage();
+  unfocusDmMessage();
   var msg = getDmMsgFromCache(msgId);
   if (!msg) return;
   if (_editingDmMsgId) cancelEditDm();
@@ -3119,7 +3116,7 @@ function cancelReplyDm() {
 function editDmMessage() {
   var menu = document.getElementById('dm-msg-menu');
   var msgId = menu._msgId;
-  closeDmMenu(); unfocusDmMessage();
+  unfocusDmMessage();
   cancelReplyDm();
   clearDmSwipe();
   var msg = getDmMsgFromCache(msgId);
@@ -3145,7 +3142,7 @@ function cancelEditDm() {
 function deleteDmMessage() {
   var menu = document.getElementById('dm-msg-menu');
   var msgId = menu._msgId;
-  closeDmMenu(); unfocusDmMessage();
+  unfocusDmMessage();
   showConfirm('Xóa tin nhắn?', 'Tin nhắn sẽ bị xóa cho cả hai.', function(ok) {
     if (!ok) return;
     db.collection('messages').doc(getChatId()).collection('messages').doc(msgId).update({
@@ -3244,10 +3241,10 @@ function renderDmMessages() {
       var imgHtml = '';
       if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(m.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
       var hasText=!!(replyHtml||m.text);
-      if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble" onclick="focusDmMessage(\''+m.id+'\')">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div></div>'}
+      if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div></div>'}
       else if(imgHtml)contentHtml+=imgHtml
-      else if(hasText)contentHtml+='<div class="dm-msg-bubble" onclick="focusDmMessage(\''+m.id+'\')">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div>'
-      else if(reactionsHtml)contentHtml+='<div class="dm-msg-bubble" onclick="focusDmMessage(\''+m.id+'\')">'+reactionsHtml+'</div>'
+      else if(hasText)contentHtml+='<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div>'
+      else if(reactionsHtml)contentHtml+='<div class="dm-msg-bubble">'+reactionsHtml+'</div>'
     }
     var avaHtml = '';
     if (!isSent && partnerAva) avaHtml = '<img class="dm-msg-avatar" src="'+esc(partnerAva)+'" alt="">';
@@ -3312,6 +3309,7 @@ document.getElementById('dm-messages').addEventListener('touchstart', function(e
     var menu = document.getElementById('dm-msg-menu');
     if (menu.classList.contains('open')) { closeDmMenu(); return; }
     toggleDmMenu(el.dataset.msgId, t.clientX, t.clientY);
+    focusDmMessage(el.dataset.msgId);
     _dmMenuJustOpened = true; setTimeout(function() { _dmMenuJustOpened = false; }, 300);
   }, 400);
 }, { passive: true });
@@ -3339,23 +3337,11 @@ document.getElementById('dm-messages').addEventListener('touchend', function(e) 
   var el = _dmTouchData.el;
   var longPress = _dmTouchData.longPress;
   var dx = e.changedTouches[0].clientX - _dmTouchData.startX;
-  var isTap = !_dmTouchData.moved && Math.abs(dx) < 10;
   var isSent = el.classList.contains('sent');
   _dmTouchData = null;
   if (longPress) return;
-  if (isTap) {
-    el.style.transition = ''; el.style.transform = ''; el.style.opacity = '';
-    _dmFocusFromTouch = el.dataset.msgId;
-    setTimeout(function() { _dmFocusFromTouch = null; }, 500);
-    var overlay = document.getElementById('dm-msg-overlay');
-    if (overlay && overlay.classList.contains('open')) unfocusDmMessage();
-    focusDmMessage(el.dataset.msgId);
-    return;
-  }
   el.classList.add('swiped');
   el.style.transition = 'transform 0.25s cubic-bezier(0.22,1,0.36,1), opacity 0.25s';
-  _dmFocusFromTouch = el.dataset.msgId;
-  setTimeout(function() { _dmFocusFromTouch = null; }, 500);
   if ((isSent && dx < -55) || (!isSent && dx > 55)) {
     setTimeout(function() { replyToMessage(el.dataset.msgId); }, 100);
   }
