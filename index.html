@@ -6,8 +6,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
   <meta name="apple-mobile-web-app-title" content="Love Story" />
   <title>Love Story</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -61,7 +61,7 @@
   --card-bg: #ffffff;
   --text-primary: #262626;
   --text-secondary: #8e8e8e;
-  --text-link: #0095f6;
+  --text-link: #e91e63;
   --text-danger: #ed4956;
   --border: #dbdbdb;
   --border-light: #efefef;
@@ -97,7 +97,7 @@ html.dark {
   --card-bg: #1e1e1e;
   --text-primary: #e4e4e4;
   --text-secondary: #a8a8a8;
-  --text-link: #0095f6;
+  --text-link: #e91e63;
   --text-danger: #ed4956;
   --border: #2e2e2e;
   --border-light: #2e2e2e;
@@ -157,12 +157,12 @@ a { color: var(--text-link); text-decoration:none; }
 .lock-sub { font-size:0.85rem; color:var(--text-secondary); margin-bottom:24px; }
 .pin-dots { display:flex; gap:14px; justify-content:center; margin-bottom:20px; }
 .pin-dot { width:16px; height:16px; border-radius:50%; background:var(--border-light); border:2px solid var(--border); transition:0.12s; }
-.pin-dot.active { background:var(--text-link); border-color:var(--text-link); transform:scale(1.15); box-shadow:0 0 12px rgba(0,149,246,0.3); }
+.pin-dot.active { background:var(--text-link); border-color:var(--text-link); transform:scale(1.15); box-shadow:0 0 12px rgba(233,30,99,0.3); }
 .pin-keyboard { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto; }
 .pin-key { background:var(--hover-bg); border:1px solid var(--border); border-radius:14px; padding:16px 0; font-size:1.3rem; font-weight:600; color:var(--text-primary); transition:0.07s; }
 .pin-key:active { transform:scale(0.92); background:var(--border-light); }
 .pin-key.pressed { transform:scale(0.92); background:var(--border-light); }
-.pin-key.delete { color:var(--text-link); font-size:1rem; }
+.pin-key.delete { color:var(--text-link); font-size:1rem; display:flex; align-items:center; justify-content:center; }
 .pin-key.empty { visibility:hidden; }
 @media (hover:none) and (pointer:coarse) { .pin-key { touch-action:manipulation; } }
 .lock-error { color:var(--text-danger); font-size:0.78rem; min-height:20px; margin-top:10px; font-weight:500; }
@@ -250,8 +250,8 @@ a { color: var(--text-link); text-decoration:none; }
 }
 
 .page { display:none; }
-.page.active { display:block; animation:pageIn 0.15s ease-out; }
-@keyframes pageIn { from { opacity:0; } to { opacity:1; } }
+.page.active { display:block; animation:pageIn 0.3s cubic-bezier(0.22,1,0.36,1); }
+@keyframes pageIn { from { opacity:0;transform:translateY(12px); } to { opacity:1;transform:translateY(0); } }
 @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
@@ -297,8 +297,11 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-posts { max-width:630px; margin:0 auto; padding:12px 0; }
 .feed-card {
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
-  margin-bottom:16px; position:relative;   animation:feedCardIn 0.25s cubic-bezier(0.22,1,0.36,1) both;
+  margin-bottom:16px; position:relative;
+  animation:feedCardIn 0.3s cubic-bezier(0.22,1,0.36,1) both;
+  transition:box-shadow 0.2s, transform 0.15s;
 }
+.feed-card:hover { box-shadow:var(--shadow); transform:translateY(-1px); }
 @keyframes feedCardIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 .feed-card-images { border-radius:0; overflow:hidden; }
 .feed-card-header {
@@ -441,7 +444,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 /* Threads-style profile posts */
 .threads-list { max-width:600px; margin:0 auto; }
-.threads-item { padding:16px 0; border-bottom:1px solid var(--border-light); cursor:pointer; transition:0.07s; }
+.threads-item { padding:16px 0; border-bottom:1px solid var(--border-light); cursor:pointer; transition:0.07s; animation:feedCardIn 0.3s cubic-bezier(0.22,1,0.36,1) both; }
 .threads-item:hover { background:var(--hover-bg); margin:0 -16px; padding:16px; border-radius:4px; }
 .threads-author { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.85rem; }
 .threads-author strong { display:flex; align-items:center; gap:3px; color:var(--text-primary); }
@@ -506,7 +509,7 @@ a { color: var(--text-link); text-decoration:none; }
   padding:7px 20px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:0.07s;
 }
 .create-header .submit-btn:disabled { opacity:0.4; cursor:not-allowed; }
-.create-header .submit-btn:hover:not(:disabled) { background:#0080e0; }
+.create-header .submit-btn:hover:not(:disabled) { background:#c2185b; }
 .create-inner { display:flex; flex-direction:column; flex:1; min-height:0; }
 .create-body { flex:1; overflow-y:auto; padding:12px 16px 100px; }
 /* Threads-style user row */
@@ -567,10 +570,11 @@ a { color: var(--text-link); text-decoration:none; }
 #post-overlay {
   position:fixed; inset:0; z-index:2000;
   background:var(--card-bg); display:flex; flex-direction:column;
-  opacity:0; pointer-events:none; transition:opacity 0.15s ease;
-  will-change:opacity;
+  transform:translateY(100%); opacity:0; pointer-events:none;
+  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease;
+  will-change:transform,opacity;
 }
-#post-overlay.open { opacity:1; pointer-events:auto; }
+#post-overlay.open { transform:translateY(0); opacity:1; pointer-events:auto; }
 
 /* ===== GLOBAL TRANSITIONS ===== */
 * { -webkit-tap-highlight-color:transparent; }
@@ -727,20 +731,42 @@ a { color: var(--text-link); text-decoration:none; }
   border-top:1px solid var(--border-light); padding:6px 12px 6px; flex-shrink:0;
   background:var(--card-bg);
 }
-.pd-input-row { display:flex; align-items:flex-end; gap:8px; }
+.pd-reply-preview { display:flex; align-items:center; gap:8px; padding:4px 12px; background:var(--hover-bg); border-radius:8px; margin-bottom:6px; }
+.pd-reply-line { width:3px; height:24px; border-radius:2px; background:var(--text-link); flex-shrink:0; }
+.pd-reply-info { flex:1; min-width:0; }
+.pd-reply-info span { font-size:0.75rem; font-weight:600; color:var(--text-link); }
+.pd-reply-preview button { width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.7rem; flex-shrink:0; }
+.pd-reply-preview button:hover { background:var(--border-light); }
+.pd-input-row { display:flex; align-items:center; gap:8px; }
 .pd-input-row textarea {
   flex:1; border:1px solid var(--border-light); border-radius:20px; padding:8px 14px; font-size:16px;
-  resize:none; outline:none; min-height:38px; max-height:140px; line-height:1.4;
+  resize:none; outline:none; min-height:38px; max-height:120px; line-height:1.4;
   font-family:var(--font); overflow-y:auto; background:var(--input-bg); color:var(--text-primary);
 }
 .pd-input-row textarea.edit-mode { max-height:40vh; }
 .pd-input-row textarea:focus { border-color:var(--text-secondary); }
-.pd-input-row .pd-send-btn { color:var(--text-link); font-size:0.9rem; font-weight:600; padding:6px 10px; cursor:pointer; background:none; border:none; transition:0.07s; }
-.pd-input-row .pd-send-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.pd-send-btn {
+  height:34px; border-radius:20px; border:none; padding:0 10px;
+  background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+  transition:transform 0.15s, opacity 0.15s; flex-shrink:0; line-height:1;
+}
+.pd-send-btn:hover { transform:scale(1.05); }
+.pd-send-btn:active { transform:scale(0.95); }
+.pd-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+#pd-cancel-btn { background:transparent; color:var(--text-secondary); border:1px solid var(--border-light); }
+#pd-cancel-btn:hover { background:var(--hover-bg); }
+.pd-reply-to-btn { background:none; border:none; font-size:0.7rem; color:var(--text-secondary); cursor:pointer; padding:0; margin-left:6px; }
+.pd-reply-to-btn:hover { color:var(--text-primary); }
+.pd-replies { margin-top:6px; padding-left:12px; border-left:2px solid var(--border-light); }
+.pd-reply-item { display:flex; gap:8px; margin-top:6px; }
+.pd-reply-avatar { width:24px !important; height:24px !important; min-width:24px; }
+.pd-reply-avatar i { font-size:1rem !important; }
 
 @media (min-width:768px) {
-  #post-overlay { background:var(--overlay-bg); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); align-items:center; justify-content:center; }
-  .pd-modal { background:var(--card-bg); border-radius:var(--radius); max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.15); will-change:transform,opacity; transform:translateZ(0); }
+  #post-overlay { background:var(--overlay-bg); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); align-items:center; justify-content:center; transform:none; transition:opacity 0.25s ease; }
+  #post-overlay.open .pd-modal { transform:translateY(0) scale(1); opacity:1; }
+  .pd-modal { background:var(--card-bg); border-radius:var(--radius); max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.15); will-change:transform,opacity; transform:translateY(20px) scale(0.97); opacity:0; transition:transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease; }
   .pd-modal-inner { flex-direction:row; }
   .pd-images { width:calc(100% - 380px); flex:none; background:#000; min-height:400px; max-height:80vh; }
   .pd-carousel-img { max-height:80vh; }
@@ -785,15 +811,25 @@ a { color: var(--text-link); text-decoration:none; }
   border-top:1px solid var(--border-light); padding:6px 12px 6px; flex-shrink:0;
   background:var(--card-bg);
 }
-.cs-input-row { display:flex; align-items:flex-end; gap:8px; }
+.cs-input-row { display:flex; align-items:center; gap:8px; }
 .cs-input-row textarea {
   flex:1; border:1px solid var(--border-light); border-radius:20px; padding:8px 14px; font-size:16px;
-  resize:none; outline:none; min-height:36px; max-height:120px; line-height:1.4;
+  resize:none; outline:none; min-height:38px; max-height:120px; line-height:1.4;
   font-family:var(--font); overflow-y:auto; background:var(--input-bg); color:var(--text-primary);
 }
 .cs-input-row textarea:focus { border-color:var(--text-secondary); }
-.cs-send-btn { color:var(--text-link); font-size:0.9rem; font-weight:600; padding:6px 10px; cursor:pointer; background:none; border:none; transition:0.07s; }
-.cs-send-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.cs-reply-preview { display:flex; align-items:center; gap:8px; padding:4px 12px; background:var(--hover-bg); border-radius:8px; margin-bottom:6px; }
+.cs-reply-preview button { width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.7rem; flex-shrink:0; }
+.cs-reply-preview button:hover { background:var(--border-light); }
+.cs-send-btn {
+  height:34px; border-radius:20px; border:none; padding:0 10px;
+  background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+  transition:transform 0.15s, opacity 0.15s; flex-shrink:0; line-height:1;
+}
+.cs-send-btn:hover { transform:scale(1.05); }
+.cs-send-btn:active { transform:scale(0.95); }
+.cs-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 .cs-comment-item {
   display:flex; gap:10px; padding:8px 0;
 }
@@ -846,7 +882,7 @@ a { color: var(--text-link); text-decoration:none; }
 .form-input, .form-textarea { width:100%; background:var(--input-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px 14px; font-size:16px; color:var(--text-primary); outline:none; transition:0.12s; -webkit-appearance:none; }
 .form-input:focus, .form-textarea:focus { border-color:var(--text-secondary); }
 .btn-primary { background:var(--text-link); color:#fff; border:none; border-radius:var(--radius-sm); padding:10px 20px; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.07s; }
-.btn-primary:hover { background:#0080e0; }
+.btn-primary:hover { background:#c2185b; }
 .btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
 .btn-secondary { background:var(--input-bg); color:var(--text-primary); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px 20px; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.07s; }
 .btn-secondary:hover { background:var(--border-light); }
@@ -946,11 +982,9 @@ a { color: var(--text-link); text-decoration:none; }
   position:fixed; bottom:0; left:0; right:0; z-index:20;
   padding:6px 12px calc(6px + var(--safe-bottom));
 }
+#page-direct.active .dm-messages { padding-bottom:56px; }
 @media (min-width:1024px) {
   #page-direct.active .dm-input-wrap { left:var(--sidebar-w); }
-}
-#page-direct.active .dm-messages {
-  padding-bottom:56px;
 }
 .dm-header {
   display:flex; align-items:center; gap:8px; padding:10px 16px;
@@ -961,41 +995,117 @@ a { color: var(--text-link); text-decoration:none; }
 
 .dm-messages { flex:1; overflow-y:auto; padding:12px 16px 4px; display:flex; flex-direction:column; gap:6px; -webkit-overflow-scrolling:touch; }
 .dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
-.dm-msg { max-width:85%; animation:msgIn 0.15s ease; margin-bottom:2px; }
-.dm-msg.received { display:flex; align-items:flex-end; gap:6px; }
+.dm-msg { max-width:85%; animation:msgIn 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+.dm-msg.sent { align-self:flex-end; }
+.dm-msg.received { align-self:flex-start; display:flex; align-items:flex-end; gap:6px; }
 .dm-msg-avatar { width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0; align-self:flex-end; }
 .dm-msg-avatar img { width:100%; height:100%; object-fit:cover; }
+.dm-msg-avatar-spacer { width:28px; flex-shrink:0; }
 .dm-header-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
-@keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-.dm-msg.sent { align-self:flex-end; }
-.dm-msg.received { align-self:flex-start; }
-.dm-msg-bubble { padding:8px 14px; border-radius:18px; font-size:0.9rem; line-height:1.45; word-break:break-word; max-width:100%; position:relative; }
-.dm-msg.sent .dm-msg-bubble { background:var(--text-link); color:#fff; border-bottom-right-radius:4px; }
-.dm-msg.received .dm-msg-bubble { background:var(--hover-bg); color:var(--text-primary); border-bottom-left-radius:4px; }
-.dm-msg-time { font-size:0.6rem; color:var(--text-secondary); margin-top:2px; padding:0 4px; }
-.dm-msg.sent .dm-msg-time { text-align:right; }
+@keyframes msgIn { from{opacity:0;transform:translateY(6px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes bubbleIn { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes popIn { from{opacity:0;transform:scale(0.7)} 70%{transform:scale(1.08)} to{opacity:1;transform:scale(1)} }
+@keyframes slideInRight { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideInLeft { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+.dm-msg-wrap { position:relative; overflow:visible; display:flex; flex-direction:row; max-width:100%; }
+.dm-msg-inner { min-width:0; flex-shrink:1; display:flex; flex-direction:column; }
+.dm-msg-row { display:flex; flex-direction:row; align-items:center; gap:4px; }
+.dm-msg.sent .dm-msg-row { flex-direction:row-reverse; }
+.dm-msg.received .dm-msg-row { flex-direction:row; }
+.dm-msg-actions { display:flex; flex-direction:row; gap:2px; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.07s; flex-shrink:0; }
+.dm-msg-wrap:hover .dm-msg-actions { opacity:1; pointer-events:auto; }
+@media (max-width:767px) { .dm-msg-actions { opacity:0; pointer-events:none; } .dm-msg.swiped .dm-msg-actions { opacity:1; pointer-events:auto; } .dm-msg.swiped .dm-msg-time { opacity:1; transition-delay:0s; } }
+.dm-msg-action-btn { width:36px; height:36px; border:none; border-radius:8px; background:transparent; color:var(--text-secondary); font-size:0.75rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.07s; padding:0; }
+.dm-msg-action-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
+.dm-reaction-wrap { position:relative; display:flex; }
+.dm-reaction-popup {
+  position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%) scale(0);
+  background:var(--card-bg); border-radius:20px; box-shadow:var(--shadow-dropdown);
+  padding:4px 2px; display:flex; gap:0; z-index:50;
+  transition:transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+  transform-origin:bottom center;
+}
+.dm-reaction-popup.open { transform:translateX(-50%) scale(1); }
+.dm-rp-emoji {
+  display:flex; align-items:center; justify-content:center;
+  width:38px; height:38px; font-size:1.3rem; cursor:pointer;
+  border-radius:50%; transition:0.1s;
+}
+.dm-rp-emoji:hover { transform:scale(1.25); background:var(--hover-bg); }
+.dm-reactions { display:flex; gap:2px; flex-wrap:wrap; margin-top:4px; }
+.dm-msg-reaction { font-size:0.75rem; cursor:pointer; padding:2px 5px; border-radius:10px; background:var(--hover-bg); user-select:none; transition:0.07s; }
+.dm-msg-reaction.active { background:rgba(255,64,129,0.2); outline:1px solid rgba(255,64,129,0.4); }
+html.dark .dm-msg-reaction.active { background:rgba(255,64,129,0.25); outline-color:rgba(255,64,129,0.5); }
+.dm-msg.sent .dm-reactions { justify-content:flex-end; }
+.dm-msg.received .dm-reactions { justify-content:flex-start; }
+.dm-msg.sent .dm-msg-reaction { background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.9); }
+.dm-msg.sent .dm-msg-reaction.active { background:rgba(255,255,255,0.25); outline-color:rgba(255,255,255,0.5); }
+.dm-msg.deleted .dm-msg-actions { display:none !important; }
+.dm-msg-bubble { padding:8px 14px; border-radius:18px; font-size:0.9rem; line-height:1.45; word-break:break-word; max-width:100%; position:relative; animation:bubbleIn 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+.dm-msg.sent .dm-msg-bubble { background:#ff4081; color:#fff; border-bottom-right-radius:4px; }
+.dm-msg.received .dm-msg-bubble { background:#fce4ec; color:var(--text-primary); border-bottom-left-radius:4px; }
+html.dark .dm-msg.sent .dm-msg-bubble { background:#c2185b; }
+html.dark .dm-msg.received .dm-msg-bubble { background:#2d1b1f; color:#e0e0e0; }
+html.dark .dm-msg.received .dm-msg-reply { background:rgba(255,255,255,0.06); }
+html.dark .dm-msg.received .dm-msg-reply-name { color:#ff8a9e; }
+.dm-msg-time {
+  position:absolute;
+  bottom:100%;
+  margin-bottom:6px;
+  font-size:0.65rem;
+  color:#333;
+  padding:4px 10px;
+  background:#fff;
+  border-radius:8px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.15);
+  white-space:nowrap;
+  line-height:1.3;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.15s;
+  z-index:10;
+}
+html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rgba(0,0,0,0.3); }
+.dm-msg.sent .dm-msg-time { right:0; }
+.dm-msg.received .dm-msg-time { left:0; }
+.dm-msg-wrap:hover .dm-msg-time { opacity:1; transition:opacity 0.2s 1.5s; }
 .dm-msg-status { font-size:0.6rem; margin-left:6px; display:inline-flex; align-items:center; font-weight:500; }
 .dm-msg-status.sent { color:var(--text-secondary); }
-.dm-msg-status.seen { color:#0095f6; }
+.dm-msg-status.seen { color:var(--text-link); }
+.dm-msg.sent.dm-msg-latest-sent .dm-msg-wrap { margin-bottom:16px; }
+.dm-msg.sent .dm-msg-status-latest {
+  position:absolute; bottom:-14px; right:0; padding-right:14px;
+  line-height:1; pointer-events:none;
+}
+.dm-msg.received .dm-msg-status-latest { display:none; }
+.dm-msg-status-latest .dm-msg-status { font-size:0.55rem; }
 .dm-empty { text-align:center; padding:60px 20px; color:var(--text-secondary); font-size:0.85rem; }
 .dm-empty i { font-size:2.5rem; margin-bottom:12px; display:block; color:var(--border-light); }
 .dm-input-wrap {
   border-top:1px solid var(--border-light); padding:6px 12px 6px;
   background:var(--card-bg); flex-shrink:0;
 }
-.dm-input-row { display:flex; align-items:flex-end; gap:8px; }
+.dm-input-row { display:flex; align-items:center; gap:8px; }
 .dm-input-row textarea {
   flex:1; border:1px solid var(--border-light); border-radius:20px; padding:8px 14px; font-size:16px;
   resize:none; outline:none; min-height:38px; max-height:120px; line-height:1.4;
   font-family:var(--font); overflow-y:auto; background:var(--input-bg); color:var(--text-primary);
 }
 .dm-input-row textarea:focus { border-color:var(--text-secondary); }
-.dm-send-btn { color:var(--text-link); font-size:0.9rem; font-weight:600; padding:6px 10px; cursor:pointer; background:none; border:none; transition:0.07s; }
-.dm-send-btn:disabled { opacity:0.3; cursor:not-allowed; }
 
-.dm-msg-group { display:flex; flex-direction:column; gap:2px; }
-.dm-msg-group .dm-msg:last-child .dm-msg-bubble { margin-bottom:0; }
-.dm-msg-group .dm-msg + .dm-msg { margin-top:1px; }
+.dm-send-btn {
+  min-width:34px; height:34px; border-radius:20px; border:none;
+  padding:0 10px; background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:transform 0.15s, opacity 0.15s;
+  flex-shrink:0; line-height:1;
+}
+.dm-send-btn:hover { transform:scale(1.1); }
+.dm-send-btn:active { transform:scale(0.9); }
+.dm-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
+.dm-msg-group { display:flex; flex-direction:column; gap:1px; animation:fadeUp 0.15s ease; }
 .dm-msg-group .dm-msg.sent + .dm-msg.sent .dm-msg-bubble { border-top-right-radius:4px; }
 .dm-msg-group .dm-msg.received + .dm-msg.received .dm-msg-bubble { border-top-left-radius:4px; }
 .dm-msg-group .dm-msg.sent:first-child .dm-msg-bubble { border-top-right-radius:18px; }
@@ -1023,6 +1133,54 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-seen { font-size:0.6rem; color:var(--text-secondary); text-align:right; padding:2px 4px 0; }
 .dm-seen i { margin-left:2px; }
 .dm-seen.read i { color:var(--text-link); }
+.dm-typing { display:flex; align-items:center; gap:6px; padding:4px 16px 6px; font-size:0.75rem; color:var(--text-secondary); animation:typingSlideIn 0.2s ease; }
+@keyframes typingSlideIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.dm-typing-dots { display:flex; gap:2px; }
+.dm-typing-dots span { width:5px; height:5px; border-radius:50%; background:var(--text-secondary); animation:typingDot 1.2s infinite; }
+.dm-typing-dots span:nth-child(2) { animation-delay:0.2s; }
+.dm-typing-dots span:nth-child(3) { animation-delay:0.4s; }
+@keyframes typingDot { 0%,60%,100%{opacity:0.3} 30%{opacity:1} }
+.dm-msg-menu-btn { flex-shrink:0; width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); font-size:0.6rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:opacity 0.1s; opacity:0; }
+.dm-msg.sent .dm-msg-body:hover .dm-msg-menu-btn { opacity:1; }
+.dm-msg.sent .dm-msg-menu-btn:focus { opacity:1; }
+@media (max-width:767px) { .dm-msg.sent .dm-msg-menu-btn { opacity:0.4; } .dm-msg.sent .dm-msg-body:hover .dm-msg-menu-btn { opacity:1; } }
+.dm-msg.deleted .dm-msg-menu-btn, .dm-msg.deleted .dm-msg-reply-btn { display:none !important; }
+.dm-msg-menu {
+  position:fixed; z-index:300; min-width:140px;
+  background:var(--card-bg); border:1px solid var(--border);
+  border-radius:10px; box-shadow:var(--shadow-dropdown);
+  padding:4px; display:none; animation:pdDropFade 0.08s ease;
+}
+.dm-msg-menu.open { display:flex; flex-direction:column; }
+.dm-msg-menu button {
+  display:flex; align-items:center; gap:8px; width:100%;
+  padding:9px 12px; font-size:0.82rem; font-weight:500;
+  color:var(--text-primary); background:none; border:none;
+  border-radius:6px; cursor:pointer; transition:0.07s;
+}
+.dm-msg-menu button:hover { background:var(--hover-bg); }
+.dm-msg-menu button.danger { color:var(--text-danger); }
+.dm-msg-menu button.danger:hover { background:rgba(237,73,86,0.08); }
+.dm-msg-menu button i { width:16px; text-align:center; font-size:0.8rem; }
+.dm-msg.deleted { opacity:0.45; }
+.dm-msg.deleted .dm-msg-bubble { background:var(--border-light); color:var(--text-secondary); font-style:italic; font-size:0.8rem; text-align:center; }
+.dm-msg.sent.deleted .dm-msg-bubble { background:var(--border-light); color:var(--text-secondary); }
+.dm-msg.deleted .dm-msg-menu-btn { display:none !important; }
+.dm-edited { font-size:0.6rem; opacity:0.6; margin-left:4px; }
+.dm-reply-preview { display:flex; align-items:center; gap:8px; padding:6px 14px; background:var(--hover-bg); border-radius:8px; margin:4px 0 6px; animation:slideUp 0.15s cubic-bezier(0.22,1,0.36,1); }
+@keyframes slideUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.dm-reply-line { width:3px; height:32px; border-radius:2px; background:var(--text-link); flex-shrink:0; }
+.dm-reply-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.dm-reply-info span:first-child { font-size:0.72rem; font-weight:600; color:var(--text-link); }
+.dm-reply-info span:last-child { font-size:0.78rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dm-reply-preview button { width:26px; height:26px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0; }
+.dm-reply-preview button:hover { background:var(--border-light); }
+.dm-msg-reply { display:flex; align-items:center; gap:6px; margin-bottom:4px; padding:4px 8px; background:rgba(233,30,99,0.06); border-radius:6px; border-left:2px solid var(--text-link); }
+.dm-msg.sent .dm-msg-reply { background:rgba(255,255,255,0.12); border-left-color:rgba(255,255,255,0.5); }
+.dm-msg-reply-name { font-size:0.7rem; font-weight:600; color:var(--text-link); flex-shrink:0; }
+.dm-msg.sent .dm-msg-reply-name { color:rgba(255,255,255,0.8); }
+.dm-msg-reply-text { font-size:0.75rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dm-msg.sent .dm-msg-reply-text { color:rgba(255,255,255,0.65); }
 .dm-header-user { display:flex; align-items:center; gap:10px; }
 .dm-header-avatar { width:32px; height:32px; border-radius:50%; overflow:hidden; background:var(--story-gradient); padding:2px; display:flex; align-items:center; justify-content:center; }
 .dm-header-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; overflow:hidden; }
@@ -1038,9 +1196,9 @@ a { color: var(--text-link); text-decoration:none; }
 .offline-dot { background:#a0a0a0; }
 /* ===== IMAGE BUTTONS & PREVIEWS (DM, comments) ===== */
 .dm-img-btn, .pd-img-btn, .cs-img-btn {
-  width:32px; height:32px; border-radius:50%; display:flex;
+  width:34px; height:34px; border-radius:10px; display:flex;
   align-items:center; justify-content:center; color:var(--text-secondary);
-  background:none; border:none; cursor:pointer; transition:0.07s; font-size:1rem;
+  background:none; border:none; cursor:pointer; transition:0.12s; font-size:1rem;
   flex-shrink:0;
 }
 .dm-img-btn:hover, .pd-img-btn:hover, .cs-img-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
@@ -1088,7 +1246,7 @@ a { color: var(--text-link); text-decoration:none; }
       <button class="pin-key" data-digit="9" onclick="handlePinPress('9')">9</button>
       <button class="pin-key empty"></button>
       <button class="pin-key" data-digit="0" onclick="handlePinPress('0')">0</button>
-      <button class="pin-key delete" data-digit="del" onclick="handlePinDelete()">⌫</button>
+      <button class="pin-key delete" data-digit="del" onclick="handlePinDelete()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg></button>
     </div>
     <div class="lock-error" id="lock-error"></div>
   </div>
@@ -1150,15 +1308,28 @@ a { color: var(--text-link); text-decoration:none; }
         <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
         <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
       </div>
-      <div class="dm-messages" id="dm-messages"></div>
+      <div class="dm-messages" id="dm-messages"><div class="dm-typing" id="dm-typing" style="display:none;"><span class="dm-typing-dots"><span></span><span></span><span></span></span> <span id="dm-typing-text">đang nhập...</span></div></div>
       <div class="dm-input-wrap">
         <div class="dm-input-row">
-          <textarea id="dm-input" placeholder="Nhắn tin..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
+          <textarea id="dm-input" placeholder="Nhắn tin..." rows="1" oninput="onDmInput(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
           <button class="dm-img-btn" onclick="document.getElementById('dm-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
           <button class="dm-send-btn" id="dm-send-btn" onclick="sendDmMessage()">Gửi</button>
         </div>
+        <div class="dm-reply-preview" id="dm-reply-preview" style="display:none;">
+          <div class="dm-reply-line"></div>
+          <div class="dm-reply-info">
+            <span id="dm-reply-name"></span>
+            <span id="dm-reply-text"></span>
+          </div>
+          <button onclick="cancelReplyDm()"><i class="fas fa-times"></i></button>
+        </div>
         <div class="img-preview" id="dm-img-preview" style="display:none;"><img id="dm-img-preview-img"><span class="img-preview-name">1 ảnh</span><button onclick="clearDmImage()">✕</button></div>
         <input type="file" id="dm-file-input" accept="image/*" style="display:none" onchange="handleDmImageFile(this)">
+      </div>
+      <div class="dm-msg-menu" id="dm-msg-menu">
+        <button onclick="replyToMessage(document.getElementById('dm-msg-menu')._msgId)"><i class="fas fa-reply"></i> Trả lời</button>
+        <button onclick="editDmMessage()"><i class="fas fa-pen"></i> Sửa</button>
+        <button class="danger" onclick="deleteDmMessage()"><i class="fas fa-trash-alt"></i> Xóa</button>
       </div>
     </div>
 
@@ -1270,6 +1441,13 @@ a { color: var(--text-link); text-decoration:none; }
           <div class="pd-comments" id="pd-comments"></div>
         </div>
         <div class="pd-input-fixed">
+          <div class="pd-reply-preview" id="pd-reply-preview" style="display:none;">
+            <div class="pd-reply-line"></div>
+            <div class="pd-reply-info">
+              <span id="pd-reply-name"></span>
+            </div>
+            <button onclick="cancelReplyPdComment()"><i class="fas fa-times"></i></button>
+          </div>
           <div class="pd-input-row">
             <textarea id="pd-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPdComment()}"></textarea>
             <button class="pd-img-btn" onclick="document.getElementById('pd-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
@@ -1298,6 +1476,13 @@ a { color: var(--text-link); text-decoration:none; }
         <textarea id="cs-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCsComment()}"></textarea>
         <button class="cs-img-btn" onclick="document.getElementById('cs-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
         <button class="cs-send-btn" id="cs-send-btn" onclick="sendCsComment()">Gửi</button>
+      </div>
+      <div class="cs-reply-preview" id="cs-reply-preview" style="display:none;">
+        <div class="pd-reply-line"></div>
+        <div class="pd-reply-info">
+          <span id="cs-reply-name"></span>
+        </div>
+        <button onclick="cancelReplyCsComment()"><i class="fas fa-times"></i></button>
       </div>
       <div class="img-preview" id="cs-img-preview" style="display:none;"><img id="cs-img-preview-img"><span class="img-preview-name">1 ảnh</span><button onclick="clearCsImage()">✕</button></div>
       <input type="file" id="cs-file-input" accept="image/*" style="display:none" onchange="handleCsImageFile(this)">
@@ -2376,7 +2561,6 @@ function refreshData(callback){
     appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
     profilesFromData(profilesObj);
     normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
-    showToast('<i class="fas fa-sync-alt"></i> Đã làm mới dữ liệu');
     hideLoadingBar();
     if (callback) callback(appState.data);
   }).catch(function(err) {
@@ -2446,7 +2630,7 @@ function sendPayload(payload, successMsg, callback) {
   if (action === 'save_entry') {
     var entry = payload.entry;
     if (!entry || !entry.id) { fail('Thiếu dữ liệu'); return; }
-    db.collection('entries').doc(entry.id).set(entry).then(function() {
+    db.collection('entries').doc(entry.id).set(entry, {merge:true}).then(function() {
       done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
     }).catch(function(err) { fail('Lỗi đồng bộ'); });
     return;
@@ -2475,7 +2659,7 @@ function sendPayload(payload, successMsg, callback) {
     return;
   }
 
-  if (action === 'add_comment' || action === 'edit_comment' || action === 'delete_comment') {
+  if (action === 'add_comment' || action === 'edit_comment' || action === 'delete_comment' || action === 'reply_comment') {
     return handleCommentAction(payload, successMsg, callback);
   }
 
@@ -2533,6 +2717,18 @@ function handleCommentAction(payload, successMsg, callback) {
         comments.push(newComment);
       } else if (payload.action === 'edit_comment') {
         comments.forEach(function(c) { if (c.id === payload.commentId) { c.text = payload.text; c.author = payload.author || c.author; if (payload.image !== undefined) c.image = payload.image || ''; } });
+      } else if (payload.action === 'reply_comment') {
+        comments.forEach(function(c) {
+          if (c.id === payload.commentId) {
+            if (!c.replies) c.replies = [];
+            c.replies.push({
+              id: 'r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+              author: payload.author || currentUser,
+              text: payload.text || '',
+              time: new Date().toISOString()
+            });
+          }
+        });
       } else if (payload.action === 'delete_comment') {
         comments = comments.filter(function(c) { return c.id !== payload.commentId; });
       }
@@ -2669,21 +2865,79 @@ function markDmSeen() {
   updateDmBadge();
 }
 
+var _dmTypingTimer = null;
+function onDmInput(el){
+  autoResize(el);
+  if(_editingDmMsgId) return;
+  if(_dmTypingTimer) clearTimeout(_dmTypingTimer);
+  db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
+    .set({ typingAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(function(){});
+  _dmTypingTimer = setTimeout(function(){
+    db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
+      .set({ typingAt: '' }, { merge: true }).catch(function(){});
+    _dmTypingTimer = null;
+  }, 2000);
+}
+
+function toggleDmReactionPopup(btn, msgId){
+  var popup = document.getElementById('reaction-popup-'+msgId);
+  if(!popup)return;
+  var isOpen = popup.classList.contains('open');
+  document.querySelectorAll('.dm-reaction-popup.open').forEach(function(p){p.classList.remove('open');});
+  if(!isOpen) popup.classList.add('open');
+}
+function closeDmReactionPopup(msgId){
+  var popup = document.getElementById('reaction-popup-'+msgId);
+  if(popup) popup.classList.remove('open');
+}
+
+function toggleDmReaction(msgId, emoji) {
+  var docRef = db.collection('messages').doc(getChatId()).collection('messages').doc(msgId);
+  db.runTransaction(function(tx) {
+    return tx.get(docRef).then(function(doc) {
+      var reactions = doc.data() && doc.data().reactions ? JSON.parse(JSON.stringify(doc.data().reactions)) : {};
+      if (!reactions[emoji]) reactions[emoji] = {};
+      if (reactions[emoji][appState.currentPin]) {
+        delete reactions[emoji][appState.currentPin];
+        if (!Object.keys(reactions[emoji]).length) delete reactions[emoji];
+      } else {
+        reactions[emoji][appState.currentPin] = true;
+      }
+      tx.update(docRef, { reactions: reactions });
+    });
+  }).catch(function(e) { console.warn('Reaction err:', e); });
+}
+
+var _editingDmMsgId = null;
+var _editingDmMsgText = '';
 function sendDmMessage() {
   var input = document.getElementById('dm-input');
   var text = input.value.trim().replace(/🖕/g, '💖');
   if (!text && !_pendingDmImage) return;
   var btn = document.getElementById('dm-send-btn');
   btn.disabled = true;
+  if (_editingDmMsgId) {
+    db.collection('messages').doc(getChatId()).collection('messages').doc(_editingDmMsgId).update({
+      text: text || '',
+      editedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      input.value = ''; autoResize(input); btn.disabled = false; _editingDmMsgId = null; playSentSound();
+      document.getElementById('dm-send-btn').textContent = 'Gửi'; _dmShouldScroll = true;
+    }).catch(function(err) { console.warn('Edit DM err:', err); btn.disabled = false; });
+    return;
+  }
   var msg = {
     sender: appState.currentPin,
     text: text || '',
     createdAt: new Date().toISOString()
   };
+  if (_replyingDmMsg) {
+    msg.replyTo = { sender: _replyingDmMsg.sender, text: _replyingDmMsg.text||'', image: _replyingDmMsg.image||false };
+    cancelReplyDm();
+  }
   function doSend() {
     db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
       input.value = ''; autoResize(input); btn.disabled = false; playSentSound();
-      // Force scroll to bottom on next renderDmMessages
       _dmShouldScroll = true;
     }).catch(function(err) {
       console.warn('Send DM err:', err); btn.disabled = false;
@@ -2702,6 +2956,87 @@ function sendDmMessage() {
   }
 }
 
+var _replyingDmMsg = null;
+function getDmMsgFromCache(msgId) {
+  for (var i = 0; i < dmMessagesCache.length; i++) {
+    if (dmMessagesCache[i].id === msgId) return dmMessagesCache[i];
+  }
+  return null;
+}
+
+function toggleDmMenu(msgId) {
+  var menu = document.getElementById('dm-msg-menu');
+  if (menu._msgId === msgId) { closeDmMenu(); return; }
+  closeDmMenu();
+  menu._msgId = msgId;
+  var el = document.querySelector('.dm-msg[data-msg-id="'+msgId+'"]');
+  if (el) {
+    var rect = el.getBoundingClientRect();
+    menu.style.top = Math.min(rect.top, window.innerHeight - 120) + 'px';
+    menu.style.left = 'auto';
+    menu.style.right = '10px';
+  } else {
+    menu.style.top = '50%'; menu.style.right = '10px';
+  }
+  menu.classList.add('open');
+}
+function closeDmMenu() {
+  var menu = document.getElementById('dm-msg-menu');
+  if (menu) { menu.classList.remove('open'); menu._msgId = null; }
+}
+function replyToMessage(msgId) {
+  closeDmMenu();
+  var msg = getDmMsgFromCache(msgId);
+  if (!msg) return;
+  if (_editingDmMsgId) cancelEditDm();
+  _replyingDmMsg = { id: msgId, text: msg.text||'', sender: msg.sender, image: !!msg.image };
+  var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
+  var replyer = msg.sender === appState.currentPin ? 'Bạn' : partnerName;
+  document.getElementById('dm-reply-name').textContent = replyer;
+  document.getElementById('dm-reply-text').textContent = msg.text || (msg.image ? 'Ảnh' : '');
+  document.getElementById('dm-reply-preview').style.display = 'flex';
+  document.getElementById('dm-input').focus();
+}
+function cancelReplyDm() {
+  _replyingDmMsg = null;
+  document.getElementById('dm-reply-preview').style.display = 'none';
+}
+function editDmMessage() {
+  var menu = document.getElementById('dm-msg-menu');
+  var msgId = menu._msgId;
+  closeDmMenu();
+  cancelReplyDm();
+  var msg = getDmMsgFromCache(msgId);
+  if (!msg) return;
+  _editingDmMsgId = msgId;
+  _editingDmMsgText = msg.text || '';
+  var input = document.getElementById('dm-input');
+  input.value = msg.text || '';
+  autoResize(input);
+  input.focus();
+  document.getElementById('dm-send-btn').textContent = 'Cập nhật';
+  document.getElementById('dm-img-btn').style.display = 'none';
+}
+function cancelEditDm() {
+  if (!_editingDmMsgId) return;
+  _editingDmMsgId = null; _editingDmMsgText = '';
+  document.getElementById('dm-input').value = '';
+  autoResize(document.getElementById('dm-input'));
+  document.getElementById('dm-send-btn').textContent = 'Gửi';
+  document.getElementById('dm-img-btn').style.display = '';
+}
+function deleteDmMessage() {
+  var menu = document.getElementById('dm-msg-menu');
+  var msgId = menu._msgId;
+  closeDmMenu();
+  showConfirm('Xóa tin nhắn?', 'Tin nhắn sẽ bị xóa cho cả hai.', function(ok) {
+    if (!ok) return;
+    db.collection('messages').doc(getChatId()).collection('messages').doc(msgId).update({
+      text: '', image: '', deleted: true
+    }).catch(function(err) { console.warn('Delete DM err:', err); });
+  });
+}
+
 var _dmFirstRender = true;
 var _dmShouldScroll = false;
 function renderDmMessages() {
@@ -2717,8 +3052,29 @@ function renderDmMessages() {
     container.innerHTML = '<div class="dm-empty"><i class="fab fa-facebook-messenger"></i>Chưa có tin nhắn nào<br><span style="font-size:0.75rem;">Hãy gửi lời nhắn đầu tiên đến '+esc(partnerName)+'</span></div>';
     return;
   }
+  // Pre-compute group boundaries
+  var grpStart = {}, grpEnd = {};
+  for (var g = 0; g < msgs.length; g++) {
+    var gm = msgs[g], gn = msgs[g+1], gp = msgs[g-1];
+    var gd = new Date(gm.time||gm.createdAt||'');
+    var gds = gd.getFullYear()+'-'+pad(gd.getMonth()+1)+'-'+pad(gd.getDate());
+    var gNext = gn && gm.sender===gn.sender && gds===(new Date(gn.time||gn.createdAt||'').getFullYear()+'-'+pad(new Date(gn.time||gn.createdAt||'').getMonth()+1)+'-'+pad(new Date(gn.time||gn.createdAt||'').getDate())) && (new Date(gn.time||gn.createdAt||'')-gd)<300000;
+    var gPrev = gp && gm.sender===gp.sender && gds===(new Date(gp.time||gp.createdAt||'').getFullYear()+'-'+pad(new Date(gp.time||gp.createdAt||'').getMonth()+1)+'-'+pad(new Date(gp.time||gp.createdAt||'').getDate())) && (gd-new Date(gp.time||gp.createdAt||''))<300000;
+    if (gNext && !gPrev) grpStart[g] = 1;
+    if (!gNext && gPrev) grpEnd[g] = 1;
+  }
+  function fmtFull(iso){
+    if(!iso)return'';
+    try{
+      var dd=new Date(iso);if(isNaN(dd))return'';
+      var days=['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+      return days[dd.getDay()]+', '+pad(dd.getHours())+':'+pad(dd.getMinutes())+' · '+dd.getDate()+'/'+(dd.getMonth()+1)+'/'+dd.getFullYear();
+    }catch(e){return''}
+  }
   var html = '';
   var lastDate = '';
+  var lastSentIdx = -1;
+  for (var si = msgs.length - 1; si >= 0; si--) { if (msgs[si].sender === appState.currentPin && !msgs[si].deleted) { lastSentIdx = si; break; } }
   for (var i = 0; i < msgs.length; i++) {
     var m = msgs[i];
     var t = m.time || m.createdAt || '';
@@ -2733,6 +3089,7 @@ function renderDmMessages() {
       if (dateStr === todayStr) label = 'Hôm nay';
       else if (dateStr === yStr) label = 'Hôm qua';
       else { var p = dateStr.split('-'); label = 'Ngày ' + parseInt(p[2]) + ' Tháng ' + parseInt(p[1]) + ', ' + p[0]; }
+      if (grpEnd[i-1]) { html += '</div>'; }
       html += '<div class="dm-date-sep">' + label + '</div>';
       lastDate = dateStr;
     }
@@ -2741,17 +3098,66 @@ function renderDmMessages() {
     var statusText = isSent ? (seen ? 'Đã xem' : 'Đã gửi') : '';
     var statusHtml = statusText ? '<span class="dm-msg-status '+(seen?'seen':'sent')+'">'+statusText+'</span>' : '';
     var cls = isSent ? 'sent' : 'received';
-    var imgHtml = '';
-    if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(m.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
+    if (m.deleted) cls += ' deleted';
+    var isLatestSent = isSent && i === lastSentIdx;
+    if (isLatestSent) cls += ' dm-msg-latest-sent';
+    var editedHtml = m.editedAt ? '<span class="dm-edited">(đã chỉnh sửa)</span>' : '';
+    var replyHtml = '';
+    if (m.replyTo) {
+      var replyName = m.replyTo.sender === appState.currentPin ? 'Bạn' : partnerName;
+      replyHtml = '<div class="dm-msg-reply"><span class="dm-msg-reply-name">'+esc(replyName)+'</span><span class="dm-msg-reply-text">'+esc(m.replyTo.text||(m.replyTo.image?'Ảnh':''))+'</span></div>';
+    }
+    var contentHtml = '';
+    var reactionsHtml = '';
+    if (m.reactions) {
+      var emojis = Object.keys(m.reactions);
+      if (emojis.length) {
+        reactionsHtml = '<div class="dm-reactions">';
+        for (var ri = 0; ri < emojis.length; ri++) {
+          var count = Object.keys(m.reactions[emojis[ri]]).length;
+          var hasMe = m.reactions[emojis[ri]][appState.currentPin];
+          reactionsHtml += '<span class="dm-msg-reaction'+(hasMe?' active':'')+'" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\''+esc(emojis[ri])+'\')">'+emojis[ri]+(count>1?' '+count:'')+'</span>';
+        }
+        reactionsHtml += '</div>';
+      }
+    }
+    if (m.deleted) {
+      contentHtml = '<div class="dm-msg-bubble">Tin nhắn đã được thu hồi</div>';
+    } else {
+      var imgHtml = '';
+      if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(m.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
+      if (replyHtml || m.text) contentHtml += '<div class="dm-msg-bubble">' + replyHtml + esc(m.text||'').replace(/🖕/g, '💖') + editedHtml + reactionsHtml + '</div>';
+      if (!replyHtml && !m.text && imgHtml) { contentHtml += imgHtml; }
+      else if (imgHtml) contentHtml += imgHtml;
+      else if (!replyHtml && !m.text && !imgHtml && reactionsHtml) { contentHtml += '<div class="dm-msg-bubble">'+reactionsHtml+'</div>'; }
+    }
     var avaHtml = '';
     if (!isSent && partnerAva) avaHtml = '<img class="dm-msg-avatar" src="'+esc(partnerAva)+'" alt="">';
-    html += '<div class="dm-msg ' + cls + '">';
-    if (!isSent) html += avaHtml;
-    html += '<div>';
-    if (m.text) html += '<div class="dm-msg-bubble">' + esc(m.text.replace(/🖕/g, '💖')) + '</div>';
-    if (imgHtml) html += imgHtml;
-    html += '<div class="dm-msg-time">' + fmtTime(t) + statusHtml + '</div></div>';
+    var nextD = msgs[i+1] ? new Date(msgs[i+1].time||msgs[i+1].createdAt||'') : null;
+    var nextInGroup = nextD && m.sender===msgs[i+1].sender && d.getFullYear()===nextD.getFullYear() && d.getMonth()===nextD.getMonth() && d.getDate()===nextD.getDate() && (nextD-d)<300000;
+    if (grpStart[i]) html += '<div class="dm-msg-group">';
+    html += '<div class="dm-msg ' + cls + '" data-msg-id="' + m.id + '">';
+    if (!isSent) {
+      if (nextInGroup) html += '<div class="dm-msg-avatar-spacer"></div>';
+      else html += avaHtml;
+    }
+    html += '<div class="dm-msg-wrap">';
+    html += '<div class="dm-msg-inner">';
+    html += '<div class="dm-msg-row">';
+    html += contentHtml;
+    if (!m.deleted) {
+      html += '<div class="dm-msg-actions">';
+      html += '<button class="dm-msg-action-btn" onclick="event.stopPropagation();replyToMessage(\'' + m.id + '\')" title="Trả lời"><i class="fas fa-reply"></i></button>';
+      html += '<div class="dm-reaction-wrap"><button class="dm-msg-action-btn dm-reaction-btn" onclick="event.stopPropagation();toggleDmReactionPopup(this,\''+m.id+'\')" title="Cảm xúc"><i class="fas fa-smile"></i></button><div class="dm-reaction-popup" id="reaction-popup-'+m.id+'"><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'❤️\');closeDmReactionPopup(\''+m.id+'\')">❤️</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😂\');closeDmReactionPopup(\''+m.id+'\')">😂</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😢\');closeDmReactionPopup(\''+m.id+'\')">😢</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😮\');closeDmReactionPopup(\''+m.id+'\')">😮</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😡\');closeDmReactionPopup(\''+m.id+'\')">😡</span></div></div>';
+      if (isSent) html += '<button class="dm-msg-action-btn" onclick="event.stopPropagation();toggleDmMenu(\'' + m.id + '\')" title="Thêm"><i class="fas fa-ellipsis-v"></i></button>';
+      html += '</div>';
+    }
+    html += '</div></div>';
+    if (isLatestSent) html += '<div class="dm-msg-status-latest"><span class="dm-msg-status '+(seen?'seen':'sent')+'">'+statusText+'</span></div>';
+    html += '<div class="dm-msg-time">' + fmtFull(t) + statusHtml + '</div>';
     html += '</div>';
+    html += '</div>';
+    if (grpEnd[i]) html += '</div>';
   }
   // Scroll to bottom: first render, after sending msg, or if user was already near bottom
   var shouldScroll = _dmFirstRender || _dmShouldScroll || (container.scrollTop + container.clientHeight >= container.scrollHeight - 40);
@@ -2760,7 +3166,6 @@ function renderDmMessages() {
   container.innerHTML = html;
   if (shouldScroll) {
     container.scrollTop = container.scrollHeight;
-    // Double-check after layout in case images loaded async
     setTimeout(function() {
       if (container.scrollTop < container.scrollHeight - 20) {
         container.scrollTop = container.scrollHeight;
@@ -2768,6 +3173,25 @@ function renderDmMessages() {
     }, 100);
   }
 }
+// Swipe-to-reply on mobile
+var _dmTouchData = null;
+document.getElementById('dm-messages').addEventListener('touchstart', function(e) {
+  var el = e.target.closest('.dm-msg');
+  if (!el || el.classList.contains('swiped')) return;
+  _dmTouchData = { el: el, startX: e.touches[0].clientX };
+}, { passive: true });
+document.getElementById('dm-messages').addEventListener('touchmove', function(e) {
+  if (!_dmTouchData) return;
+  _dmTouchData.lastX = e.touches[0].clientX;
+}, { passive: true });
+document.getElementById('dm-messages').addEventListener('touchend', function(e) {
+  if (!_dmTouchData) return;
+  var dx = e.changedTouches[0].clientX - _dmTouchData.startX;
+  if (dx > 50) {
+    replyToMessage(_dmTouchData.el.dataset.msgId);
+  }
+  _dmTouchData = null;
+}, { passive: true });
 
 function setupRealtimeEntries() {
   if (_entriesUnsub) return;
@@ -2818,12 +3242,20 @@ function setupDmListener() {
     }, function(err) {
       console.warn('DM listener err:', err);
     });
-  // Listen to partner's lastSeen for read receipts
+  // Listen to partner's lastSeen for read receipts + typing indicator
   var partnerPin = getPartnerPin();
   if (partnerPin) {
     db.collection('dm_status').doc(getChatId()).collection('status').doc(partnerPin)
       .onSnapshot(function(snap) {
         partnerLastSeen = snap.exists ? (snap.data().lastSeen || '') : '';
+        var typingEl = document.getElementById('dm-typing');
+        if(typingEl && snap.exists && snap.data().typingAt){
+          var typingTime = snap.data().typingAt.toDate ? snap.data().typingAt.toDate() : new Date(snap.data().typingAt);
+          var elapsed = new Date() - typingTime;
+          typingEl.style.display = elapsed < 3000 ? 'flex' : 'none';
+        } else if(typingEl) {
+          typingEl.style.display = 'none';
+        }
         if (appState.currentPage === 'direct') renderDmMessages();
       }, function() {});
   }
@@ -2931,7 +3363,10 @@ function switchPage(page){
 function switchProfileTab(tab){
   appState.profileTab=tab;
   document.querySelectorAll('.profile-tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===tab)});
+  var container=document.getElementById('profile-posts');
+  container.style.opacity='0'; container.style.transform='translateY(8px)';
   renderProfileContent();
+  setTimeout(function(){ container.style.transition='opacity 0.2s ease, transform 0.2s ease'; container.style.opacity='1'; container.style.transform='translateY(0)'; setTimeout(function(){container.style.transition=''},250) }, 30);
 }
 
 // ==================== RENDER ALL ====================
@@ -2999,6 +3434,13 @@ function resetProfileView(){
   if(window.updateClock)updateClock();
 }
 
+function viewProfile(pin){
+  if(!pin||pin===appState.currentPin){resetProfileView();return}
+  closePostDetail();
+  switchPage('profile');
+  renderProfileForUser(pin);
+}
+
 // ==================== FEED ====================
 function getFeedEntries(){
   var entries=(appState.data.entries||[]).slice();
@@ -3046,7 +3488,7 @@ function buildFeedCard(entry){
   var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
   var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
   var isOwner=getEffectiveName(entry.author)===getEffectiveName(currentUser);
-  var timeDisplay=timeAgo(entry.updatedAt);
+  var timeDisplay=timeAgo(entry.createdAt||entry.updatedAt);
 
   var imgGrid='';
   var hasImages=entry.images&&entry.images.length>0;
@@ -3079,7 +3521,7 @@ function buildFeedCard(entry){
         (hasMore?'<div class="feed-card-caption-expand">Xem thêm</div>':'')+
       '</div>'+
       (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Thêm bình luận...</div>')+
-      '<div class="feed-card-timestamp">'+timeAgo(entry.updatedAt)+'</div>'+
+      '<div class="feed-card-timestamp">'+timeAgo(entry.createdAt||entry.updatedAt)+'</div>'+
     '</div>'+
   '</div>';
 }
@@ -3311,13 +3753,13 @@ function renderProfileContent(){
       var ava=getDisplayAvatar(authorPin);
   var avatar=ava?'<img class="fcard-ava" src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var isOwner=getEffectiveName(e.author)===getEffectiveName(currentUser);
-      return '<div class="threads-item" onclick="if(window.innerWidth<768){openCommentSheet(\''+e.id+'\')}else{openPostDetail(\''+e.id+'\')}">'+
+      return '<div class="threads-item" onclick="openPostDetail(\''+e.id+'\')">'+
         '<div class="threads-author"><div class="threads-avatar"><div class="inner">'+avatar+'</div></div><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong>'+(isOwner?'<div class="feed-card-actions" style="margin-left:auto;"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+e.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+e.id+'"><button onclick="event.stopPropagation();editPost(\''+e.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+e.id+'\')">Xóa bài</button></div></div>':'')+'</div>'+
         imgHtml+
         '<div class="threads-content">'+esc(e.content||'')+'</div>'+
         '<div class="threads-meta">'+
-          (commentCount>0?'<span onclick="event.stopPropagation();if(window.innerWidth<768){openCommentSheet(\''+e.id+'\')}else{openPostDetail(\''+e.id+'\')}" style="cursor:pointer;"><i class="fa-regular fa-comment"></i> '+commentCount+' bình luận</span><span class="dot-sep"></span>':'')+
-          '<span>'+timeAgo(e.updatedAt)+'</span>'+
+          (commentCount>0?'<span onclick="event.stopPropagation();openPostDetail(\''+e.id+'\')" style="cursor:pointer;"><i class="fa-regular fa-comment"></i> '+commentCount+' bình luận</span><span class="dot-sep"></span>':'')+
+          '<span>'+timeAgo(e.createdAt||e.updatedAt)+'</span>'+
         '</div>'+
       '</div>'
     }).join('')+'</div>'
@@ -3331,7 +3773,7 @@ function renderProfileContent(){
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
     _profileImages=allImages;
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
-      return '<div class="profile-grid-item" onclick="openProfilePhotoViewer('+idx+')"><img src="'+esc(img.url)+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
+      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(img.url)+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -3385,13 +3827,13 @@ function renderPostDetail(){
   // Author row with three-dot menu
   var avatarHtml=avaUrl?'<img src="'+esc(avaUrl)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
   var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
-  var timeDisplay=timeAgo(entry.updatedAt);
+  var timeDisplay=timeAgo(entry.createdAt||entry.updatedAt);
   var menuHtml=isOwner?'<div class="pd-author-actions"><button class="pd-menu-btn" onclick="event.stopPropagation();togglePdMenu()"><i class="fas fa-ellipsis-h"></i></button><div class="pd-dropdown" id="pd-dropdown"><button onclick="editFromPostDetail()"><i class="fas fa-pen"></i><span>Sửa bài viết</span></button><button class="danger" onclick="deleteFromPostDetail()"><i class="fas fa-trash-alt"></i><span>Xóa bài viết</span></button></div></div>':'';
   document.getElementById('pd-author').innerHTML=
-    '<div class="pd-author-avatar"><div class="inner">'+avatarHtml+'</div></div>'+
+    '<div class="pd-author-avatar" style="cursor:pointer;" onclick="viewProfile(\''+authorPin+'\')"><div class="inner">'+avatarHtml+'</div></div>'+
     '<div class="pd-author-info">'+
       '<div class="pd-author-name-row">'+
-        '<span class="pd-author-name">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></span>'+
+        '<span class="pd-author-name" style="cursor:pointer;" onclick="viewProfile(\''+authorPin+'\')">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></span>'+
         '<span class="pd-author-time">· '+esc(timeDisplay)+'</span>'+
         (isOwner?menuHtml:'')+
       '</div>'+
@@ -3465,6 +3907,21 @@ function updatePdNav(){
   var next=document.getElementById('pd-next');if(next)next.disabled=pdCarouselIndex===total-1;
 }
 
+var _pdReplyToCommentId = null;
+var _pdReplyToName = '';
+function replyToPdComment(commentId, name){
+  _pdReplyToCommentId = commentId;
+  _pdReplyToName = name;
+  document.getElementById('pd-reply-name').textContent = 'Đang trả lời ' + name;
+  document.getElementById('pd-reply-preview').style.display = 'flex';
+  document.getElementById('pd-input').focus();
+}
+function cancelReplyPdComment(){
+  _pdReplyToCommentId = null;
+  _pdReplyToName = '';
+  document.getElementById('pd-reply-preview').style.display = 'none';
+}
+
 function renderPdComments(){
   var entry=appState.data.entries.find(function(e){return e.id===pdEntryId});
   if(!entry){document.getElementById('pd-comments').innerHTML='';return}
@@ -3482,16 +3939,29 @@ function renderPdComments(){
       var cavatar=cava?'<img src="'+esc(cava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var cimgHtml = '';
       if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(c.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(c.image)+'\')"></div>';
+      var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
+      var repliesHtml = '';
+      if (c.replies && c.replies.length) {
+        repliesHtml = '<div class="pd-replies">' + c.replies.map(function(r){
+          var reff=getEffectiveName(r.author);
+          var rpin=getPinForUser(r.author);
+          var rava=getDisplayAvatar(rpin);
+          var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
+          var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(r.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
+          return '<div class="pd-reply-item"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(r.text?'<div class="pd-comment-text">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+esc(reff.replace(/ [\w💖🌻]+$/g,''))+'\')">Trả lời</button></div></div></div>';
+        }).join('') + '</div>';
+      }
       return '<div class="pd-comment-item" data-id="'+c.id+'">'+
         '<div class="pd-comment-avatar">'+cavatar+'</div>'+
         '<div class="pd-comment-body">'+
           '<div style="display:flex;align-items:center;gap:6px;width:100%;">'+
-            '<div class="pd-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+
+            '<div class="pd-comment-user">'+cname+' <i class="fas fa-check-circle verified-badge"></i></div>'+
             (isOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCommentMenu(\''+c.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cmt-dropdown-'+c.id+'"><button onclick="editPdComment(\''+c.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdComment(\''+c.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+
           '</div>'+
           (c.text?'<div class="pd-comment-text'+(pdEditingCommentId===c.id?' editing':'')+'" id="pd-cmt-'+c.id+'">'+esc(c.text)+'</div>':'')+
           cimgHtml+
-          '<div class="pd-comment-time">'+timeAgo(c.time)+'</div>'+
+          '<div class="pd-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+cname+'\')">Trả lời</button></div>'+
+          repliesHtml+
         '</div>'+
       '</div>'
     }).join('');
@@ -3506,6 +3976,28 @@ function sendPdComment(){
   if(!pdEntryId)return;
   var btn=document.getElementById('pd-send-btn');
   btn.disabled=true;
+
+  if(_pdReplyToCommentId){
+    function doReply(imgUrl){
+      var payload={action:'reply_comment',entryId:pdEntryId,commentId:_pdReplyToCommentId,author:currentUser,text:text};
+      if(imgUrl)payload.image=imgUrl;
+      sendCommentPayload(payload,function(result){
+        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+        if(result&&result.comments){if(master)master.comments=result.comments}
+        _pdReplyToCommentId=null;_pdReplyToName='';_pendingPdImage=null;showImgPreview('pd');
+        input.value='';autoResize(input);btn.disabled=false;
+        document.getElementById('pd-reply-preview').style.display='none';
+        renderPdComments();renderFeed();
+      });
+    }
+    if(_pendingPdImage&&_pendingPdImage.indexOf('data:')===0){
+      var pdEntry=appState.data.entries.find(function(e){return e.id===pdEntryId});
+      var pdDate=pdEntry?pdEntry.date||todayStr():todayStr();
+      uploadImage(_pendingPdImage,'comment_'+Date.now()+'.jpg',pdDate,function(r){doReply(r&&r.url?r.url:'');});
+    }else if(_pendingPdImage){doReply(_pendingPdImage)}
+    else{doReply()}
+    return;
+  }
 
   if(pdEditingCommentId){
     var masterEntry=appState.data.entries.find(function(e){return e.id===pdEntryId});
@@ -3584,6 +4076,7 @@ function editPdComment(id){
 
 function cancelEditComment(){
   pdEditingCommentId=null;
+  cancelReplyPdComment();
   _pendingPdImage=null;showImgPreview('pd');
   var inp=document.getElementById('pd-input');
   inp.value='';inp.classList.remove('edit-mode');
@@ -3665,6 +4158,21 @@ function deleteFromPostDetail(){
 // ==================== COMMENT BOTTOM SHEET ====================
 var csEntryId = null;
 
+var _csReplyToCommentId = null;
+var _csReplyToName = '';
+function replyToCsComment(commentId, name){
+  _csReplyToCommentId = commentId;
+  _csReplyToName = name;
+  document.getElementById('cs-reply-name').textContent = 'Đang trả lời ' + name;
+  document.getElementById('cs-reply-preview').style.display = 'flex';
+  document.getElementById('cs-input').focus();
+}
+function cancelReplyCsComment(){
+  _csReplyToCommentId = null;
+  _csReplyToName = '';
+  document.getElementById('cs-reply-preview').style.display = 'none';
+}
+
 function openCommentSheet(entryId){
   var entry=appState.data.entries.find(function(e){return e.id===entryId});
   if(!entry)return;
@@ -3682,6 +4190,8 @@ function closeCommentSheet(){
   var overlay=document.getElementById('comment-sheet-overlay');
   overlay.classList.remove('open');
   csEntryId=null;
+  _csReplyToCommentId=null;_csReplyToName='';
+  document.getElementById('cs-reply-preview').style.display='none';
   document.documentElement.style.overflow='';document.body.style.overflow='';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
 }
@@ -3700,13 +4210,25 @@ function renderCommentSheet(entry){
       var cavatar=cava?'<img src="'+esc(cava)+'">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var cimgHtml = '';
       if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(c.image)+'" onclick="openImageViewer(\''+esc(c.image)+'\')"></div>';
+      var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
+      var repliesHtml = '';
+      if (c.replies && c.replies.length) {
+        repliesHtml = '<div class="pd-replies">' + c.replies.map(function(r){
+          var reff=getEffectiveName(r.author);
+          var rpin=getPinForUser(r.author);
+          var rava=getDisplayAvatar(rpin);
+          var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
+          return '<div class="pd-reply-item" style="margin-top:6px;"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(r.text?'<div class="pd-comment-text">'+esc(r.text)+'</div>':'')+'</div></div>';
+        }).join('') + '</div>';
+      }
       return '<div class="cs-comment-item">'+
         '<div class="cs-comment-avatar">'+cavatar+'</div>'+
         '<div class="cs-comment-body">'+
-          '<div class="cs-comment-user">'+esc(ceffective.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+
+          '<div class="cs-comment-user">'+cname+' <i class="fas fa-check-circle verified-badge"></i></div>'+
           (c.text?'<div class="cs-comment-text">'+esc(c.text)+'</div>':'')+
           cimgHtml+
-          '<div class="cs-comment-time">'+timeAgo(c.time)+'</div>'+
+          '<div class="cs-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+cname+'\')">Trả lời</button></div>'+
+          repliesHtml+
         '</div>'+
       '</div>'
     }).join('');
@@ -3724,6 +4246,30 @@ function sendCsComment(){
   if(!csEntryId)return;
   var btn=document.getElementById('cs-send-btn');
   btn.disabled=true;
+
+  if(_csReplyToCommentId){
+    function doReply(imgUrl){
+      var payload={action:'reply_comment',entryId:csEntryId,commentId:_csReplyToCommentId,author:currentUser,text:text};
+      if(imgUrl)payload.image=imgUrl;
+      sendCommentPayload(payload,function(result){
+        var master=appState.data.entries.find(function(e){return e.id===csEntryId});
+        if(result&&result.comments){if(master)master.comments=result.comments}
+        _csReplyToCommentId=null;_csReplyToName='';_pendingCsImage=null;showImgPreview('cs');
+        input.value='';autoResize(input);btn.disabled=false;
+        document.getElementById('cs-reply-preview').style.display='none';
+        renderCommentSheet(master||appState.data.entries.find(function(e){return e.id===csEntryId}));
+        renderFeed();
+      });
+    }
+    if(_pendingCsImage&&_pendingCsImage.indexOf('data:')===0){
+      var csEntry=appState.data.entries.find(function(e){return e.id===csEntryId});
+      var csDate=csEntry?csEntry.date||todayStr():todayStr();
+      uploadImage(_pendingCsImage,'comment_'+Date.now()+'.jpg',csDate,function(r){doReply(r&&r.url?r.url:'');});
+    }else if(_pendingCsImage){doReply(_pendingCsImage)}
+    else{doReply()}
+    return;
+  }
+
   function doSend(imgUrl){
     var payload={
       action:'add_comment',
@@ -3732,12 +4278,14 @@ function sendCsComment(){
       author:currentUser
     };
     if(imgUrl)payload.image=imgUrl;
-    sendPayload(payload,'Đã bình luận!',function(){
+    sendCommentPayload(payload,function(result){
       input.value='';autoResize(input);btn.disabled=false;
       _pendingCsImage=null;showImgPreview('cs');
+      _csReplyToCommentId=null;_csReplyToName='';
+      document.getElementById('cs-reply-preview').style.display='none';
       renderCommentSheet(appState.data.entries.find(function(e){return e.id===csEntryId}));
       renderFeed();
-    })
+    });
   }
   if(_pendingCsImage){
     var raw=_pendingCsImage.split(',')[1]||_pendingCsImage;
@@ -3932,7 +4480,8 @@ function submitCreatePost(){
   };
   if(appState.writeEditId){
     var old=appState.data.entries.find(function(e){return e.id===appState.writeEditId});
-    if(old){entry.title=old.title||'';entry.comments=old.comments||[];entry.createdAt=old.createdAt||now}
+    if(old){entry.title=old.title||'';entry.createdAt=old.createdAt||now}
+    delete entry.comments;
   }
   sendPayload({action:'save_entry',entry:entry},null,function(){
     showToast(appState.writeEditId?'<i class="fas fa-save"></i> Đã cập nhật!':'<i class="fas fa-save"></i> Đã đăng bài!');
@@ -4066,6 +4615,7 @@ function triggerSync(){showLoadingBar();loadData(function(){hideLoadingBar();sho
 
 // ==================== KEYBOARD SHORTCUTS ====================
 document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){if(_editingDmMsgId){cancelEditDm()}else if(_replyingDmMsg){cancelReplyDm()}return}
   var createPage=document.getElementById('create-page');
   if(createPage.classList.contains('open')&&e.key==='Escape')closeCreatePage();
   var pd=document.getElementById('post-overlay');
@@ -4074,6 +4624,10 @@ document.addEventListener('keydown',function(e){
     if(e.key==='ArrowLeft')pdPrev();
     if(e.key==='ArrowRight')pdNext();
   }
+})
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.dm-msg-menu')&&!e.target.closest('.dm-msg-menu-btn'))closeDmMenu();
+  if(!e.target.closest('.dm-reaction-popup')&&!e.target.closest('.dm-reaction-btn'))document.querySelectorAll('.dm-reaction-popup.open').forEach(function(p){p.classList.remove('open')});
 })
 
 
