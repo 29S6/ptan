@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "ptan.storyapp",
-        "sha256_cert_fingerprints": ["1E:0A:01:01:51:D7:DC:8A:34:C6:86:56:F0:3D:A4:C4:6A:BE:E6:A9:8F:E1:1E:3A:06:6A:AA:1B:52:65:87:26"]
-      }
-    }]
