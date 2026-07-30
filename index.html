@@ -3344,7 +3344,7 @@ function smoothScroll(el,to,dur){
 function switchPage(page){
   appState.currentPage=page;
   var nav=document.getElementById('bottom-nav');if(nav)nav.style.display=page==='direct'?'none':'';
-  var mc=document.getElementById('main-content');if(mc){mc.style.paddingBottom=page==='direct'?'0':'';mc.style.overflow=page==='direct'?'hidden':'auto';}
+  var mc=document.getElementById('main-content');if(mc){mc.style.paddingBottom=page==='direct'?'0':'';mc.style.overflow=page==='direct'?'hidden':'';}
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   var target=document.getElementById('page-'+page);
   void target.offsetHeight;
@@ -4480,7 +4480,8 @@ function submitCreatePost(){
   };
   if(appState.writeEditId){
     var old=appState.data.entries.find(function(e){return e.id===appState.writeEditId});
-    if(old){entry.title=old.title||'';entry.createdAt=old.createdAt||now}
+    if(old){entry.title=old.title||'';entry.createdAt=old.createdAt||(old.date?old.date+'T00:00:00.000Z':undefined);if(!entry.createdAt)delete entry.createdAt}
+    else delete entry.createdAt;
     delete entry.comments;
   }
   sendPayload({action:'save_entry',entry:entry},null,function(){
