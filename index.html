@@ -1224,7 +1224,9 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   background:var(--border-light); border:none; cursor:pointer; flex-shrink:0; transition:0.07s;
 }
 .img-preview button:hover { background:var(--text-danger); color:#fff; }
-.dm-msg-img-content { max-width:200px; max-height:240px; border-radius:8px; margin-top:4px; overflow:hidden; width:100%; }
+.dm-msg-media { display:flex; flex-direction:column; align-items:flex-start; }
+.dm-msg.sent .dm-msg-media { align-items:flex-end; }
+.dm-msg-img-content { max-width:200px; max-height:240px; border-radius:8px; overflow:hidden; width:100%; }
 .dm-msg-img-content img { width:100%; height:auto; max-height:240px; object-fit:cover; border-radius:8px; display:block; cursor:pointer; }
 .comment-img-content { max-width:200px; max-height:240px; border-radius:8px; margin-top:4px; overflow:hidden; }
 .comment-img-content img { width:100%; height:auto; max-height:240px; border-radius:8px; display:block; cursor:pointer; }
@@ -3064,10 +3066,11 @@ function renderDmMessages() {
     } else {
       var imgHtml = '';
       if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(m.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
-      if (replyHtml || m.text) contentHtml += '<div class="dm-msg-bubble">' + replyHtml + esc(m.text||'').replace(/🖕/g, '💖') + editedHtml + reactionsHtml + '</div>';
-      if (!replyHtml && !m.text && imgHtml) { contentHtml += imgHtml; }
-      else if (imgHtml) contentHtml += imgHtml;
-      else if (!replyHtml && !m.text && !imgHtml && reactionsHtml) { contentHtml += '<div class="dm-msg-bubble">'+reactionsHtml+'</div>'; }
+      var hasText=!!(replyHtml||m.text);
+      if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+editedHtml+reactionsHtml+'</div></div>'}
+      else if(imgHtml)contentHtml+=imgHtml
+      else if(hasText)contentHtml+='<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+editedHtml+reactionsHtml+'</div>'
+      else if(reactionsHtml)contentHtml+='<div class="dm-msg-bubble">'+reactionsHtml+'</div>'
     }
     var avaHtml = '';
     if (!isSent && partnerAva) avaHtml = '<img class="dm-msg-avatar" src="'+esc(partnerAva)+'" alt="">';
