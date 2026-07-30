@@ -3078,7 +3078,14 @@ function copyDmMessage() {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
       showToast('Đã sao chép tin nhắn');
-    }).catch(function() {});
+    }).catch(function() {
+      // fallback to execCommand
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('Đã sao chép tin nhắn');
+    });
   } else {
     // Fallback
     var ta = document.createElement('textarea');
@@ -3092,7 +3099,7 @@ function clearDmSwipe() {
   document.querySelectorAll('.dm-msg.swiped').forEach(function(el){el.classList.remove('swiped');el.style.transform='';el.style.opacity='';el.style.transition=''});
 }
 function replyToMessage(msgId) {
-  closeDmMenu();
+  closeDmMenu(); unfocusDmMessage();
   var msg = getDmMsgFromCache(msgId);
   if (!msg) return;
   if (_editingDmMsgId) cancelEditDm();
@@ -3107,12 +3114,12 @@ function replyToMessage(msgId) {
 function cancelReplyDm() {
   _replyingDmMsg = null;
   document.getElementById('dm-reply-preview').style.display = 'none';
-  clearDmSwipe();
+  clearDmSwipe(); unfocusDmMessage();
 }
 function editDmMessage() {
   var menu = document.getElementById('dm-msg-menu');
   var msgId = menu._msgId;
-  closeDmMenu();
+  closeDmMenu(); unfocusDmMessage();
   cancelReplyDm();
   clearDmSwipe();
   var msg = getDmMsgFromCache(msgId);
@@ -3138,7 +3145,7 @@ function cancelEditDm() {
 function deleteDmMessage() {
   var menu = document.getElementById('dm-msg-menu');
   var msgId = menu._msgId;
-  closeDmMenu();
+  closeDmMenu(); unfocusDmMessage();
   showConfirm('Xóa tin nhắn?', 'Tin nhắn sẽ bị xóa cho cả hai.', function(ok) {
     if (!ok) return;
     db.collection('messages').doc(getChatId()).collection('messages').doc(msgId).update({
@@ -3485,7 +3492,7 @@ function openImageViewer(src) {
   var _img=document.getElementById('pv-image');gsap.fromTo(_img,{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out',onComplete:function(){_img.style.transform='none'}})
 }
 // ==================== NAVIGATION ====================
-function goHome(){switchPage('feed')}
+function goHome(){switchPage('feed');refreshData()}
 function smoothScroll(el,to,dur){
   if(!el)return;
   var start=el.scrollTop,startTime=null;
