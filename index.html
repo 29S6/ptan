@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/svg+xml" href="icon.svg" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <meta name="apple-mobile-web-app-title" content="Love Story" />
   <title>Love Story</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,8 +15,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script>
 // Apply saved/preferred theme immediately to prevent flash
 (function(){
@@ -1697,74 +1692,6 @@ auth.signInAnonymously().catch(function(err) {
   console.warn('Anonymous auth err:', err);
 });
 
-// ==================== SERVICE WORKER + PUSH NOTIFICATIONS ====================
-var _fcmToken = null;
-var _notifGranted = false;
-
-function registerSw() {
-  if (!('serviceWorker' in navigator)) return;
-  navigator.serviceWorker.register('sw.js').then(function(reg) {
-    console.log('SW registered');
-    // Set up FCM push
-    if ('Notification' in window && firebase.messaging) {
-      try {
-        var msg = firebase.messaging();
-        // Get FCM token and store in Firestore
-        msg.getToken().then(function(token) {
-          _fcmToken = token;
-          storeFcmToken(token);
-        }).catch(function() {});
-        // Listen for foreground messages
-        msg.onMessage(function(payload) {
-          // Foreground push — handled by our onSnapshot already
-        });
-      } catch(e) {}
-    }
-  }).catch(function() {});
-}
-
-function storeFcmToken(token) {
-  if (!token || !appState.currentPin) return;
-  db.collection('config').doc('fcm_tokens').set({
-    tokens: { [appState.currentPin]: token }
-  }, { merge: true }).catch(function() {});
-}
-
-function requestNotifPermission() {
-  if (!('Notification' in window)) return;
-  if (Notification.permission === 'granted') { _notifGranted = true; return; }
-  if (Notification.permission === 'denied') return;
-  Notification.requestPermission().then(function(p) {
-    if (p === 'granted') _notifGranted = true;
-  });
-}
-
-function showBrowserNotification(title, body, tag) {
-  if (!_notifGranted && Notification.permission !== 'granted') return;
-  _notifGranted = true;
-  try {
-    var n = new Notification(title, {
-      body: body,
-      tag: tag || 'dm-' + Date.now(),
-      icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23ed4956\'/%3E%3Ctext x=\'50\' y=\'68\' text-anchor=\'middle\' font-size=\'50\' fill=\'white\'%3E%E2%9D%A4%3C/text%3E%3C/svg%3E',
-      vibrate: [200, 100, 200],
-      requireInteraction: true
-    });
-    n.onclick = function() {
-      this.close();
-      window.focus();
-      switchPage('direct');
-    };
-  } catch(e) {}
-}
-
-// Register SW after page load
-if (document.readyState === 'complete') {
-  registerSw();
-} else {
-  window.addEventListener('load', registerSw);
-}
-
 var currentUser = CONFIG.USER1_NAME;
 var appState = {
   data: { entries: [], anniversaries: [] },
@@ -2160,8 +2087,6 @@ function unlockApp(){
     update['mapping.' + appState.currentPin] = appState.currentUid;
     db.collection('config').doc('pin_mapping').set(update, { merge: true }).catch(function() {});
   }
-  // Store FCM token for this PIN
-  if (_fcmToken) storeFcmToken(_fcmToken);
   document.getElementById('lock-screen').classList.add('hiding');
   setTimeout(function(){
     document.getElementById('lock-screen').style.display='none';
@@ -2205,8 +2130,6 @@ function initApp(){
   updateDmBadge();
   setupPresence();
   setupPartnerPresenceListener();
-  // Ask notification permission on first interaction
-  requestNotifPermission();
 
   // iOS visualViewport fix: scroll DM messages to bottom when keyboard opens
   if (window.visualViewport) {
@@ -3226,13 +3149,6 @@ function setupDmListener() {
         for (var j = _prevDmCount; j < dmMessagesCache.length; j++) {
           if (dmMessagesCache[j].sender !== appState.currentPin) {
             playIncomingSound();
-            // Show browser notification if page is in background
-            if (document.hidden) {
-              requestNotifPermission();
-              var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
-              var msgText = dmMessagesCache[j].text || (dmMessagesCache[j].image ? 'Đã gửi một ảnh' : '');
-              showBrowserNotification(partnerName, msgText, 'dm-' + dmMessagesCache[j].id);
-            }
             break;
           }
         }
