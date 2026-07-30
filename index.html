@@ -3019,18 +3019,27 @@ function toggleDmMenu(msgId, cx, cy) {
     menu.style.display='block'; menu.style.visibility='hidden'; menu.style.pointerEvents='none';
     var mw = menu.offsetWidth, mh = menu.offsetHeight;
     menu.style.display=''; menu.style.visibility=''; menu.style.pointerEvents='';
-    menu.style.left = Math.min(cx - mw/2, window.innerWidth - mw - 10) + 'px';
-    menu.style.top = Math.min(cy - mh - 10, window.innerHeight - mh - 10) + 'px';
-    if (parseInt(menu.style.top) < 10) menu.style.top = Math.min(cy + 10, window.innerHeight - mh - 10) + 'px';
-    menu.style.right = 'auto';
+    var left = cx - mw/2;
+    var top = cy - mh - 10;
+    left = Math.max(10, Math.min(left, window.innerWidth - mw - 10));
+    top = Math.max(10, Math.min(top, window.innerHeight - mh - 10));
+    if (top <= 10 && cy + mh + 20 < window.innerHeight) top = cy + 10;
+    menu.style.left = left + 'px'; menu.style.top = top + 'px'; menu.style.right = 'auto'; menu.style.transform = '';
   } else {
     var el = document.querySelector('.dm-msg[data-msg-id="'+msgId+'"]');
     if (el) {
+      menu.style.display='block'; menu.style.visibility='hidden'; menu.style.pointerEvents='none';
+      var mw = menu.offsetWidth, mh = menu.offsetHeight;
+      menu.style.display=''; menu.style.visibility=''; menu.style.pointerEvents='';
       var rect = el.getBoundingClientRect();
-      menu.style.top = Math.min(rect.top, window.innerHeight - 120) + 'px';
-      menu.style.left = 'auto'; menu.style.right = '10px';
+      var left = rect.left + rect.width + 8;
+      var top = rect.top;
+      if (left + mw + 10 > window.innerWidth) left = rect.left - mw - 8;
+      left = Math.max(10, Math.min(left, window.innerWidth - mw - 10));
+      top = Math.max(10, Math.min(top, window.innerHeight - mh - 10));
+      menu.style.left = left + 'px'; menu.style.top = top + 'px'; menu.style.right = 'auto'; menu.style.transform = '';
     } else {
-      menu.style.top = '50%'; menu.style.right = '10px';
+      menu.style.top = '50%'; menu.style.left = '50%'; menu.style.transform = 'translateX(-50%)'; menu.style.right = 'auto';
     }
   }
   menu.classList.add('open');
