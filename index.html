@@ -30,6 +30,8 @@
 <script>
 // Kill all service workers — force fresh load every time
 try{navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(r){r.unregister()})})}catch(e){}
+// Cache-bust: force fresh load from CDN on each deploy
+if(!location.search.includes('_='))location.replace(location.href.split('?')[0]+'?_='+Date.now())
 // Apply saved/preferred theme immediately to prevent flash
 (function(){
   try {
