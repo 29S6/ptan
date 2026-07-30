@@ -17,6 +17,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script>
+// Kill all service workers — force fresh load every time
+try{navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(r){r.unregister()})})}catch(e){}
 // Apply saved/preferred theme immediately to prevent flash
 (function(){
   try {
