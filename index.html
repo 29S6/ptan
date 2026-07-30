@@ -3434,7 +3434,7 @@ function buildFeedCard(entry){
   var caption=entry.content||'';
   var captionShort=caption.length>120?caption.substring(0,120)+'...':caption;
   var hasMore=caption.length>120;
-  var commentCount=entry.comments?entry.comments.length:0;
+  var commentCount=entry.comments?entry.comments.reduce(function(s,c){return s+1+(c.replies?c.replies.length:0)},0):0;
 
   return '<div class="feed-card" onclick="openPostDetail(\''+entry.id+'\')">'+
     '<div class="feed-card-header">'+
@@ -3450,7 +3450,6 @@ function buildFeedCard(entry){
         (hasMore?'<div class="feed-card-caption-expand">Xem thêm</div>':'')+
       '</div>'+
       (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Thêm bình luận...</div>')+
-      '<div class="feed-card-timestamp">'+timeAgo(entry.createdAt||entry.updatedAt)+'</div>'+
     '</div>'+
   '</div>';
 }
