@@ -2991,7 +2991,7 @@ function sendDmMessage() {
       editedAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
       input.value = ''; autoResize(input); btn.disabled = false; _editingDmMsgId = null; playSentSound();
-      document.getElementById('dm-send-btn').textContent = 'Gửi'; _dmShouldScroll = true; input.blur();
+      document.getElementById('dm-send-btn').textContent = 'Gửi'; _dmShouldScroll = true;
       var dib = document.querySelector('.dm-img-btn'); if(dib) dib.style.display = '';
     }).catch(function(err) { console.warn('Edit DM err:', err); btn.disabled = false; });
     return;
@@ -3009,7 +3009,7 @@ function sendDmMessage() {
     var sentText = input.value;
     input.value = ''; autoResize(input);
     db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
-      btn.disabled = false; playSentSound(); input.blur();
+      btn.disabled = false; playSentSound();
       _dmShouldScroll = true;
     }).catch(function(err) {
       console.warn('Send DM err:', err); btn.disabled = false;
