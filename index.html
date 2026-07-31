@@ -514,11 +514,14 @@ a { color: var(--text-link); text-decoration:none; }
 .create-header .submit-btn {
   background:var(--text-link); color:#fff; border:none; border-radius:10px;
   padding:7px 20px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:0.07s;
+  min-width:96px; display:inline-flex; align-items:center; justify-content:center;
 }
+.create-title { flex:1; text-align:center; font-size:0.95rem; font-weight:600; color:var(--text-primary); }
 .create-header .submit-btn:disabled { opacity:0.4; cursor:not-allowed; }
 .create-header .submit-btn:hover:not(:disabled) { background:#c2185b; }
 .create-inner { display:flex; flex-direction:column; flex:1; min-height:0; }
-.create-body { flex:1; overflow-y:auto; padding:12px 16px 100px; }
+.create-body { flex:1; min-height:0; display:flex; flex-direction:column; }
+.create-scroll { flex:1; min-height:0; overflow-y:auto; padding:12px 16px; -webkit-overflow-scrolling:touch; }
 
 .create-user-row {
   display:flex; align-items:center; gap:10px; margin-bottom:8px; padding:0 2px;
@@ -541,8 +544,8 @@ a { color: var(--text-link); text-decoration:none; }
 
 
 .create-toolbar {
-  display:flex; gap:4px; padding:10px 0 4px; position:sticky; bottom:0;
-  background:var(--card-bg); border-top:1px solid var(--border-light); margin-top:8px;
+  display:flex; gap:4px; padding:10px 16px; flex-shrink:0;
+  background:var(--card-bg); border-top:1px solid var(--border-light);
 }
 .create-tool-btn {
   width:36px; height:36px; border-radius:8px; display:flex;
@@ -558,7 +561,7 @@ a { color: var(--text-link); text-decoration:none; }
   width:80px; height:80px; border-radius:8px; overflow:hidden; position:relative;
   background:var(--placeholder-bg); border:1px solid var(--border-light); flex-shrink:0;
 }
-.create-image-preview .pimg img { width:100%; height:100%; object-fit:contain; }
+.create-image-preview .pimg img { width:100%; height:100%; object-fit:cover; }
 .create-image-preview .pimg .remove-btn {
   position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.6); color:#fff; border:none;
   border-radius:4px; width:18px; height:18px; font-size:0.45rem; cursor:pointer;
@@ -1008,7 +1011,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; min-width:0; }
 .dm-header-title span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-.dm-messages { flex:1; overflow-y:auto; padding:12px 16px 4px; display:flex; flex-direction:column; gap:6px; -webkit-overflow-scrolling:touch; }
+.dm-messages { flex:1; overflow-y:auto; padding:12px 16px 4px; display:flex; flex-direction:column; gap:6px; }
 .dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
 .dm-msg { max-width:85%; }
 .dm-msg.sent { align-self:flex-end; }
@@ -1170,8 +1173,9 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-msg-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.45); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); display:none; animation:dmOverlayIn 0.2s ease; }
 .dm-msg-overlay.open { display:block; }
 @keyframes dmOverlayIn { from{opacity:0} to{opacity:1} }
-.dm-msg-focused { z-index:250 !important; position:relative; }
+.dm-msg-focused { z-index:250 !important; position:relative; animation:dmVibrate 0.22s ease; }
 .dm-msg-focused .dm-msg-bubble { box-shadow:0 4px 24px rgba(0,0,0,0.25); transform:scale(1.02); transition:transform 0.2s, box-shadow 0.2s; }
+@keyframes dmVibrate { 0%,100%{transform:translateX(0)} 25%{transform:translateX(1.5px)} 50%{transform:translateX(-1.5px)} 75%{transform:translateX(1px)} }
 .dm-msg-menu {
   position:fixed; z-index:300; min-width:140px;
   background:var(--card-bg); border:1px solid var(--border);
@@ -1446,15 +1450,18 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   <div class="create-inner">
     <div class="create-header">
       <button class="back-btn" onclick="closeCreatePage()"><i class="fas fa-arrow-left"></i></button>
+      <div class="create-title" id="create-title">Bài viết mới</div>
       <button class="submit-btn" id="create-submit-btn" onclick="submitCreatePost()">Đăng</button>
     </div>
     <div class="create-body">
-      <div class="create-user-row">
-        <div class="create-avatar" id="create-user-avatar"><i class="fas fa-user-circle"></i></div>
-        <span class="create-username" id="create-user-name"></span>
+      <div class="create-scroll">
+        <div class="create-user-row">
+          <div class="create-avatar" id="create-user-avatar"><i class="fas fa-user-circle"></i></div>
+          <span class="create-username" id="create-user-name"></span>
+        </div>
+        <textarea class="create-content-input" id="create-content" placeholder="Viết gì đó..." autofocus></textarea>
+        <div class="create-image-preview" id="create-image-preview"></div>
       </div>
-      <textarea class="create-content-input" id="create-content" placeholder="Viết gì đó..." autofocus></textarea>
-      <div class="create-image-preview" id="create-image-preview"></div>
       <div class="create-toolbar">
         <button class="create-tool-btn" onclick="document.getElementById('create-file-input').click()" title="Thêm ảnh">
           <i class="fas fa-image"></i>
@@ -2615,7 +2622,13 @@ function sendPayload(payload, successMsg, callback) {
     if (!entry || !entry.id) { fail('Thiếu dữ liệu'); return; }
     db.collection('entries').doc(entry.id).set(entry, {merge:true}).then(function() {
       done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
-    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+    }).catch(function(err) {
+      if (!navigator.onLine) {
+        addQueue({payload: payload});
+        done(successMsg || 'Đã lưu tạm');
+        showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ khi có mạng');
+      } else fail('Lỗi đồng bộ');
+    });
     return;
   }
 
@@ -3323,6 +3336,7 @@ document.getElementById('dm-messages').addEventListener('touchstart', function(e
     _dmTouchData.longPress = true;
     var menu = document.getElementById('dm-msg-menu');
     if (menu.classList.contains('open')) { closeDmMenu(); return; }
+    if (navigator.vibrate) navigator.vibrate(10);
     toggleDmMenu(el.dataset.msgId, t.clientX, t.clientY);
     focusDmMessage(el.dataset.msgId);
     _dmMenuJustOpened = true; setTimeout(function() { _dmMenuJustOpened = false; }, 300);
@@ -4806,7 +4820,9 @@ _pvContainer.addEventListener('touchmove',function(e){if(e.touches.length===1&&(
 _pvContainer.addEventListener('touchend',function(){if(_pvDragging||_pvSwiping)onPvDragEnd()})
 
 
+var _createUploaded = [];
 function openCreatePage(editId){
+  _createUploaded=[];
   updateUserUI();
   var page=document.getElementById('create-page');
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
@@ -4824,7 +4840,8 @@ function openCreatePage(editId){
   appState.writeEditId=editId||null;
   renderCreatePreview();
   document.getElementById('create-submit-btn').disabled=false;
-  document.getElementById('create-submit-btn').textContent=editId?'Cập nhật':'Đăng';
+  document.getElementById('create-submit-btn').innerHTML=editId?'Cập nhật':'Đăng';
+  document.getElementById('create-title').textContent=editId?'Chỉnh sửa bài viết':'Bài viết mới';
 
   if(editId){
     var entry=appState.data.entries.find(function(e){return e.id===editId});
@@ -4841,6 +4858,7 @@ function openCreatePage(editId){
 }
 
 function closeCreatePage(){
+  if(_createUploaded&&_createUploaded.length){deleteRemoteImages(_createUploaded);_createUploaded=[]}
   var page=document.getElementById('create-page');
   page.classList.remove('anim-in');
   requestAnimationFrame(function(){
@@ -4864,7 +4882,13 @@ function handleCreateImages(input){
     reader.onload=function(e){
       compressImage(file,function(base64){
         uploadImage(base64,file.name,date,function(result){
-          if(result&&result.url){appState.writeImages.push({url:result.url,driveId:result.driveId||''});renderCreatePreview()}
+          if(result&&result.url){
+            var rec={url:result.url,driveId:result.driveId||''};
+            if(!document.getElementById('create-page').classList.contains('open')){deleteRemoteImages([rec]);return}
+            _createUploaded.push(rec);
+            appState.writeImages.push(rec);
+            renderCreatePreview()
+          }
           else{showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh: '+esc(file.name))}
         })
       })
@@ -4928,8 +4952,9 @@ function submitCreatePost(){
     else delete entry.createdAt;
     delete entry.comments;
   }
-  sendPayload({action:'save_entry',entry:entry},null,function(){
-    closeCreatePage()
+  sendPayload({action:'save_entry',entry:entry},null,function(ok){
+    if(ok){_createUploaded=[];closeCreatePage()}
+    else{btn.disabled=false;btn.innerHTML=appState.writeEditId?'Cập nhật':'Đăng'}
   })
 }
 
