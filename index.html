@@ -1825,6 +1825,10 @@ function loadUserProfiles(force) {
             if (remoteProfiles[pin].theme) userProfiles[pin].theme = remoteProfiles[pin].theme;
           }
         }
+        var cp = appState.currentPin;
+        if (cp && userProfiles[cp] && userProfiles[cp].name) {
+          currentUser = userProfiles[cp].name;
+        }
         saveUserProfiles();
         updateUserUI();
         
@@ -2157,8 +2161,8 @@ function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('dot-'+
 function verifyPin(){
   try {
     var p=appState.pinCode;appState.currentPin=p;
-    if(p===CONFIG.PIN_USER1){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}
-    else if(p===CONFIG.PIN_USER2){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}
+    if(p===CONFIG.PIN_USER1){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
+    else if(p===CONFIG.PIN_USER2){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
     else{document.getElementById('lock-error').textContent='Mật mã không đúng';appState.pinCode='';appState.currentPin='';updateDots()}
   } catch(e){document.getElementById('lock-error').textContent='Lỗi: '+e.message}
 }
