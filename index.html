@@ -1,13 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <title>Love Story</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,6 +26,12 @@
 <script>
 
 try{navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(r){r.unregister()})})}catch(e){}
+
+try{
+  if(window.location.search&&window.location.search.indexOf('_=')>=0&&history.replaceState){
+    history.replaceState(null,'',window.location.pathname);
+  }
+}catch(e){}
 
 (function(){
   try {
@@ -1258,7 +1261,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div id="lock-screen">
   <div class="lock-inner">
     <div class="lock-logo"><i class="fas fa-heart" style="-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
-    <p class="lock-sub">Nhập mật mã để tiếp tục</p>
+    <p class="lock-sub">Nháº­p máº­t mÃ£ Ä‘á»ƒ tiáº¿p tá»¥c</p>
     <div class="pin-dots">
       <div class="pin-dot" id="dot-0"></div>
       <div class="pin-dot" id="dot-1"></div>
@@ -1291,28 +1294,28 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     <div class="sidebar-logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
     <nav class="sidebar-nav">
       <div class="sidebar-item active" data-page="feed" onclick="switchPage('feed')">
-        <i class="fas fa-house"></i><span class="label">Trang chủ</span>
+        <i class="fas fa-house"></i><span class="label">Trang chá»§</span>
       </div>
       <div class="sidebar-item" data-page="explore" onclick="switchPage('explore')">
-        <i class="fas fa-compass"></i><span class="label">Khám phá</span>
+        <i class="fas fa-compass"></i><span class="label">KhÃ¡m phÃ¡</span>
       </div>
       <div class="sidebar-item" onclick="openCreatePage()">
-        <i class="fas fa-square-plus"></i><span class="label">Tạo bài viết</span>
+        <i class="fas fa-square-plus"></i><span class="label">Táº¡o bÃ i viáº¿t</span>
       </div>
       <div class="sidebar-item" data-page="direct" onclick="switchPage('direct')">
-        <i class="fab fa-facebook-messenger"></i><span class="label">Tin nhắn</span><span class="dm-sidebar-badge" id="dm-sidebar-badge" style="display:none;">0</span>
+        <i class="fab fa-facebook-messenger"></i><span class="label">Tin nháº¯n</span><span class="dm-sidebar-badge" id="dm-sidebar-badge" style="display:none;">0</span>
       </div>
       <div class="sidebar-item" data-page="activity" onclick="switchPage('activity')">
-        <i class="fas fa-heart"></i><span class="label">Hoạt động</span><span class="activity-badge sidebar-badge" style="display:none;">0</span>
+        <i class="fas fa-heart"></i><span class="label">Hoáº¡t Ä‘á»™ng</span><span class="activity-badge sidebar-badge" style="display:none;">0</span>
       </div>
       <div class="sidebar-item" data-page="profile" onclick="switchPage('profile')">
-        <i class="fas fa-user"></i><span class="label">Hồ sơ</span>
+        <i class="fas fa-user"></i><span class="label">Há»“ sÆ¡</span>
       </div>
       <div class="sidebar-item" onclick="openAnnModal()">
-        <i class="fas fa-gift"></i><span class="label">Kỷ niệm</span>
+        <i class="fas fa-gift"></i><span class="label">Ká»· niá»‡m</span>
       </div>
       <div class="sidebar-item sidebar-more" onclick="openSettings()">
-        <i class="fas fa-bars"></i><span class="label">Xem thêm</span>
+        <i class="fas fa-bars"></i><span class="label">Xem thÃªm</span>
       </div>
     </nav>
   </div>
@@ -1337,14 +1340,14 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     <div class="page" id="page-direct">
       <div class="dm-header">
         <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-        <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
+        <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <span id="dm-partner-name">NgÆ°á»i áº¥y</span> <span id="dm-online-status"></span></div>
       </div>
       <div class="dm-messages" id="dm-messages"></div>
       <div class="dm-input-wrap">
         <div class="dm-input-row">
-          <textarea id="dm-input" placeholder="Nhắn tin..." rows="1" oninput="onDmInput(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
-          <button class="dm-img-btn" onclick="document.getElementById('dm-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
-          <button class="dm-send-btn" id="dm-send-btn" onclick="sendDmMessage()">Gửi</button>
+          <textarea id="dm-input" placeholder="Nháº¯n tin..." rows="1" oninput="onDmInput(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
+          <button class="dm-img-btn" onclick="document.getElementById('dm-file-input').click()" title="Gá»­i áº£nh"><i class="fas fa-image"></i></button>
+          <button class="dm-send-btn" id="dm-send-btn" onclick="sendDmMessage()">Gá»­i</button>
         </div>
         <div class="dm-reply-preview" id="dm-reply-preview" style="display:none;">
           <div class="dm-reply-line"></div>
@@ -1354,23 +1357,23 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
           </div>
           <button onclick="cancelReplyDm()"><i class="fas fa-times"></i></button>
         </div>
-        <div class="img-preview" id="dm-img-preview" style="display:none;"><img id="dm-img-preview-img" alt=""><span class="img-preview-name">1 ảnh</span><button onclick="clearDmImage()">✕</button></div>
+        <div class="img-preview" id="dm-img-preview" style="display:none;"><img id="dm-img-preview-img" alt=""><span class="img-preview-name">1 áº£nh</span><button onclick="clearDmImage()">âœ•</button></div>
         <input type="file" id="dm-file-input" accept="image/*" style="display:none" onchange="handleDmImageFile(this)">
       </div>
       <div class="dm-msg-overlay" id="dm-msg-overlay" onclick="unfocusDmMessage()"></div>
       <div class="dm-msg-menu" id="dm-msg-menu">
         <div class="dm-menu-reactions" id="dm-menu-reactions">
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'❤️');unfocusDmMessage()">❤️</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😂');unfocusDmMessage()">😂</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😢');unfocusDmMessage()">😢</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😮');unfocusDmMessage()">😮</span>
-          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'😡');unfocusDmMessage()">😡</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'â¤ï¸');unfocusDmMessage()">â¤ï¸</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'ðŸ˜‚');unfocusDmMessage()">ðŸ˜‚</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'ðŸ˜¢');unfocusDmMessage()">ðŸ˜¢</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'ðŸ˜®');unfocusDmMessage()">ðŸ˜®</span>
+          <span onclick="event.stopPropagation();toggleDmReaction(document.getElementById('dm-msg-menu')._msgId,'ðŸ˜¡');unfocusDmMessage()">ðŸ˜¡</span>
         </div>
         <div class="dm-menu-divider"></div>
-        <button onclick="replyToMessage(document.getElementById('dm-msg-menu')._msgId)"><i class="fas fa-reply"></i> Trả lời</button>
-        <button onclick="copyDmMessage()"><i class="fas fa-copy"></i> Sao chép</button>
-        <button onclick="editDmMessage()"><i class="fas fa-pen"></i> Sửa</button>
-        <button class="danger" onclick="deleteDmMessage()"><i class="fas fa-trash-alt"></i> Xóa</button>
+        <button onclick="replyToMessage(document.getElementById('dm-msg-menu')._msgId)"><i class="fas fa-reply"></i> Tráº£ lá»i</button>
+        <button onclick="copyDmMessage()"><i class="fas fa-copy"></i> Sao chÃ©p</button>
+        <button onclick="editDmMessage()"><i class="fas fa-pen"></i> Sá»­a</button>
+        <button class="danger" onclick="deleteDmMessage()"><i class="fas fa-trash-alt"></i> XÃ³a</button>
       </div>
     </div>
 
@@ -1379,7 +1382,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <div class="explore-header">
         <div class="explore-search">
           <i class="fas fa-search"></i>
-          <input type="text" id="explore-search-input" placeholder="Tìm kiếm bài viết..." oninput="searchExplore(this.value)" />
+          <input type="text" id="explore-search-input" placeholder="TÃ¬m kiáº¿m bÃ i viáº¿t..." oninput="searchExplore(this.value)" />
         </div>
       </div>
       <div class="explore-grid" id="explore-grid"></div>
@@ -1387,7 +1390,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
     
     <div class="page" id="page-activity">
-      <div class="activity-header"><span>Hoạt động</span><button class="activity-mark-read" onclick="markActivitiesSeen();renderActivity()"><i class="fas fa-check-double"></i> Đã đọc hết</button></div>
+      <div class="activity-header"><span>Hoáº¡t Ä‘á»™ng</span><button class="activity-mark-read" onclick="markActivitiesSeen();renderActivity()"><i class="fas fa-check-double"></i> ÄÃ£ Ä‘á»c háº¿t</button></div>
       <div class="activity-list" id="activity-list"></div>
     </div>
 
@@ -1398,11 +1401,11 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
           <div class="profile-top">
             <div class="profile-avatar"><div class="inner" id="profile-avatar-inner"><i class="fas fa-user-circle" style="font-size:2.4rem;color:var(--text-secondary);"></i></div></div>
             <div class="profile-info">
-              <div class="profile-username" id="profile-username">Ánh Ngọc <i class="fas fa-check-circle verified-badge"></i></div>
+              <div class="profile-username" id="profile-username">Ãnh Ngá»c <i class="fas fa-check-circle verified-badge"></i></div>
               <div class="profile-stats">
-                <div class="profile-stat"><div class="profile-stat-num" id="profile-post-count">0</div><div class="profile-stat-label">bài viết</div></div>
-                <div class="profile-stat"><div class="profile-stat-num" id="profile-photo-count">0</div><div class="profile-stat-label">ảnh</div></div>
-                <div class="profile-stat"><div class="profile-stat-num" id="profile-comment-count">0</div><div class="profile-stat-label">bình luận</div></div>
+                <div class="profile-stat"><div class="profile-stat-num" id="profile-post-count">0</div><div class="profile-stat-label">bÃ i viáº¿t</div></div>
+                <div class="profile-stat"><div class="profile-stat-num" id="profile-photo-count">0</div><div class="profile-stat-label">áº£nh</div></div>
+                <div class="profile-stat"><div class="profile-stat-num" id="profile-comment-count">0</div><div class="profile-stat-label">bÃ¬nh luáº­n</div></div>
               </div>
               <div class="profile-clock" id="profile-clock"></div>
               <div class="profile-viewing" id="profile-viewing" style="display:none;"></div>
@@ -1410,16 +1413,16 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
             <div class="profile-more-container">
               <button class="profile-more-btn" onclick="toggleProfileMenu(event)"><i class="fas fa-ellipsis-h"></i></button>
               <div class="profile-dropdown" id="profile-dropdown">
-                <button onclick="closeProfileMenu();openSettings()"><i class="fas fa-cog"></i> Cài đặt</button>
-                <button class="danger" onclick="closeProfileMenu();showLogoutConfirm()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+                <button onclick="closeProfileMenu();openSettings()"><i class="fas fa-cog"></i> CÃ i Ä‘áº·t</button>
+                <button class="danger" onclick="closeProfileMenu();showLogoutConfirm()"><i class="fas fa-sign-out-alt"></i> ÄÄƒng xuáº¥t</button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="profile-tabs">
-        <div class="profile-tab active" data-tab="posts" onclick="switchProfileTab('posts')"><i class="fas fa-th"></i> Bài viết</div>
-        <div class="profile-tab" data-tab="photos" onclick="switchProfileTab('photos')"><i class="fas fa-image"></i> Ảnh</div>
+        <div class="profile-tab active" data-tab="posts" onclick="switchProfileTab('posts')"><i class="fas fa-th"></i> BÃ i viáº¿t</div>
+        <div class="profile-tab" data-tab="photos" onclick="switchProfileTab('photos')"><i class="fas fa-image"></i> áº¢nh</div>
       </div>
       <div class="profile-posts" id="profile-posts"></div>
     </div>
@@ -1442,8 +1445,8 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   <div class="create-inner">
     <div class="create-header">
       <button class="back-btn" onclick="closeCreatePage()"><i class="fas fa-arrow-left"></i></button>
-      <div class="create-title" id="create-title">Bài viết mới</div>
-      <button class="submit-btn" id="create-submit-btn" onclick="submitCreatePost()">Đăng</button>
+      <div class="create-title" id="create-title">BÃ i viáº¿t má»›i</div>
+      <button class="submit-btn" id="create-submit-btn" onclick="submitCreatePost()">ÄÄƒng</button>
     </div>
     <div class="create-body">
       <div class="create-scroll">
@@ -1451,11 +1454,11 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
           <div class="create-avatar" id="create-user-avatar"><i class="fas fa-user-circle"></i></div>
           <span class="create-username" id="create-user-name"></span>
         </div>
-        <textarea class="create-content-input" id="create-content" placeholder="Viết gì đó..." autofocus></textarea>
+        <textarea class="create-content-input" id="create-content" placeholder="Viáº¿t gÃ¬ Ä‘Ã³..." autofocus></textarea>
         <div class="create-image-preview" id="create-image-preview"></div>
       </div>
       <div class="create-toolbar">
-        <button class="create-tool-btn" onclick="document.getElementById('create-file-input').click()" title="Thêm ảnh">
+        <button class="create-tool-btn" onclick="document.getElementById('create-file-input').click()" title="ThÃªm áº£nh">
           <i class="fas fa-image"></i>
         </button>
         <div class="create-tool-btn create-date-wrapper" id="create-date-wrapper">
@@ -1473,7 +1476,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   <div class="pd-modal">
     <div class="pd-header">
       <button class="pd-back" onclick="closePostDetail()"><i class="fas fa-arrow-left"></i></button>
-      <div class="pd-header-title">Bài viết</div>
+      <div class="pd-header-title">BÃ i viáº¿t</div>
     </div>
     <div class="pd-modal-inner">
       <div class="pd-images" id="pd-images"></div>
@@ -1493,12 +1496,12 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
             <button onclick="cancelReplyPdComment()"><i class="fas fa-times"></i></button>
           </div>
           <div class="pd-input-row">
-            <textarea id="pd-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPdComment()}"></textarea>
-            <button class="pd-img-btn" onclick="document.getElementById('pd-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
-            <button class="pd-send-btn" id="pd-cancel-btn" onclick="cancelEditComment()" style="display:none;">Hủy</button>
-            <button class="pd-send-btn" id="pd-send-btn" onclick="sendPdComment()">Gửi</button>
+            <textarea id="pd-input" placeholder="Viáº¿t bÃ¬nh luáº­n..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPdComment()}"></textarea>
+            <button class="pd-img-btn" onclick="document.getElementById('pd-file-input').click()" title="Gá»­i áº£nh"><i class="fas fa-image"></i></button>
+            <button class="pd-send-btn" id="pd-cancel-btn" onclick="cancelEditComment()" style="display:none;">Há»§y</button>
+            <button class="pd-send-btn" id="pd-send-btn" onclick="sendPdComment()">Gá»­i</button>
           </div>
-          <div class="img-preview" id="pd-img-preview" style="display:none;"><img id="pd-img-preview-img" alt=""><span class="img-preview-name">1 ảnh</span><button onclick="clearPdImage()">✕</button></div>
+          <div class="img-preview" id="pd-img-preview" style="display:none;"><img id="pd-img-preview-img" alt=""><span class="img-preview-name">1 áº£nh</span><button onclick="clearPdImage()">âœ•</button></div>
           <input type="file" id="pd-file-input" accept="image/*" style="display:none" onchange="handlePdImageFile(this)">
         </div>
       </div>
@@ -1511,16 +1514,16 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   <div id="comment-sheet">
     <div class="cs-handle"></div>
     <div class="cs-header">
-      <span class="cs-title">Bình luận</span>
+      <span class="cs-title">BÃ¬nh luáº­n</span>
       <button class="cs-close" onclick="closeCommentSheet()"><i class="fas fa-times"></i></button>
     </div>
     <div class="cs-scroll" id="cs-scroll"></div>
     <div class="cs-input-wrap">
       <div class="cs-input-row">
-        <textarea id="cs-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCsComment()}"></textarea>
-        <button class="cs-img-btn" onclick="document.getElementById('cs-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
-        <button class="cs-send-btn" id="cs-cancel-btn" onclick="cancelEditCsComment()" style="display:none;">Hủy</button>
-        <button class="cs-send-btn" id="cs-send-btn" onclick="sendCsComment()">Gửi</button>
+        <textarea id="cs-input" placeholder="Viáº¿t bÃ¬nh luáº­n..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCsComment()}"></textarea>
+        <button class="cs-img-btn" onclick="document.getElementById('cs-file-input').click()" title="Gá»­i áº£nh"><i class="fas fa-image"></i></button>
+        <button class="cs-send-btn" id="cs-cancel-btn" onclick="cancelEditCsComment()" style="display:none;">Há»§y</button>
+        <button class="cs-send-btn" id="cs-send-btn" onclick="sendCsComment()">Gá»­i</button>
       </div>
       <div class="cs-reply-preview" id="cs-reply-preview" style="display:none;">
         <div class="pd-reply-line"></div>
@@ -1529,7 +1532,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
         </div>
         <button onclick="cancelReplyCsComment()"><i class="fas fa-times"></i></button>
       </div>
-      <div class="img-preview" id="cs-img-preview" style="display:none;"><img id="cs-img-preview-img" alt=""><span class="img-preview-name">1 ảnh</span><button onclick="clearCsImage()">✕</button></div>
+      <div class="img-preview" id="cs-img-preview" style="display:none;"><img id="cs-img-preview-img" alt=""><span class="img-preview-name">1 áº£nh</span><button onclick="clearCsImage()">âœ•</button></div>
       <input type="file" id="cs-file-input" accept="image/*" style="display:none" onchange="handleCsImageFile(this)">
     </div>
   </div>
@@ -1538,7 +1541,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
 <div id="photo-viewer">
   <div class="pv-top">
-    <button onclick="downloadCurrentPhoto()" title="Tải ảnh"><i class="fas fa-download"></i></button>
+    <button onclick="downloadCurrentPhoto()" title="Táº£i áº£nh"><i class="fas fa-download"></i></button>
     <button onclick="closePhotoViewer()"><i class="fas fa-times"></i></button>
   </div>
   <button class="pv-nav prev" id="pv-prev" onclick="navigatePhoto(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -1546,9 +1549,9 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   <div class="pv-container" id="pv-container"><img id="pv-image" src="" alt="" /></div>
   <div class="pv-counter" id="pv-counter">1 / 1</div>
   <div class="pv-zoom-wrap">
-    <button class="pv-zoom-btn" onclick="pvZoomOut()" title="Thu nhỏ"><i class="fas fa-minus"></i></button>
+    <button class="pv-zoom-btn" onclick="pvZoomOut()" title="Thu nhá»"><i class="fas fa-minus"></i></button>
     <span class="pv-zoom-label" id="pv-zoom-label">1x</span>
-    <button class="pv-zoom-btn" onclick="pvZoomIn()" title="Phóng to"><i class="fas fa-plus"></i></button>
+    <button class="pv-zoom-btn" onclick="pvZoomIn()" title="PhÃ³ng to"><i class="fas fa-plus"></i></button>
   </div>
 </div>
 
@@ -1559,11 +1562,11 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div class="modal-overlay" id="modal-ann">
   <div class="modal-box" style="max-width:420px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <div class="modal-title"><i class="fas fa-gift" style="margin-right:6px;color:var(--text-secondary);"></i> Kỷ niệm</div>
+      <div class="modal-title"><i class="fas fa-gift" style="margin-right:6px;color:var(--text-secondary);"></i> Ká»· niá»‡m</div>
       <button class="modal-close" onclick="closeModal('modal-ann')"><i class="fas fa-times"></i></button>
     </div>
     <div class="ann-list" id="ann-list"></div>
-    <button class="add-ann-btn" onclick="openAnnForm()"><i class="fas fa-plus" style="font-size:0.7rem;"></i> Thêm kỷ niệm</button>
+    <button class="add-ann-btn" onclick="openAnnForm()"><i class="fas fa-plus" style="font-size:0.7rem;"></i> ThÃªm ká»· niá»‡m</button>
   </div>
 </div>
 
@@ -1571,12 +1574,12 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div class="modal-overlay" id="modal-ann-form">
   <div class="modal-box" style="max-width:380px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-      <div class="modal-title" id="ann-form-title"><i class="fas fa-plus-circle" style="margin-right:6px;color:var(--text-secondary);"></i> Thêm kỷ niệm</div>
+      <div class="modal-title" id="ann-form-title"><i class="fas fa-plus-circle" style="margin-right:6px;color:var(--text-secondary);"></i> ThÃªm ká»· niá»‡m</div>
       <button class="modal-close" onclick="closeModal('modal-ann-form')"><i class="fas fa-times"></i></button>
     </div>
-    <div class="form-group"><label class="form-label" for="ann-form-date">Ngày</label><input type="date" class="form-input" id="ann-form-date" /></div>
-    <div class="form-group"><label class="form-label" for="ann-form-name">Tên kỷ niệm</label><input type="text" class="form-input" id="ann-form-name" placeholder="VD: Ngày đầu yêu nhau" maxlength="80" /></div>
-    <div class="button-row"><button class="btn-secondary" onclick="closeModal('modal-ann-form')">Hủy</button><button class="btn-primary" onclick="saveAnnForm()"><i class="fas fa-check"></i> Lưu</button></div>
+    <div class="form-group"><label class="form-label" for="ann-form-date">NgÃ y</label><input type="date" class="form-input" id="ann-form-date" /></div>
+    <div class="form-group"><label class="form-label" for="ann-form-name">TÃªn ká»· niá»‡m</label><input type="text" class="form-input" id="ann-form-name" placeholder="VD: NgÃ y Ä‘áº§u yÃªu nhau" maxlength="80" /></div>
+    <div class="button-row"><button class="btn-secondary" onclick="closeModal('modal-ann-form')">Há»§y</button><button class="btn-primary" onclick="saveAnnForm()"><i class="fas fa-check"></i> LÆ°u</button></div>
   </div>
 </div>
 
@@ -1584,7 +1587,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div class="modal-overlay" id="modal-settings">
   <div class="modal-box" style="max-width:380px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <div class="modal-title"><i class="fas fa-cog" style="margin-right:6px;color:var(--text-secondary);"></i> Cài đặt</div>
+      <div class="modal-title"><i class="fas fa-cog" style="margin-right:6px;color:var(--text-secondary);"></i> CÃ i Ä‘áº·t</div>
       <button class="modal-close" onclick="closeModal('modal-settings')"><i class="fas fa-times"></i></button>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;">
@@ -1593,28 +1596,28 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
           <div style="width:100%;height:100%;border-radius:50%;background:var(--card-bg);display:flex;align-items:center;justify-content:center;font-size:1.1rem;overflow:hidden;" id="settings-avatar-preview"><i class="fas fa-user-circle" style="font-size:1.8rem;color:var(--text-secondary);"></i></div>
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="font-weight:600;font-size:0.9rem;" id="settings-user">Ánh Ngọc</div>
-          <div style="font-size:0.7rem;color:var(--text-secondary);">Đang đăng nhập</div>
+          <div style="font-weight:600;font-size:0.9rem;" id="settings-user">Ãnh Ngá»c</div>
+          <div style="font-size:0.7rem;color:var(--text-secondary);">Äang Ä‘Äƒng nháº­p</div>
         </div>
       </div>
       <button style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:0.85rem;width:100%;text-align:left;color:var(--text-primary);background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;" onclick="closeModal('modal-settings');openEditName()">
-        <span><i class="fas fa-pen" style="width:20px;color:var(--text-link);"></i> Chỉnh sửa trang cá nhân</span>
+        <span><i class="fas fa-pen" style="width:20px;color:var(--text-link);"></i> Chá»‰nh sá»­a trang cÃ¡ nhÃ¢n</span>
         <i class="fas fa-chevron-right" style="color:var(--text-secondary);font-size:0.7rem;"></i>
       </button>
       <button style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:0.85rem;width:100%;text-align:left;color:var(--text-primary);background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;" onclick="closeModal('modal-settings');openEditAvatar()">
-        <span><i class="fas fa-camera" style="width:20px;color:var(--text-link);"></i> Đổi ảnh đại diện</span>
+        <span><i class="fas fa-camera" style="width:20px;color:var(--text-link);"></i> Äá»•i áº£nh Ä‘áº¡i diá»‡n</span>
         <i class="fas fa-chevron-right" style="color:var(--text-secondary);font-size:0.7rem;"></i>
       </button>
       <div style="padding:8px 0;border-bottom:1px solid var(--border-light);">
-        <div style="font-size:0.85rem;color:var(--text-primary);margin-bottom:8px;"><i class="fas fa-moon" style="width:20px;color:var(--text-secondary);"></i> Giao diện</div>
+        <div style="font-size:0.85rem;color:var(--text-primary);margin-bottom:8px;"><i class="fas fa-moon" style="width:20px;color:var(--text-secondary);"></i> Giao diá»‡n</div>
         <div id="theme-selector" style="display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--border-light);background:var(--input-bg);">
           <button data-theme="auto" onclick="setTheme('auto')" style="flex:1;padding:7px 0;font-size:0.78rem;font-weight:600;border:none;cursor:pointer;transition:all 0.15s cubic-bezier(0.22,1,0.36,1);color:var(--text-secondary);background:transparent;">Auto</button>
-          <button data-theme="light" onclick="setTheme('light')" style="flex:1;padding:7px 0;font-size:0.78rem;font-weight:600;border:none;cursor:pointer;transition:all 0.15s cubic-bezier(0.22,1,0.36,1);color:var(--text-secondary);background:transparent;"><i class="fas fa-sun" style="margin-right:3px;"></i> Sáng</button>
-          <button data-theme="dark" onclick="setTheme('dark')" style="flex:1;padding:7px 0;font-size:0.78rem;font-weight:600;border:none;cursor:pointer;transition:all 0.15s cubic-bezier(0.22,1,0.36,1);color:var(--text-secondary);background:transparent;"><i class="fas fa-moon" style="margin-right:3px;"></i> Tối</button>
+          <button data-theme="light" onclick="setTheme('light')" style="flex:1;padding:7px 0;font-size:0.78rem;font-weight:600;border:none;cursor:pointer;transition:all 0.15s cubic-bezier(0.22,1,0.36,1);color:var(--text-secondary);background:transparent;"><i class="fas fa-sun" style="margin-right:3px;"></i> SÃ¡ng</button>
+          <button data-theme="dark" onclick="setTheme('dark')" style="flex:1;padding:7px 0;font-size:0.78rem;font-weight:600;border:none;cursor:pointer;transition:all 0.15s cubic-bezier(0.22,1,0.36,1);color:var(--text-secondary);background:transparent;"><i class="fas fa-moon" style="margin-right:3px;"></i> Tá»‘i</button>
         </div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:0.85rem;">
-        <span><i class="fas fa-volume-up" style="width:20px;color:var(--text-secondary);"></i> Âm thanh thông báo</span>
+        <span><i class="fas fa-volume-up" style="width:20px;color:var(--text-secondary);"></i> Ã‚m thanh thÃ´ng bÃ¡o</span>
         <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer;">
           <input type="checkbox" id="sound-toggle" onchange="toggleSound(this.checked)" style="opacity:0;width:0;height:0;">
           <span id="sound-toggle-slider" style="position:absolute;inset:0;background:var(--text-secondary);border-radius:22px;transition:0.2s;"></span>
@@ -1623,15 +1626,15 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       </div>
       <div style="height:1px;background:var(--border-light);margin:2px 0;"></div>
       <button style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:0.85rem;width:100%;text-align:left;color:var(--text-primary);background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;" onclick="triggerSync()">
-        <span><i class="fas fa-sync" style="width:20px;color:var(--text-link);"></i> Đồng bộ dữ liệu</span>
+        <span><i class="fas fa-sync" style="width:20px;color:var(--text-link);"></i> Äá»“ng bá»™ dá»¯ liá»‡u</span>
         <i class="fas fa-chevron-right" style="color:var(--text-secondary);font-size:0.7rem;"></i>
       </button>
       <button style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:0.85rem;width:100%;text-align:left;color:var(--text-primary);background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;" onclick="showDataInfo()">
-        <span><i class="fas fa-info-circle" style="width:20px;color:var(--text-secondary);"></i> Thông tin dữ liệu</span>
+        <span><i class="fas fa-info-circle" style="width:20px;color:var(--text-secondary);"></i> ThÃ´ng tin dá»¯ liá»‡u</span>
         <i class="fas fa-chevron-right" style="color:var(--text-secondary);font-size:0.7rem;"></i>
       </button>
       <button style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:0.85rem;width:100%;text-align:left;color:var(--text-danger);background:none;border:none;cursor:pointer;" onclick="showLogoutConfirm()">
-        <span><i class="fas fa-sign-out-alt" style="width:20px;"></i> Đăng xuất</span>
+        <span><i class="fas fa-sign-out-alt" style="width:20px;"></i> ÄÄƒng xuáº¥t</span>
         <i class="fas fa-chevron-right" style="color:var(--text-danger);font-size:0.7rem;"></i>
       </button>
     </div>
@@ -1641,13 +1644,13 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
 <div class="modal-overlay" id="modal-edit-name">
   <div class="modal-box" style="max-width:380px;">
-    <div class="modal-title">Đổi tên hiển thị</div>
-    <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Tên này sẽ hiển thị trên tất cả bài viết của bạn.</p>
-    <input type="text" id="edit-name-input" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:16px;outline:none;box-sizing:border-box;" placeholder="Nhập tên mới..." maxlength="50">
+    <div class="modal-title">Äá»•i tÃªn hiá»ƒn thá»‹</div>
+    <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">TÃªn nÃ y sáº½ hiá»ƒn thá»‹ trÃªn táº¥t cáº£ bÃ i viáº¿t cá»§a báº¡n.</p>
+    <input type="text" id="edit-name-input" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:16px;outline:none;box-sizing:border-box;" placeholder="Nháº­p tÃªn má»›i..." maxlength="50">
     <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:6px;" id="edit-name-hint"></p>
     <div class="button-row" style="justify-content:flex-end;margin-top:16px;">
-      <button class="btn-secondary" onclick="closeModal('modal-edit-name')">Hủy</button>
-      <button class="btn-primary" onclick="saveDisplayName()">Lưu</button>
+      <button class="btn-secondary" onclick="closeModal('modal-edit-name')">Há»§y</button>
+      <button class="btn-primary" onclick="saveDisplayName()">LÆ°u</button>
     </div>
   </div>
 </div>
@@ -1656,7 +1659,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div class="modal-overlay" id="modal-edit-avatar">
   <div class="modal-box" style="max-width:420px;text-align:center;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <div class="modal-title"><i class="fas fa-camera" style="margin-right:6px;color:var(--text-secondary);"></i> Đổi ảnh đại diện</div>
+      <div class="modal-title"><i class="fas fa-camera" style="margin-right:6px;color:var(--text-secondary);"></i> Äá»•i áº£nh Ä‘áº¡i diá»‡n</div>
       <button class="modal-close" onclick="closeModal('modal-edit-avatar');avatarCropCleanup()"><i class="fas fa-times"></i></button>
     </div>
     <div style="padding:3px;width:180px;height:180px;margin:8px auto;border-radius:50%;background:var(--story-gradient);" id="avatar-crop-wrapper">
@@ -1669,16 +1672,16 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <input type="range" id="avatar-zoom-slider" min="1" max="3" step="0.01" value="1" style="flex:1;accent-color:var(--text-link);" oninput="acClamp();applyAvatarCropPos()">
       <i class="fas fa-search-plus" style="color:var(--text-secondary);font-size:0.7rem;"></i>
     </div>
-    <p style="font-size:0.7rem;color:var(--text-secondary);margin:2px 0 8px;">Kéo để di chuyển · Thanh trượt để phóng to</p>
+    <p style="font-size:0.7rem;color:var(--text-secondary);margin:2px 0 8px;">KÃ©o Ä‘á»ƒ di chuyá»ƒn Â· Thanh trÆ°á»£t Ä‘á»ƒ phÃ³ng to</p>
     <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
       <button class="btn-secondary" style="font-size:0.8rem;padding:8px 14px;" onclick="document.getElementById('avatar-file-input').click()">
-        <i class="fas fa-image"></i> Chọn ảnh
+        <i class="fas fa-image"></i> Chá»n áº£nh
       </button>
       <button class="btn-primary" style="font-size:0.8rem;padding:8px 14px;" onclick="saveCroppedAvatar()">
-        <i class="fas fa-check"></i> Lưu
+        <i class="fas fa-check"></i> LÆ°u
       </button>
       <button class="btn-secondary" style="font-size:0.8rem;padding:8px 14px;color:var(--text-danger);" onclick="removeCustomAvatar()">
-        <i class="fas fa-trash-alt"></i> Xóa
+        <i class="fas fa-trash-alt"></i> XÃ³a
       </button>
     </div>
     <input type="file" id="avatar-file-input" accept="image/*" style="display:none;" onchange="handleAvatarFile(event)">
@@ -1688,11 +1691,11 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
 <div class="modal-overlay" id="modal-confirm" style="z-index:9000;">
   <div class="modal-box" style="max-width:360px;text-align:center;">
-    <div class="modal-title" id="confirm-title" style="margin-bottom:8px;">Xác nhận</div>
-    <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:16px;" id="confirm-message">Bạn có chắc chắn?</p>
+    <div class="modal-title" id="confirm-title" style="margin-bottom:8px;">XÃ¡c nháº­n</div>
+    <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:16px;" id="confirm-message">Báº¡n cÃ³ cháº¯c cháº¯n?</p>
     <div class="button-row" style="justify-content:center;">
-      <button class="btn-secondary" id="confirm-cancel" onclick="closeModal('modal-confirm')">Hủy</button>
-      <button class="btn-primary" id="confirm-ok">Đồng ý</button>
+      <button class="btn-secondary" id="confirm-cancel" onclick="closeModal('modal-confirm')">Há»§y</button>
+      <button class="btn-primary" id="confirm-ok">Äá»“ng Ã½</button>
     </div>
   </div>
 </div>
@@ -1701,7 +1704,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div class="modal-overlay" id="modal-data-info">
   <div class="modal-box" style="max-width:380px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-      <div class="modal-title"><i class="fas fa-chart-bar" style="margin-right:6px;color:var(--text-secondary);"></i> Thông tin</div>
+      <div class="modal-title"><i class="fas fa-chart-bar" style="margin-right:6px;color:var(--text-secondary);"></i> ThÃ´ng tin</div>
       <button class="modal-close" onclick="closeModal('modal-data-info')"><i class="fas fa-times"></i></button>
     </div>
     <div id="data-info-content" style="font-size:0.85rem;line-height:1.8;"></div>
@@ -1715,7 +1718,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div id="saving-overlay">
   <div class="saving-box">
     <div class="saving-spinner"></div>
-    <div class="saving-text" id="saving-text">Đang xử lý...</div>
+    <div class="saving-text" id="saving-text">Äang xá»­ lÃ½...</div>
   </div>
 </div>
 
@@ -1726,7 +1729,7 @@ var CONFIG = {
   PIN_USER1: '2204',
   PIN_USER2: '2009',
   LOVE_START: '2026-04-22',
-  USER1_NAME: 'Ánh Ngọc',
+  USER1_NAME: 'Ãnh Ngá»c',
   USER2_NAME: 'Anh',
   MAX_IMAGES: 10,
   PAGE_SIZE: 10
@@ -1786,7 +1789,7 @@ auth.onAuthStateChanged(function(user) {
     }).catch(function() {});
   }
 });
-var FEED_INIT = 30;
+var FEED_INIT = 15;
 var FEED_MORE = 20;
 var feedRenderCount = 0;
 var feedObserver = null;
@@ -1990,7 +1993,7 @@ function getPinForUser(userName) {
   for (var pin in userProfiles) {
     if (userProfiles[pin].name === userName) return pin;
   }
-  if (userName === CONFIG.USER1_NAME || userName.replace(/ 🌻| 💖/g,'') === CONFIG.USER1_NAME.replace(/ 🌻| 💖/g,'')) return CONFIG.PIN_USER1;
+  if (userName === CONFIG.USER1_NAME || userName.replace(/ ðŸŒ»| ðŸ’–/g,'') === CONFIG.USER1_NAME.replace(/ ðŸŒ»| ðŸ’–/g,'')) return CONFIG.PIN_USER1;
   return CONFIG.PIN_USER2;
 }
 
@@ -2025,11 +2028,11 @@ function driveThumb(url, w) {
 }
 function pad(n){return n<10?'0'+n:''+n}
 function todayStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())}
-function formatDateVN(d){if(!d)return'';var p=d.split('-');if(p.length<3)return d;var day=parseInt(p[2]),mon=parseInt(p[1]),yr=p[0];var months=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];return'Ngày '+day+' '+months[mon-1]+', '+yr}
+function formatDateVN(d){if(!d)return'';var p=d.split('-');if(p.length<3)return d;var day=parseInt(p[2]),mon=parseInt(p[1]),yr=p[0];var months=['ThÃ¡ng 1','ThÃ¡ng 2','ThÃ¡ng 3','ThÃ¡ng 4','ThÃ¡ng 5','ThÃ¡ng 6','ThÃ¡ng 7','ThÃ¡ng 8','ThÃ¡ng 9','ThÃ¡ng 10','ThÃ¡ng 11','ThÃ¡ng 12'];return'NgÃ y '+day+' '+months[mon-1]+', '+yr}
 function formatShortDate(d){if(!d)return'';var p=d.split('-');if(p.length<3)return d;return parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0]}
 function formatTime(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return '';return pad(d.getHours())+':'+pad(d.getMinutes())}catch(e){return ''}}
-function formatFull(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return '';return pad(d.getHours())+':'+pad(d.getMinutes())+' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()}catch(e){return ''}}
-function timeAgo(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return'';var n=Date.now(),diff=Math.floor((n-d)/1000);if(diff<60)return'Vài giây trước';if(diff<3600)return Math.floor(diff/60)+' phút trước';if(diff<86400)return Math.floor(diff/3600)+' giờ trước';return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2)}catch(e){return ''}}
+function formatFull(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return '';return pad(d.getHours())+':'+pad(d.getMinutes())+' Â· '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()}catch(e){return ''}}
+function timeAgo(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return'';var n=Date.now(),diff=Math.floor((n-d)/1000);if(diff<60)return'VÃ i giÃ¢y trÆ°á»›c';if(diff<3600)return Math.floor(diff/60)+' phÃºt trÆ°á»›c';if(diff<86400)return Math.floor(diff/3600)+' giá» trÆ°á»›c';return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2)}catch(e){return ''}}
 function autoResize(el){if(!el)return;el.style.height='auto';el.style.height=el.scrollHeight+'px'}
 
 
@@ -2093,16 +2096,16 @@ setupPasteHandler('cs-input', function(base64) {
 setupPasteHandler('create-content', function(base64) {
   var parts = base64.split(',');
   var rawData = parts[1] || parts[0];
-  if (rawData.length > 1.2 * 1024 * 1024) { showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh quá lớn'); return; }
+  if (rawData.length > 1.2 * 1024 * 1024) { showToast('<i class="fas fa-exclamation-triangle"></i> áº¢nh quÃ¡ lá»›n'); return; }
   var date = document.getElementById('create-date').value || todayStr();
-  showToast('<i class="fas fa-spinner fa-pulse"></i> Đang tải ảnh lên...');
+  showToast('<i class="fas fa-spinner fa-pulse"></i> Äang táº£i áº£nh lÃªn...');
   uploadImage(base64, 'paste_' + Date.now() + '.jpg', date, function(result) {
     if (result && result.url) {
       appState.writeImages.push({ url: result.url, driveId: result.driveId || '' });
       renderCreatePreview();
       
     } else {
-      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh từ clipboard');
+      showToast('<i class="fas fa-exclamation-triangle"></i> Lá»—i táº£i áº£nh tá»« clipboard');
     }
   });
 });
@@ -2150,11 +2153,11 @@ function handleCsImageFile(input) {
 
 function handlePinPress(d){
   try {
-    if(!appState){document.getElementById('lock-error').textContent='Lỗi: app chưa khởi tạo';return}
+    if(!appState){document.getElementById('lock-error').textContent='Lá»—i: app chÆ°a khá»Ÿi táº¡o';return}
     if(appState.pinCode.length>=4)return;
     appState.pinCode+=d;updateDots();
     if(appState.pinCode.length===4)setTimeout(verifyPin,80);
-  } catch(e){document.getElementById('lock-error').textContent='Lỗi: '+e.message}
+  } catch(e){document.getElementById('lock-error').textContent='Lá»—i: '+e.message}
 }
 function handlePinDelete(){appState.pinCode=appState.pinCode.slice(0,-1);updateDots();document.getElementById('lock-error').textContent=''}
 function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('dot-'+i);d.classList.toggle('active',i<appState.pinCode.length)}}
@@ -2163,8 +2166,8 @@ function verifyPin(){
     var p=appState.pinCode;appState.currentPin=p;
     if(p===CONFIG.PIN_USER1){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
     else if(p===CONFIG.PIN_USER2){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
-    else{document.getElementById('lock-error').textContent='Mật mã không đúng';appState.pinCode='';appState.currentPin='';updateDots()}
-  } catch(e){document.getElementById('lock-error').textContent='Lỗi: '+e.message}
+    else{document.getElementById('lock-error').textContent='Máº­t mÃ£ khÃ´ng Ä‘Ãºng';appState.pinCode='';appState.currentPin='';updateDots()}
+  } catch(e){document.getElementById('lock-error').textContent='Lá»—i: '+e.message}
 }
 function unlockApp(){
   applyTheme();
@@ -2226,7 +2229,7 @@ function updateUserUI(){
   applyTheme();
   var ava = getDisplayAvatar(appState.currentPin);
   var displayName = getEffectiveName(currentUser);
-  var plainName = displayName.replace(/ [\w💖🌻]+$/g,'');
+  var plainName = displayName.replace(/ [\wðŸ’–ðŸŒ»]+$/g,'');
   var avaTag = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : '<i class="fas fa-user-circle" style="font-size:1.6rem;color:var(--text-secondary);"></i>';
   document.getElementById('create-user-avatar').innerHTML = avaTag;
   document.getElementById('create-user-name').innerHTML = esc(plainName)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.75rem;"></i>';
@@ -2242,13 +2245,13 @@ function openEditName(){
   closeModal('modal-settings');
   loadUserProfiles();
   var profile=userProfiles[appState.currentPin];
-  document.getElementById('edit-name-input').value=profile?profile.name.replace(/ [\w💖🌻]+$/g,''):currentUser.replace(/ [\w💖🌻]+$/g,'');
-  document.getElementById('edit-name-hint').textContent='Tên hiện tại: '+(profile?profile.name:currentUser);
+  document.getElementById('edit-name-input').value=profile?profile.name.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''):currentUser.replace(/ [\wðŸ’–ðŸŒ»]+$/g,'');
+  document.getElementById('edit-name-hint').textContent='TÃªn hiá»‡n táº¡i: '+(profile?profile.name:currentUser);
   openModal('modal-edit-name');
 }
 function saveDisplayName(){
   var newName=document.getElementById('edit-name-input').value.trim();
-  if(!newName){showToast('<i class="fas fa-exclamation-triangle"></i> Vui lòng nhập tên');return}
+  if(!newName){showToast('<i class="fas fa-exclamation-triangle"></i> Vui lÃ²ng nháº­p tÃªn');return}
   loadUserProfiles();
   userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
   var oldName=userProfiles[appState.currentPin].name||currentUser;
@@ -2335,7 +2338,7 @@ function openEditAvatar(){
 function handleAvatarFile(e){
   var file=e.target.files[0];
   if(!file)return;
-  if(file.size>5*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh tối đa 5MB');return}
+  if(file.size>5*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> áº¢nh tá»‘i Ä‘a 5MB');return}
   var reader=new FileReader();
   reader.onload=function(ev){
     var dataUrl=ev.target.result;
@@ -2355,7 +2358,7 @@ function handleAvatarFile(e){
 
 function saveCroppedAvatar(){
   var img=document.getElementById('avatar-crop-img');
-  if(!img.src||!avatarCrop.imgW){showToast('<i class="fas fa-exclamation-triangle"></i> Chưa chọn ảnh');return}
+  if(!img.src||!avatarCrop.imgW){showToast('<i class="fas fa-exclamation-triangle"></i> ChÆ°a chá»n áº£nh');return}
   var size=200;
   var c=document.createElement('canvas');
   c.width=size;c.height=size;
@@ -2372,8 +2375,8 @@ function saveCroppedAvatar(){
   ctx.drawImage(img,Math.max(0,-l/(scale*zoom)),Math.max(0,-t/(scale*zoom)),Math.min(avatarCrop.imgW+l/(scale*zoom),cw/(scale*zoom)),Math.min(avatarCrop.imgH+t/(scale*zoom),ch/(scale*zoom)),0,0,size,size);
   var compressed=c.toDataURL('image/jpeg',0.85);
   var parts=compressed.split(',');var rawData=parts[1]||parts[0];
-  if(rawData.length>300*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh quá lớn');return}
-  showToast('<i class="fas fa-spinner fa-pulse"></i> Đang tải ảnh lên...');
+  if(rawData.length>300*1024){showToast('<i class="fas fa-exclamation-triangle"></i> áº¢nh quÃ¡ lá»›n');return}
+  showToast('<i class="fas fa-spinner fa-pulse"></i> Äang táº£i áº£nh lÃªn...');
   uploadAvatarOrFallback(compressed,rawData);
 }
 function uploadAvatarOrFallback(compressed,rawData){
@@ -2390,14 +2393,14 @@ function uploadAvatarOrFallback(compressed,rawData){
     .then(function(r){return r.json()}).then(function(result){
       if(result&&result.url){
         avatarUploadDone(result);
-      }else if(result&&result.error&&result.error.indexOf('Hành động không hợp lệ')>=0){
+      }else if(result&&result.error&&result.error.indexOf('HÃ nh Ä‘á»™ng khÃ´ng há»£p lá»‡')>=0){
         return uploadImage(compressed,'avatar_'+appState.currentPin+'.jpg','avatars',avatarUploadDone);
       }else{
-        avatarUploadFail(compressed,result&&result.error?result.error:'Lỗi tải ảnh lên');
+        avatarUploadFail(compressed,result&&result.error?result.error:'Lá»—i táº£i áº£nh lÃªn');
       }
     });
   }).catch(function(err){
-    avatarUploadFail(compressed,'Lỗi mạng');
+    avatarUploadFail(compressed,'Lá»—i máº¡ng');
   });
 }
 function avatarUploadDone(r){
@@ -2490,7 +2493,7 @@ function startClock(){
     var otherName=partnerPin===CONFIG.PIN_USER1?getEffectiveName(CONFIG.USER1_NAME):getEffectiveName(CONFIG.USER2_NAME);
     var diff=Math.max(0,Date.now()-start.getTime());
     var d=Math.floor(diff/86400000);
-    document.getElementById('profile-clock').innerHTML='Đã ở bên <a class="partner-link" href="javascript:void(0)" onclick="renderProfileForUser(\''+partnerPin+'\')">'+esc(otherName)+'</a> được <span class="num-days">'+d+'</span> ngày';
+    document.getElementById('profile-clock').innerHTML='ÄÃ£ á»Ÿ bÃªn <a class="partner-link" href="javascript:void(0)" onclick="renderProfileForUser(\''+partnerPin+'\')">'+esc(otherName)+'</a> Ä‘Æ°á»£c <span class="num-days">'+d+'</span> ngÃ y';
   }
   tick();
   if (!_clockInterval) _clockInterval = setInterval(tick,3600000);
@@ -2498,7 +2501,7 @@ function startClock(){
 }
 
 
-function showSaving(t){document.getElementById('saving-text').textContent=t||'Đang xử lý...';document.getElementById('saving-overlay').classList.add('show')}
+function showSaving(t){document.getElementById('saving-text').textContent=t||'Äang xá»­ lÃ½...';document.getElementById('saving-overlay').classList.add('show')}
 function hideSaving(){document.getElementById('saving-overlay').classList.remove('show')}
 
 var toastTimer=null;
@@ -2539,7 +2542,7 @@ function loadData(callback){
     appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
     profilesFromData(profilesObj);
     normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
-    if (!appState.hasWelcomed) { appState.hasWelcomed = true; showToast('<i class="fas fa-gem"></i> Xin chào ' + esc(currentUser) + '!'); }
+    if (!appState.hasWelcomed) { appState.hasWelcomed = true; showToast('<i class="fas fa-gem"></i> Xin chÃ o ' + esc(currentUser) + '!'); }
     if (callback) callback(appState.data);
   }).catch(function(err) {
     console.warn('Firestore error:', err);
@@ -2566,7 +2569,7 @@ function refreshData(callback){
     if (callback) callback(appState.data);
   }).catch(function(err) {
     console.warn('Refresh error:', err);
-    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi làm mới dữ liệu');
+    showToast('<i class="fas fa-exclamation-triangle"></i> Lá»—i lÃ m má»›i dá»¯ liá»‡u');
     hideLoadingBar();
   });
 }
@@ -2608,12 +2611,12 @@ function processOfflineQueue(){
   processNext(0);
 }
 window.addEventListener('online',function(){appState.isOnline=true;processOfflineQueue()})
-window.addEventListener('offline',function(){appState.isOnline=false;showToast('<i class="fas fa-wifi"></i> Mất kết nối, dữ liệu sẽ lưu tạm')})
+window.addEventListener('offline',function(){appState.isOnline=false;showToast('<i class="fas fa-wifi"></i> Máº¥t káº¿t ná»‘i, dá»¯ liá»‡u sáº½ lÆ°u táº¡m')})
 
 
 function sendPayload(payload, successMsg, callback) {
   var action = payload.action;
-  var p = showSaving('Đang xử lý...');
+  var p = showSaving('Äang xá»­ lÃ½...');
 
   function done(smsg) {
     hideSaving();
@@ -2624,45 +2627,45 @@ function sendPayload(payload, successMsg, callback) {
 
   function fail(msg) {
     hideSaving();
-    showToast('<i class="fas fa-exclamation-triangle"></i> ' + (msg || 'Lỗi, đã lưu tạm'));
+    showToast('<i class="fas fa-exclamation-triangle"></i> ' + (msg || 'Lá»—i, Ä‘Ã£ lÆ°u táº¡m'));
     if (callback) callback(null);
   }
 
   if (action === 'save_entry') {
     var entry = payload.entry;
-    if (!entry || !entry.id) { fail('Thiếu dữ liệu'); return; }
+    if (!entry || !entry.id) { fail('Thiáº¿u dá»¯ liá»‡u'); return; }
     db.collection('entries').doc(entry.id).set(entry, {merge:true}).then(function() {
-      done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
+      done(successMsg || '<i class="fas fa-save"></i> ÄÃ£ lÆ°u!');
     }).catch(function(err) {
       if (!navigator.onLine) {
         addQueue({payload: payload});
-        done(successMsg || 'Đã lưu tạm');
-        showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ khi có mạng');
-      } else fail('Lỗi đồng bộ');
+        done(successMsg || 'ÄÃ£ lÆ°u táº¡m');
+        showToast('<i class="fas fa-save"></i> ÄÃ£ lÆ°u táº¡m, sáº½ Ä‘á»“ng bá»™ khi cÃ³ máº¡ng');
+      } else fail('Lá»—i Ä‘á»“ng bá»™');
     });
     return;
   }
 
   if (action === 'delete_entry') {
     db.collection('entries').doc(payload.id).delete().then(function() {
-      done(successMsg || 'Đã xóa!');
-    }).catch(function(err) { fail('Lỗi xóa'); });
+      done(successMsg || 'ÄÃ£ xÃ³a!');
+    }).catch(function(err) { fail('Lá»—i xÃ³a'); });
     return;
   }
 
   if (action === 'save_anniversary') {
     var ann = payload.anniversary;
-    if (!ann || !ann.id) { fail('Thiếu dữ liệu'); return; }
+    if (!ann || !ann.id) { fail('Thiáº¿u dá»¯ liá»‡u'); return; }
     db.collection('anniversaries').doc(ann.id).set(ann).then(function() {
-      done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
-    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+      done(successMsg || '<i class="fas fa-save"></i> ÄÃ£ lÆ°u!');
+    }).catch(function(err) { fail('Lá»—i Ä‘á»“ng bá»™'); });
     return;
   }
 
   if (action === 'delete_anniversary') {
     db.collection('anniversaries').doc(payload.id).delete().then(function() {
-      done(successMsg || 'Đã xóa!');
-    }).catch(function(err) { fail('Lỗi xóa'); });
+      done(successMsg || 'ÄÃ£ xÃ³a!');
+    }).catch(function(err) { fail('Lá»—i xÃ³a'); });
     return;
   }
 
@@ -2678,8 +2681,8 @@ function sendPayload(payload, successMsg, callback) {
       data.profiles[payload.pin] = { name: payload.name, avatar: payload.avatar || '', theme: payload.theme || 'auto' };
       return profilesRef.set(data);
     }).then(function() {
-      done(successMsg || '<i class="fas fa-check-circle"></i> Đã lưu!');
-    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+      done(successMsg || '<i class="fas fa-check-circle"></i> ÄÃ£ lÆ°u!');
+    }).catch(function(err) { fail('Lá»—i Ä‘á»“ng bá»™'); });
     return;
   }
 
@@ -2695,7 +2698,7 @@ function sendPayload(payload, successMsg, callback) {
   var clean = JSON.parse(JSON.stringify(payload));
   if (clean.entry && clean.entry.images) clean.entry.images = clean.entry.images.map(function(i) { return { url: i.url || '', driveId: i.driveId || '' }; });
   var body = JSON.stringify(clean);
-  if (body.length > 45 * 1024 * 1024) { showToast('<i class="fas fa-exclamation-triangle"></i> Dung lượng quá lớn!'); if (callback) callback(null); return; }
+  if (body.length > 45 * 1024 * 1024) { showToast('<i class="fas fa-exclamation-triangle"></i> Dung lÆ°á»£ng quÃ¡ lá»›n!'); if (callback) callback(null); return; }
   fetch(CONFIG.BACKEND_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body, mode: 'cors' })
     .then(function(r) { return r.json().catch(function() { return null; }); })
     .then(function(result) {
@@ -2764,7 +2767,7 @@ function handleCommentAction(payload, successMsg, callback) {
     if (callback) callback({ success: true, comments: comments });
   }).catch(function(err) {
     if (err === 'DOC_MISSING') return;
-    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi đồng bộ');
+    showToast('<i class="fas fa-exclamation-triangle"></i> Lá»—i Ä‘á»“ng bá»™');
     if (callback) callback(null);
   });
 }
@@ -2775,7 +2778,7 @@ function sendCommentPayload(payload, callback) {
 
 function uploadImage(base64,filename,dateStr,callback){
   var parts=base64.split(',');var data=parts[1]||parts[0];var mime=base64.indexOf('png')>-1?'image/png':'image/jpeg';
-  if(data.length>1.2*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh quá lớn');callback(null);return}
+  if(data.length>1.2*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> áº¢nh quÃ¡ lá»›n');callback(null);return}
   fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'upload_image',imageData:data,mimeType:mime,filename:filename||('photo_'+Date.now()+'.jpg'),dateStr:dateStr})})
   .then(function(r){return r.json()}).then(function(r){if(r&&r.url)callback(r);else callback(null)}).catch(function(){callback(null)})
 }
@@ -2970,7 +2973,7 @@ function toggleDmReaction(msgId, emoji) {
     });
   }).catch(function(e) {
     console.warn('Reaction err:', e);
-    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi thả cảm xúc, thử lại');
+    showToast('<i class="fas fa-exclamation-triangle"></i> Lá»—i tháº£ cáº£m xÃºc, thá»­ láº¡i');
   });
 }
 
@@ -2978,7 +2981,7 @@ var _editingDmMsgId = null;
 var _editingDmMsgText = '';
 function sendDmMessage() {
   var input = document.getElementById('dm-input');
-  var text = input.value.trim().replace(/🖕/g, '💖');
+  var text = input.value.trim().replace(/ðŸ–•/g, 'ðŸ’–');
   if (!text && !_pendingDmImage) return;
   var btn = document.getElementById('dm-send-btn');
   btn.disabled = true;
@@ -2988,7 +2991,7 @@ function sendDmMessage() {
       editedAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
       input.value = ''; autoResize(input); btn.disabled = false; _editingDmMsgId = null; playSentSound();
-      document.getElementById('dm-send-btn').textContent = 'Gửi'; _dmShouldScroll = true; input.blur();
+      document.getElementById('dm-send-btn').textContent = 'Gá»­i'; _dmShouldScroll = true; input.blur();
       var dib = document.querySelector('.dm-img-btn'); if(dib) dib.style.display = '';
     }).catch(function(err) { console.warn('Edit DM err:', err); btn.disabled = false; });
     return;
@@ -3003,11 +3006,14 @@ function sendDmMessage() {
     cancelReplyDm();
   }
   function doSend() {
+    var sentText = input.value;
+    input.value = ''; autoResize(input);
     db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
-      input.value = ''; autoResize(input); btn.disabled = false; playSentSound(); input.blur();
+      btn.disabled = false; playSentSound(); input.blur();
       _dmShouldScroll = true;
     }).catch(function(err) {
       console.warn('Send DM err:', err); btn.disabled = false;
+      if (sentText) { input.value = sentText; autoResize(input); }
     });
   }
   if (_pendingDmImage && _pendingDmImage.indexOf('data:') === 0) {
@@ -3103,17 +3109,17 @@ function copyDmMessage() {
   var msg = getDmMsgFromCache(msgId);
   if (!msg) return;
   var text = msg.text || '';
-  if (!text) { showToast('Không có nội dung để sao chép'); return; }
+  if (!text) { showToast('KhÃ´ng cÃ³ ná»™i dung Ä‘á»ƒ sao chÃ©p'); return; }
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
-      showToast('Đã sao chép tin nhắn');
+      showToast('ÄÃ£ sao chÃ©p tin nháº¯n');
     }).catch(function() {
       
       var ta = document.createElement('textarea');
       ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
       document.body.appendChild(ta); ta.select();
       document.execCommand('copy'); document.body.removeChild(ta);
-      showToast('Đã sao chép tin nhắn');
+      showToast('ÄÃ£ sao chÃ©p tin nháº¯n');
     });
   } else {
     
@@ -3121,7 +3127,7 @@ function copyDmMessage() {
     ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); document.body.removeChild(ta);
-    showToast('Đã sao chép tin nhắn');
+    showToast('ÄÃ£ sao chÃ©p tin nháº¯n');
   }
 }
 function clearDmSwipe() {
@@ -3133,10 +3139,10 @@ function replyToMessage(msgId) {
   if (!msg) return;
   if (_editingDmMsgId) cancelEditDm();
   _replyingDmMsg = { id: msgId, text: msg.text||'', sender: msg.sender, image: !!msg.image };
-  var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
-  var replyer = msg.sender === appState.currentPin ? 'Bạn' : partnerName;
+  var partnerName = getPartnerName().replace(/ [\wðŸ’–ðŸŒ»]+$/g, '');
+  var replyer = msg.sender === appState.currentPin ? 'Báº¡n' : partnerName;
   document.getElementById('dm-reply-name').textContent = replyer;
-  document.getElementById('dm-reply-text').textContent = msg.text || (msg.image ? 'Ảnh' : '');
+  document.getElementById('dm-reply-text').textContent = msg.text || (msg.image ? 'áº¢nh' : '');
   document.getElementById('dm-reply-preview').style.display = 'flex';
   document.getElementById('dm-input').focus();
 }
@@ -3159,7 +3165,7 @@ function editDmMessage() {
   input.value = msg.text || '';
   autoResize(input);
   input.focus();
-  document.getElementById('dm-send-btn').textContent = 'Cập nhật';
+  document.getElementById('dm-send-btn').textContent = 'Cáº­p nháº­t';
   var dib = document.querySelector('.dm-img-btn'); if(dib) dib.style.display = 'none';
 }
 function cancelEditDm() {
@@ -3167,7 +3173,7 @@ function cancelEditDm() {
   _editingDmMsgId = null; _editingDmMsgText = '';
   document.getElementById('dm-input').value = '';
   autoResize(document.getElementById('dm-input'));
-  document.getElementById('dm-send-btn').textContent = 'Gửi';
+  document.getElementById('dm-send-btn').textContent = 'Gá»­i';
   var dib = document.querySelector('.dm-img-btn'); if(dib) dib.style.display = '';
   clearDmSwipe();
 }
@@ -3175,7 +3181,7 @@ function deleteDmMessage() {
   var menu = document.getElementById('dm-msg-menu');
   var msgId = menu._msgId;
   unfocusDmMessage();
-  showConfirm('Xóa tin nhắn?', 'Tin nhắn sẽ bị xóa cho cả hai.', function(ok) {
+  showConfirm('XÃ³a tin nháº¯n?', 'Tin nháº¯n sáº½ bá»‹ xÃ³a cho cáº£ hai.', function(ok) {
     if (!ok) return;
     db.collection('messages').doc(getChatId()).collection('messages').doc(msgId).update({
       text: '', image: '', deleted: true
@@ -3189,13 +3195,13 @@ function renderDmMessages() {
   var container = document.getElementById('dm-messages');
   var msgs = dmMessagesCache;
   var partnerPin = getPartnerPin();
-  var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
+  var partnerName = getPartnerName().replace(/ [\wðŸ’–ðŸŒ»]+$/g, '');
   document.getElementById('dm-partner-name').textContent = partnerName;
   var partnerAva = getDisplayAvatar(partnerPin);
   var ha = document.getElementById('dm-header-avatar');
   if (ha) { ha.src = partnerAva || ''; ha.style.display = partnerAva ? '' : 'none'; }
   if (!msgs.length) {
-    container.innerHTML = '<div class="dm-empty"><i class="fab fa-facebook-messenger"></i>Chưa có tin nhắn nào<br><span style="font-size:0.75rem;">Hãy gửi lời nhắn đầu tiên đến '+esc(partnerName)+'</span></div>';
+    container.innerHTML = '<div class="dm-empty"><i class="fab fa-facebook-messenger"></i>ChÆ°a cÃ³ tin nháº¯n nÃ o<br><span style="font-size:0.75rem;">HÃ£y gá»­i lá»i nháº¯n Ä‘áº§u tiÃªn Ä‘áº¿n '+esc(partnerName)+'</span></div>';
     return;
   }
   
@@ -3213,8 +3219,8 @@ function renderDmMessages() {
     if(!iso)return'';
     try{
       var dd=new Date(iso);if(isNaN(dd))return'';
-      var days=['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
-      return days[dd.getDay()]+', '+pad(dd.getHours())+':'+pad(dd.getMinutes())+' · '+dd.getDate()+'/'+(dd.getMonth()+1)+'/'+dd.getFullYear();
+      var days=['Chá»§ Nháº­t','Thá»© Hai','Thá»© Ba','Thá»© TÆ°','Thá»© NÄƒm','Thá»© SÃ¡u','Thá»© Báº£y'];
+      return days[dd.getDay()]+', '+pad(dd.getHours())+':'+pad(dd.getMinutes())+' Â· '+dd.getDate()+'/'+(dd.getMonth()+1)+'/'+dd.getFullYear();
     }catch(e){return''}
   }
   var html = '';
@@ -3232,25 +3238,25 @@ function renderDmMessages() {
       var yesterday = new Date(today); yesterday.setDate(yesterday.getDate()-1);
       var yStr = yesterday.getFullYear() + '-' + pad(yesterday.getMonth()+1) + '-' + pad(yesterday.getDate());
       var label = '';
-      if (dateStr === todayStr) label = 'Hôm nay';
-      else if (dateStr === yStr) label = 'Hôm qua';
-      else { var p = dateStr.split('-'); label = 'Ngày ' + parseInt(p[2]) + ' Tháng ' + parseInt(p[1]) + ', ' + p[0]; }
+      if (dateStr === todayStr) label = 'HÃ´m nay';
+      else if (dateStr === yStr) label = 'HÃ´m qua';
+      else { var p = dateStr.split('-'); label = 'NgÃ y ' + parseInt(p[2]) + ' ThÃ¡ng ' + parseInt(p[1]) + ', ' + p[0]; }
       html += '<div class="dm-date-sep">' + label + '</div>';
       lastDate = dateStr;
     }
     var isSent = m.sender === appState.currentPin;
     var seen = isSent && partnerLastSeen && t && t <= partnerLastSeen;
-    var statusText = isSent ? (seen ? 'Đã xem' : 'Đã gửi') : '';
+    var statusText = isSent ? (seen ? 'ÄÃ£ xem' : 'ÄÃ£ gá»­i') : '';
     var statusHtml = statusText ? '<span class="dm-msg-status '+(seen?'seen':'sent')+'">'+statusText+'</span>' : '';
     var cls = isSent ? 'sent' : 'received';
     if (m.deleted) cls += ' deleted';
     var isLatestSent = isSent && i === lastSentIdx;
     if (isLatestSent) cls += ' dm-msg-latest-sent';
-    var editedHtml = m.editedAt ? '<div class="dm-edited-indicator">Đã chỉnh sửa</div>' : '';
+    var editedHtml = m.editedAt ? '<div class="dm-edited-indicator">ÄÃ£ chá»‰nh sá»­a</div>' : '';
     var replyHtml = '';
     if (m.replyTo) {
-      var replyName = m.replyTo.sender === appState.currentPin ? 'Bạn' : partnerName;
-      replyHtml = '<div class="dm-msg-reply"><span class="dm-msg-reply-name">'+esc(replyName)+'</span><span class="dm-msg-reply-text">'+esc(m.replyTo.text||(m.replyTo.image?'Ảnh':''))+'</span></div>';
+      var replyName = m.replyTo.sender === appState.currentPin ? 'Báº¡n' : partnerName;
+      replyHtml = '<div class="dm-msg-reply"><span class="dm-msg-reply-name">'+esc(replyName)+'</span><span class="dm-msg-reply-text">'+esc(m.replyTo.text||(m.replyTo.image?'áº¢nh':''))+'</span></div>';
     }
     var contentHtml = '';
     var reactionsHtml = '';
@@ -3267,14 +3273,14 @@ function renderDmMessages() {
       }
     }
     if (m.deleted) {
-      contentHtml = '<div class="dm-msg-bubble">Tin nhắn đã được thu hồi</div>';
+      contentHtml = '<div class="dm-msg-bubble">Tin nháº¯n Ä‘Ã£ Ä‘Æ°á»£c thu há»“i</div>';
     } else {
       var imgHtml = '';
       if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(driveThumb(m.image,800))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
       var hasText=!!(replyHtml||m.text);
-      if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div></div>'}
+      if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/ðŸ–•/g,'ðŸ’–')+reactionsHtml+'</div></div>'}
       else if(imgHtml)contentHtml+=imgHtml
-      else if(hasText)contentHtml+='<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div>'
+      else if(hasText)contentHtml+='<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/ðŸ–•/g,'ðŸ’–')+reactionsHtml+'</div>'
       else if(reactionsHtml)contentHtml+='<div class="dm-msg-bubble">'+reactionsHtml+'</div>'
     }
     var avaHtml = '';
@@ -3294,9 +3300,9 @@ function renderDmMessages() {
     html += contentHtml;
     if (!m.deleted) {
       html += '<div class="dm-msg-actions">';
-      html += '<button class="dm-msg-action-btn" onclick="event.stopPropagation();replyToMessage(\'' + m.id + '\')" title="Trả lời"><i class="fas fa-reply"></i></button>';
-      html += '<div class="dm-reaction-wrap"><button class="dm-msg-action-btn dm-reaction-btn" onclick="event.stopPropagation();toggleDmReactionPopup(this,\''+m.id+'\')" title="Cảm xúc"><i class="fas fa-smile"></i></button><div class="dm-reaction-popup" id="reaction-popup-'+m.id+'"><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'❤️\');closeDmReactionPopup(\''+m.id+'\')">❤️</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😂\');closeDmReactionPopup(\''+m.id+'\')">😂</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😢\');closeDmReactionPopup(\''+m.id+'\')">😢</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😮\');closeDmReactionPopup(\''+m.id+'\')">😮</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'😡\');closeDmReactionPopup(\''+m.id+'\')">😡</span></div></div>';
-      if (isSent) html += '<button class="dm-msg-action-btn" onclick="event.stopPropagation();toggleDmMenu(\'' + m.id + '\')" title="Thêm"><i class="fas fa-ellipsis-v"></i></button>';
+      html += '<button class="dm-msg-action-btn" onclick="event.stopPropagation();replyToMessage(\'' + m.id + '\')" title="Tráº£ lá»i"><i class="fas fa-reply"></i></button>';
+      html += '<div class="dm-reaction-wrap"><button class="dm-msg-action-btn dm-reaction-btn" onclick="event.stopPropagation();toggleDmReactionPopup(this,\''+m.id+'\')" title="Cáº£m xÃºc"><i class="fas fa-smile"></i></button><div class="dm-reaction-popup" id="reaction-popup-'+m.id+'"><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'â¤ï¸\');closeDmReactionPopup(\''+m.id+'\')">â¤ï¸</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'ðŸ˜‚\');closeDmReactionPopup(\''+m.id+'\')">ðŸ˜‚</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'ðŸ˜¢\');closeDmReactionPopup(\''+m.id+'\')">ðŸ˜¢</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'ðŸ˜®\');closeDmReactionPopup(\''+m.id+'\')">ðŸ˜®</span><span class="dm-rp-emoji" onclick="event.stopPropagation();toggleDmReaction(\''+m.id+'\',\'ðŸ˜¡\');closeDmReactionPopup(\''+m.id+'\')">ðŸ˜¡</span></div></div>';
+      if (isSent) html += '<button class="dm-msg-action-btn" onclick="event.stopPropagation();toggleDmMenu(\'' + m.id + '\')" title="ThÃªm"><i class="fas fa-ellipsis-v"></i></button>';
       html += '</div>';
     }
     html += '</div></div>';
@@ -3481,8 +3487,8 @@ function setupPartnerPresenceListener() {
         }
       });
       el.innerHTML = isOnline
-        ? '<span class="online-dot"></span> Đang hoạt động'
-        : '<span class="offline-dot"></span> Ngoại tuyến';
+        ? '<span class="online-dot"></span> Äang hoáº¡t Ä‘á»™ng'
+        : '<span class="offline-dot"></span> Ngoáº¡i tuyáº¿n';
     }, function(err) {
       console.warn('Presence listener err:', err);
     });
@@ -3564,8 +3570,8 @@ function renderStories(){
   function avaHtml(ava,fallback){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':fallback;}
   var html='';
   var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.8rem;color:var(--text-secondary);"></i>';
-  html+='<div class="story-item"><div class="story-avatar"><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Bạn</div></div>';
-  html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(otherDisplayName.replace(/ [\w💖🌻]+$/g,''))+'</div></div>';
+  html+='<div class="story-item"><div class="story-avatar"><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Báº¡n</div></div>';
+  html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(otherDisplayName.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''))+'</div></div>';
   container.innerHTML=html;
 }
 
@@ -3573,8 +3579,8 @@ function switchToUserProfile(){
   var otherPin=appState.currentPin===CONFIG.PIN_USER1?CONFIG.PIN_USER2:CONFIG.PIN_USER1;
   var targetUser=getDisplayName(otherPin);
   var entries=(appState.data.entries||[]).filter(function(e){return e.author===targetUser || getEffectiveName(e.author)===targetUser});
-  if(!entries.length){showToast('<i class="fas fa-user-circle"></i> '+esc(targetUser)+' chưa có bài viết nào');return}
-  showToast('<i class="fas fa-user-circle"></i> Xem bài viết của '+esc(targetUser));
+  if(!entries.length){showToast('<i class="fas fa-user-circle"></i> '+esc(targetUser)+' chÆ°a cÃ³ bÃ i viáº¿t nÃ o');return}
+  showToast('<i class="fas fa-user-circle"></i> Xem bÃ i viáº¿t cá»§a '+esc(targetUser));
   switchPage('profile');
   renderProfileForUser(otherPin);
 }
@@ -3584,7 +3590,7 @@ function renderProfileForUser(pin){
   var displayName=getDisplayName(pin);
   var ava=getDisplayAvatar(pin);
   profileViewUser=pin;
-  var plainName=displayName.replace(/ [\w💖🌻]+$/g,'');
+  var plainName=displayName.replace(/ [\wðŸ’–ðŸŒ»]+$/g,'');
   function imgHtml(){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:2.4rem;color:var(--text-secondary);"></i>';}
   document.getElementById('profile-avatar-inner').innerHTML=imgHtml();
   document.getElementById('profile-username').innerHTML=esc(plainName)+' <i class="fas fa-check-circle verified-badge"></i>';
@@ -3595,7 +3601,7 @@ function renderProfileForUser(pin){
   document.getElementById('profile-photo-count').textContent=photoCount;
   document.getElementById('profile-comment-count').textContent=commentCount;
   document.getElementById('profile-viewing').style.display='flex';
-  document.getElementById('profile-viewing').innerHTML='<i class="fas fa-eye"></i> Đang xem <strong>'+esc(plainName)+'</strong> <a href="javascript:void(0)" onclick="resetProfileView()" style="color:var(--text-link);font-weight:600;font-size:0.75rem;white-space:nowrap;margin-left:auto;">Về trang của tôi</a>';
+  document.getElementById('profile-viewing').innerHTML='<i class="fas fa-eye"></i> Äang xem <strong>'+esc(plainName)+'</strong> <a href="javascript:void(0)" onclick="resetProfileView()" style="color:var(--text-link);font-weight:600;font-size:0.75rem;white-space:nowrap;margin-left:auto;">Vá» trang cá»§a tÃ´i</a>';
   renderProfileContent();
   if(window.updateClock)updateClock();
 }
@@ -3630,7 +3636,7 @@ function renderFeed(){
   var entries=getFeedEntries();
   var container=document.getElementById('feed-posts');
   if(feedObserver){feedObserver.disconnect();feedObserver=null}
-  if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào<br><span style="font-size:0.75rem;">Hãy viết nhật ký đầu tiên nhé!</span></div>';feedRenderCount=0;return}
+  if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>ChÆ°a cÃ³ bÃ i viáº¿t nÃ o<br><span style="font-size:0.75rem;">HÃ£y viáº¿t nháº­t kÃ½ Ä‘áº§u tiÃªn nhÃ©!</span></div>';feedRenderCount=0;return}
   feedRenderCount=Math.min(entries.length,FEED_INIT);
   container.innerHTML=entries.slice(0,feedRenderCount).map(function(e,i){return '<div style="animation-delay:'+(i*0.04)+'s">'+buildFeedCard(e)+'</div>'}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
   observeFeed();
@@ -3660,7 +3666,7 @@ function buildFeedCard(entry){
   var authorPin=getPinForUser(entry.author);
   var ava=getDisplayAvatar(authorPin);
   var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
-  var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
+  var username=effectiveAuthor.replace(/ [\wðŸ’–ðŸŒ»]+$/g,'');
   var isOwner=getEffectiveName(entry.author)===getEffectiveName(currentUser);
   var timeDisplay=timeAgo(entry.createdAt||entry.updatedAt);
 
@@ -3687,14 +3693,14 @@ function buildFeedCard(entry){
         '<div class="feed-card-avatar"><div class="inner">'+avatar+'</div></div>'+
         '<div><div class="feed-card-username">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></div><div class="feed-card-time">'+timeDisplay+'</div></div>'+
       '</div>'+
-      (isOwner?'<div class="feed-card-actions"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+entry.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+entry.id+'"><button onclick="event.stopPropagation();editPost(\''+entry.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+entry.id+'\')">Xóa bài</button></div></div>':'')+
+      (isOwner?'<div class="feed-card-actions"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+entry.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+entry.id+'"><button onclick="event.stopPropagation();editPost(\''+entry.id+'\')">Sá»­a bÃ i</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+entry.id+'\')">XÃ³a bÃ i</button></div></div>':'')+
     '</div>'+
     imgGrid+
     '<div class="feed-card-content">'+
       '<div class="feed-card-caption">'+esc(captionShort)+
-        (hasMore?'<div class="feed-card-caption-expand">Xem thêm</div>':'')+
+        (hasMore?'<div class="feed-card-caption-expand">Xem thÃªm</div>':'')+
       '</div>'+
-      (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Thêm bình luận...</div>')+
+      (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bÃ¬nh luáº­n</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">ThÃªm bÃ¬nh luáº­n...</div>')+
     '</div>'+
   '</div>';
 }
@@ -3709,8 +3715,8 @@ function editPost(id){document.querySelectorAll('.dropdown-menu.show').forEach(f
 function deletePost(id){
   document.querySelectorAll('.dropdown-menu.show').forEach(function(m){m.classList.remove('show')});
   var entry=appState.data.entries.find(function(e){return e.id===id});
-  if(!entry||getEffectiveName(entry.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn không có quyền xóa');return}
-  showConfirm('Xóa bài viết?','Bài viết sẽ bị xóa vĩnh viễn.',function(ok){if(!ok)return;deleteRemoteImages(entry.images);sendPayload({action:'delete_entry',id:id},'Đã xóa!')})
+  if(!entry||getEffectiveName(entry.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n khÃ´ng cÃ³ quyá»n xÃ³a');return}
+  showConfirm('XÃ³a bÃ i viáº¿t?','BÃ i viáº¿t sáº½ bá»‹ xÃ³a vÄ©nh viá»…n.',function(ok){if(!ok)return;deleteRemoteImages(entry.images);sendPayload({action:'delete_entry',id:id},'ÄÃ£ xÃ³a!')})
 }
 
 
@@ -3839,7 +3845,7 @@ function renderExplore(){
     }
   });
   var container=document.getElementById('explore-grid');
-  if(!allImages.length){container.innerHTML='<div class="explore-empty"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
+  if(!allImages.length){container.innerHTML='<div class="explore-empty"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>ChÆ°a cÃ³ áº£nh nÃ o</div>';return}
   var q=appState.exploreQuery;
   if(q){
     allImages=allImages.filter(function(i){return(i.title||'').toLowerCase().includes(q)||(i.date||'').includes(q)})
@@ -3848,7 +3854,7 @@ function renderExplore(){
   var html=allImages.map(function(img,idx){
     return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" /></div>'
   }).join('');
-  container.innerHTML=html||'<div class="explore-empty"><i class="fas fa-search" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Không tìm thấy ảnh nào</div>';
+  container.innerHTML=html||'<div class="explore-empty"><i class="fas fa-search" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>KhÃ´ng tÃ¬m tháº¥y áº£nh nÃ o</div>';
 }
 
 function openExploreViewer(index){
@@ -3870,19 +3876,19 @@ function fmtTime(iso){
   try{var d=new Date(iso);if(isNaN(d))return'';
     var now=new Date();var sameDay=d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
     if(sameDay)return pad(d.getHours())+':'+pad(d.getMinutes());
-    return pad(d.getHours())+':'+pad(d.getMinutes())+' · '+d.getDate()+'/'+(d.getMonth()+1)+(d.getFullYear()!==now.getFullYear()?'/'+d.getFullYear():'')
+    return pad(d.getHours())+':'+pad(d.getMinutes())+' Â· '+d.getDate()+'/'+(d.getMonth()+1)+(d.getFullYear()!==now.getFullYear()?'/'+d.getFullYear():'')
   }catch(e){return''}
 }
 function renderActivity(){
   var container=document.getElementById('activity-list');
   var seen=getSeenAt();
   var acts=getRecentActivities().filter(function(a){return a.authorPin!==appState.currentPin});
-  if(!acts.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-heart" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có hoạt động nào</div>';return}
+  if(!acts.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-heart" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>ChÆ°a cÃ³ hoáº¡t Ä‘á»™ng nÃ o</div>';return}
   var html=acts.slice(0,50).map(function(a){
     var isNew=!seen||a.time>seen;
-    var authorName=getDisplayName(a.authorPin)||'Ai đó';
-    var name=authorName.replace(/ [\w💖🌻]+$/g,'');
-    var label=a.type==='post'?'đã thêm bài viết mới':a.type==='reply'?'đã trả lời bình luận':'đã bình luận';
+    var authorName=getDisplayName(a.authorPin)||'Ai Ä‘Ã³';
+    var name=authorName.replace(/ [\wðŸ’–ðŸŒ»]+$/g,'');
+    var label=a.type==='post'?'Ä‘Ã£ thÃªm bÃ i viáº¿t má»›i':a.type==='reply'?'Ä‘Ã£ tráº£ lá»i bÃ¬nh luáº­n':'Ä‘Ã£ bÃ¬nh luáº­n';
     var preview=a.preview?esc(a.preview).substring(0,100):'';
     return '<div class="activity-item'+(isNew?' activity-new':'')+'" onclick="openPostDetail(\''+a.entryId+'\')">'+
       '<div class="activity-avatar">'+(a.type==='post'?'<i class="fas fa-file-lines"></i>':'<i class="fa-regular fa-comment"></i>')+'</div>'+
@@ -3894,7 +3900,7 @@ function renderActivity(){
       (isNew?'<div class="activity-dot"></div>':'')+
     '</div>'
   }).join('');
-  container.innerHTML=html||'<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;">Chưa có hoạt động nào</div>';
+  container.innerHTML=html||'<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;">ChÆ°a cÃ³ hoáº¡t Ä‘á»™ng nÃ o</div>';
 }
 
 
@@ -3916,7 +3922,7 @@ function renderProfileContent(){
   var targetName=profileViewUser?getDisplayName(profileViewUser):getEffectiveName(currentUser);
   var userEntries=entries.filter(function(e){return getEffectiveName(e.author)===targetName});
   var container=document.getElementById('profile-posts');
-  if(!userEntries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào</div>';return}
+  if(!userEntries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>ChÆ°a cÃ³ bÃ i viáº¿t nÃ o</div>';return}
 
   if(appState.profileTab==='posts'){
     container.innerHTML='<div class="threads-list">'+userEntries.map(function(e){
@@ -3925,17 +3931,17 @@ function renderProfileContent(){
       if(e.images&&e.images.length>0){
         imgHtml='<div class="threads-img"><img src="'+esc(driveThumb(e.images[0].url||e.images[0],600))+'" loading="lazy" /></div>';
       }
-      var uname=getEffectiveName(e.author).replace(/ [\w💖🌻]+$/g,'');
+      var uname=getEffectiveName(e.author).replace(/ [\wðŸ’–ðŸŒ»]+$/g,'');
       var authorPin=getPinForUser(e.author);
       var ava=getDisplayAvatar(authorPin);
   var avatar=ava?'<img class="fcard-ava" src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var isOwner=getEffectiveName(e.author)===getEffectiveName(currentUser);
       return '<div class="threads-item" onclick="openPostDetail(\''+e.id+'\')">'+
-        '<div class="threads-author"><div class="threads-avatar"><div class="inner">'+avatar+'</div></div><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong>'+(isOwner?'<div class="feed-card-actions" style="margin-left:auto;"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+e.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+e.id+'"><button onclick="event.stopPropagation();editPost(\''+e.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+e.id+'\')">Xóa bài</button></div></div>':'')+'</div>'+
+        '<div class="threads-author"><div class="threads-avatar"><div class="inner">'+avatar+'</div></div><strong>'+esc(uname)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.7rem;"></i></strong>'+(isOwner?'<div class="feed-card-actions" style="margin-left:auto;"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+e.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+e.id+'"><button onclick="event.stopPropagation();editPost(\''+e.id+'\')">Sá»­a bÃ i</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+e.id+'\')">XÃ³a bÃ i</button></div></div>':'')+'</div>'+
         imgHtml+
         '<div class="threads-content">'+esc(e.content||'')+'</div>'+
         '<div class="threads-meta">'+
-          (commentCount>0?'<span onclick="event.stopPropagation();openPostDetail(\''+e.id+'\')" style="cursor:pointer;"><i class="fa-regular fa-comment"></i> '+commentCount+' bình luận</span><span class="dot-sep"></span>':'')+
+          (commentCount>0?'<span onclick="event.stopPropagation();openPostDetail(\''+e.id+'\')" style="cursor:pointer;"><i class="fa-regular fa-comment"></i> '+commentCount+' bÃ¬nh luáº­n</span><span class="dot-sep"></span>':'')+
           '<span>'+timeAgo(e.createdAt||e.updatedAt)+'</span>'+
         '</div>'+
       '</div>'
@@ -3947,7 +3953,7 @@ function renderProfileContent(){
         e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i,commentCount:e.comments?e.comments.length:0})})
       }
     });
-    if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
+    if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>ChÆ°a cÃ³ áº£nh nÃ o</div>';return}
     _profileImages=allImages;
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
       return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
@@ -4013,15 +4019,15 @@ function renderPostDetail(){
 
   
   var avatarHtml=avaUrl?'<img src="'+esc(avaUrl)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
-  var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
+  var username=effectiveAuthor.replace(/ [\wðŸ’–ðŸŒ»]+$/g,'');
   var timeDisplay=timeAgo(entry.createdAt||entry.updatedAt);
-  var menuHtml=isOwner?'<div class="pd-author-actions"><button class="pd-menu-btn" onclick="event.stopPropagation();togglePdMenu()"><i class="fas fa-ellipsis-h"></i></button><div class="pd-dropdown" id="pd-dropdown"><button onclick="editFromPostDetail()"><i class="fas fa-pen"></i><span>Sửa bài viết</span></button><button class="danger" onclick="deleteFromPostDetail()"><i class="fas fa-trash-alt"></i><span>Xóa bài viết</span></button></div></div>':'';
+  var menuHtml=isOwner?'<div class="pd-author-actions"><button class="pd-menu-btn" onclick="event.stopPropagation();togglePdMenu()"><i class="fas fa-ellipsis-h"></i></button><div class="pd-dropdown" id="pd-dropdown"><button onclick="editFromPostDetail()"><i class="fas fa-pen"></i><span>Sá»­a bÃ i viáº¿t</span></button><button class="danger" onclick="deleteFromPostDetail()"><i class="fas fa-trash-alt"></i><span>XÃ³a bÃ i viáº¿t</span></button></div></div>':'';
   document.getElementById('pd-author').innerHTML=
     '<div class="pd-author-avatar" style="cursor:pointer;" onclick="viewProfile(\''+authorPin+'\')"><div class="inner">'+avatarHtml+'</div></div>'+
     '<div class="pd-author-info">'+
       '<div class="pd-author-name-row">'+
         '<span class="pd-author-name" style="cursor:pointer;" onclick="viewProfile(\''+authorPin+'\')">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></span>'+
-        '<span class="pd-author-time">· '+esc(timeDisplay)+'</span>'+
+        '<span class="pd-author-time">Â· '+esc(timeDisplay)+'</span>'+
         (isOwner?menuHtml:'')+
       '</div>'+
     '</div>';
@@ -4099,7 +4105,7 @@ var _pdReplyToName = '';
 function replyToPdComment(commentId, name){
   _pdReplyToCommentId = commentId;
   _pdReplyToName = name;
-  document.getElementById('pd-reply-name').textContent = 'Đang trả lời ' + name;
+  document.getElementById('pd-reply-name').textContent = 'Äang tráº£ lá»i ' + name;
   document.getElementById('pd-reply-preview').style.display = 'flex';
   document.getElementById('pd-input').focus();
 }
@@ -4114,9 +4120,9 @@ function renderPdComments(){
   if(!entry){document.getElementById('pd-comments').innerHTML='';return}
   var comments=entry.comments||[];
   var container=document.getElementById('pd-comments');
-  var html='<div class="pd-comments-header"><i class="fa-regular fa-comment"></i> '+(comments.length>0?comments.length+' bình luận':'Bình luận')+'</div>';
+  var html='<div class="pd-comments-header"><i class="fa-regular fa-comment"></i> '+(comments.length>0?comments.length+' bÃ¬nh luáº­n':'BÃ¬nh luáº­n')+'</div>';
   if(!comments.length){
-    html+='<div class="pd-comment-empty">Chưa có bình luận nào</div>';
+    html+='<div class="pd-comment-empty">ChÆ°a cÃ³ bÃ¬nh luáº­n nÃ o</div>';
   }else{
     html+=comments.map(function(c){
       var ceffective=getEffectiveName(c.author);
@@ -4126,7 +4132,7 @@ function renderPdComments(){
       var cavatar=cava?'<img src="'+esc(cava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var cimgHtml = '';
       if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(driveThumb(c.image,600))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(c.image)+'\')"></div>';
-      var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
+      var cname = esc(ceffective.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''));
       var repliesHtml = '';
       if (c.replies && c.replies.length) {
         repliesHtml = '<div class="pd-replies">' + c.replies.map(function(r){
@@ -4136,7 +4142,7 @@ function renderPdComments(){
           var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
           var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(driveThumb(r.image,600))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
           var rIsOwner=getEffectiveName(reff)===getEffectiveName(currentUser);
-          return '<div class="pd-reply-item"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editPdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(pdEditingReply&&pdEditingReply.replyId===r.id?' editing':'')+'" id="pd-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+esc(reff.replace(/ [\w💖🌻]+$/g,''))+'\')">Trả lời</button></div></div></div>';
+          return '<div class="pd-reply-item"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editPdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sá»­a</button><button class="danger" onclick="deletePdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>XÃ³a</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(pdEditingReply&&pdEditingReply.replyId===r.id?' editing':'')+'" id="pd-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+esc(reff.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''))+'\')">Tráº£ lá»i</button></div></div></div>';
         }).join('') + '</div>';
       }
       return '<div class="pd-comment-item" data-id="'+c.id+'">'+
@@ -4144,11 +4150,11 @@ function renderPdComments(){
         '<div class="pd-comment-body">'+
           '<div style="display:flex;align-items:center;gap:6px;width:100%;">'+
             '<div class="pd-comment-user">'+cname+' <i class="fas fa-check-circle verified-badge"></i></div>'+
-            (isOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCommentMenu(\''+c.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cmt-dropdown-'+c.id+'"><button onclick="editPdComment(\''+c.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdComment(\''+c.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+
+            (isOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCommentMenu(\''+c.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cmt-dropdown-'+c.id+'"><button onclick="editPdComment(\''+c.id+'\')"><i class="fas fa-pen"></i>Sá»­a</button><button class="danger" onclick="deletePdComment(\''+c.id+'\')"><i class="fas fa-trash-alt"></i>XÃ³a</button></div></div>':'')+
           '</div>'+
           (c.text?'<div class="pd-comment-text'+(pdEditingCommentId===c.id?' editing':'')+'" id="pd-cmt-'+c.id+'">'+esc(c.text)+'</div>':'')+
           cimgHtml+
-          '<div class="pd-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+cname+'\')">Trả lời</button></div>'+
+          '<div class="pd-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+cname+'\')">Tráº£ lá»i</button></div>'+
           repliesHtml+
         '</div>'+
       '</div>'
@@ -4160,7 +4166,7 @@ function renderPdComments(){
 function sendPdComment(){
   var input=document.getElementById('pd-input');
   var text=input.value.trim();
-  if(!text && !_pendingPdImage){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
+  if(!text && !_pendingPdImage){showToast('<i class="fas fa-exclamation-triangle"></i> Nháº­p ná»™i dung bÃ¬nh luáº­n');return}
   if(!pdEntryId)return;
   var btn=document.getElementById('pd-send-btn');
   btn.disabled=true;
@@ -4269,7 +4275,7 @@ function editPdComment(id){
   var entry=appState.data.entries.find(function(e){return e.id===pdEntryId});
   if(!entry)return;
   var comment=entry.comments.find(function(c){return c.id===id});
-  if(!comment||getEffectiveName(comment.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ sửa được bình luận của mình');return}
+  if(!comment||getEffectiveName(comment.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n chá»‰ sá»­a Ä‘Æ°á»£c bÃ¬nh luáº­n cá»§a mÃ¬nh');return}
   pdEditingCommentId=id;
   var input=document.getElementById('pd-input');
   input.value=comment.text;
@@ -4300,8 +4306,8 @@ function deletePdComment(id){
   var entry=appState.data.entries.find(function(e){return e.id===pdEntryId});
   if(!entry)return;
   var comment=entry.comments.find(function(c){return c.id===id});
-  if(!comment||getEffectiveName(comment.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ xóa được bình luận của mình');return}
-  showConfirm('Xóa bình luận?','',function(ok){
+  if(!comment||getEffectiveName(comment.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n chá»‰ xÃ³a Ä‘Æ°á»£c bÃ¬nh luáº­n cá»§a mÃ¬nh');return}
+  showConfirm('XÃ³a bÃ¬nh luáº­n?','',function(ok){
     if(!ok)return;
     var payload={action:'delete_comment',entryId:pdEntryId,commentId:id,author:comment.author};
     sendCommentPayload(payload,function(result){
@@ -4319,7 +4325,7 @@ function editPdReply(commentId, replyId){
   var comment=entry.comments.find(function(c){return c.id===commentId});
   if(!comment||!comment.replies)return;
   var reply=comment.replies.find(function(r){return r.id===replyId});
-  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ sửa được bình luận của mình');return}
+  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n chá»‰ sá»­a Ä‘Æ°á»£c bÃ¬nh luáº­n cá»§a mÃ¬nh');return}
   pdEditingReply={commentId:commentId,replyId:replyId};
   var input=document.getElementById('pd-input');
   input.value=reply.text||'';
@@ -4338,8 +4344,8 @@ function deletePdReply(commentId, replyId){
   var comment=entry.comments.find(function(c){return c.id===commentId});
   if(!comment||!comment.replies)return;
   var reply=comment.replies.find(function(r){return r.id===replyId});
-  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ xóa được bình luận của mình');return}
-  showConfirm('Xóa bình luận?','',function(ok){
+  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n chá»‰ xÃ³a Ä‘Æ°á»£c bÃ¬nh luáº­n cá»§a mÃ¬nh');return}
+  showConfirm('XÃ³a bÃ¬nh luáº­n?','',function(ok){
     if(!ok)return;
     var payload={action:'delete_reply',entryId:pdEntryId,commentId:commentId,replyId:replyId};
     sendCommentPayload(payload,function(result){
@@ -4356,7 +4362,7 @@ function editCsReply(commentId, replyId){
   var comment=entry.comments.find(function(c){return c.id===commentId});
   if(!comment||!comment.replies)return;
   var reply=comment.replies.find(function(r){return r.id===replyId});
-  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ sửa được bình luận của mình');return}
+  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n chá»‰ sá»­a Ä‘Æ°á»£c bÃ¬nh luáº­n cá»§a mÃ¬nh');return}
   csEditingReply={commentId:commentId,replyId:replyId};
   var input=document.getElementById('cs-input');
   input.value=reply.text||'';
@@ -4375,8 +4381,8 @@ function deleteCsReply(commentId, replyId){
   var comment=entry.comments.find(function(c){return c.id===commentId});
   if(!comment||!comment.replies)return;
   var reply=comment.replies.find(function(r){return r.id===replyId});
-  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ xóa được bình luận của mình');return}
-  showConfirm('Xóa bình luận?','',function(ok){
+  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n chá»‰ xÃ³a Ä‘Æ°á»£c bÃ¬nh luáº­n cá»§a mÃ¬nh');return}
+  showConfirm('XÃ³a bÃ¬nh luáº­n?','',function(ok){
     if(!ok)return;
     var payload={action:'delete_reply',entryId:csEntryId,commentId:commentId,replyId:replyId};
     sendCommentPayload(payload,function(result){
@@ -4466,11 +4472,11 @@ function editFromPostDetail(){
 function deleteFromPostDetail(){
   if(!pdEntryId)return;
   var entry=appState.data.entries.find(function(e){return e.id===pdEntryId});
-  if(!entry||getEffectiveName(entry.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn không có quyền xóa');return}
-  showConfirm('Xóa bài viết?','Bài viết sẽ bị xóa vĩnh viễn.',function(ok){
+  if(!entry||getEffectiveName(entry.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Báº¡n khÃ´ng cÃ³ quyá»n xÃ³a');return}
+  showConfirm('XÃ³a bÃ i viáº¿t?','BÃ i viáº¿t sáº½ bá»‹ xÃ³a vÄ©nh viá»…n.',function(ok){
     if(!ok)return;
     deleteRemoteImages(entry.images);
-    sendPayload({action:'delete_entry',id:pdEntryId},'Đã xóa!');
+    sendPayload({action:'delete_entry',id:pdEntryId},'ÄÃ£ xÃ³a!');
     closePostDetail()
   })
 }
@@ -4483,7 +4489,7 @@ var _csReplyToName = '';
 function replyToCsComment(commentId, name){
   _csReplyToCommentId = commentId;
   _csReplyToName = name;
-  document.getElementById('cs-reply-name').textContent = 'Đang trả lời ' + name;
+  document.getElementById('cs-reply-name').textContent = 'Äang tráº£ lá»i ' + name;
   document.getElementById('cs-reply-preview').style.display = 'flex';
   document.getElementById('cs-input').focus();
 }
@@ -4539,7 +4545,7 @@ function renderCommentSheet(entry){
   var container=document.getElementById('cs-scroll');
   var html='';
   if(!comments.length){
-    html='<div class="cs-empty">Chưa có bình luận nào</div>';
+    html='<div class="cs-empty">ChÆ°a cÃ³ bÃ¬nh luáº­n nÃ o</div>';
   }else{
     html=comments.map(function(c){
       var ceffective=getEffectiveName(c.author);
@@ -4548,7 +4554,7 @@ function renderCommentSheet(entry){
       var cavatar=cava?'<img src="'+esc(cava)+'">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var cimgHtml = '';
       if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(driveThumb(c.image,600))+'" loading="lazy" onclick="openImageViewer(\''+esc(c.image)+'\')"></div>';
-      var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
+      var cname = esc(ceffective.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''));
       var repliesHtml = '';
       if (c.replies && c.replies.length) {
         repliesHtml = '<div class="pd-replies">' + c.replies.map(function(r){
@@ -4558,7 +4564,7 @@ function renderCommentSheet(entry){
           var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
           var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(driveThumb(r.image,600))+'" loading="lazy" onclick="openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
           var rIsOwner=getEffectiveName(reff)===getEffectiveName(currentUser);
-          return '<div class="pd-reply-item" style="margin-top:6px;"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCsReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cs-reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deleteCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(csEditingReply&&csEditingReply.replyId===r.id?' editing':'')+'" id="cs-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+esc(reff.replace(/ [\w💖🌻]+$/g,''))+'\')">Trả lời</button></div></div></div>';
+          return '<div class="pd-reply-item" style="margin-top:6px;"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCsReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cs-reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sá»­a</button><button class="danger" onclick="deleteCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>XÃ³a</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(csEditingReply&&csEditingReply.replyId===r.id?' editing':'')+'" id="cs-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+esc(reff.replace(/ [\wðŸ’–ðŸŒ»]+$/g,''))+'\')">Tráº£ lá»i</button></div></div></div>';
         }).join('') + '</div>';
       }
       return '<div class="cs-comment-item">'+
@@ -4567,7 +4573,7 @@ function renderCommentSheet(entry){
           '<div class="cs-comment-user">'+cname+' <i class="fas fa-check-circle verified-badge"></i></div>'+
           (c.text?'<div class="cs-comment-text">'+esc(c.text)+'</div>':'')+
           cimgHtml+
-          '<div class="cs-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+cname+'\')">Trả lời</button></div>'+
+          '<div class="cs-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+cname+'\')">Tráº£ lá»i</button></div>'+
           repliesHtml+
         '</div>'+
       '</div>'
@@ -4584,7 +4590,7 @@ function renderCommentSheet(entry){
 function sendCsComment(){
   var input=document.getElementById('cs-input');
   var text=input.value.trim();
-  if(!text && !_pendingCsImage){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
+  if(!text && !_pendingCsImage){showToast('<i class="fas fa-exclamation-triangle"></i> Nháº­p ná»™i dung bÃ¬nh luáº­n');return}
   if(!csEntryId)return;
   var btn=document.getElementById('cs-send-btn');
   btn.disabled=true;
@@ -4853,8 +4859,8 @@ function openCreatePage(editId){
   appState.writeEditId=editId||null;
   renderCreatePreview();
   document.getElementById('create-submit-btn').disabled=false;
-  document.getElementById('create-submit-btn').innerHTML=editId?'Cập nhật':'Đăng';
-  document.getElementById('create-title').textContent=editId?'Chỉnh sửa bài viết':'Bài viết mới';
+  document.getElementById('create-submit-btn').innerHTML=editId?'Cáº­p nháº­t':'ÄÄƒng';
+  document.getElementById('create-title').textContent=editId?'Chá»‰nh sá»­a bÃ i viáº¿t':'BÃ i viáº¿t má»›i';
 
   if(editId){
     var entry=appState.data.entries.find(function(e){return e.id===editId});
@@ -4888,7 +4894,7 @@ function handleCreateImages(input){
   var files=[].slice.call(input.files);
   if(!files.length)return;
   var remaining=CONFIG.MAX_IMAGES-appState.writeImages.length;
-  if(files.length>remaining){showToast('<i class="fas fa-exclamation-triangle"></i> Chỉ thêm tối đa '+remaining+' ảnh');files=files.slice(0,remaining)}
+  if(files.length>remaining){showToast('<i class="fas fa-exclamation-triangle"></i> Chá»‰ thÃªm tá»‘i Ä‘a '+remaining+' áº£nh');files=files.slice(0,remaining)}
   var date=document.getElementById('create-date').value||todayStr();
   files.forEach(function(file){
     var reader=new FileReader();
@@ -4902,7 +4908,7 @@ function handleCreateImages(input){
             appState.writeImages.push(rec);
             renderCreatePreview()
           }
-          else{showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh: '+esc(file.name))}
+          else{showToast('<i class="fas fa-exclamation-triangle"></i> Lá»—i táº£i áº£nh: '+esc(file.name))}
         })
       })
     };
@@ -4931,7 +4937,7 @@ function renderCreatePreview(){
   var display=appState.writeImages.slice(0,4);var extra=total-4;
   preview.innerHTML=display.map(function(img,idx){
     var more=idx===3&&extra>0?'<div class="more-badge">+'+extra+'</div>':'';
-    return '<div class="pimg">'+more+'<img src="'+esc(img.url||img)+'" /><button class="remove-btn" onclick="removeCreateImage('+idx+')">✕</button></div>'
+    return '<div class="pimg">'+more+'<img src="'+esc(img.url||img)+'" /><button class="remove-btn" onclick="removeCreateImage('+idx+')">âœ•</button></div>'
   }).join('')
 }
 
@@ -4953,9 +4959,9 @@ function removeCreateImage(idx){
 
 function submitCreatePost(){
   var content=document.getElementById('create-content').value.trim();
-  if(!content){showToast('<i class="fas fa-exclamation-triangle"></i> Vui lòng nhập nội dung');return}
+  if(!content){showToast('<i class="fas fa-exclamation-triangle"></i> Vui lÃ²ng nháº­p ná»™i dung');return}
   var date=document.getElementById('create-date').value;
-  if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chọn ngày');return}
+  if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chá»n ngÃ y');return}
   var btn=document.getElementById('create-submit-btn');
   btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
   var now=new Date().toISOString();
@@ -4979,7 +4985,7 @@ function submitCreatePost(){
   }
   sendPayload({action:'save_entry',entry:entry},null,function(ok){
     if(ok){_createUploaded=[];closeCreatePage()}
-    else{btn.disabled=false;btn.innerHTML=appState.writeEditId?'Cập nhật':'Đăng'}
+    else{btn.disabled=false;btn.innerHTML=appState.writeEditId?'Cáº­p nháº­t':'ÄÄƒng'}
   })
 }
 
@@ -4997,12 +5003,12 @@ function showDataInfo(){
   var totalImages=0;entries.forEach(function(e){if(e.images)totalImages+=e.images.length});
   var totalComments=0;entries.forEach(function(e){if(e.comments)totalComments+=e.comments.length});
   document.getElementById('data-info-content').innerHTML=
-    '<b><i class="fas fa-chart-bar"></i> Thống kê</b><br>'+
-    '• Tổng bài viết: '+entries.length+'<br>'+
-    '• Tổng ảnh: '+totalImages+'<br>'+
-    '• Tổng bình luận: '+totalComments+'<br>'+
-    '• Kỷ niệm: '+anns.length+'<br>'+
-    '• Người dùng: '+esc(currentUser);
+    '<b><i class="fas fa-chart-bar"></i> Thá»‘ng kÃª</b><br>'+
+    'â€¢ Tá»•ng bÃ i viáº¿t: '+entries.length+'<br>'+
+    'â€¢ Tá»•ng áº£nh: '+totalImages+'<br>'+
+    'â€¢ Tá»•ng bÃ¬nh luáº­n: '+totalComments+'<br>'+
+    'â€¢ Ká»· niá»‡m: '+anns.length+'<br>'+
+    'â€¢ NgÆ°á»i dÃ¹ng: '+esc(currentUser);
   openModal('modal-data-info')
 }
 
@@ -5013,13 +5019,13 @@ function openAnnModal(){
 function renderAnnList(){
   var container=document.getElementById('ann-list');
   var anns=appState.data.anniversaries||[];
-  if(!anns.length){container.innerHTML='<div style="text-align:center;padding:30px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-gift" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có kỷ niệm nào</div>';return}
+  if(!anns.length){container.innerHTML='<div style="text-align:center;padding:30px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-gift" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>ChÆ°a cÃ³ ká»· niá»‡m nÃ o</div>';return}
   var today=new Date();today.setHours(0,0,0,0);
   anns.sort(function(a,b){return new Date(a.date)-new Date(b.date)});
   container.innerHTML=anns.map(function(a){
     var countdown=getCountdown(a,today);
     var cls=countdown.days===0?'today':countdown.days<=30?'soon':'far';
-    var icon='fa-gift';if(a.name.toLowerCase().includes('yêu'))icon='fa-heart';else if(a.name.toLowerCase().includes('cưới'))icon='fa-ring';else if(a.name.toLowerCase().includes('sinh'))icon='fa-cake-candles';
+    var icon='fa-gift';if(a.name.toLowerCase().includes('yÃªu'))icon='fa-heart';else if(a.name.toLowerCase().includes('cÆ°á»›i'))icon='fa-ring';else if(a.name.toLowerCase().includes('sinh'))icon='fa-cake-candles';
     return '<div class="ann-item '+cls+'"><div class="ann-icon"><i class="fas '+icon+'"></i></div><div class="ann-info"><div class="ann-name">'+esc(a.name)+'</div><div class="ann-date">'+formatDateVN(a.date)+'</div><div class="ann-countdown '+cls+'">'+countdown.text+'</div></div><div class="ann-actions"><button onclick="editAnn(\''+a.id+'\')"><i class="fas fa-pen"></i></button><button class="del" onclick="deleteAnn(\''+a.id+'\')"><i class="fas fa-trash-alt"></i></button></div></div>'
   }).join('')
 }
@@ -5028,12 +5034,12 @@ function getCountdown(ann,today){
   var p=ann.date.split('-');var next=new Date(today.getFullYear(),parseInt(p[1])-1,parseInt(p[2]));
   if(next<today)next.setFullYear(next.getFullYear()+1);
   var days=Math.round((next-today)/86400000);
-  var text;if(days===0)text='Hôm nay!';else if(days===1)text='Còn 1 ngày nữa';else if(days<=7)text='Còn '+days+' ngày nữa';else text='Còn '+days+' ngày';
+  var text;if(days===0)text='HÃ´m nay!';else if(days===1)text='CÃ²n 1 ngÃ y ná»¯a';else if(days<=7)text='CÃ²n '+days+' ngÃ y ná»¯a';else text='CÃ²n '+days+' ngÃ y';
   return{days:days,text:text}
 }
 function openAnnForm(){
   document.getElementById('ann-form-date').value='';document.getElementById('ann-form-name').value='';appState.editingAnnId=null;
-  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-plus-circle" style="margin-right:6px;color:var(--text-secondary);"></i> Thêm kỷ niệm';openModal('modal-ann-form')
+  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-plus-circle" style="margin-right:6px;color:var(--text-secondary);"></i> ThÃªm ká»· niá»‡m';openModal('modal-ann-form')
 }
 function editAnn(id){
   var ann=(appState.data.anniversaries||[]).find(function(a){return a.id===id});
@@ -5041,18 +5047,18 @@ function editAnn(id){
   appState.editingAnnId=id;
   document.getElementById('ann-form-date').value=ann.date;
   document.getElementById('ann-form-name').value=ann.name;
-  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-pen" style="margin-right:6px;color:var(--text-secondary);"></i> Sửa kỷ niệm';openModal('modal-ann-form')
+  document.getElementById('ann-form-title').innerHTML='<i class="fas fa-pen" style="margin-right:6px;color:var(--text-secondary);"></i> Sá»­a ká»· niá»‡m';openModal('modal-ann-form')
 }
 function saveAnnForm(){
   var date=document.getElementById('ann-form-date').value;
   var name=document.getElementById('ann-form-name').value.trim();
-  if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chọn ngày');return}if(!name){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập tên');return}
+  if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chá»n ngÃ y');return}if(!name){showToast('<i class="fas fa-exclamation-triangle"></i> Nháº­p tÃªn');return}
   closeModal('modal-ann-form');
-  if(appState.editingAnnId){sendPayload({action:'save_anniversary',anniversary:{id:appState.editingAnnId,date:date,name:name}},'<i class="fas fa-save"></i> Đã cập nhật!');return}
-  sendPayload({action:'save_anniversary',anniversary:{id:'ann_'+Date.now(),date:date,name:name}},'<i class="fas fa-save"></i> Đã thêm kỷ niệm!')
+  if(appState.editingAnnId){sendPayload({action:'save_anniversary',anniversary:{id:appState.editingAnnId,date:date,name:name}},'<i class="fas fa-save"></i> ÄÃ£ cáº­p nháº­t!');return}
+  sendPayload({action:'save_anniversary',anniversary:{id:'ann_'+Date.now(),date:date,name:name}},'<i class="fas fa-save"></i> ÄÃ£ thÃªm ká»· niá»‡m!')
 }
 function deleteAnn(id){
-  showConfirm('Xóa kỷ niệm?','',function(ok){if(!ok)return;sendPayload({action:'delete_anniversary',id:id},'Đã xóa!')})
+  showConfirm('XÃ³a ká»· niá»‡m?','',function(ok){if(!ok)return;sendPayload({action:'delete_anniversary',id:id},'ÄÃ£ xÃ³a!')})
 }
 
 
@@ -5070,7 +5076,7 @@ document.addEventListener('click',function(e){
 
 function showLogoutConfirm(){
   closeModal('modal-settings');
-  showConfirm('Đăng xuất?','Quay lại màn hình khóa?',function(ok){
+  showConfirm('ÄÄƒng xuáº¥t?','Quay láº¡i mÃ n hÃ¬nh khÃ³a?',function(ok){
     if(!ok)return;
     document.getElementById('app').style.display='none';
     document.getElementById('lock-screen').style.display='flex';
@@ -5096,8 +5102,8 @@ function closeModal(id){
 document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventListener('click',function(e){if(e.target!==el)return;closeModal(el.id);if(el.id==='modal-edit-avatar')avatarCropCleanup()})})
 
 function showConfirm(title,msg,callback){
-  document.getElementById('confirm-title').textContent=title||'Xác nhận';
-  document.getElementById('confirm-message').textContent=msg||'Bạn có chắc?';
+  document.getElementById('confirm-title').textContent=title||'XÃ¡c nháº­n';
+  document.getElementById('confirm-message').textContent=msg||'Báº¡n cÃ³ cháº¯c?';
   openModal('modal-confirm');
   document.getElementById('confirm-ok').onclick=function(){closeModal('modal-confirm');if(callback)callback(true)};
   document.getElementById('confirm-cancel').onclick=function(){closeModal('modal-confirm');if(callback)callback(false)}
