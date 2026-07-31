@@ -21,16 +21,16 @@
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <!-- Firebase SDKs -->
+  
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script>
-// Kill all service workers — force fresh load every time
+
 try{navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(r){r.unregister()})})}catch(e){}
-// Apply saved/preferred theme immediately to prevent flash
+
 (function(){
   try {
     var stored = localStorage.getItem('love_theme_mode');
@@ -38,7 +38,7 @@ try{navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(functi
     if (dark) {
       document.documentElement.classList.add('dark');
       document.documentElement.style.colorScheme = 'dark';
-      // Set dark variables inline (highest specificity, no flash)
+      
       var root = document.documentElement.style;
       root.setProperty('--bg','#121212');
       root.setProperty('--card-bg','#1e1e1e');
@@ -138,7 +138,7 @@ body {
   transition: background 0.2s ease, color 0.2s ease;
   overscroll-behavior:none;
 }
-/* Loading bar */
+
 #loading-bar { position:fixed; top:0; left:0; width:100%; height:3px; z-index:99999; pointer-events:none; opacity:0; transition:opacity 0.3s; }
 #loading-bar.active { opacity:1; }
 #loading-bar .bar { height:100%; width:0%; border-radius:0 2px 2px 0; background:var(--loading-bar); background-size:200% 100%; animation:loadingShimmer 0.8s linear infinite; box-shadow:0 0 8px rgba(220,39,67,0.5); }
@@ -151,7 +151,7 @@ img { max-width:100%; display:block; }
 a { color: var(--text-link); text-decoration:none; }
 ::-webkit-scrollbar { width:4px; height:4px; } ::-webkit-scrollbar-thumb { background:var(--border-light); border-radius:4px; }
 
-/* ===== LOCK SCREEN ===== */
+
 #lock-screen {
   position:fixed; inset:0; z-index:9999;
   background: var(--card-bg);
@@ -175,7 +175,7 @@ a { color: var(--text-link); text-decoration:none; }
 @media (hover:none) and (pointer:coarse) { .pin-key { touch-action:manipulation; } }
 .lock-error { color:var(--text-danger); font-size:0.78rem; min-height:20px; margin-top:10px; font-weight:500; }
 
-/* ===== SKELETON LOADING ===== */
+
 @keyframes shimmer { 0%{opacity:0.3} 50%{opacity:0.7} 100%{opacity:0.3} }
 .feed-skeleton { padding:12px 16px; }
 .feed-skeleton .sk-card { background:var(--card-bg); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
@@ -189,12 +189,12 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-skeleton .sk-img { width:100%; height:200px; background:var(--hover-bg); }
 .feed-skeleton .sk-body { padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
 
-/* ===== LOADING SCREEN ===== */
 
-/* ===== APP LAYOUT ===== */
+
+
 #app { display:none; height:100vh; height:100dvh; overflow:hidden; background:var(--bg); }
 
-/* ===== SIDEBAR (desktop only) ===== */
+
 @media (min-width:1024px) {
   #sidebar {
     display:flex; position:fixed; top:0; left:0; bottom:0; z-index:100;
@@ -218,12 +218,12 @@ a { color: var(--text-link); text-decoration:none; }
   #bottom-nav { display:none !important; }
   #main-content { margin-left:var(--sidebar-w); }
 }
-/* Hide sidebar on mobile */
+
 @media (max-width:1023px) {
   #sidebar { display:none !important; }
 }
 
-/* ===== BOTTOM NAV (mobile) ===== */
+
 #bottom-nav {
   position:fixed; bottom:0; left:0; right:0; z-index:100;
   background:var(--card-bg); border-top:1px solid var(--border);
@@ -244,7 +244,7 @@ a { color: var(--text-link); text-decoration:none; }
   #bottom-nav { display:none !important; }
 }
 
-/* ===== MAIN CONTENT ===== */
+
 #main-content {
   height:100vh; height:100dvh; overflow-y:auto; overflow-x:hidden;
   padding-bottom:var(--nav-h);
@@ -269,7 +269,7 @@ a { color: var(--text-link); text-decoration:none; }
 @keyframes heartPop { 0%{transform:scale(1)} 25%{transform:scale(1.3)} 50%{transform:scale(0.95)} 100%{transform:scale(1)} }
 @keyframes ripple { to { transform:scale(4); opacity:0; } }
 
-/* ===== FEED ===== */
+
 .feed-header {
   display:none; align-items:center; justify-content:space-between; padding:10px 16px;
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
@@ -287,7 +287,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* Stories */
+
 .stories-container {
   display:flex; gap:12px; padding:12px 16px; overflow-x:auto; background:var(--card-bg);
   border-bottom:1px solid var(--border-light); margin-bottom:0;
@@ -301,14 +301,14 @@ a { color: var(--text-link); text-decoration:none; }
 .story-avatar .inner img { width:100%; height:100%; object-fit:cover; }
 .story-name { font-size:0.7rem; color:var(--text-secondary); max-width:64px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-/* Feed posts */
+
 .feed-posts { max-width:630px; margin:0 auto; padding:12px 0; }
 .feed-card {
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
   margin-bottom:16px; position:relative;
   transition:box-shadow 0.2s, transform 0.15s;
 }
-.feed-card:hover { box-shadow:var(--shadow); transform:translateY(-1px); }
+.feed-card:hover { box-shadow:var(--shadow); }
 @keyframes feedCardIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 .feed-card-images { border-radius:0; overflow:hidden; }
 .feed-card-header {
@@ -325,7 +325,7 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-card-menu-btn { font-size:1.1rem; color:var(--text-secondary); padding:4px 8px; border-radius:8px; transition:0.07s; }
 .feed-card-menu-btn:hover { background:var(--hover-bg); }
 
-/* Feed card carousel */
+
 .feed-card-images { position:relative; background:var(--input-bg); }
 .fc-carousel { position:relative; width:100%; overflow:hidden; background:var(--input-bg); }
 .fc-carousel-inner { display:flex; width:100%; transition:transform 0.2s cubic-bezier(0.25,0.1,0.25,1); }
@@ -358,10 +358,10 @@ a { color: var(--text-link); text-decoration:none; }
   padding:2px 8px; border-radius:10px;
 }
 
-/* Feed card actions bar */
 
 
-/* Feed card content */
+
+
 .feed-card-content { padding:2px 14px 12px; }
 .feed-card-caption { font-size:0.95rem; line-height:1.5; overflow-wrap:break-word; word-break:break-word; }
 .feed-card-caption-expand { color:var(--text-secondary); font-size:0.85rem; cursor:pointer; margin-top:2px; }
@@ -369,7 +369,7 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-card-comments:hover { color:var(--text-primary); }
 .feed-card-timestamp { font-size:0.7rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.03em; margin-top:6px; }
 
-/* ===== EXPLORE PAGE ===== */
+
 .explore-header { padding:14px 16px 8px; background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10; }
 .explore-search { display:flex; align-items:center; background:var(--border-light); border-radius:var(--radius-sm); padding:6px 14px; gap:8px; }
 .explore-search i { color:var(--text-secondary); font-size:0.9rem; }
@@ -382,7 +382,7 @@ a { color: var(--text-link); text-decoration:none; }
 .explore-item .multi-icon { position:absolute; top:6px; right:6px; color:#fff; font-size:0.8rem; text-shadow:0 1px 4px rgba(0,0,0,0.4); }
 .explore-empty { text-align:center; padding:60px 20px; color:var(--text-secondary); }
 
-/* ===== PROFILE PAGE ===== */
+
 .profile-header-sticky { background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10; }
 .profile-header { max-width:630px; margin:0 auto; padding:28px 16px 16px; }
 .profile-top { display:flex; align-items:center; gap:28px; }
@@ -403,7 +403,7 @@ a { color: var(--text-link); text-decoration:none; }
 .profile-clock .partner-link:hover { text-decoration:underline; }
 .profile-viewing { margin-top:8px; font-size:0.72rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px; flex-wrap:wrap; background:var(--hover-bg); border-radius:8px; padding:6px 10px; border:1px solid var(--border-light); }
 
-/* ===== PROFILE MORE MENU (mobile) ===== */
+
 .profile-more-container { position:relative; align-self:flex-start; margin-left:auto; }
 .profile-more-btn {
   background:none; border:none; font-size:1.3rem; color:var(--text-primary);
@@ -449,10 +449,10 @@ a { color: var(--text-link); text-decoration:none; }
 .profile-grid-item:hover .overlay { opacity:1; pointer-events:auto; transition:opacity 0.15s; }
 .profile-grid-item .overlay i { font-size:1rem; }
 
-/* Threads-style profile posts */
+
 .threads-list { max-width:600px; margin:0 auto; }
-.threads-item { padding:16px 0; border-bottom:1px solid var(--border-light); cursor:pointer; transition:0.07s; }
-.threads-item:hover { background:var(--hover-bg); margin:0 -16px; padding:16px; border-radius:4px; }
+.threads-item { padding:16px; margin:0 -16px; border-bottom:1px solid var(--border-light); cursor:pointer; transition:background 0.07s; }
+.threads-item:hover { background:var(--hover-bg); }
 .threads-author { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.85rem; }
 .threads-author strong { display:flex; align-items:center; gap:3px; color:var(--text-primary); }
 .threads-avatar { width:32px; height:32px; border-radius:50%; background:var(--story-gradient); padding:2px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
@@ -466,14 +466,14 @@ a { color: var(--text-link); text-decoration:none; }
 .threads-meta.stat { color:var(--text-secondary); font-weight:500; }
 .threads-meta .dot-sep { width:3px; height:3px; border-radius:50%; background:var(--text-secondary); flex-shrink:0; }
 
-/* ===== ACTIVITY PAGE ===== */
+
 .activity-header { padding:14px 16px; background:var(--sticky-bg); border-bottom:1px solid var(--border-light); font-size:1rem; font-weight:700; position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between; }
 .activity-header .activity-mark-read { background:none; border:1px solid var(--border-light); border-radius:20px; padding:4px 12px; font-size:0.72rem; font-weight:500; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:4px; transition:0.07s; }
 .activity-header .activity-mark-read:hover { background:var(--hover-bg); color:var(--text-primary); }
 .activity-list { max-width:630px; margin:0 auto; padding:8px 16px; }
-.activity-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border-light); cursor:pointer; transition:0.07s; }
-.activity-item:hover { background:var(--hover-bg); margin:0 -16px; padding:12px 16px; }
-.activity-item.activity-new { background:var(--hover-bg); margin:0 -16px; padding:12px 16px; border-bottom-color:var(--border); position:relative; }
+.activity-item { display:flex; align-items:center; gap:12px; padding:12px 16px; margin:0 -16px; border-bottom:1px solid var(--border-light); cursor:pointer; transition:background 0.07s; }
+.activity-item:hover { background:var(--hover-bg); }
+.activity-item.activity-new { background:var(--hover-bg); border-bottom-color:var(--border); position:relative; }
 .activity-item.activity-new::before { content:''; position:absolute; left:0; top:4px; bottom:4px; width:3px; border-radius:0 2px 2px 0; background:var(--text-danger); }
 .activity-avatar { width:40px; height:40px; border-radius:50%; background:var(--border-light); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
 .activity-text { flex:1; font-size:0.9rem; line-height:1.4; }
@@ -482,7 +482,7 @@ a { color: var(--text-link); text-decoration:none; }
 .activity-preview { font-size:0.82rem; color:var(--text-secondary); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px; }
 .activity-time { font-size:0.7rem; color:var(--text-secondary); margin-top:1px; font-weight:500; }
 
-/* ===== CREATE PAGE ===== */
+
 #create-page {
   position:fixed; inset:0; z-index:500; background:var(--card-bg);
   display:none; flex-direction:column;   animation:fadeUp 0.15s ease;
@@ -500,7 +500,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .create-header .back-btn { font-size:1.2rem; color:var(--text-primary); padding:6px 10px; border-radius:8px; background:none; border:none; cursor:pointer; transition:0.07s; }
 .create-header .back-btn:hover { background:var(--hover-bg); }
-/* Desktop: create page as modal */
+
 @media (min-width:768px) {
   #create-page { background:var(--overlay-bg); align-items:center; justify-content:center; }
   #create-page .create-inner { background:var(--card-bg); border-radius:var(--radius); max-width:600px; width:100%; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.15); }
@@ -519,7 +519,7 @@ a { color: var(--text-link); text-decoration:none; }
 .create-header .submit-btn:hover:not(:disabled) { background:#c2185b; }
 .create-inner { display:flex; flex-direction:column; flex:1; min-height:0; }
 .create-body { flex:1; overflow-y:auto; padding:12px 16px 100px; }
-/* Threads-style user row */
+
 .create-user-row {
   display:flex; align-items:center; gap:10px; margin-bottom:8px; padding:0 2px;
 }
@@ -531,7 +531,7 @@ a { color: var(--text-link); text-decoration:none; }
 .create-user-row .create-avatar i { font-size:1.6rem; color:var(--text-secondary); }
 .create-user-row .create-username { font-size:0.88rem; font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:4px; }
 
-/* Threads-style textarea - clean, no border */
+
 .create-content-input {
   width:100%; border:none; outline:none; resize:none;
   font-size:1.05rem; line-height:1.6; padding:4px 2px; min-height:180px;
@@ -539,7 +539,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .create-content-input::placeholder { color:var(--text-secondary); }
 
-/* Threads-style toolbar */
+
 .create-toolbar {
   display:flex; gap:4px; padding:10px 0 4px; position:sticky; bottom:0;
   background:var(--card-bg); border-top:1px solid var(--border-light); margin-top:8px;
@@ -573,7 +573,7 @@ a { color: var(--text-link); text-decoration:none; }
 .create-date-wrapper { display:none; }
 .create-date-wrapper.show { display:flex; }
 
-/* ===== POST DETAIL ===== */
+
 #post-overlay {
   position:fixed; inset:0; z-index:2000;
   background:var(--card-bg); display:flex; flex-direction:column;
@@ -583,21 +583,21 @@ a { color: var(--text-link); text-decoration:none; }
 }
 #post-overlay.open { transform:translateY(0); opacity:1; pointer-events:auto; }
 
-/* ===== GLOBAL TRANSITIONS ===== */
+
 * { -webkit-tap-highlight-color:transparent; }
 
-/* Post detail - mobile first (column layout) */
+
 .pd-modal { display:flex; flex-direction:column; flex:1; min-height:0; }
 .pd-modal-inner { display:flex; flex-direction:column; flex:1; min-height:0; }
 .pd-side { display:flex; flex-direction:column; flex:1; min-height:0; }
 .pd-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-/* Mobile: images inside scroll content */
+
 .pd-scroll-images { width:100%; }
 .pd-scroll-images .pd-carousel { height:auto; max-height:50vh; min-height:180px; }
 .pd-scroll-images .pd-carousel-inner { height:auto; align-items:flex-start; }
 .pd-scroll-images .pd-carousel-img { height:auto; max-height:50vh; width:100%; flex-shrink:0; display:block; }
 #pd-scroll-images:empty { display:none; }
-/* Desktop: hide scroll images, show side panel images */
+
 @media (min-width:768px) {
   #pd-scroll-images { display:none; }
 }
@@ -635,7 +635,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-dropdown button.danger { color:var(--text-danger); }
 .pd-dropdown button.danger:hover { background:rgba(237,73,86,0.08); }
 .pd-dropdown button i { font-size:0.9rem; width:18px; text-align:center; }
-/* Post images in detail - carousel */
+
 .pd-images {
   background:#000; position:relative; overflow:hidden;
   display:flex; align-items:center; justify-content:center;
@@ -678,12 +678,12 @@ a { color: var(--text-link); text-decoration:none; }
 @media (min-width:768px) {
   .pd-carousel-nav { opacity:1; pointer-events:auto; }
 }
-/* Mobile: show carousel nav always (touch devices can't hover) */
+
 @media (max-width:767px) {
   .fc-carousel-nav, .pd-carousel-nav { opacity:0.7; pointer-events:auto; }
   .fc-carousel-nav:hover, .pd-carousel-nav:hover { opacity:1; }
 }
-/* Author row in detail */
+
 .pd-author {
   display:flex; align-items:flex-start; gap:10px; padding:12px 16px 6px;
 }
@@ -693,11 +693,11 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-author-name-row { display:flex; align-items:center; gap:6px; width:100%; }
 .pd-author-name { font-size:0.92rem; font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:4px; }
 .pd-author-time { font-size:0.72rem; color:var(--text-secondary); }
-/* Caption/content */
+
 .pd-caption { padding:4px 16px 8px; }
 .pd-caption .pd-caption-title { font-size:1.15rem; font-weight:700; color:var(--text-primary); margin-bottom:4px; }
 .pd-caption .pd-caption-text { font-size:0.95rem; line-height:1.6; color:var(--text-primary); white-space:pre-wrap; word-break:break-word; }
-/* Comments in detail */
+
 .pd-comments { padding:4px 16px 8px; border-top:1px solid var(--border-light); }
 .pd-comments-header { font-size:0.88rem; font-weight:600; color:var(--text-secondary); padding:8px 0; }
 .pd-comment-item { display:flex; gap:10px; padding:6px 0; }
@@ -734,7 +734,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-comment-dropdown button.danger:hover { background:rgba(237,73,86,0.08); }
 .pd-comment-dropdown button i { font-size:0.8rem; width:16px; text-align:center; }
 .pd-comment-empty { text-align:center; color:var(--text-secondary); font-size:0.85rem; padding:12px 0; }
-/* Fixed input */
+
 .pd-input-fixed {
   border-top:1px solid var(--border-light); padding:6px 12px 6px; flex-shrink:0;
   background:var(--card-bg);
@@ -754,7 +754,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-input-row textarea.edit-mode { max-height:40vh; }
 .pd-input-row textarea:focus { border-color:var(--text-secondary); }
 .pd-send-btn {
-  height:34px; border-radius:20px; border:none; padding:0 10px;
+  height:38px; border-radius:20px; border:none; padding:0 10px;
   background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
   cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
   transition:transform 0.15s, opacity 0.15s; flex-shrink:0; line-height:1;
@@ -783,7 +783,7 @@ a { color: var(--text-link); text-decoration:none; }
   #pd-scroll-images { display:none !important; }
 }
 
-/* ===== COMMENT BOTTOM SHEET (mobile) ===== */
+
 #comment-sheet-overlay {
   position:fixed; inset:0; z-index:2200; background:rgba(0,0,0,0.5);
   display:flex; align-items:flex-end; justify-content:center;
@@ -830,7 +830,7 @@ a { color: var(--text-link); text-decoration:none; }
 .cs-reply-preview button { width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.7rem; flex-shrink:0; }
 .cs-reply-preview button:hover { background:var(--border-light); }
 .cs-send-btn {
-  height:34px; border-radius:20px; border:none; padding:0 10px;
+  height:38px; border-radius:20px; border:none; padding:0 10px;
   background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
   cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
   transition:transform 0.15s, opacity 0.15s; flex-shrink:0; line-height:1;
@@ -849,7 +849,7 @@ a { color: var(--text-link); text-decoration:none; }
 .cs-comment-time { font-size:0.65rem; color:var(--text-secondary); margin-top:2px; }
 .cs-empty { text-align:center; color:var(--text-secondary); font-size:0.85rem; padding:24px 0; }
 
-/* ===== PHOTO VIEWER ===== */
+
 #photo-viewer {
   position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.92);
   display:none; align-items:center; justify-content:center; flex-direction:column;
@@ -874,7 +874,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pv-zoom-btn:active { transform:scale(0.9); }
 .pv-zoom-label { color:rgba(255,255,255,0.85); font-size:0.7rem; min-width:30px; text-align:center; font-variant-numeric:tabular-nums; }
 
-/* ===== MODALS ===== */
+
 .modal-overlay {
   position:fixed; inset:0; z-index:800; background:var(--overlay-bg);
   display:flex; align-items:center; justify-content:center; padding:16px;
@@ -902,7 +902,7 @@ a { color: var(--text-link); text-decoration:none; }
 .btn-secondary:hover { background:var(--border-light); }
 .button-row { display:flex; gap:10px; margin-top:14px; }
 
-/* ===== TOAST ===== */
+
 #toast {
   position:fixed; bottom:calc(60px + var(--safe-bottom)); left:50%; transform:translateX(-50%) translateY(14px);
   background:var(--toast-bg); color:var(--toast-text); padding:10px 24px; border-radius:30px;
@@ -912,7 +912,7 @@ a { color: var(--text-link); text-decoration:none; }
 #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 @media (min-width:1024px) { #toast { bottom:30px; } }
 
-/* ===== SAVING OVERLAY ===== */
+
 #saving-overlay {
   position:fixed; inset:0; z-index:9500; background:var(--overlay-bg); -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   display:none; align-items:center; justify-content:center; opacity:0; transition:opacity 0.25s ease;
@@ -922,7 +922,7 @@ a { color: var(--text-link); text-decoration:none; }
 .saving-spinner { width:48px; height:48px; border:4px solid var(--border-light); border-top-color:var(--text-link); border-radius:50%;   animation:spin 0.5s linear infinite; margin:0 auto 12px; }
 .saving-text { font-size:0.9rem; font-weight:500; color:var(--text-primary); }
 
-/* ===== DROPDOWN ===== */
+
 .dropdown-menu {
   position:absolute; top:100%; right:0; z-index:50;
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
@@ -936,7 +936,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dropdown-menu button:hover { background:var(--hover-bg); }
 .dropdown-menu button.danger { color:var(--text-danger); }
 
-/* ===== RESPONSIVE ===== */
+
 @media (max-width:1023px) {
   .story-avatar { width:56px; height:56px; }
   .story-avatar .inner { font-size:1.4rem; }
@@ -960,12 +960,12 @@ a { color: var(--text-link); text-decoration:none; }
   .sidebar-nav .sidebar-item .label { display:inline; }
   .feed-header { display:none; }
 }
-/* Sidebar labels visibility */
+
 .sidebar-item .label { display:inline; }
 
 
 
-/* Anniversaries in modal */
+
 .ann-list { display:flex; flex-direction:column; gap:6px; }
 .ann-item { display:flex; align-items:center; gap:14px; padding:14px 14px; border:1px solid var(--border-light); border-radius:12px; transition:0.07s; position:relative; overflow:hidden; font-family:'Roboto',Arial,sans-serif; }
 .ann-item:hover { border-color:var(--border); background:var(--hover-bg); }
@@ -990,7 +990,7 @@ a { color: var(--text-link); text-decoration:none; }
 .add-ann-btn { width:100%; background:transparent; border:1px dashed var(--border); border-radius:12px; padding:12px; font-size:0.8rem; font-weight:500; color:var(--text-secondary); cursor:pointer; transition:0.07s; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'Roboto',Arial,sans-serif; }
 .add-ann-btn:hover { background:var(--hover-bg); color:var(--text-primary); border-color:var(--text-secondary); }
 
-/* ===== CHAT / DIRECT MESSAGES (Instagram Direct style) ===== */
+
 #page-direct { display:none; }
 #page-direct.active .dm-input-wrap {
   position:fixed; bottom:0; left:0; right:0; z-index:20;
@@ -1117,7 +1117,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-input-row textarea:focus { border-color:var(--text-secondary); }
 
 .dm-send-btn {
-  min-width:34px; height:34px; border-radius:20px; border:none;
+  min-width:38px; height:38px; border-radius:20px; border:none;
   padding:0 10px; background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   transition:transform 0.15s, opacity 0.15s;
@@ -1206,7 +1206,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-reply-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
 .dm-reply-info span:first-child { font-size:0.72rem; font-weight:600; color:var(--text-link); }
 .dm-reply-info span:last-child { font-size:0.78rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.dm-reply-preview button { width:26px; height:26px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0; }
+.dm-reply-preview button { width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.7rem; flex-shrink:0; }
 .dm-reply-preview button:hover { background:var(--border-light); }
 .dm-msg-reply { display:flex; align-items:center; gap:6px; margin-bottom:4px; padding:4px 8px; background:rgba(233,30,99,0.06); border-radius:6px; border-left:2px solid var(--text-link); }
 .dm-msg.sent .dm-msg-reply { background:rgba(255,255,255,0.12); border-left-color:rgba(255,255,255,0.5); }
@@ -1227,9 +1227,9 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .online-dot, .offline-dot { display:inline-block; width:8px; height:8px; border-radius:50%; }
 .online-dot { background:#31c24c; }
 .offline-dot { background:#a0a0a0; }
-/* ===== IMAGE BUTTONS & PREVIEWS (DM, comments) ===== */
+
 .dm-img-btn, .pd-img-btn, .cs-img-btn {
-  width:34px; height:34px; border-radius:10px; display:flex;
+  width:38px; height:38px; border-radius:10px; display:flex;
   align-items:center; justify-content:center; color:var(--text-secondary);
   background:none; border:none; cursor:pointer; transition:0.12s; font-size:1rem;
   flex-shrink:0;
@@ -1258,7 +1258,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <body>
 <div id="loading-bar"><div class="bar" id="loading-bar-inner"></div></div>
 
-<!-- ===== LOCK SCREEN ===== -->
+
 <div id="lock-screen">
   <div class="lock-inner">
     <div class="lock-logo"><i class="fas fa-heart" style="-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
@@ -1287,10 +1287,10 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== APP ===== -->
+
 <div id="app">
 
-  <!-- ===== SIDEBAR ===== -->
+  
   <div id="sidebar">
     <div class="sidebar-logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
     <nav class="sidebar-nav">
@@ -1321,10 +1321,10 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     </nav>
   </div>
 
-  <!-- ===== MAIN ===== -->
+  
   <div id="main-content">
 
-    <!-- ===== FEED PAGE ===== -->
+    
     <div class="page active" id="page-feed">
       <div class="feed-header">
         <div class="logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
@@ -1337,7 +1337,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <div class="feed-posts" id="feed-posts"></div>
     </div>
 
-    <!-- ===== DIRECT MESSAGES PAGE ===== -->
+    
     <div class="page" id="page-direct">
       <div class="dm-header">
         <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
@@ -1378,7 +1378,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       </div>
     </div>
 
-    <!-- ===== EXPLORE PAGE ===== -->
+    
     <div class="page" id="page-explore">
       <div class="explore-header">
         <div class="explore-search">
@@ -1389,13 +1389,13 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <div class="explore-grid" id="explore-grid"></div>
     </div>
 
-    <!-- ===== ACTIVITY PAGE ===== -->
+    
     <div class="page" id="page-activity">
       <div class="activity-header"><span>Hoạt động</span><button class="activity-mark-read" onclick="markActivitiesSeen();renderActivity()"><i class="fas fa-check-double"></i> Đã đọc hết</button></div>
       <div class="activity-list" id="activity-list"></div>
     </div>
 
-    <!-- ===== PROFILE PAGE ===== -->
+    
     <div class="page" id="page-profile">
       <div class="profile-header-sticky">
         <div class="profile-header">
@@ -1428,9 +1428,9 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <div class="profile-posts" id="profile-posts"></div>
     </div>
 
-  </div><!-- /main-content -->
+  </div>
 
-  <!-- ===== BOTTOM NAV ===== -->
+  
   <div id="bottom-nav">
     <div class="nav-item active" data-page="feed" onclick="switchPage('feed')"><i class="fas fa-house"></i></div>
     <div class="nav-item" data-page="explore" onclick="switchPage('explore')"><i class="fas fa-compass"></i></div>
@@ -1439,9 +1439,9 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     <div class="nav-item" data-page="profile" onclick="switchPage('profile')"><i class="fas fa-user"></i></div>
   </div>
 
-</div><!-- /app -->
+</div>
 
-<!-- ===== CREATE PAGE ===== -->
+
 <div id="create-page">
   <div class="create-inner">
     <div class="create-header">
@@ -1469,7 +1469,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== POST DETAIL OVERLAY ===== -->
+
 <div id="post-overlay">
   <div class="pd-modal">
     <div class="pd-header">
@@ -1507,7 +1507,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== COMMENT BOTTOM SHEET (mobile) ===== -->
+
 <div id="comment-sheet-overlay">
   <div id="comment-sheet">
     <div class="cs-handle"></div>
@@ -1536,7 +1536,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== PHOTO VIEWER ===== -->
+
 <div id="photo-viewer">
   <div class="pv-top">
     <button onclick="downloadCurrentPhoto()" title="Tải ảnh"><i class="fas fa-download"></i></button>
@@ -1553,10 +1553,10 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== CALENDAR MODAL ===== -->
 
 
-<!-- ===== ANNIVERSARY MODAL ===== -->
+
+
 <div class="modal-overlay" id="modal-ann">
   <div class="modal-box" style="max-width:420px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -1568,7 +1568,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== ANNIVERSARY FORM MODAL ===== -->
+
 <div class="modal-overlay" id="modal-ann-form">
   <div class="modal-box" style="max-width:380px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -1581,7 +1581,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== SETTINGS MODAL ===== -->
+
 <div class="modal-overlay" id="modal-settings">
   <div class="modal-box" style="max-width:380px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -1639,7 +1639,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== EDIT NAME MODAL ===== -->
+
 <div class="modal-overlay" id="modal-edit-name">
   <div class="modal-box" style="max-width:380px;">
     <div class="modal-title">Đổi tên hiển thị</div>
@@ -1653,7 +1653,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== EDIT AVATAR MODAL ===== -->
+
 <div class="modal-overlay" id="modal-edit-avatar">
   <div class="modal-box" style="max-width:420px;text-align:center;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -1686,7 +1686,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== CONFIRM MODAL ===== -->
+
 <div class="modal-overlay" id="modal-confirm" style="z-index:9000;">
   <div class="modal-box" style="max-width:360px;text-align:center;">
     <div class="modal-title" id="confirm-title" style="margin-bottom:8px;">Xác nhận</div>
@@ -1698,7 +1698,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== DATA INFO MODAL ===== -->
+
 <div class="modal-overlay" id="modal-data-info">
   <div class="modal-box" style="max-width:380px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -1709,10 +1709,10 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-<!-- ===== TOAST ===== -->
+
 <div id="toast"></div>
 
-<!-- ===== SAVING ===== -->
+
 <div id="saving-overlay">
   <div class="saving-box">
     <div class="saving-spinner"></div>
@@ -1721,7 +1721,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 </div>
 
 <script>
-// ==================== CONFIG ====================
+
 var CONFIG = {
   BACKEND_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
   PIN_USER1: '2204',
@@ -1733,7 +1733,7 @@ var CONFIG = {
   PAGE_SIZE: 10
 };
 
-// ==================== FIREBASE INIT ====================
+
 var firebaseConfig = {
   apiKey: "AIzaSyDDoeCYCxvKuAQ9CnYKPoE1_6s6htBYY04",
   authDomain: "ptan2009-92b5a.firebaseapp.com",
@@ -1751,7 +1751,7 @@ db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
   if (err.code !== 'failed-precondition') console.warn('Persistence err:', err);
 });
 
-// Anonymous auth for cross-device support
+
 auth.signInAnonymously().catch(function(err) {
   console.warn('Anonymous auth err:', err);
 });
@@ -1792,7 +1792,7 @@ var FEED_MORE = 20;
 var feedRenderCount = 0;
 var feedObserver = null;
 
-// ==================== USER PROFILES (custom name & avatar) ====================
+
 var userProfiles = null;
 
 function loadUserProfiles(force) {
@@ -1806,13 +1806,13 @@ function loadUserProfiles(force) {
     userProfiles[CONFIG.PIN_USER1] = { name: CONFIG.USER1_NAME, avatar: '', theme: 'auto' };
     userProfiles[CONFIG.PIN_USER2] = { name: CONFIG.USER2_NAME, avatar: '', theme: 'auto' };
   }
-  // Clean up any base64 avatars stuck from old fallback
+  
   for (var p in userProfiles) {
     if (userProfiles[p] && userProfiles[p].avatar && userProfiles[p].avatar.indexOf('data:') === 0) {
       userProfiles[p].avatar = '';
     }
   }
-  // When force=true and PIN is set, sync FROM Firestore
+  
   if (force && appState.currentPin) {
     db.collection('config').doc('profiles').get().then(function(doc) {
       if (doc.exists) {
@@ -1828,7 +1828,7 @@ function loadUserProfiles(force) {
         }
         saveUserProfiles();
         updateUserUI();
-        // Update avatars in existing feed cards without full re-render
+        
         if (changed && appState.currentPage === 'feed') {
           var newAva = userProfiles[appState.currentPin] && userProfiles[appState.currentPin].avatar;
           if (newAva) {
@@ -1856,7 +1856,7 @@ function applyTheme(){
   var mode=getCurrentTheme();
   var meta=document.getElementById('meta-theme-color');
   document.documentElement.style.colorScheme = mode === 'dark' ? 'dark' : 'light';
-  // Clear inline variables set by early script so CSS class takes over
+  
   var darkVars = ['--bg','--card-bg','--text-primary','--text-secondary','--border','--border-light','--hover-bg','--input-bg','--sticky-bg','--placeholder-bg','--toast-bg','--toast-text','--ann-today-bg','--ann-soon-bg','--ann-today-text','--ann-soon-text','--overlay-bg'];
   darkVars.forEach(function(v){ try{document.documentElement.style.removeProperty(v)}catch(e){} });
   if(mode==='dark'){
@@ -1866,12 +1866,12 @@ function applyTheme(){
     document.documentElement.classList.remove('dark');
     if(meta)meta.content='#ffffff';
   }
-  // Cache only explicit choices to avoid stale auto-detection
+  
   var pin=appState.currentPin;
   var userTheme=userProfiles[pin]?userProfiles[pin].theme:'auto';
   if(userTheme!=='auto'){try{localStorage.setItem('love_theme_mode',mode)}catch(e){}}
   else{try{localStorage.removeItem('love_theme_mode')}catch(e){}}
-  // Update selector UI
+  
   var sel=document.getElementById('theme-selector');
   if(sel){
     var btns=sel.querySelectorAll('button');
@@ -1899,7 +1899,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',func
   if(userProfiles[pin]&&userProfiles[pin].theme==='auto')applyTheme();
 });
 
-// ==================== ACTIVITIES ====================
+
 var _activitySeenMap = {};
 var _activityUnsub = null;
 var _entriesUnsub = null;
@@ -1909,7 +1909,7 @@ function loadActivitySeen() {
   _activityUnsub = db.collection('config').doc('activities')
     .onSnapshot(function(doc) {
       _activitySeenMap = doc.exists ? (doc.data().seen || {}) : {};
-      // Cache in local for offline fallback
+      
       for (var p in _activitySeenMap) {
         localStorage.setItem('love_activity_seen_' + p, _activitySeenMap[p]);
       }
@@ -2005,7 +2005,7 @@ function getEffectiveAvatar(author) {
   return getDisplayAvatar(pin);
 }
 
-// ==================== UTILITY ====================
+
 function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function pad(n){return n<10?'0'+n:''+n}
 function todayStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())}
@@ -2016,7 +2016,7 @@ function formatFull(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))re
 function timeAgo(iso){if(!iso)return'';try{var d=new Date(iso);if(isNaN(d))return'';var n=Date.now(),diff=Math.floor((n-d)/1000);if(diff<60)return'Vài giây trước';if(diff<3600)return Math.floor(diff/60)+' phút trước';if(diff<86400)return Math.floor(diff/3600)+' giờ trước';return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2)}catch(e){return ''}}
 function autoResize(el){if(!el)return;el.style.height='auto';el.style.height=el.scrollHeight+'px'}
 
-// ==================== CLIPBOARD / IMAGE PASTE UTILITY ====================
+
 var _pendingDmImage = null;
 var _pendingPdImage = null;
 var _pendingCsImage = null;
@@ -2061,7 +2061,7 @@ function setupPasteHandler(textareaId, onImageCallback) {
   });
 }
 
-// Init paste handlers (script runs at end of body, DOM is ready)
+
 setupPasteHandler('dm-input', function(base64) {
   _pendingDmImage = base64;
   showImgPreview('dm');
@@ -2131,7 +2131,7 @@ function handleCsImageFile(input) {
   input.value = '';
 }
 
-// ==================== LOCK SCREEN ====================
+
 function handlePinPress(d){
   try {
     if(!appState){document.getElementById('lock-error').textContent='Lỗi: app chưa khởi tạo';return}
@@ -2145,20 +2145,13 @@ function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('dot-'+
 function verifyPin(){
   try {
     var p=appState.pinCode;appState.currentPin=p;
-    if(p===CONFIG.PIN_USER1){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
-    else if(p===CONFIG.PIN_USER2){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
+    if(p===CONFIG.PIN_USER1){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}
+    else if(p===CONFIG.PIN_USER2){loadUserProfiles();currentUser=getDisplayName(p);unlockApp()}
     else{document.getElementById('lock-error').textContent='Mật mã không đúng';appState.pinCode='';appState.currentPin='';updateDots()}
   } catch(e){document.getElementById('lock-error').textContent='Lỗi: '+e.message}
 }
 function unlockApp(){
-  // Apply theme BEFORE fading lock screen so the switch is invisible
   applyTheme();
-  // Link anonymous UID to this PIN
-  if (appState.currentUid && appState.currentPin) {
-    var update = {};
-    update['mapping.' + appState.currentPin] = appState.currentUid;
-    db.collection('config').doc('pin_mapping').set(update, { merge: true }).catch(function() {});
-  }
   document.getElementById('lock-screen').classList.add('hiding');
   setTimeout(function(){
     document.getElementById('lock-screen').style.display='none';
@@ -2188,7 +2181,7 @@ document.getElementById('pin-keyboard').addEventListener('pointerleave',function
 });
 document.addEventListener('keydown',function(e){var ls=document.getElementById('lock-screen');if(ls.style.display==='none'||ls.classList.contains('hiding'))return;if(e.key>='0'&&e.key<='9')handlePinPress(e.key);if(e.key==='Backspace')handlePinDelete()})
 
-// ==================== INIT ====================
+
 function initApp(){
   showFeedSkeleton();
   updateUserUI();
@@ -2200,7 +2193,7 @@ function initApp(){
   setupPresence();
   setupPartnerPresenceListener();
 
-  // iOS visualViewport fix: scroll DM messages to bottom when keyboard opens
+  
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', function() {
       if (appState.currentPage === 'direct') {
@@ -2227,7 +2220,7 @@ function updateUserUI(){
   if (sa) sa.innerHTML = avaTag;
 }
 
-// ==================== EDIT NAME / AVATAR ====================
+
 function openEditName(){
   closeModal('modal-settings');
   loadUserProfiles();
@@ -2258,10 +2251,10 @@ function syncProfileToBackend(){
   if(!userProfiles[pin])userProfiles[pin]={name:'',avatar:'',theme:'auto'};
   if(!userProfiles[pin].name)userProfiles[pin].name=pin===CONFIG.PIN_USER1?CONFIG.USER1_NAME:CONFIG.USER2_NAME;
   if(!userProfiles[pin].theme)userProfiles[pin].theme='auto';
-  // Never sync base64
+  
   if(userProfiles[pin].avatar&&userProfiles[pin].avatar.indexOf('data:')===0)userProfiles[pin].avatar='';
   saveUserProfiles();
-  // Save to Firestore
+  
   var profilesRef = db.collection('config').doc('profiles');
   profilesRef.get().then(function(doc) {
     var data = doc.exists ? doc.data() : { profiles: {} };
@@ -2271,7 +2264,7 @@ function syncProfileToBackend(){
   }).catch(function(err) { console.warn('syncProfile error:', err); });
 }
 
-// ==================== AVATAR CROP ====================
+
 var avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
 var AC_SIZE=174;
 
@@ -2428,7 +2421,7 @@ function removeCustomAvatar(){
   avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
 }
 
-// Drag to pan (mouse)
+
 document.addEventListener('mousedown',function(e){
   var el=e.target;
   if(el.id!=='avatar-crop-img')return;
@@ -2450,7 +2443,7 @@ document.addEventListener('mouseup',function(){
   var img=document.getElementById('avatar-crop-img');
   if(img)img.style.cursor='grab';
 });
-// Touch support
+
 document.addEventListener('touchstart',function(e){
   var el=e.target;
   if(el.id!=='avatar-crop-img')return;
@@ -2470,7 +2463,8 @@ document.addEventListener('touchmove',function(e){
 },{passive:false});
 document.addEventListener('touchend',function(){avatarCrop.isDragging=false});
 
-// ==================== CLOCK ====================
+
+var _clockInterval = null;
 function startClock(){
   var start=new Date(CONFIG.LOVE_START+'T00:00:00');
   function tick(){
@@ -2481,11 +2475,12 @@ function startClock(){
     var d=Math.floor(diff/86400000);
     document.getElementById('profile-clock').innerHTML='Đã ở bên <a class="partner-link" href="javascript:void(0)" onclick="renderProfileForUser(\''+partnerPin+'\')">'+esc(otherName)+'</a> được <span class="num-days">'+d+'</span> ngày';
   }
-  tick();setInterval(tick,3600000);
+  tick();
+  if (!_clockInterval) _clockInterval = setInterval(tick,3600000);
   window.updateClock=tick;
 }
 
-// ==================== DATA LOADING ====================
+
 function showSaving(t){document.getElementById('saving-text').textContent=t||'Đang xử lý...';document.getElementById('saving-overlay').classList.add('show')}
 function hideSaving(){document.getElementById('saving-overlay').classList.remove('show')}
 
@@ -2598,7 +2593,7 @@ function processOfflineQueue(){
 window.addEventListener('online',function(){appState.isOnline=true;processOfflineQueue()})
 window.addEventListener('offline',function(){appState.isOnline=false;showToast('<i class="fas fa-wifi"></i> Mất kết nối, dữ liệu sẽ lưu tạm')})
 
-// ==================== SERVER ====================
+
 function sendPayload(payload, successMsg, callback) {
   var action = payload.action;
   var p = showSaving('Đang xử lý...');
@@ -2672,7 +2667,7 @@ function sendPayload(payload, successMsg, callback) {
     return;
   }
 
-  // Unknown action — try old method as fallback
+  
   var clean = JSON.parse(JSON.stringify(payload));
   if (clean.entry && clean.entry.images) clean.entry.images = clean.entry.images.map(function(i) { return { url: i.url || '', driveId: i.driveId || '' }; });
   var body = JSON.stringify(clean);
@@ -2737,7 +2732,7 @@ function handleCommentAction(payload, successMsg, callback) {
       return comments;
     });
   }).then(function(comments) {
-    // Update in-memory immediately (snapshot will confirm)
+    
     var master = appState.data.entries.find(function(e) { return e.id === entryId; });
     if (master) master.comments = comments;
     if (callback) callback({ success: true, comments: comments });
@@ -2759,7 +2754,18 @@ function uploadImage(base64,filename,dateStr,callback){
   .then(function(r){return r.json()}).then(function(r){if(r&&r.url)callback(r);else callback(null)}).catch(function(){callback(null)})
 }
 
-// ==================== DIRECT MESSAGES ====================
+function deleteRemoteImages(images){
+  if(!images||!images.length)return;
+  images.forEach(function(img){
+    var url=img&&(img.url||img)||'';
+    var driveId=img&&img.driveId||'';
+    if(!driveId&&url){var m=url.match(/[?&]id=([^&]+)/);if(m)driveId=m[1]}
+    if(!driveId)return;
+    fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete_image',driveId:driveId})}).catch(function(){})
+  })
+}
+
+
 function getPartnerPin() {
   return appState.currentPin === CONFIG.PIN_USER1 ? CONFIG.PIN_USER2 : CONFIG.PIN_USER1;
 }
@@ -2767,7 +2773,7 @@ function getPartnerName() {
   return getDisplayName(getPartnerPin());
 }
 
-// ==================== SOUNDS ====================
+
 var _audioCtx = null;
 function getAudioCtx() {
   if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -2805,7 +2811,7 @@ function playSentSound() {
     var ctx = getAudioCtx();
     if (ctx.state === 'suspended') ctx.resume();
     var t = ctx.currentTime;
-    // Facebook-style "whoosh" sent sound — quick high-to-low sweep
+    
     var o = ctx.createOscillator();
     var g = ctx.createGain();
     o.type = 'sine';
@@ -2825,7 +2831,7 @@ function playIncomingSound() {
     var ctx = getAudioCtx();
     if (ctx.state === 'suspended') ctx.resume();
     var t = ctx.currentTime;
-    // Facebook Messenger-style double pop: two quick soft notes
+    
     playTone(ctx, 880, t, 0.10, 'triangle', 0.30);
     playTone(ctx, 1109, t + 0.12, 0.18, 'triangle', 0.35);
   } catch(e) {}
@@ -2836,7 +2842,7 @@ function playActivitySound() {
     var ctx = getAudioCtx();
     if (ctx.state === 'suspended') ctx.resume();
     var t = ctx.currentTime;
-    // Single bright "ding" — sliding up
+    
     var o = ctx.createOscillator();
     var g = ctx.createGain();
     o.type = 'triangle';
@@ -2851,7 +2857,7 @@ function playActivitySound() {
   } catch(e) {}
 }
 
-// ==================== DM (Firestore Realtime) ====================
+
 var dmMessagesCache = [];
 var dmUnsubscribe = null;
 var partnerLastSeen = '';
@@ -2885,7 +2891,7 @@ function markDmSeen() {
   var val = lastT.time || lastT.createdAt || '';
   _myDmLastSeen = val;
   if (val) localStorage.setItem('love_dm_seen_' + getChatId() + '_' + appState.currentPin, val);
-  // Sync lastSeen to Firestore for read receipts
+  
   if (appState.currentPin) {
     db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
       .set({ lastSeen: new Date().toISOString() }).catch(function() {});
@@ -2967,6 +2973,7 @@ function sendDmMessage() {
     }).then(function() {
       input.value = ''; autoResize(input); btn.disabled = false; _editingDmMsgId = null; playSentSound();
       document.getElementById('dm-send-btn').textContent = 'Gửi'; _dmShouldScroll = true; input.blur();
+      var dib = document.querySelector('.dm-img-btn'); if(dib) dib.style.display = '';
     }).catch(function(err) { console.warn('Edit DM err:', err); btn.disabled = false; });
     return;
   }
@@ -3016,14 +3023,23 @@ function toggleDmMenu(msgId, cx, cy) {
   closeDmMenu();
   menu._msgId = msgId;
   if (cx != null) {
+    var mEl = document.querySelector('.dm-msg[data-msg-id="' + msgId + '"]');
     menu.style.display='block'; menu.style.visibility='hidden'; menu.style.pointerEvents='none';
     var mw = menu.offsetWidth, mh = menu.offsetHeight;
     menu.style.display=''; menu.style.visibility=''; menu.style.pointerEvents='';
-    var left = cx - mw/2;
-    var top = cy - mh - 10;
-    left = Math.max(10, Math.min(left, window.innerWidth - mw - 10));
-    top = Math.max(10, Math.min(top, window.innerHeight - mh - 10));
-    if (top <= 10 && cy + mh + 20 < window.innerHeight) top = cy + 10;
+    var left, top;
+    if (mEl) {
+      var mRect = mEl.getBoundingClientRect();
+      left = mRect.left + mRect.width / 2 - mw / 2;
+      left = Math.max(10, Math.min(left, window.innerWidth - mw - 10));
+      var topAbove = mRect.top - mh - 8;
+      if (topAbove >= 10) top = topAbove;
+      else top = mRect.bottom + 8;
+      top = Math.max(10, Math.min(top, window.innerHeight - mh - 10));
+    } else {
+      left = Math.max(10, Math.min(cx - mw / 2, window.innerWidth - mw - 10));
+      top = Math.max(10, Math.min(cy - mh - 10, window.innerHeight - mh - 10));
+    }
     menu.style.left = left + 'px'; menu.style.top = top + 'px'; menu.style.right = 'auto'; menu.style.transform = '';
   } else {
     var el = document.querySelector('.dm-msg[data-msg-id="'+msgId+'"]');
@@ -3076,7 +3092,7 @@ function copyDmMessage() {
     navigator.clipboard.writeText(text).then(function() {
       showToast('Đã sao chép tin nhắn');
     }).catch(function() {
-      // fallback to execCommand
+      
       var ta = document.createElement('textarea');
       ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
       document.body.appendChild(ta); ta.select();
@@ -3084,7 +3100,7 @@ function copyDmMessage() {
       showToast('Đã sao chép tin nhắn');
     });
   } else {
-    // Fallback
+    
     var ta = document.createElement('textarea');
     ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
@@ -3166,7 +3182,7 @@ function renderDmMessages() {
     container.innerHTML = '<div class="dm-empty"><i class="fab fa-facebook-messenger"></i>Chưa có tin nhắn nào<br><span style="font-size:0.75rem;">Hãy gửi lời nhắn đầu tiên đến '+esc(partnerName)+'</span></div>';
     return;
   }
-  // Pre-compute group boundaries
+  
   var grpStart = {}, grpEnd = {};
   for (var g = 0; g < msgs.length; g++) {
     var gm = msgs[g], gn = msgs[g+1], gp = msgs[g-1];
@@ -3203,7 +3219,6 @@ function renderDmMessages() {
       if (dateStr === todayStr) label = 'Hôm nay';
       else if (dateStr === yStr) label = 'Hôm qua';
       else { var p = dateStr.split('-'); label = 'Ngày ' + parseInt(p[2]) + ' Tháng ' + parseInt(p[1]) + ', ' + p[0]; }
-      if (grpEnd[i-1]) { html += '</div>'; }
       html += '<div class="dm-date-sep">' + label + '</div>';
       lastDate = dateStr;
     }
@@ -3275,7 +3290,7 @@ function renderDmMessages() {
     html += '</div>';
     if (grpEnd[i]) html += '</div>';
   }
-  // Scroll to bottom: first render, after sending msg, or if user was already near bottom
+  
   var shouldScroll = _dmFirstRender || _dmShouldScroll || (container.scrollTop + container.clientHeight >= container.scrollHeight - 40);
   _dmFirstRender = false;
   _dmShouldScroll = false;
@@ -3289,7 +3304,7 @@ function renderDmMessages() {
     }, 100);
   }
 }
-// Swipe-to-reply & long-press menu on mobile
+
 var _dmTouchData = null;
 var _dmSwipeReset = null;
 var _dmLongPressTimer = null;
@@ -3354,7 +3369,6 @@ function setupRealtimeEntries() {
   _entriesUnsub = db.collection('entries').onSnapshot(function(snap) {
     var entriesArr = [];
     snap.forEach(function(doc) { entriesArr.push(doc.data()); });
-    if (!entriesArr.length) return;
     appState.data.entries = entriesArr;
     sortEntries(); renderAll(); updateActivityBadge();
   }, function() {});
@@ -3391,7 +3405,7 @@ function setupDmListener() {
     }, function(err) {
       console.warn('DM listener err:', err);
     });
-  // Listen to partner's lastSeen for read receipts + typing indicator
+  
   var partnerPin = getPartnerPin();
   if (partnerPin) {
     db.collection('dm_status').doc(getChatId()).collection('status').doc(partnerPin)
@@ -3409,7 +3423,7 @@ function setupDmListener() {
         if (appState.currentPage === 'direct') renderDmMessages();
       }, function() {});
   }
-  // Listen to own status for online-first unread count
+  
   if (appState.currentPin) {
     db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
       .onSnapshot(function(snap) {
@@ -3419,7 +3433,7 @@ function setupDmListener() {
   }
 }
 
-// ==================== ONLINE PRESENCE ====================
+
 var partnerPresenceUnsub = null;
 
 function setupPresence() {
@@ -3430,7 +3444,7 @@ function setupPresence() {
   var ref = db.collection('presence').doc(appState.currentUid);
   var data = { pin: appState.currentPin, online: true, lastSeen: new Date().toISOString() };
   ref.set(data).catch(function() {});
-  // Heartbeat every 30s
+  
   if (appState.presenceHeartbeat) clearInterval(appState.presenceHeartbeat);
   appState.presenceHeartbeat = setInterval(function() {
     ref.update({ online: true, lastSeen: new Date().toISOString() }).catch(function() {});
@@ -3465,7 +3479,7 @@ function setupPartnerPresenceListener() {
     });
 }
 
-// Simple image viewer for DM & comment images
+
 function openImageViewer(src) {
   var viewer=document.getElementById('photo-viewer');
   if(viewer.classList.contains('open')){closePhotoViewer();return}
@@ -3477,7 +3491,7 @@ function openImageViewer(src) {
   document.getElementById('pv-prev').disabled=true; document.getElementById('pv-next').disabled=true;
   var _img=document.getElementById('pv-image');gsap.fromTo(_img,{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out',onComplete:function(){_img.style.transform='none'}})
 }
-// ==================== NAVIGATION ====================
+
 function goHome(){switchPage('feed');refreshData()}
 function smoothScroll(el,to,dur){
   if(!el)return;
@@ -3520,7 +3534,7 @@ function switchProfileTab(tab){
   setTimeout(function(){ container.style.transition='opacity 0.2s ease, transform 0.2s ease'; container.style.opacity='1'; container.style.transform='translateY(0)'; setTimeout(function(){container.style.transition=''},250) }, 30);
 }
 
-// ==================== RENDER ALL ====================
+
 function renderAll(){
   renderFeed();
   renderExplore();
@@ -3531,7 +3545,7 @@ function renderAll(){
   updateDmBadge();
 }
 
-// ==================== STORIES ====================
+
 function renderStories(){
   var container=document.getElementById('stories-container');
   var otherPin=appState.currentPin===CONFIG.PIN_USER1?CONFIG.PIN_USER2:CONFIG.PIN_USER1;
@@ -3542,7 +3556,7 @@ function renderStories(){
   var html='';
   var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.8rem;color:var(--text-secondary);"></i>';
   html+='<div class="story-item"><div class="story-avatar"><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Bạn</div></div>';
-  html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(otherDisplayName.replace(/ \w+$/g,''))+'</div></div>';
+  html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(otherDisplayName.replace(/ [\w💖🌻]+$/g,''))+'</div></div>';
   container.innerHTML=html;
 }
 
@@ -3592,7 +3606,7 @@ function viewProfile(pin){
   renderProfileForUser(pin);
 }
 
-// ==================== FEED ====================
+
 function getFeedEntries(){
   var entries=(appState.data.entries||[]).slice();
   sortEntries(entries);
@@ -3687,10 +3701,10 @@ function deletePost(id){
   document.querySelectorAll('.dropdown-menu.show').forEach(function(m){m.classList.remove('show')});
   var entry=appState.data.entries.find(function(e){return e.id===id});
   if(!entry||getEffectiveName(entry.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn không có quyền xóa');return}
-  showConfirm('Xóa bài viết?','Bài viết sẽ bị xóa vĩnh viễn.',function(ok){if(!ok)return;sendPayload({action:'delete_entry',id:id},'Đã xóa!')})
+  showConfirm('Xóa bài viết?','Bài viết sẽ bị xóa vĩnh viễn.',function(ok){if(!ok)return;deleteRemoteImages(entry.images);sendPayload({action:'delete_entry',id:id},'Đã xóa!')})
 }
 
-// ==================== FEED CAROUSEL NAV ====================
+
 function fcCarouselNav(entryId,dir){
   var carousel=document.querySelector('.fc-carousel[data-id="'+entryId+'"]');
   if(!carousel)return;
@@ -3717,7 +3731,7 @@ function fcCarouselGoTo(entryId,index){
   if(count)count.textContent=(index+1)+'/'+total;
 }
 
-// ===== Detect image orientation & set aspect ratio =====
+
 function fcFitImg(img){
   var carousel=img.closest('.fc-carousel');
   if(!carousel||carousel.dataset.fitted)return;
@@ -3732,7 +3746,7 @@ function fcFitImg(img){
   });
 }
 
-// ===== Carousel swipe (mobile) =====
+
 (function(){
   var sx=0,sy=0,dx=0,swiping=false,currentEl=null,sLen=0,lastSwipe=0;
   document.addEventListener('touchstart',function(e){
@@ -3759,7 +3773,7 @@ function fcFitImg(img){
     var current=parseInt(currentEl.dataset.current||'0');
     var total=inner.children.length;
     dx=hd;
-    // Overshoot damping at boundaries
+    
     var damp=0;
     if(current===0&&dx>0)damp=dx*0.5;
     else if(current===total-1&&dx<0)damp=dx*0.5;
@@ -3789,7 +3803,7 @@ function fcFitImg(img){
     }
     swiping=false;currentEl=null;dx=0;
   },{passive:true});
-  // Prevent click after swipe
+  
 document.addEventListener('touchstart',function(e){
   if(_dmMenuJustOpened)return;
   if(!e.target.closest('.dm-msg-menu')&&!e.target.closest('.dm-msg-menu-btn'))closeDmMenu();
@@ -3799,7 +3813,7 @@ document.addEventListener('click',function(e){
   },true);
 })();
 
-// ==================== EXPLORE ====================
+
 var _exploreImages=[];
 var _profileImages=[];
 
@@ -3841,7 +3855,7 @@ function openExploreViewer(index){
 
 function searchExplore(q){appState.exploreQuery=q.toLowerCase().trim();renderExplore()}
 
-// ==================== ACTIVITY ====================
+
 function fmtTime(iso){
   if(!iso)return'';
   try{var d=new Date(iso);if(isNaN(d))return'';
@@ -3874,7 +3888,7 @@ function renderActivity(){
   container.innerHTML=html||'<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;">Chưa có hoạt động nào</div>';
 }
 
-// ==================== PROFILE ====================
+
 function renderProfile(){
   if(profileViewUser){resetProfileView();return}
   var entries=(appState.data.entries||[]).slice();
@@ -3934,11 +3948,11 @@ function renderProfileContent(){
 
 
 
-// ==================== POST DETAIL ====================
+
 var pdEntryId = null;
 var pdEditingCommentId = null;
-var pdEditingReply = null; // { commentId, replyId } or null
-var csEditingReply = null; // { commentId, replyId } or null
+var pdEditingReply = null; 
+var csEditingReply = null; 
 
 function openPostDetail(entryId){
   var entry=appState.data.entries.find(function(e){return e.id===entryId});
@@ -3951,7 +3965,7 @@ function openPostDetail(entryId){
   renderPostDetail();
   var scrollEl=document.getElementById('pd-scroll');
   if(scrollEl)scrollEl.scrollTop=0;
-  // Force layout commit before opening
+  
   void overlay.offsetHeight;
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
@@ -3977,10 +3991,10 @@ function renderPostDetail(){
   var avaUrl=getDisplayAvatar(authorPin);
   var isOwner=effectiveAuthor===getEffectiveName(currentUser);
 
-  // Images
+  
   renderPdImages(entry);
 
-  // Author row with three-dot menu
+  
   var avatarHtml=avaUrl?'<img src="'+esc(avaUrl)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
   var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
   var timeDisplay=timeAgo(entry.createdAt||entry.updatedAt);
@@ -3995,15 +4009,15 @@ function renderPostDetail(){
       '</div>'+
     '</div>';
 
-  // Caption - merge title into content
+  
   var captionHtml='';
   if(entry.title)captionHtml+='<div class="pd-caption-title">'+esc(entry.title)+'</div>';
   if(entry.content)captionHtml+='<div class="pd-caption-text">'+esc(entry.content)+'</div>';
   document.getElementById('pd-caption').innerHTML=captionHtml||'<div class="pd-caption-text"></div>';
 
-  // Comments
+  
   renderPdComments();
-  // Reset scroll to top to show post content
+  
   var ps=document.getElementById('pd-scroll');
   if(ps)ps.scrollTop=0;
 }
@@ -4247,7 +4261,7 @@ function editPdComment(id){
   input.focus();
   input.scrollTop=0;
   document.getElementById('pd-cancel-btn').style.display='';
-  // Show existing image in preview
+  
   _pendingPdImage = comment.image || null;
   showImgPreview('pd');
   renderPdComments()
@@ -4414,10 +4428,10 @@ function toggleCsReplyMenu(commentId, replyId){
 document.addEventListener('click',function(e){
   var wrap=e.target.closest('.pd-author-actions');
   if(!wrap){var dd=document.getElementById('pd-dropdown');if(dd)dd.classList.remove('show')}
-  // Close all comment dropdowns
+  
   document.querySelectorAll('.pd-comment-dropdown.show').forEach(function(d){d.classList.remove('show')});
 });
-// Carousel image click delegation (works on mobile inside scroll container)
+
 document.getElementById('post-overlay').addEventListener('click',function(e){
   var img=e.target.closest('.pd-carousel-img');
   if(img&&!e.target.closest('.pd-carousel-dot')&&!e.target.closest('.pd-carousel-nav')){
@@ -4438,12 +4452,13 @@ function deleteFromPostDetail(){
   if(!entry||getEffectiveName(entry.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn không có quyền xóa');return}
   showConfirm('Xóa bài viết?','Bài viết sẽ bị xóa vĩnh viễn.',function(ok){
     if(!ok)return;
+    deleteRemoteImages(entry.images);
     sendPayload({action:'delete_entry',id:pdEntryId},'Đã xóa!');
     closePostDetail()
   })
 }
 
-// ==================== COMMENT BOTTOM SHEET ====================
+
 var csEntryId = null;
 
 var _csReplyToCommentId = null;
@@ -4477,7 +4492,7 @@ function openCommentSheet(entryId){
   csEntryId=entryId;
   renderCommentSheet(entry);
   var overlay=document.getElementById('comment-sheet-overlay');
-  // Force layout commit before opening to prevent flicker
+  
   void overlay.offsetHeight;
   overlay.classList.add('open');
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
@@ -4622,7 +4637,7 @@ function sendCsComment(){
   }
 }
 
-// Overlay click to close
+
 document.addEventListener('DOMContentLoaded',function(){
   var csOverlay=document.getElementById('comment-sheet-overlay');
   if(csOverlay)csOverlay.addEventListener('click',function(e){
@@ -4630,7 +4645,7 @@ document.addEventListener('DOMContentLoaded',function(){
   });
 });
 
-// ==================== PHOTO VIEWER ====================
+
 function openProfilePhotoViewer(index){
   if(!_profileImages||!_profileImages.length)return;
   appState.photoImages=_profileImages.slice();
@@ -4681,7 +4696,7 @@ function navigatePhoto(d){
 var _pvZoomIdx=0;
 var _pvZoomLevels=[1,1.5,2,3,5];
 var _pvPanX=0,_pvPanY=0,_pvDragging=false,_pvSwiping=false;
-var _pvStartX=0,_pvStartY=0,_pvPanStartX=0,_pvPanStartY=0,_pvSwipeStartX=0;
+var _pvStartX=0,_pvStartY=0,_pvPanStartX=0,_pvPanStartY=0,_pvSwipeStartX=0,_pvLastX=0;
 function resetPvTransform(animate){
   var img=document.getElementById('pv-image');
   _pvZoomIdx=0;_pvPanX=0;_pvPanY=0;
@@ -4720,6 +4735,7 @@ function onPvDragMove(x,y){
     _pvPanY=_pvPanStartY+(y-_pvStartY);
     applyPvImgTransform();
   }else if(_pvSwiping){
+    _pvLastX=x;
     var dx=x-_pvSwipeStartX;
     var img=document.getElementById('pv-image');
     var maxW=document.querySelector('.pv-container').offsetWidth;
@@ -4733,7 +4749,7 @@ function onPvDragEnd(){
   if(_pvSwiping){
     var img=document.getElementById('pv-image');
     var maxW=document.querySelector('.pv-container').offsetWidth;
-    var dx=_pvStartX-_pvSwipeStartX;
+    var dx=_pvLastX-_pvSwipeStartX;
     var threshold=maxW*0.2;
     if(Math.abs(dx)>threshold){
       var dir=dx>0?1:-1;
@@ -4789,7 +4805,7 @@ _pvContainer.addEventListener('touchstart',function(e){if(e.touches.length===1)o
 _pvContainer.addEventListener('touchmove',function(e){if(e.touches.length===1&&(_pvDragging||_pvSwiping)){e.preventDefault();onPvDragMove(e.touches[0].clientX,e.touches[0].clientY)}},{passive:false})
 _pvContainer.addEventListener('touchend',function(){if(_pvDragging||_pvSwiping)onPvDragEnd()})
 
-// ==================== CREATE PAGE ====================
+
 function openCreatePage(editId){
   updateUserUI();
   var page=document.getElementById('create-page');
@@ -4903,7 +4919,12 @@ function submitCreatePost(){
   };
   if(appState.writeEditId){
     var old=appState.data.entries.find(function(e){return e.id===appState.writeEditId});
-    if(old){entry.title=old.title||'';entry.createdAt=old.createdAt||(old.date?old.date+'T00:00:00.000Z':undefined);if(!entry.createdAt)delete entry.createdAt}
+    if(old){
+      entry.title=old.title||'';entry.createdAt=old.createdAt||(old.date?old.date+'T00:00:00.000Z':undefined);if(!entry.createdAt)delete entry.createdAt;
+      var keptIds={};
+      appState.writeImages.forEach(function(im){keptIds[(im&&(im.driveId||im.url))||'']=1});
+      deleteRemoteImages((old.images||[]).filter(function(im){var k=(im&&(im.driveId||im.url))||'';return k&&!keptIds[k]}));
+    }
     else delete entry.createdAt;
     delete entry.comments;
   }
@@ -4912,7 +4933,7 @@ function submitCreatePost(){
   })
 }
 
-// ==================== SETTINGS ====================
+
 function openSettings(){
   updateUserUI();
   initSoundToggle();
@@ -4935,7 +4956,7 @@ function showDataInfo(){
   openModal('modal-data-info')
 }
 
-// ==================== ANNIVERSARIES ====================
+
 function openAnnModal(){
   renderAnnList();openModal('modal-ann')
 }
@@ -4984,7 +5005,7 @@ function deleteAnn(id){
   showConfirm('Xóa kỷ niệm?','',function(ok){if(!ok)return;sendPayload({action:'delete_anniversary',id:id},'Đã xóa!')})
 }
 
-// ==================== PROFILE MENU ====================
+
 function toggleProfileMenu(e){
   if(e)e.stopPropagation();
   var menu=document.getElementById('profile-dropdown');
@@ -5009,7 +5030,7 @@ function showLogoutConfirm(){
   })
 }
 
-// ==================== MODAL ====================
+
 function openModal(id){
   document.getElementById(id).classList.add('open');
   document.body.style.overflow='hidden';
@@ -5032,12 +5053,12 @@ function showConfirm(title,msg,callback){
   document.getElementById('confirm-cancel').onclick=function(){closeModal('modal-confirm');if(callback)callback(false)}
 }
 
-// ==================== SYNC ====================
+
 function showLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.add('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 6s linear';i.style.width='70%'}}
 function hideLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.remove('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 0.25s ease';i.style.width='100%';setTimeout(function(){if(i)i.style.width='0%';if(i)i.style.transition='none'},300)}}
 function triggerSync(){showLoadingBar();loadData(function(){hideLoadingBar()})}
 
-// ==================== KEYBOARD SHORTCUTS ====================
+
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){if(_editingDmMsgId){cancelEditDm()}else if(_replyingDmMsg){cancelReplyDm()}var dmOverlay=document.getElementById('dm-msg-overlay');if(dmOverlay&&dmOverlay.classList.contains('open'))unfocusDmMessage();return}
   var createPage=document.getElementById('create-page');
