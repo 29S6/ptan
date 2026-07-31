@@ -24,7 +24,6 @@
   
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script>
@@ -1158,13 +1157,6 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-seen { font-size:0.6rem; color:var(--text-secondary); text-align:right; padding:2px 4px 0; }
 .dm-seen i { margin-left:2px; }
 .dm-seen.read i { color:var(--text-link); }
-.dm-typing { display:flex; align-items:center; gap:6px; padding:4px 16px 6px; font-size:0.75rem; color:var(--text-secondary); animation:typingSlideIn 0.2s ease; }
-@keyframes typingSlideIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-.dm-typing-dots { display:flex; gap:2px; }
-.dm-typing-dots span { width:5px; height:5px; border-radius:50%; background:var(--text-secondary); animation:typingDot 1.2s infinite; }
-.dm-typing-dots span:nth-child(2) { animation-delay:0.2s; }
-.dm-typing-dots span:nth-child(3) { animation-delay:0.4s; }
-@keyframes typingDot { 0%,60%,100%{opacity:0.3} 30%{opacity:1} }
 .dm-msg-menu-btn { flex-shrink:0; width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); font-size:0.6rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:opacity 0.12s 0.08s; opacity:0; }
 .dm-msg.sent .dm-msg-body:hover .dm-msg-menu-btn { opacity:1; }
 .dm-msg.sent .dm-msg-menu-btn:focus { opacity:1; }
@@ -1253,10 +1245,10 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .img-preview button:hover { background:var(--text-danger); color:#fff; }
 .dm-msg-media { display:flex; flex-direction:column; align-items:flex-start; }
 .dm-msg.sent .dm-msg-media { align-items:flex-end; }
-.dm-msg-img-content { max-width:200px; max-height:240px; border-radius:8px; overflow:hidden; width:100%; }
-.dm-msg-img-content img { width:100%; height:auto; max-height:240px; object-fit:cover; border-radius:8px; display:block; cursor:pointer; }
-.comment-img-content { max-width:200px; max-height:240px; border-radius:8px; margin-top:4px; overflow:hidden; }
-.comment-img-content img { width:100%; height:auto; max-height:240px; border-radius:8px; display:block; cursor:pointer; }
+.dm-msg-img-content { max-width:200px; max-height:240px; border-radius:8px; overflow:hidden; width:auto; }
+.dm-msg-img-content img { width:auto; max-width:200px; height:auto; max-height:240px; border-radius:8px; display:block; cursor:pointer; }
+.comment-img-content { max-width:200px; max-height:240px; border-radius:8px; margin-top:4px; overflow:hidden; display:inline-block; }
+.comment-img-content img { width:auto; max-width:200px; height:auto; max-height:240px; border-radius:8px; display:block; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -1347,7 +1339,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
         <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
         <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
       </div>
-      <div class="dm-messages" id="dm-messages"><div class="dm-typing" id="dm-typing" style="display:none;"><span class="dm-typing-dots"><span></span><span></span><span></span></span> <span id="dm-typing-text">đang nhập...</span></div></div>
+      <div class="dm-messages" id="dm-messages"></div>
       <div class="dm-input-wrap">
         <div class="dm-input-row">
           <textarea id="dm-input" placeholder="Nhắn tin..." rows="1" oninput="onDmInput(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
@@ -2014,6 +2006,19 @@ function getEffectiveAvatar(author) {
 
 
 function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function driveThumb(url, w) {
+  if (!url) return '';
+  var id = '';
+  var m = String(url).match(/[?&]id=([^&]+)/);
+  if (m) id = m[1];
+  else if (String(url).indexOf('drive.google.com') > -1 && String(url).indexOf('lh3.googleusercontent') === -1) {
+    var m2 = String(url).match(/\/d\/([^/?#]+)/);
+    if (m2) id = m2[1];
+  }
+  if (!id) return url;
+  w = w || 800;
+  return 'https://lh3.googleusercontent.com/d/' + encodeURIComponent(id) + '=w' + w;
+}
 function pad(n){return n<10?'0'+n:''+n}
 function todayStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())}
 function formatDateVN(d){if(!d)return'';var p=d.split('-');if(p.length<3)return d;var day=parseInt(p[2]),mon=parseInt(p[1]),yr=p[0];var months=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];return'Ngày '+day+' '+months[mon-1]+', '+yr}
@@ -2193,6 +2198,7 @@ function initApp(){
   showFeedSkeleton();
   updateUserUI();
   loadOfflineQueue();
+  processOfflineQueue();
   startClock();
   loadData(function(){setupDmListener();setupRealtimeEntries();updateDmBadge();});
   loadActivitySeen();
@@ -2605,9 +2611,10 @@ function sendPayload(payload, successMsg, callback) {
   var action = payload.action;
   var p = showSaving('Đang xử lý...');
 
-  function done() {
+  function done(smsg) {
     hideSaving();
     renderAll();
+    if (smsg) showToast(smsg);
     if (callback) callback({ success: true });
   }
 
@@ -2717,12 +2724,14 @@ function handleCommentAction(payload, successMsg, callback) {
         comments.forEach(function(c) {
           if (c.id === payload.commentId) {
             if (!c.replies) c.replies = [];
-            c.replies.push({
+            var nr = {
               id: 'r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
               author: payload.author || currentUser,
               text: payload.text || '',
               time: new Date().toISOString()
-            });
+            };
+            if (payload.image) nr.image = payload.image;
+            c.replies.push(nr);
           }
         });
       } else if (payload.action === 'delete_comment') {
@@ -2912,18 +2921,8 @@ function markDmSeen() {
   updateDmBadge();
 }
 
-var _dmTypingTimer = null;
 function onDmInput(el){
   autoResize(el);
-  if(_editingDmMsgId) return;
-  if(_dmTypingTimer) clearTimeout(_dmTypingTimer);
-  db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
-    .set({ typingAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }).catch(function(){});
-  _dmTypingTimer = setTimeout(function(){
-    db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
-      .set({ typingAt: '' }, { merge: true }).catch(function(){});
-    _dmTypingTimer = null;
-  }, 2000);
 }
 
 function toggleDmReactionPopup(btn, msgId){
@@ -3267,7 +3266,7 @@ function renderDmMessages() {
       contentHtml = '<div class="dm-msg-bubble">Tin nhắn đã được thu hồi</div>';
     } else {
       var imgHtml = '';
-      if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(m.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
+      if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(driveThumb(m.image,800))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
       var hasText=!!(replyHtml||m.text);
       if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div></div>'}
       else if(imgHtml)contentHtml+=imgHtml
@@ -3426,15 +3425,6 @@ function setupDmListener() {
     db.collection('dm_status').doc(getChatId()).collection('status').doc(partnerPin)
       .onSnapshot(function(snap) {
         partnerLastSeen = snap.exists ? (snap.data().lastSeen || '') : '';
-        var typingEl = document.getElementById('dm-typing');
-        if(typingEl && snap.exists && snap.data().typingAt){
-          var ta = snap.data().typingAt;
-          var typingTime = ta && ta.toDate ? ta.toDate() : new Date(ta || 0);
-          var elapsed = new Date() - typingTime;
-          typingEl.style.display = elapsed < 3000 ? 'flex' : 'none';
-        } else if(typingEl) {
-          typingEl.style.display = 'none';
-        }
         if (appState.currentPage === 'direct') renderDmMessages();
       }, function() {});
   }
@@ -3675,7 +3665,7 @@ function buildFeedCard(entry){
   if(hasImages){
     var total=entry.images.length;
     var imgs=entry.images.map(function(img,idx){
-      return '<img class="fc-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'"'+(idx===0?' onload="fcFitImg(this)"':'')+' />'
+      return '<img class="fc-carousel-img" src="'+esc(driveThumb(img.url||img,800))+'" data-index="'+idx+'"'+(idx===0?' onload="fcFitImg(this)"':' loading="lazy"')+' />'
     }).join('');
     var dots=total>1?entry.images.map(function(_,idx){return '<span class="fc-dot'+(idx===0?' active':'')+'" onclick="event.stopPropagation();fcCarouselGoTo(\''+entry.id+'\','+idx+')"></span>'}).join(''):'';
     var nav=total>1?'<button class="fc-carousel-nav prev" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',-1)"><i class="fas fa-chevron-left"></i></button><button class="fc-carousel-nav next" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',1)"><i class="fas fa-chevron-right"></i></button><span class="fc-carousel-count">1/'+total+'</span>':'';
@@ -3852,7 +3842,7 @@ function renderExplore(){
   }
   _exploreImages=allImages;
   var html=allImages.map(function(img,idx){
-    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(img.url)+'" loading="lazy" /></div>'
+    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" /></div>'
   }).join('');
   container.innerHTML=html||'<div class="explore-empty"><i class="fas fa-search" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Không tìm thấy ảnh nào</div>';
 }
@@ -3929,7 +3919,7 @@ function renderProfileContent(){
       var commentCount=e.comments?e.comments.length:0;
       var imgHtml='';
       if(e.images&&e.images.length>0){
-        imgHtml='<div class="threads-img"><img src="'+esc(e.images[0].url||e.images[0])+'" loading="lazy" /></div>';
+        imgHtml='<div class="threads-img"><img src="'+esc(driveThumb(e.images[0].url||e.images[0],600))+'" loading="lazy" /></div>';
       }
       var uname=getEffectiveName(e.author).replace(/ [\w💖🌻]+$/g,'');
       var authorPin=getPinForUser(e.author);
@@ -3956,7 +3946,7 @@ function renderProfileContent(){
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
     _profileImages=allImages;
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
-      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(img.url)+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
+      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -3974,8 +3964,13 @@ function openPostDetail(entryId){
   if(!entry)return;
   pdEntryId=entryId;
   pdEditingCommentId=null;
+  pdEditingReply=null;
+  cancelReplyPdComment();
+  _pendingPdImage=null;showImgPreview('pd');
   var overlay=document.getElementById('post-overlay');
   document.getElementById('pd-input').value='';
+  document.getElementById('pd-input').classList.remove('edit-mode');
+  document.getElementById('pd-cancel-btn').style.display='none';
   autoResize(document.getElementById('pd-input'));
   renderPostDetail();
   var scrollEl=document.getElementById('pd-scroll');
@@ -3991,6 +3986,9 @@ function closePostDetail(){
   var overlay=document.getElementById('post-overlay');
   pdEntryId=null;
   pdEditingCommentId=null;
+  pdEditingReply=null;
+  _pendingPdImage=null;showImgPreview('pd');
+  cancelReplyPdComment();
   document.documentElement.style.overflow='';document.body.style.overflow='';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
   overlay.classList.remove('open');
@@ -4049,7 +4047,7 @@ function renderPdImages(entry){
   var total=entry.images.length;
   var isMobile=window.innerWidth<768;
   var imgs=entry.images.map(function(img,idx){
-    return '<img class="pd-carousel-img" src="'+esc(img.url||img)+'" data-index="'+idx+'" />'
+    return '<img class="pd-carousel-img" src="'+esc(driveThumb(img.url||img,1200))+'" data-index="'+idx+'"'+(idx===0?'':' loading="lazy"')+' />'
   }).join('');
   var dots=entry.images.map(function(_,idx){return '<span class="pd-carousel-dot'+(idx===0?' active':'')+'" onclick="pdGoTo('+idx+')"></span>'}).join('');
   var carouselHtml='<div class="pd-carousel" data-entry="'+entry.id+'" data-current="0"><div class="pd-carousel-inner" id="pd-carousel-inner">'+imgs+'</div>';
@@ -4123,7 +4121,7 @@ function renderPdComments(){
       var isOwner=ceffective===getEffectiveName(currentUser);
       var cavatar=cava?'<img src="'+esc(cava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var cimgHtml = '';
-      if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(c.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(c.image)+'\')"></div>';
+      if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(driveThumb(c.image,600))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(c.image)+'\')"></div>';
       var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
       var repliesHtml = '';
       if (c.replies && c.replies.length) {
@@ -4132,7 +4130,7 @@ function renderPdComments(){
           var rpin=getPinForUser(r.author);
           var rava=getDisplayAvatar(rpin);
           var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
-          var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(r.image)+'" onclick="event.stopPropagation();openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
+          var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(driveThumb(r.image,600))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
           var rIsOwner=getEffectiveName(reff)===getEffectiveName(currentUser);
           return '<div class="pd-reply-item"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editPdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(pdEditingReply&&pdEditingReply.replyId===r.id?' editing':'')+'" id="pd-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+esc(reff.replace(/ [\w💖🌻]+$/g,''))+'\')">Trả lời</button></div></div></div>';
         }).join('') + '</div>';
@@ -4505,6 +4503,10 @@ function openCommentSheet(entryId){
   var entry=appState.data.entries.find(function(e){return e.id===entryId});
   if(!entry)return;
   csEntryId=entryId;
+  csEditingReply=null;
+  _csReplyToCommentId=null;_csReplyToName='';
+  _pendingCsImage=null;showImgPreview('cs');
+  document.getElementById('cs-reply-preview').style.display='none';
   renderCommentSheet(entry);
   var overlay=document.getElementById('comment-sheet-overlay');
   
@@ -4519,7 +4521,11 @@ function closeCommentSheet(){
   overlay.classList.remove('open');
   csEntryId=null;csEditingReply=null;
   _csReplyToCommentId=null;_csReplyToName='';
+  _pendingCsImage=null;showImgPreview('cs');
   document.getElementById('cs-reply-preview').style.display='none';
+  var inp=document.getElementById('cs-input');
+  inp.value='';inp.classList.remove('edit-mode');autoResize(inp);
+  document.getElementById('cs-cancel-btn').style.display='none';
   document.documentElement.style.overflow='';document.body.style.overflow='';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
 }
@@ -4537,7 +4543,7 @@ function renderCommentSheet(entry){
       var cava=getDisplayAvatar(cpin);
       var cavatar=cava?'<img src="'+esc(cava)+'">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var cimgHtml = '';
-      if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(c.image)+'" onclick="openImageViewer(\''+esc(c.image)+'\')"></div>';
+      if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(driveThumb(c.image,600))+'" loading="lazy" onclick="openImageViewer(\''+esc(c.image)+'\')"></div>';
       var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
       var repliesHtml = '';
       if (c.replies && c.replies.length) {
@@ -4546,7 +4552,7 @@ function renderCommentSheet(entry){
           var rpin=getPinForUser(r.author);
           var rava=getDisplayAvatar(rpin);
           var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
-          var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(r.image)+'" onclick="openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
+          var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(driveThumb(r.image,600))+'" loading="lazy" onclick="openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
           var rIsOwner=getEffectiveName(reff)===getEffectiveName(currentUser);
           return '<div class="pd-reply-item" style="margin-top:6px;"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCsReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cs-reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deleteCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(csEditingReply&&csEditingReply.replyId===r.id?' editing':'')+'" id="cs-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+esc(reff.replace(/ [\w💖🌻]+$/g,''))+'\')">Trả lời</button></div></div></div>';
         }).join('') + '</div>';
@@ -4565,8 +4571,10 @@ function renderCommentSheet(entry){
   }
   container.innerHTML=html;
   container.scrollTop = container.scrollHeight;
-  document.getElementById('cs-input').value='';
-  autoResize(document.getElementById('cs-input'));
+  if(!csEditingReply){
+    document.getElementById('cs-input').value='';
+    autoResize(document.getElementById('cs-input'));
+  }
 }
 
 function sendCsComment(){
@@ -4924,7 +4932,19 @@ function renderCreatePreview(){
 }
 
 function removeCreateImage(idx){
-  appState.writeImages.splice(idx, 1); renderCreatePreview();
+  var removed=appState.writeImages.splice(idx,1);
+  if(removed.length){
+    var inSession=false;
+    for(var i=_createUploaded.length-1;i>=0;i--){
+      if(_createUploaded[i].driveId===removed[0].driveId||_createUploaded[i].url===removed[0].url){
+        _createUploaded.splice(i,1);
+        inSession=true;
+        break;
+      }
+    }
+    if(inSession)deleteRemoteImages(removed);
+  }
+  renderCreatePreview();
 }
 
 function submitCreatePost(){
