@@ -217,6 +217,12 @@ a { color: var(--text-link); text-decoration:none; }
 .nav-item.active { color:var(--text-primary); }
 .nav-item.active i { font-weight:900; }
 .nav-item .nav-plus { width:28px; height:28px; border:2px solid var(--text-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:var(--text-primary); }
+.nav-item .nav-badge {
+  position:absolute; top:2px; right:50%; transform:translateX(18px);
+  background:var(--text-danger); color:#fff; font-size:0.55rem; font-weight:700;
+  min-width:16px; height:16px; border-radius:8px; display:none; align-items:center;
+  justify-content:center; padding:0 4px; box-shadow:0 1px 3px rgba(0,0,0,0.2);
+}
 
 @media (min-width:1024px) {
   #bottom-nav { display:none !important; }
@@ -659,6 +665,10 @@ a { color: var(--text-link); text-decoration:none; }
   .fc-carousel-nav:hover, .pd-carousel-nav:hover { opacity:1; }
 }
 
+@media (hover:none) and (pointer:coarse) {
+  .fc-carousel-nav, .pd-carousel-nav { opacity:1; pointer-events:auto; }
+}
+
 .pd-author {
   display:flex; align-items:flex-start; gap:10px; padding:12px 16px 6px;
 }
@@ -757,72 +767,6 @@ a { color: var(--text-link); text-decoration:none; }
   .pd-input-fixed { border-left:1px solid var(--border-light); }
   #pd-scroll-images { display:none !important; }
 }
-
-
-#comment-sheet-overlay {
-  position:fixed; inset:0; z-index:2200; background:rgba(0,0,0,0.5);
-  display:flex; align-items:flex-end; justify-content:center;
-  opacity:0; pointer-events:none; transition:opacity 0.15s ease;
-}
-#comment-sheet-overlay.open { opacity:1; pointer-events:auto; }
-#comment-sheet {
-  width:100%; max-width:500px; background:var(--card-bg);
-  border-radius:20px 20px 0 0; max-height:85vh; display:flex;
-  flex-direction:column; transform:translateY(100%); transition:transform 0.2s cubic-bezier(0.22,1,0.36,1);
-  box-shadow:0 -8px 30px rgba(0,0,0,0.12); will-change:transform;
-}
-#comment-sheet-overlay.open #comment-sheet { transform:translateY(0); }
-
-.cs-handle {
-  width:36px; height:4px; border-radius:2px; background:var(--border-light);
-  margin:8px auto 0; flex-shrink:0;
-}
-.cs-header {
-  display:flex; align-items:center; justify-content:center; padding:10px 16px 8px;
-  border-bottom:1px solid var(--border-light); flex-shrink:0; position:relative;
-}
-.cs-title { font-size:0.95rem; font-weight:600; color:var(--text-primary); }
-.cs-close {
-  position:absolute; right:12px; top:50%; transform:translateY(-50%);
-  width:32px; height:32px; border-radius:50%; border:none; background:var(--hover-bg);
-  color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center;
-  font-size:0.85rem; transition:0.08s;
-}
-.cs-close:hover { background:var(--border-light); color:var(--text-primary); }
-.cs-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:8px 16px 4px; }
-.cs-input-wrap {
-  border-top:1px solid var(--border-light); padding:6px 12px 6px; flex-shrink:0;
-  background:var(--card-bg);
-}
-.cs-input-row { display:flex; align-items:center; gap:8px; }
-.cs-input-row textarea {
-  flex:1; border:1px solid var(--border-light); border-radius:20px; padding:8px 14px; font-size:16px;
-  resize:none; outline:none; min-height:38px; max-height:120px; line-height:1.4;
-  font-family:var(--font); overflow-y:auto; background:var(--input-bg); color:var(--text-primary);
-}
-.cs-input-row textarea:focus { border-color:var(--text-secondary); }
-.cs-reply-preview { display:flex; align-items:center; gap:8px; padding:4px 12px; background:var(--hover-bg); border-radius:8px; margin-bottom:6px; }
-.cs-reply-preview button { width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.7rem; flex-shrink:0; }
-.cs-reply-preview button:hover { background:var(--border-light); }
-.cs-send-btn {
-  height:38px; border-radius:20px; border:none; padding:0 10px;
-  background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
-  cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
-  transition:transform 0.15s, opacity 0.15s; flex-shrink:0; line-height:1;
-}
-.cs-send-btn:hover { transform:scale(1.05); }
-.cs-send-btn:active { transform:scale(0.95); }
-.cs-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
-.cs-comment-item {
-  display:flex; gap:10px; padding:8px 0;
-}
-.cs-comment-avatar { width:32px; height:32px; border-radius:50%; background:var(--border-light); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:600; overflow:hidden; }
-.cs-comment-avatar img { width:100%; height:100%; object-fit:cover; }
-.cs-comment-body { flex:1; min-width:0; }
-.cs-comment-user { font-size:0.88rem; font-weight:600; display:flex; align-items:center; gap:4px; }
-.cs-comment-text { font-size:0.88rem; line-height:1.4; margin-top:1px; word-break:break-word; }
-.cs-comment-time { font-size:0.65rem; color:var(--text-secondary); margin-top:2px; }
-.cs-empty { text-align:center; color:var(--text-secondary); font-size:0.85rem; padding:24px 0; }
 
 
 #photo-viewer {
@@ -981,6 +925,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .dm-back-btn { font-size:1.2rem; color:var(--text-primary); padding:4px 6px; border:none; background:none; cursor:pointer; }
 .dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; min-width:0; }
+.dm-header-info { display:flex; flex-direction:column; min-width:0; line-height:1.2; }
 .dm-header-title #dm-partner-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
 
 .dm-messages { flex:1; overflow-y:auto; padding:12px 16px 4px; display:flex; flex-direction:column; gap:6px; touch-action:pan-y; }
@@ -991,7 +936,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-msg-avatar { width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0; align-self:flex-end; }
 .dm-msg-avatar img { width:100%; height:100%; object-fit:cover; }
 .dm-msg-avatar-spacer { width:28px; flex-shrink:0; }
-.dm-header-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.dm-header-title .dm-header-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 .dm-msg-wrap { position:relative; overflow:visible; display:flex; flex-direction:row; max-width:100%; user-select:none; -webkit-user-select:none; }
 .dm-msg-inner { min-width:0; flex-shrink:1; display:flex; flex-direction:column; }
@@ -1086,14 +1031,14 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 }
 .dm-input-row textarea:focus { border-color:var(--text-secondary); }
 
-.pd-input-row textarea, .cs-input-row textarea, .dm-input-row textarea {
+.pd-input-row textarea, .dm-input-row textarea {
   min-width:0;
   overflow-x:hidden;
   overflow-wrap:break-word;
   word-break:break-word;
   scrollbar-width:none;
 }
-.pd-input-row textarea::-webkit-scrollbar, .cs-input-row textarea::-webkit-scrollbar, .dm-input-row textarea::-webkit-scrollbar { width:0; height:0; }
+.pd-input-row textarea::-webkit-scrollbar, .dm-input-row textarea::-webkit-scrollbar { width:0; height:0; }
 
 .dm-send-btn {
   min-width:38px; height:38px; border-radius:20px; border:none;
@@ -1201,13 +1146,13 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .online-dot { background:#31c24c; }
 .offline-dot { background:#a0a0a0; }
 
-.dm-img-btn, .pd-img-btn, .cs-img-btn {
+.dm-img-btn, .pd-img-btn {
   width:38px; height:38px; border-radius:10px; display:flex;
   align-items:center; justify-content:center; color:var(--text-secondary);
   background:none; border:none; cursor:pointer; transition:0.12s; font-size:1rem;
   flex-shrink:0;
 }
-.dm-img-btn:hover, .pd-img-btn:hover, .cs-img-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
+.dm-img-btn:hover, .pd-img-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
 .img-preview {
   display:flex; align-items:center; gap:6px; padding:4px 8px 4px 4px;
   background:var(--hover-bg); border-radius:8px; margin:4px 0 2px;
@@ -1314,7 +1259,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     <div class="page" id="page-direct">
       <div class="dm-header">
         <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-        <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div>
+        <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <div class="dm-header-info"><span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div></div>
       </div>
       <div class="dm-messages" id="dm-messages"></div>
       <div class="dm-input-wrap">
@@ -1408,7 +1353,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     <div class="nav-item active" data-page="feed" onclick="switchPage('feed')"><i class="fas fa-house"></i></div>
     <div class="nav-item" data-page="explore" onclick="switchPage('explore')"><i class="fas fa-compass"></i></div>
     <div class="nav-item" onclick="openCreatePage()"><div class="nav-plus"><i class="fas fa-plus"></i></div></div>
-    <div class="nav-item" data-page="activity" onclick="switchPage('activity')" style="position:relative;"><i class="fas fa-heart"></i><span class="activity-badge nav-badge" style="position:absolute;top:2px;right:50%;transform:translateX(18px);background:var(--text-danger);color:#fff;font-size:0.55rem;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:none;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);">0</span></div>
+    <div class="nav-item" data-page="activity" onclick="switchPage('activity')"><i class="fas fa-heart"></i><span class="activity-badge nav-badge">0</span></div>
     <div class="nav-item" data-page="profile" onclick="switchPage('profile')"><i class="fas fa-user"></i></div>
   </div>
 
@@ -1483,34 +1428,6 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
-
-<div id="comment-sheet-overlay">
-  <div id="comment-sheet">
-    <div class="cs-handle"></div>
-    <div class="cs-header">
-      <span class="cs-title">Bình luận</span>
-      <button class="cs-close" onclick="closeCommentSheet()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="cs-scroll" id="cs-scroll"></div>
-    <div class="cs-input-wrap">
-      <div class="cs-input-row">
-        <textarea id="cs-input" placeholder="Viết bình luận..." rows="1" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCsComment()}"></textarea>
-        <button class="cs-img-btn" onclick="document.getElementById('cs-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
-        <button class="cs-send-btn" id="cs-cancel-btn" onclick="cancelEditCsComment()" style="display:none;">Hủy</button>
-        <button class="cs-send-btn" id="cs-send-btn" onclick="sendCsComment()">Gửi</button>
-      </div>
-      <div class="cs-reply-preview" id="cs-reply-preview" style="display:none;">
-        <div class="pd-reply-line"></div>
-        <div class="pd-reply-info">
-          <span id="cs-reply-name"></span>
-        </div>
-        <button onclick="cancelReplyCsComment()"><i class="fas fa-times"></i></button>
-      </div>
-      <div class="img-preview" id="cs-img-preview" style="display:none;"><img id="cs-img-preview-img" alt=""><span class="img-preview-name">1 ảnh</span><button onclick="clearCsImage()">✕</button></div>
-      <input type="file" id="cs-file-input" accept="image/*" style="display:none" onchange="handleCsImageFile(this)">
-    </div>
-  </div>
-</div>
 
 
 <div id="photo-viewer">
@@ -1720,17 +1637,23 @@ var firebaseConfig = {
   appId: "1:745340137438:web:ce45b0ed2d7bc22137774f",
   measurementId: "G-7DE8711M4Y"
 };
-firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
-var auth = firebase.auth();
-db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
-  if (err.code !== 'failed-precondition') console.warn('Persistence err:', err);
-});
-
-
-auth.signInAnonymously().catch(function(err) {
-  console.warn('Anonymous auth err:', err);
-});
+try {
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+  var auth = firebase.auth();
+  db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
+    if (err.code !== 'failed-precondition') console.warn('Persistence err:', err);
+  });
+  auth.signInAnonymously().catch(function(err) {
+    console.warn('Anonymous auth err:', err);
+  });
+} catch(e) {
+  console.error('Firebase không khả dụng:', e);
+  document.addEventListener('DOMContentLoaded', function() {
+    var ls = document.getElementById('lock-screen');
+    if (ls) ls.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:30px;height:100%"><i class="fas fa-wifi" style="font-size:2.2rem;color:var(--text-secondary)"></i><div style="font-size:1.1rem;font-weight:700;color:var(--text-primary)">Không kết nối được máy chủ</div><div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5">Kiểm tra mạng rồi thử lại nhé.</div><button onclick="location.reload()" style="margin-top:6px;padding:11px 26px;border:none;border-radius:22px;background:var(--text-link);color:#fff;font-weight:600;font-size:0.9rem;cursor:pointer">Thử lại</button></div>';
+  });
+}
 
 var currentUser = CONFIG.USER1_NAME;
 var appState = {
@@ -2012,7 +1935,6 @@ function autoResize(el){if(!el)return;el.style.height='auto';el.style.height=el.
 
 var _pendingDmImage = null;
 var _pendingPdImage = null;
-var _pendingCsImage = null;
 
 function compressBlob(blob, maxW, quality, callback) {
   var reader = new FileReader();
@@ -2063,10 +1985,6 @@ setupPasteHandler('pd-input', function(base64) {
   _pendingPdImage = base64;
   showImgPreview('pd');
 });
-setupPasteHandler('cs-input', function(base64) {
-  _pendingCsImage = base64;
-  showImgPreview('cs');
-});
 setupPasteHandler('create-content', function(base64) {
   var parts = base64.split(',');
   var rawData = parts[1] || parts[0];
@@ -2085,7 +2003,7 @@ setupPasteHandler('create-content', function(base64) {
 });
 
 function showImgPreview(prefix) {
-  var data = { dm: _pendingDmImage, pd: _pendingPdImage, cs: _pendingCsImage }[prefix];
+  var data = { dm: _pendingDmImage, pd: _pendingPdImage }[prefix];
   var preview = document.getElementById(prefix + '-img-preview');
   var img = document.getElementById(prefix + '-img-preview-img');
   if (data) { img.src = data; preview.style.display = 'flex'; }
@@ -2094,7 +2012,6 @@ function showImgPreview(prefix) {
 
 function clearDmImage() { _pendingDmImage = null; showImgPreview('dm'); }
 function clearPdImage() { _pendingPdImage = null; showImgPreview('pd'); }
-function clearCsImage() { _pendingCsImage = null; showImgPreview('cs'); }
 
 function handleDmImageFile(input) {
   var file = input.files[0];
@@ -2111,15 +2028,6 @@ function handlePdImageFile(input) {
   compressBlob(file, 800, 0.7, function(base64) {
     _pendingPdImage = base64;
     showImgPreview('pd');
-  });
-  input.value = '';
-}
-function handleCsImageFile(input) {
-  var file = input.files[0];
-  if (!file) return;
-  compressBlob(file, 800, 0.7, function(base64) {
-    _pendingCsImage = base64;
-    showImgPreview('cs');
   });
   input.value = '';
 }
@@ -3648,7 +3556,7 @@ function buildFeedCard(entry){
   if(hasImages){
     var total=entry.images.length;
     var imgs=entry.images.map(function(img,idx){
-      return '<img class="fc-carousel-img" src="'+esc(driveThumb(img.url||img,800))+'" data-index="'+idx+'"'+(idx===0?' onload="fcFitImg(this)"':' loading="lazy"')+' />'
+      return '<img class="fc-carousel-img" src="'+esc(driveThumb(img.url||img,800))+'" data-index="'+idx+'" onload="fcFitImg(this)"'+(idx===0?'':' loading="lazy"')+' />'
     }).join('');
     var dots=total>1?entry.images.map(function(_,idx){return '<span class="fc-dot'+(idx===0?' active':'')+'" onclick="event.stopPropagation();fcCarouselGoTo(\''+entry.id+'\','+idx+')"></span>'}).join(''):'';
     var nav=total>1?'<button class="fc-carousel-nav prev" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',-1)"><i class="fas fa-chevron-left"></i></button><button class="fc-carousel-nav next" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',1)"><i class="fas fa-chevron-right"></i></button><span class="fc-carousel-count">1/'+total+'</span>':'';
@@ -3736,17 +3644,12 @@ function fcCarouselGoTo(entryId,index){
 
 
 function fcFitImg(img){
-  var carousel=img.closest('.fc-carousel');
-  if(!carousel||carousel.dataset.fitted)return;
-  carousel.dataset.fitted='1';
   var w=img.naturalWidth,h=img.naturalHeight;
   if(!w||!h)return;
   var r=w/h;
-  carousel.querySelectorAll('.fc-carousel-img').forEach(function(el){
-    el.classList.remove('ratio-1x1','ratio-4x3');
-    if(r>1.2) el.classList.add('ratio-4x3');
-    else if(r>0.85) el.classList.add('ratio-1x1');
-  });
+  img.classList.remove('ratio-1x1','ratio-4x3');
+  if(r>1.2) img.classList.add('ratio-4x3');
+  else if(r>0.85) img.classList.add('ratio-1x1');
 }
 
 
@@ -3955,7 +3858,6 @@ function renderProfileContent(){
 var pdEntryId = null;
 var pdEditingCommentId = null;
 var pdEditingReply = null; 
-var csEditingReply = null; 
 
 function openPostDetail(entryId){
   var entry=appState.data.entries.find(function(e){return e.id===entryId});
@@ -4344,43 +4246,6 @@ function deletePdReply(commentId, replyId){
     })
   })
 }
-function editCsReply(commentId, replyId){
-  var entry=appState.data.entries.find(function(e){return e.id===csEntryId});
-  if(!entry)return;
-  var comment=entry.comments.find(function(c){return c.id===commentId});
-  if(!comment||!comment.replies)return;
-  var reply=comment.replies.find(function(r){return r.id===replyId});
-  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ sửa được bình luận của mình');return}
-  csEditingReply={commentId:commentId,replyId:replyId};
-  var input=document.getElementById('cs-input');
-  input.value=reply.text||'';
-  input.classList.add('edit-mode');
-  autoResize(input);
-  input.focus();
-  input.scrollTop=0;
-  document.getElementById('cs-cancel-btn').style.display='';
-  _pendingCsImage = reply.image || null;
-  showImgPreview('cs');
-  renderCommentSheet(entry)
-}
-function deleteCsReply(commentId, replyId){
-  var entry=appState.data.entries.find(function(e){return e.id===csEntryId});
-  if(!entry)return;
-  var comment=entry.comments.find(function(c){return c.id===commentId});
-  if(!comment||!comment.replies)return;
-  var reply=comment.replies.find(function(r){return r.id===replyId});
-  if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ xóa được bình luận của mình');return}
-  showConfirm('Xóa bình luận?','',function(ok){
-    if(!ok)return;
-    var payload={action:'delete_reply',entryId:csEntryId,commentId:commentId,replyId:replyId};
-    sendCommentPayload(payload,function(result){
-      var master=appState.data.entries.find(function(e){return e.id===csEntryId});
-      if(result&&result.comments){if(master)master.comments=result.comments}
-      if(csEditingReply&&csEditingReply.replyId===replyId){csEditingReply=null;var inp=document.getElementById('cs-input');inp.value='';inp.classList.remove('edit-mode');autoResize(inp);document.getElementById('cs-cancel-btn').style.display='none'}
-      renderCommentSheet(master||appState.data.entries.find(function(e){return e.id===csEntryId}));
-    })
-  })
-}
 function togglePdMenu(){
   var dd=document.getElementById('pd-dropdown');
   dd.classList.toggle('show');
@@ -4412,23 +4277,6 @@ function toggleReplyMenu(commentId, replyId){
   dd.classList.remove('up');
   var rect=dd.getBoundingClientRect();
   var scroll=document.getElementById('pd-scroll');
-  if(scroll){
-    var sRect=scroll.getBoundingClientRect();
-    if(rect.bottom>sRect.bottom-4||rect.top<sRect.top+4){
-      dd.classList.add('up');
-    }
-  }
-}
-function toggleCsReplyMenu(commentId, replyId){
-  var dd=document.getElementById('cs-reply-dropdown-'+commentId+'-'+replyId);
-  if(!dd)return;
-  var isOpen=dd.classList.contains('show');
-  document.querySelectorAll('.pd-comment-dropdown.show').forEach(function(d){d.classList.remove('show')});
-  if(isOpen)return;
-  dd.classList.add('show');
-  dd.classList.remove('up');
-  var rect=dd.getBoundingClientRect();
-  var scroll=document.getElementById('cs-scroll');
   if(scroll){
     var sRect=scroll.getBoundingClientRect();
     if(rect.bottom>sRect.bottom-4||rect.top<sRect.top+4){
@@ -4468,204 +4316,6 @@ function deleteFromPostDetail(){
     closePostDetail()
   })
 }
-
-
-var csEntryId = null;
-
-var _csReplyToCommentId = null;
-var _csReplyToName = '';
-function replyToCsComment(commentId, name){
-  _csReplyToCommentId = commentId;
-  _csReplyToName = name;
-  document.getElementById('cs-reply-name').textContent = 'Đang trả lời ' + name;
-  document.getElementById('cs-reply-preview').style.display = 'flex';
-  document.getElementById('cs-input').focus();
-}
-function cancelReplyCsComment(){
-  _csReplyToCommentId = null;
-  _csReplyToName = '';
-  document.getElementById('cs-reply-preview').style.display = 'none';
-}
-function cancelEditCsComment(){
-  csEditingReply=null;
-  cancelReplyCsComment();
-  _pendingCsImage=null;showImgPreview('cs');
-  var inp=document.getElementById('cs-input');
-  inp.value='';inp.classList.remove('edit-mode');
-  autoResize(inp);
-  document.getElementById('cs-cancel-btn').style.display='none';
-  renderCommentSheet(appState.data.entries.find(function(e){return e.id===csEntryId}));
-}
-
-function openCommentSheet(entryId){
-  var entry=appState.data.entries.find(function(e){return e.id===entryId});
-  if(!entry)return;
-  csEntryId=entryId;
-  csEditingReply=null;
-  _csReplyToCommentId=null;_csReplyToName='';
-  _pendingCsImage=null;showImgPreview('cs');
-  document.getElementById('cs-reply-preview').style.display='none';
-  renderCommentSheet(entry);
-  var overlay=document.getElementById('comment-sheet-overlay');
-  
-  void overlay.offsetHeight;
-  overlay.classList.add('open');
-  document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
-  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
-}
-
-function closeCommentSheet(){
-  var overlay=document.getElementById('comment-sheet-overlay');
-  overlay.classList.remove('open');
-  csEntryId=null;csEditingReply=null;
-  _csReplyToCommentId=null;_csReplyToName='';
-  _pendingCsImage=null;showImgPreview('cs');
-  document.getElementById('cs-reply-preview').style.display='none';
-  var inp=document.getElementById('cs-input');
-  inp.value='';inp.classList.remove('edit-mode');autoResize(inp);
-  document.getElementById('cs-cancel-btn').style.display='none';
-  document.documentElement.style.overflow='';document.body.style.overflow='';
-  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
-}
-
-function renderCommentSheet(entry){
-  var comments=entry.comments||[];
-  var container=document.getElementById('cs-scroll');
-  var html='';
-  if(!comments.length){
-    html='<div class="cs-empty">Chưa có bình luận nào</div>';
-  }else{
-    html=comments.map(function(c){
-      var ceffective=getEffectiveName(c.author);
-      var cpin=getPinForUser(c.author);
-      var cava=getDisplayAvatar(cpin);
-      var cavatar=cava?'<img src="'+esc(cava)+'">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
-      var cimgHtml = '';
-      if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(driveThumb(c.image,600))+'" loading="lazy" onclick="openImageViewer(\''+esc(c.image)+'\')"></div>';
-      var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
-      var repliesHtml = '';
-      if (c.replies && c.replies.length) {
-        repliesHtml = '<div class="pd-replies">' + c.replies.map(function(r){
-          var reff=getEffectiveName(r.author);
-          var rpin=getPinForUser(r.author);
-          var rava=getDisplayAvatar(rpin);
-          var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
-          var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(driveThumb(r.image,600))+'" loading="lazy" onclick="openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
-          var rIsOwner=getEffectiveName(reff)===getEffectiveName(currentUser);
-          return '<div class="pd-reply-item" style="margin-top:6px;"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleCsReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="cs-reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deleteCsReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(csEditingReply&&csEditingReply.replyId===r.id?' editing':'')+'" id="cs-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+esc(reff.replace(/ [\w💖🌻]+$/g,''))+'\')">Trả lời</button></div></div></div>';
-        }).join('') + '</div>';
-      }
-      return '<div class="cs-comment-item">'+
-        '<div class="cs-comment-avatar">'+cavatar+'</div>'+
-        '<div class="cs-comment-body">'+
-          '<div class="cs-comment-user">'+cname+' <i class="fas fa-check-circle verified-badge"></i></div>'+
-          (c.text?'<div class="cs-comment-text">'+esc(c.text)+'</div>':'')+
-          cimgHtml+
-          '<div class="cs-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToCsComment(\''+c.id+'\',\''+cname+'\')">Trả lời</button></div>'+
-          repliesHtml+
-        '</div>'+
-      '</div>'
-    }).join('');
-  }
-  container.innerHTML=html;
-  container.scrollTop = container.scrollHeight;
-  if(!csEditingReply){
-    document.getElementById('cs-input').value='';
-    autoResize(document.getElementById('cs-input'));
-  }
-}
-
-function sendCsComment(){
-  var input=document.getElementById('cs-input');
-  var text=input.value.trim();
-  if(!text && !_pendingCsImage){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập nội dung bình luận');return}
-  if(!csEntryId)return;
-  var btn=document.getElementById('cs-send-btn');
-  btn.disabled=true;
-
-  if(_csReplyToCommentId){
-    function doReply(imgUrl){
-      var payload={action:'reply_comment',entryId:csEntryId,commentId:_csReplyToCommentId,author:currentUser,text:text};
-      if(imgUrl)payload.image=imgUrl;
-      sendCommentPayload(payload,function(result){
-        var master=appState.data.entries.find(function(e){return e.id===csEntryId});
-        if(result&&result.comments){if(master)master.comments=result.comments}
-        _csReplyToCommentId=null;_csReplyToName='';_pendingCsImage=null;showImgPreview('cs');
-        input.value='';autoResize(input);btn.disabled=false;
-        document.getElementById('cs-reply-preview').style.display='none';
-        renderCommentSheet(master||appState.data.entries.find(function(e){return e.id===csEntryId}));
-        renderFeed();
-      });
-    }
-    if(_pendingCsImage&&_pendingCsImage.indexOf('data:')===0){
-      var csEntry=appState.data.entries.find(function(e){return e.id===csEntryId});
-      var csDate=csEntry?csEntry.date||todayStr():todayStr();
-      uploadImage(_pendingCsImage,'comment_'+Date.now()+'.jpg',csDate,function(r){doReply(r&&r.url?r.url:'');});
-    }else if(_pendingCsImage){doReply(_pendingCsImage)}
-    else{doReply()}
-    return;
-  }
-
-  if(csEditingReply){
-    function finishCsReplyEdit(imgUrl){
-      var payload={action:'edit_reply',entryId:csEntryId,commentId:csEditingReply.commentId,replyId:csEditingReply.replyId,text:text};
-      if(imgUrl!==undefined)payload.image=imgUrl;
-      sendCommentPayload(payload,function(result){
-        var master=appState.data.entries.find(function(e){return e.id===csEntryId});
-        if(result&&result.comments){if(master)master.comments=result.comments}
-        csEditingReply=null;_pendingCsImage=null;showImgPreview('cs');
-        input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
-        document.getElementById('cs-cancel-btn').style.display='none';
-        renderCommentSheet(master||appState.data.entries.find(function(e){return e.id===csEntryId}));
-        renderFeed();
-      });
-    }
-    if(_pendingCsImage&&_pendingCsImage.indexOf('data:')===0){
-      var csEntry=appState.data.entries.find(function(e){return e.id===csEntryId});
-      var csDate=csEntry?csEntry.date||todayStr():todayStr();
-      uploadImage(_pendingCsImage,'reply_'+Date.now()+'.jpg',csDate,function(r){finishCsReplyEdit(r&&r.url?r.url:'');});
-    }else if(_pendingCsImage){finishCsReplyEdit(_pendingCsImage)}
-    else{finishCsReplyEdit()}
-    return;
-  }
-
-  function doSend(imgUrl){
-    var payload={
-      action:'add_comment',
-      entryId:csEntryId,
-      text:text||'',
-      author:currentUser
-    };
-    if(imgUrl)payload.image=imgUrl;
-    sendCommentPayload(payload,function(result){
-      input.value='';autoResize(input);btn.disabled=false;
-      _pendingCsImage=null;showImgPreview('cs');
-      _csReplyToCommentId=null;_csReplyToName='';
-      document.getElementById('cs-reply-preview').style.display='none';
-      renderCommentSheet(appState.data.entries.find(function(e){return e.id===csEntryId}));
-      renderFeed();
-    });
-  }
-  if(_pendingCsImage){
-    var raw=_pendingCsImage.split(',')[1]||_pendingCsImage;
-    var csEntry=appState.data.entries.find(function(e){return e.id===csEntryId});
-    var csDate=csEntry?csEntry.date||todayStr():todayStr();
-    uploadImage(_pendingCsImage,'comment_'+Date.now()+'.jpg',csDate,function(r){
-      doSend(r&&r.url?r.url:null);
-    });
-  }else{
-    doSend(null);
-  }
-}
-
-
-document.addEventListener('DOMContentLoaded',function(){
-  var csOverlay=document.getElementById('comment-sheet-overlay');
-  if(csOverlay)csOverlay.addEventListener('click',function(e){
-    if(e.target===csOverlay)closeCommentSheet();
-  });
-});
-
 
 function openProfilePhotoViewer(index){
   if(!_profileImages||!_profileImages.length)return;
@@ -4746,7 +4396,7 @@ function pvZoomOut(){
   applyPvImgTransform();
 }
 function onPvDragStart(x,y){
-  _pvStartX=x;_pvStartY=y;
+  _pvStartX=x;_pvStartY=y;_pvLastX=x;
   if(_pvZoomIdx>0){_pvDragging=true;_pvPanStartX=_pvPanX;_pvPanStartY=_pvPanY;document.getElementById('pv-container').classList.add('pv-dragging')}
   else{_pvSwiping=true;_pvSwipeStartX=x;document.getElementById('pv-container').classList.add('pv-dragging')}
 }
@@ -4771,7 +4421,7 @@ function onPvDragEnd(){
     var img=document.getElementById('pv-image');
     var maxW=document.querySelector('.pv-container').offsetWidth;
     var dx=_pvLastX-_pvSwipeStartX;
-    var threshold=maxW*0.2;
+    var threshold=Math.min(maxW*0.2,90);
     if(Math.abs(dx)>threshold){
       var dir=dx>0?1:-1;
       var ni=appState.photoIndex-dir;
