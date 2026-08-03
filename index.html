@@ -37,31 +37,8 @@ try{
   try {
     var stored = localStorage.getItem('love_theme_mode');
     var dark = stored === 'dark' || (stored !== 'light' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    if (dark) {
-      document.documentElement.classList.add('dark');
-      document.documentElement.style.colorScheme = 'dark';
-      
-      var root = document.documentElement.style;
-      root.setProperty('--bg','#121212');
-      root.setProperty('--card-bg','#1e1e1e');
-      root.setProperty('--text-primary','#e4e4e4');
-      root.setProperty('--text-secondary','#a8a8a8');
-      root.setProperty('--border','#2e2e2e');
-      root.setProperty('--border-light','#2e2e2e');
-      root.setProperty('--hover-bg','#282828');
-      root.setProperty('--input-bg','#282828');
-      root.setProperty('--sticky-bg','#1e1e1e');
-      root.setProperty('--placeholder-bg','#2a2a2a');
-      root.setProperty('--toast-bg','#3a3a3a');
-      root.setProperty('--toast-text','#e4e4e4');
-      root.setProperty('--ann-today-bg','#3a2020');
-      root.setProperty('--ann-soon-bg','#3a2e1a');
-      root.setProperty('--ann-today-text','#ff6b7a');
-      root.setProperty('--ann-soon-text','#f0a050');
-      root.setProperty('--overlay-bg','rgba(0,0,0,0.5)');
-    } else {
-      document.documentElement.style.colorScheme = 'light';
-    }
+    document.documentElement.classList.toggle('dark', !!dark);
+    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
   } catch(e) {}
 })();
 </script>
@@ -86,7 +63,6 @@ try{
   --sidebar-w: 244px;
   --nav-h: 50px;
   --font: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --loading-bar: linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888,#cc2366,#dc2743,#e6683c,#f09433);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --placeholder-bg: #f0f0f0;
@@ -147,7 +123,7 @@ body {
 @keyframes loadingShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
 button, input, textarea, select { font-family:inherit; font-size:inherit; }
-button { cursor:pointer; background:none; border:none; -webkit-tap-highlight-color:transparent; }
+button { cursor:pointer; background:none; border:none; }
 img { max-width:100%; display:block; }
 #avatar-crop-img { max-width:none; }
 a { color: var(--text-link); text-decoration:none; }
@@ -261,12 +237,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 .page { display:none; }
 .page.active { display:block; }
-@keyframes pageIn { from { opacity:0;transform:translateY(12px); } to { opacity:1;transform:translateY(0); } }
-@keyframes fadeUpOld { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
-@keyframes slideUpOld { from { opacity:0; transform:translateY(100%); } to { opacity:1; transform:translateY(0); } }
-@keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
 @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
 @keyframes heartPop { 0%{transform:scale(1)} 25%{transform:scale(1.3)} 50%{transform:scale(0.95)} 100%{transform:scale(1)} }
 @keyframes ripple { to { transform:scale(4); opacity:0; } }
@@ -312,7 +283,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .feed-card:hover { box-shadow:var(--shadow); }
 @keyframes feedCardIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-.feed-card-images { border-radius:0; overflow:hidden; }
+.feed-card-images { border-radius:0; overflow:hidden; position:relative; background:var(--input-bg); }
 .feed-card-header {
   display:flex; align-items:center; justify-content:space-between;
   padding:10px 14px 8px; gap:10px;
@@ -328,7 +299,6 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-card-menu-btn:hover { background:var(--hover-bg); }
 
 
-.feed-card-images { position:relative; background:var(--input-bg); }
 .fc-carousel { position:relative; width:100%; overflow:hidden; background:var(--input-bg); }
 .fc-carousel-inner { display:flex; width:100%; transition:transform 0.2s cubic-bezier(0.25,0.1,0.25,1); }
 .fc-carousel-img { width:100%; flex-shrink:0; object-fit:cover; aspect-ratio:3/4; cursor:pointer; background:var(--input-bg); }
@@ -1011,7 +981,7 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .dm-back-btn { font-size:1.2rem; color:var(--text-primary); padding:4px 6px; border:none; background:none; cursor:pointer; }
 .dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; min-width:0; }
-.dm-header-title span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dm-header-title #dm-partner-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
 
 .dm-messages { flex:1; overflow-y:auto; padding:12px 16px 4px; display:flex; flex-direction:column; gap:6px; touch-action:pan-y; }
 .dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
@@ -1022,12 +992,7 @@ a { color: var(--text-link); text-decoration:none; }
 .dm-msg-avatar img { width:100%; height:100%; object-fit:cover; }
 .dm-msg-avatar-spacer { width:28px; flex-shrink:0; }
 .dm-header-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
-@keyframes msgIn { from{opacity:0;transform:translateY(6px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
-@keyframes bubbleIn { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-@keyframes popIn { from{opacity:0;transform:scale(0.7)} 70%{transform:scale(1.08)} to{opacity:1;transform:scale(1)} }
-@keyframes slideInRight { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
-@keyframes slideInLeft { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
 .dm-msg-wrap { position:relative; overflow:visible; display:flex; flex-direction:row; max-width:100%; user-select:none; -webkit-user-select:none; }
 .dm-msg-inner { min-width:0; flex-shrink:1; display:flex; flex-direction:column; }
 .dm-msg-row { display:flex; flex-direction:row; align-items:center; gap:4px; }
@@ -1120,6 +1085,15 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   font-family:var(--font); overflow-y:auto; background:var(--input-bg); color:var(--text-primary);
 }
 .dm-input-row textarea:focus { border-color:var(--text-secondary); }
+
+.pd-input-row textarea, .cs-input-row textarea, .dm-input-row textarea {
+  min-width:0;
+  overflow-x:hidden;
+  overflow-wrap:break-word;
+  word-break:break-word;
+  scrollbar-width:none;
+}
+.pd-input-row textarea::-webkit-scrollbar, .cs-input-row textarea::-webkit-scrollbar, .dm-input-row textarea::-webkit-scrollbar { width:0; height:0; }
 
 .dm-send-btn {
   min-width:38px; height:38px; border-radius:20px; border:none;
@@ -1222,7 +1196,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-header-status { font-size:0.7rem; color:var(--text-secondary); }
 .dm-unread-badge { background:var(--text-danger); color:#fff; font-size:0.55rem; font-weight:700; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; position:absolute; top:2px; right:-4px; }
 .dm-sidebar-badge { background:var(--text-danger); color:#fff; font-size:0.6rem; font-weight:700; border-radius:10px; min-width:18px; height:18px; display:flex; align-items:center; justify-content:center; margin-left:auto; padding:0 5px; }
-#dm-online-status { font-size:0.65rem; color:var(--text-secondary); white-space:nowrap; display:inline-flex; align-items:center; gap:4px; }
+#dm-online-status { font-size:0.65rem; color:var(--text-secondary); white-space:nowrap; display:inline-flex; align-items:center; gap:4px; flex-shrink:0; }
 .online-dot, .offline-dot { display:inline-block; width:8px; height:8px; border-radius:50%; }
 .online-dot { background:#31c24c; }
 .offline-dot { background:#a0a0a0; }
@@ -2179,7 +2153,6 @@ function unlockApp(){
     initApp();
   },300);
 }
-function hideLoadingScreen(){}
 function showFeedSkeleton(){
   var c=document.getElementById('feed-posts');
   if(!c)return;
@@ -2534,7 +2507,7 @@ function loadData(callback){
     db.collection('config').doc('profiles').get()
   ]).then(function(results) {
     if (loaded) return; loaded = true;
-    hideLoadingScreen(); hideLoadingBar();
+    hideLoadingBar();
     var entriesArr = [], annsArr = [], profilesObj = {};
     if (!results[0].empty) results[0].forEach(function(doc) { entriesArr.push(doc.data()); });
     if (!results[1].empty) results[1].forEach(function(doc) { annsArr.push(doc.data()); });
@@ -2546,7 +2519,7 @@ function loadData(callback){
     if (callback) callback(appState.data);
   }).catch(function(err) {
     console.warn('Firestore error:', err);
-    hideLoadingScreen(); hideLoadingBar();
+    hideLoadingBar();
     if (callback) callback(null);
   });
 }
@@ -3697,12 +3670,27 @@ function buildFeedCard(entry){
     '</div>'+
     imgGrid+
     '<div class="feed-card-content">'+
-      '<div class="feed-card-caption">'+esc(captionShort)+
-        (hasMore?'<div class="feed-card-caption-expand">Xem thêm</div>':'')+
+      '<div class="feed-card-caption"><span id="feed-caption-'+entry.id+'">'+esc(captionShort)+'</span>'+
+        (hasMore?'<div class="feed-card-caption-expand" id="feed-caption-btn-'+entry.id+'" onclick="event.stopPropagation();toggleCaption(\''+entry.id+'\')">Xem thêm</div>':'')+
       '</div>'+
       (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Thêm bình luận...</div>')+
     '</div>'+
   '</div>';
+}
+
+function toggleCaption(id){
+  var entry=appState.data.entries.find(function(e){return e.id===id});
+  var el=document.getElementById('feed-caption-'+id);
+  var btn=document.getElementById('feed-caption-btn-'+id);
+  if(!entry||!el||!btn)return;
+  var full=entry.content||'';
+  if(btn.textContent==='Thu gọn'){
+    el.textContent=full.length>120?full.substring(0,120)+'...':full;
+    btn.textContent='Xem thêm';
+  }else{
+    el.textContent=full;
+    btn.textContent='Thu gọn';
+  }
 }
 
 function toggleFeedMenu(id){
