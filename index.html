@@ -48,7 +48,7 @@ try{
   --card-bg: #ffffff;
   --text-primary: #262626;
   --text-secondary: #8e8e8e;
-  --text-link: #e91e63;
+  --text-link: #e1306c;
   --text-danger: #ed4956;
   --border: #dbdbdb;
   --border-light: #efefef;
@@ -83,7 +83,7 @@ html.dark {
   --card-bg: #1e1e1e;
   --text-primary: #e4e4e4;
   --text-secondary: #a8a8a8;
-  --text-link: #e91e63;
+  --text-link: #e1306c;
   --text-danger: #ed4956;
   --border: #2e2e2e;
   --border-light: #2e2e2e;
@@ -125,7 +125,7 @@ body {
 button, input, textarea, select { font-family:inherit; font-size:inherit; }
 button { cursor:pointer; background:none; border:none; }
 img { max-width:100%; display:block; }
-#avatar-crop-img { max-width:none; }
+#avatar-crop-img, #ann-crop-img { max-width:none; }
 a { color: var(--text-link); text-decoration:none; }
 ::-webkit-scrollbar { width:4px; height:4px; } ::-webkit-scrollbar-thumb { background:var(--border-light); border-radius:4px; }
 
@@ -143,7 +143,7 @@ a { color: var(--text-link); text-decoration:none; }
 .lock-sub { font-size:0.85rem; color:var(--text-secondary); margin-bottom:24px; }
 .pin-dots { display:flex; gap:14px; justify-content:center; margin-bottom:20px; }
 .pin-dot { width:16px; height:16px; border-radius:50%; background:var(--border-light); border:2px solid var(--border); transition:0.12s; }
-.pin-dot.active { background:var(--text-link); border-color:var(--text-link); transform:scale(1.15); box-shadow:0 0 12px rgba(233,30,99,0.3); }
+.pin-dot.active { background:var(--text-link); border-color:var(--text-link); transform:scale(1.15); box-shadow:0 0 12px rgba(225,48,108,0.3); }
 .pin-keyboard { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto; }
 .pin-key { background:var(--hover-bg); border:1px solid var(--border); border-radius:14px; padding:16px 0; font-size:1.3rem; font-weight:600; color:var(--text-primary); transition:0.07s; }
 .pin-key:active { transform:scale(0.92); background:var(--border-light); }
@@ -203,22 +203,31 @@ a { color: var(--text-link); text-decoration:none; }
 
 
 #bottom-nav {
-  position:fixed; bottom:0; left:0; right:0; z-index:100;
-  background:var(--card-bg); border-top:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-around;
-  height:calc(var(--nav-h) + var(--safe-bottom)); padding-bottom:var(--safe-bottom);
+  position:fixed; bottom:calc(12px + var(--safe-bottom)); left:50%; transform:translateX(-50%);
+  z-index:100; display:flex; align-items:center; justify-content:space-around;
+  width:min(calc(100% - 24px), 500px);
+  height:58px; border-radius:30px;
+  background:rgba(255,255,255,0.78);
+  -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.4);
+  box-shadow:0 8px 30px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+html.dark #bottom-nav {
+  background:rgba(30,30,34,0.72);
+  border-color:rgba(255,255,255,0.08);
+  box-shadow:0 8px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 .nav-item {
   flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:6px 0; color:var(--text-secondary); transition:color 0.2s ease; cursor:pointer;
+  padding:4px 0; color:var(--text-secondary); transition:color 0.2s ease; cursor:pointer;
   font-size:0.55rem; font-weight:500; gap:1px; position:relative;
 }
-.nav-item i { font-size:1.35rem; }
+.nav-item i { font-size:1.35rem; transition:transform 0.1s ease; }
+.nav-item:active i { transform:scale(0.88); }
 .nav-item.active { color:var(--text-primary); }
 .nav-item.active i { font-weight:900; }
-.nav-item .nav-plus { width:28px; height:28px; border:2px solid var(--text-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:var(--text-primary); }
 .nav-item .nav-badge {
-  position:absolute; top:2px; right:50%; transform:translateX(18px);
+  position:absolute; top:0; right:50%; transform:translateX(16px);
   background:var(--text-danger); color:#fff; font-size:0.55rem; font-weight:700;
   min-width:16px; height:16px; border-radius:8px; display:none; align-items:center;
   justify-content:center; padding:0 4px; box-shadow:0 1px 3px rgba(0,0,0,0.2);
@@ -231,7 +240,7 @@ a { color: var(--text-link); text-decoration:none; }
 
 #main-content {
   height:100vh; height:100dvh; overflow-y:auto; overflow-x:hidden;
-  padding-bottom:var(--nav-h);
+  padding-bottom:calc(86px + var(--safe-bottom));
   display:flex; flex-direction:column;
   overscroll-behavior:none; -webkit-overflow-scrolling:touch;
 }
@@ -242,7 +251,8 @@ a { color: var(--text-link); text-decoration:none; }
 }
 
 .page { display:none; }
-.page.active { display:block; }
+.page.active { display:block; animation:pageIn 0.18s ease; }
+@keyframes pageIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
 @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
 @keyframes heartPop { 0%{transform:scale(1)} 25%{transform:scale(1.3)} 50%{transform:scale(0.95)} 100%{transform:scale(1)} }
@@ -250,20 +260,15 @@ a { color: var(--text-link); text-decoration:none; }
 
 
 .feed-header {
-  display:none; align-items:center; justify-content:space-between; padding:10px 16px;
+  display:none; align-items:center; gap:14px; padding:8px 16px;
   background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10;
 }
 @media (max-width:1023px) {
   .feed-header { display:flex; }
 }
+.feed-create-btn { font-size:1.35rem; color:var(--text-primary); padding:4px; display:flex; align-items:center; }
 .feed-header .logo { font-size:1.3rem; font-weight:800; letter-spacing:-0.5px; display:flex; align-items:center; gap:6px; }
 .feed-header .logo i { font-size:1.1rem; background:var(--story-gradient); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.feed-header-actions { display:flex; gap:14px; align-items:center; }
-.feed-header-actions button { font-size:1.2rem; color:var(--text-primary); padding:4px; position:relative; }
-
-@media (max-width:767px) {
-  .feed-header-actions button:first-child { display:none !important; }
-}
 @keyframes spin { to { transform:rotate(360deg); } }
 
 
@@ -274,14 +279,36 @@ a { color: var(--text-link); text-decoration:none; }
 }
 .stories-container::-webkit-scrollbar { display:none; }
 .story-item { display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; flex-shrink:0; }
-.story-avatar { width:64px; height:64px; border-radius:50%; padding:3px; background:var(--story-gradient); display:flex; align-items:center; justify-content:center; }
+.story-avatar { width:64px; height:64px; border-radius:50%; padding:3px; background:var(--story-gradient); display:flex; align-items:center; justify-content:center; position:relative; transition:transform 0.12s ease; }
+.story-item:active .story-avatar { transform:scale(0.94); }
 .story-item .story-avatar.seen { background:var(--border-light); }
 .story-avatar .inner { width:100%; height:100%; border-radius:50%; background:var(--card-bg); display:flex; align-items:center; justify-content:center; font-size:1.8rem; overflow:hidden; }
 .story-avatar .inner img { width:100%; height:100%; object-fit:cover; }
+.story-avatar .story-plus {
+  position:absolute; bottom:-2px; right:-2px; width:22px; height:22px; border-radius:50%;
+  background:#0095f6; color:#fff; border:2px solid var(--card-bg);
+  display:flex; align-items:center; justify-content:center; font-size:0.6rem; z-index:2;
+}
 .story-name { font-size:0.7rem; color:var(--text-secondary); max-width:64px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.story-avatar.ann-highlight { background:linear-gradient(45deg,#f2d183,#f0a03b); }
+.story-avatar.ann-highlight.ann-today { background:var(--story-gradient); box-shadow:0 0 0 3px rgba(237,73,86,0.25); }
+.ann-highlight-icon { font-size:1.5rem; color:#ed4956; }
 
 
 .feed-posts { max-width:630px; margin:0 auto; padding:12px 0; }
+.write-reminder-banner {
+  display:flex; align-items:center; gap:12px;
+  max-width:630px; margin:10px auto 16px; padding:12px 16px;
+  background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
+  font-size:0.82rem; color:var(--text-primary);
+}
+.write-reminder-banner .wrb-ic { color:#ed4956; font-size:1.05rem; flex-shrink:0; }
+.write-reminder-banner .wrb-text { flex:1; min-width:0; }
+.write-reminder-banner .wrb-btn {
+  flex-shrink:0; border:1px solid rgba(237,73,86,0.4); background:transparent; color:#ed4956;
+  border-radius:20px; padding:7px 16px; font-size:0.78rem; font-weight:600; cursor:pointer; font-family:'Roboto',Arial,sans-serif;
+}
+.write-reminder-banner .wrb-btn:active { opacity:0.8; }
 .feed-card {
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
   margin-bottom:16px; position:relative;
@@ -351,7 +378,7 @@ a { color: var(--text-link); text-decoration:none; }
 .explore-header { padding:14px 16px 8px; background:var(--sticky-bg); border-bottom:1px solid var(--border-light); position:sticky; top:0; z-index:10; }
 .explore-search { display:flex; align-items:center; background:var(--border-light); border-radius:var(--radius-sm); padding:6px 14px; gap:8px; }
 .explore-search i { color:var(--text-secondary); font-size:0.9rem; }
-.explore-search input { flex:1; border:none; outline:none; background:transparent; font-size:0.85rem; padding:4px 0; min-width:0; }
+.explore-search input { flex:1; border:none; outline:none; background:transparent; font-size:16px; padding:4px 0; min-width:0; }
 .explore-search input::placeholder { color:var(--text-secondary); }
 .explore-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; padding:4px; }
 .explore-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:var(--placeholder-bg); border-radius:2px; }
@@ -423,14 +450,13 @@ a { color: var(--text-link); text-decoration:none; }
 .profile-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; }
 .profile-grid-item { aspect-ratio:1; overflow:hidden; cursor:pointer; position:relative; background:var(--placeholder-bg); }
 .profile-grid-item img { width:100%; height:100%; object-fit:cover; }
-.profile-grid-item .overlay { position:absolute; inset:0; background:rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:#fff; gap:10px; font-size:0.85rem; font-weight:600; opacity:0; pointer-events:none; transition:opacity 0.15s 0.08s; -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px); }
-.profile-grid-item:hover .overlay { opacity:1; pointer-events:auto; transition:opacity 0.15s; }
-.profile-grid-item .overlay i { font-size:1rem; }
+.profile-grid-item .overlay { position:absolute; top:6px; right:6px; display:flex; align-items:center; gap:4px; color:#fff; font-size:0.72rem; font-weight:700; text-shadow:0 1px 3px rgba(0,0,0,0.6); pointer-events:none; }
+.profile-grid-item .overlay i { font-size:0.8rem; }
+.profile-grid-item .overlay-multi { position:absolute; top:6px; left:6px; color:#fff; font-size:0.8rem; text-shadow:0 1px 3px rgba(0,0,0,0.6); pointer-events:none; }
 
 
 .threads-list { max-width:600px; margin:0 auto; }
-.threads-item { padding:16px; margin:0 -16px; border-bottom:1px solid var(--border-light); cursor:pointer; transition:background 0.07s; }
-.threads-item:hover { background:var(--hover-bg); }
+.threads-item { padding:16px; margin:0 -16px; border-bottom:1px solid var(--border-light); cursor:pointer; }
 .threads-author { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.85rem; }
 .threads-author strong { display:flex; align-items:center; gap:3px; color:var(--text-primary); }
 .threads-avatar { width:32px; height:32px; border-radius:50%; background:var(--story-gradient); padding:2px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
@@ -686,6 +712,11 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-comments { padding:4px 16px 8px; border-top:1px solid var(--border-light); }
 .pd-comments-header { font-size:0.88rem; font-weight:600; color:var(--text-secondary); padding:8px 0; }
 .pd-comment-item { display:flex; gap:10px; padding:6px 0; }
+.pd-comment-item.pd-highlight, .pd-reply-item.pd-highlight { animation:pdFlash 0.55s ease-in-out 2; }
+@keyframes pdFlash {
+  0%, 100% { background:rgba(225,48,108,0.06); }
+  50% { background:rgba(225,48,108,0.18); }
+}
 .pd-comment-avatar { width:32px; height:32px; border-radius:50%; background:var(--border-light); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:600; flex-shrink:0; }
 .pd-comment-body { flex:1; min-width:0; }
 .pd-comment-user { font-size:0.88rem; font-weight:600; display:flex; align-items:center; gap:4px; }
@@ -740,7 +771,7 @@ a { color: var(--text-link); text-decoration:none; }
 .pd-input-row textarea:focus { border-color:var(--text-secondary); }
 .pd-send-btn {
   height:38px; border-radius:20px; border:none; padding:0 10px;
-  background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
+  background:var(--text-link); color:#fff; font-size:0.8rem; font-weight:600;
   cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
   transition:transform 0.15s, opacity 0.15s; flex-shrink:0; line-height:1;
 }
@@ -826,7 +857,7 @@ a { color: var(--text-link); text-decoration:none; }
   position:fixed; bottom:calc(60px + var(--safe-bottom)); left:50%; transform:translateX(-50%) translateY(14px);
   background:var(--toast-bg); color:var(--toast-text); padding:10px 24px; border-radius:30px;
   font-size:0.8rem; font-weight:500; z-index:9999; opacity:0; pointer-events:none;
-  transition:all 0.2s cubic-bezier(0.22,1,0.36,1); white-space:nowrap; max-width:90%; box-shadow:0 4px 20px rgba(0,0,0,0.15);
+  transition:all 0.2s cubic-bezier(0.22,1,0.36,1); max-width:90%; white-space:normal; word-break:break-word; box-shadow:0 4px 20px rgba(0,0,0,0.15);
 }
 #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 @media (min-width:1024px) { #toast { bottom:30px; } }
@@ -858,10 +889,11 @@ a { color: var(--text-link); text-decoration:none; }
 
 @media (max-width:1023px) {
   .story-avatar { width:56px; height:56px; }
+  .story-avatar .story-plus { width:18px; height:18px; font-size:0.55rem; bottom:-1px; right:-1px; }
   .story-avatar .inner { font-size:1.4rem; }
   .story-name { font-size:0.55rem; max-width:56px; }
-  .feed-card { border-left:0; border-right:0; border-radius:0; }
-  .feed-posts { padding:0; }
+  .feed-card { border-left:1px solid var(--border-light); border-right:1px solid var(--border-light); border-radius:var(--radius-sm); }
+  .feed-posts { padding:12px; }
   .profile-avatar { width:64px; height:64px; }
   .profile-avatar .inner { font-size:1.8rem; }
   .profile-top { gap:20px; }
@@ -874,6 +906,7 @@ a { color: var(--text-link); text-decoration:none; }
   .explore-grid { gap:3px; padding:3px; }
   .profile-grid { gap:3px; }
   .profile-grid-item { border-radius:1px; }
+  .profile-posts { padding:4px 12px 12px; }
 }
 @media (min-width:1024px) {
   .sidebar-nav .sidebar-item .label { display:inline; }
@@ -893,6 +926,20 @@ a { color: var(--text-link); text-decoration:none; }
 .ann-item.soon::before { background:#e67e22; }
 .ann-item.far::before { background:var(--border); }
 .ann-icon { width:42px; height:42px; border-radius:50%; background:var(--hover-bg); display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:var(--text-secondary); flex-shrink:0; }
+.ann-thumb { width:42px; height:42px; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--hover-bg); }
+.ann-thumb img { width:100%; height:100%; object-fit:cover; }
+.ann-img-field {
+  width:88px; height:88px; border-radius:14px; border:1px dashed var(--border);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  color:var(--text-secondary); font-size:0.7rem; cursor:pointer; overflow:hidden; position:relative;
+  background:var(--input-bg);
+}
+.ann-img-field img { width:100%; height:100%; object-fit:cover; }
+.ann-img-field.has-img:hover::after { content:'Đổi ảnh'; position:absolute; inset:0; background:rgba(0,0,0,0.45); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.7rem; }
+.ann-img-remove {
+  position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.6); color:#fff; border:none;
+  border-radius:50%; width:20px; height:20px; font-size:0.55rem; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;
+}
 .ann-item.today .ann-icon { background:var(--ann-today-bg); color:var(--ann-today-text); }
 .ann-item.soon .ann-icon { background:var(--ann-soon-bg); color:var(--ann-soon-text); }
 .ann-info { flex:1; min-width:0; }
@@ -980,10 +1027,10 @@ html.dark .dm-msg-reaction.active { background:rgba(255,64,129,0.25); outline-co
 .dm-msg.sent .dm-msg-reaction.active { background:rgba(255,255,255,0.25); outline-color:rgba(255,255,255,0.5); }
 .dm-msg.deleted .dm-msg-actions { display:none !important; }
 .dm-msg-bubble { padding:8px 14px; border-radius:18px; font-size:0.9rem; line-height:1.45; word-break:break-word; max-width:100%; position:relative; user-select:none; -webkit-user-select:none; }
-.dm-msg.sent .dm-msg-bubble { background:#ff4081; color:#fff; border-bottom-right-radius:4px; }
-.dm-msg.received .dm-msg-bubble { background:#fce4ec; color:var(--text-primary); border-bottom-left-radius:4px; }
+.dm-msg.sent .dm-msg-bubble { background:var(--text-link); color:#fff; border-bottom-right-radius:4px; }
+.dm-msg.received .dm-msg-bubble { background:#f0f2f5; color:#050505; border-bottom-left-radius:4px; }
 html.dark .dm-msg.sent .dm-msg-bubble { background:#c2185b; }
-html.dark .dm-msg.received .dm-msg-bubble { background:#2d1b1f; color:#e0e0e0; }
+html.dark .dm-msg.received .dm-msg-bubble { background:#3a3b3c; color:#e4e6eb; }
 html.dark .dm-msg.received .dm-msg-reply { background:rgba(255,255,255,0.06); }
 html.dark .dm-msg.received .dm-msg-reply-name { color:#ff8a9e; }
 .dm-msg-time {
@@ -1010,6 +1057,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-msg-status { font-size:0.6rem; margin-left:6px; display:inline-flex; align-items:center; font-weight:500; white-space:nowrap; }
 .dm-msg-status.sent { color:var(--text-secondary); }
 .dm-msg-status.seen { color:var(--text-link); }
+.dm-tick i { font-size:0.7rem; }
 .dm-msg.sent.dm-msg-latest-sent .dm-msg-wrap { margin-bottom:16px; }
 .dm-msg.sent .dm-msg-status-latest {
   position:absolute; bottom:-14px; right:0; padding-right:14px;
@@ -1042,7 +1090,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
 .dm-send-btn {
   min-width:38px; height:38px; border-radius:20px; border:none;
-  padding:0 10px; background:#ff4081; color:#fff; font-size:0.8rem; font-weight:600;
+  padding:0 10px; background:var(--text-link); color:#fff; font-size:0.8rem; font-weight:600;
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   transition:transform 0.15s, opacity 0.15s;
   flex-shrink:0; line-height:1;
@@ -1052,30 +1100,13 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
 .dm-msg-group { display:flex; flex-direction:column; gap:1px; }
-.dm-msg-group .dm-msg.sent + .dm-msg.sent .dm-msg-bubble { border-top-right-radius:4px; }
-.dm-msg-group .dm-msg.received + .dm-msg.received .dm-msg-bubble { border-top-left-radius:4px; }
-.dm-msg-group .dm-msg.sent:first-child .dm-msg-bubble { border-top-right-radius:18px; }
-.dm-msg-group .dm-msg.received:first-child .dm-msg-bubble { border-top-left-radius:18px; }
-.dm-msg-group .dm-msg:last-child .dm-msg-bubble { border-bottom-right-radius:18px; border-bottom-left-radius:18px; }
 .dm-msg-group .dm-msg:only-child .dm-msg-bubble { border-radius:18px; }
-.dm-msg-group .dm-msg.sent:last-child .dm-msg-bubble { border-bottom-right-radius:4px; }
-.dm-msg-group .dm-msg.received:last-child .dm-msg-bubble { border-bottom-left-radius:4px; }
-.dm-msg-group .dm-msg.sent:first-child:not(:last-child) .dm-msg-bubble { border-top-right-radius:18px; }
-.dm-msg-group .dm-msg.received:first-child:not(:last-child) .dm-msg-bubble { border-top-left-radius:18px; }
-.dm-msg-group .dm-msg.sent:not(:first-child) .dm-msg-bubble { border-top-right-radius:4px; }
-.dm-msg-group .dm-msg.received:not(:first-child) .dm-msg-bubble { border-top-left-radius:4px; }
-.dm-msg-group .dm-msg.sent:last-child .dm-msg-bubble { border-bottom-right-radius:4px; }
-.dm-msg-group .dm-msg.received:last-child .dm-msg-bubble { border-bottom-left-radius:4px; }
-.dm-msg-group .dm-msg:only-child .dm-msg-bubble { border-radius:18px; }
-.dm-msg-group .dm-msg.sent:only-child .dm-msg-bubble { border-bottom-right-radius:4px; }
-.dm-msg-group .dm-msg.received:only-child .dm-msg-bubble { border-bottom-left-radius:4px; }
 .dm-msg-group .dm-msg.sent:first-child:not(:last-child) .dm-msg-bubble { border-top-right-radius:18px; border-bottom-right-radius:4px; }
 .dm-msg-group .dm-msg.received:first-child:not(:last-child) .dm-msg-bubble { border-top-left-radius:18px; border-bottom-left-radius:4px; }
 .dm-msg-group .dm-msg.sent:last-child:not(:first-child) .dm-msg-bubble { border-top-right-radius:4px; border-bottom-right-radius:18px; }
 .dm-msg-group .dm-msg.received:last-child:not(:first-child) .dm-msg-bubble { border-top-left-radius:4px; border-bottom-left-radius:18px; }
-.dm-msg-group .dm-msg:not(:first-child):not(:last-child) .dm-msg-bubble { border-radius:4px 18px 18px 4px; }
-.dm-msg-group .dm-msg.received:not(:first-child):not(:last-child) .dm-msg-bubble { border-radius:4px 18px 18px 4px; }
 .dm-msg-group .dm-msg.sent:not(:first-child):not(:last-child) .dm-msg-bubble { border-radius:18px 4px 4px 18px; }
+.dm-msg-group .dm-msg.received:not(:first-child):not(:last-child) .dm-msg-bubble { border-radius:4px 18px 18px 4px; }
 .dm-seen { font-size:0.6rem; color:var(--text-secondary); text-align:right; padding:2px 4px 0; }
 .dm-seen i { margin-left:2px; }
 .dm-seen.read i { color:var(--text-link); }
@@ -1126,7 +1157,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-reply-info span:last-child { font-size:0.78rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .dm-reply-preview button { width:24px; height:24px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.7rem; flex-shrink:0; }
 .dm-reply-preview button:hover { background:var(--border-light); }
-.dm-msg-reply { display:flex; align-items:center; gap:6px; margin-bottom:4px; padding:4px 8px; background:rgba(233,30,99,0.06); border-radius:6px; border-left:2px solid var(--text-link); }
+.dm-msg-reply { display:flex; align-items:center; gap:6px; margin-bottom:4px; padding:4px 8px; background:rgba(225,48,108,0.06); border-radius:6px; border-left:2px solid var(--text-link); }
 .dm-msg.sent .dm-msg-reply { background:rgba(255,255,255,0.12); border-left-color:rgba(255,255,255,0.5); }
 .dm-msg-reply-name { font-size:0.7rem; font-weight:600; color:var(--text-link); flex-shrink:0; }
 .dm-msg.sent .dm-msg-reply-name { color:rgba(255,255,255,0.8); }
@@ -1141,7 +1172,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-header-status { font-size:0.7rem; color:var(--text-secondary); }
 .dm-unread-badge { background:var(--text-danger); color:#fff; font-size:0.55rem; font-weight:700; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; position:absolute; top:2px; right:-4px; }
 .dm-sidebar-badge { background:var(--text-danger); color:#fff; font-size:0.6rem; font-weight:700; border-radius:10px; min-width:18px; height:18px; display:flex; align-items:center; justify-content:center; margin-left:auto; padding:0 5px; }
-#dm-online-status { font-size:0.65rem; color:var(--text-secondary); white-space:nowrap; display:inline-flex; align-items:center; gap:4px; flex-shrink:0; }
+#dm-online-status { font-size:0.65rem; color:var(--text-secondary); line-height:1.3; text-align:left; display:inline-flex; align-items:center; gap:4px; flex-shrink:0; }
 .online-dot, .offline-dot { display:inline-block; width:8px; height:8px; border-radius:50%; }
 .online-dot { background:#31c24c; }
 .offline-dot { background:#a0a0a0; }
@@ -1171,6 +1202,46 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 .dm-msg-img-content img { width:auto; max-width:200px; height:auto; max-height:240px; border-radius:8px; display:block; cursor:pointer; }
 .comment-img-content { max-width:200px; max-height:240px; border-radius:8px; margin-top:4px; overflow:hidden; display:inline-block; }
 .comment-img-content img { width:auto; max-width:200px; height:auto; max-height:240px; border-radius:8px; display:block; cursor:pointer; }
+
+@media (hover:none) {
+  .feed-card:hover { box-shadow:none; }
+  .explore-item:hover img { transform:none; }
+  .profile-grid-item:hover .overlay { opacity:0; pointer-events:none; }
+  .ann-img-field.has-img:hover::after { content:none; }
+  .fc-carousel:hover .fc-carousel-nav, .fc-carousel-nav:hover, .pd-carousel:hover .pd-carousel-nav, .pd-carousel-nav:hover { opacity:0; pointer-events:none; }
+  .dm-msg-wrap:hover .dm-msg-time { opacity:0; }
+  .dm-msg.sent .dm-msg-body:hover .dm-msg-menu-btn { opacity:0.4; }
+  .dm-msg-action-btn:hover { background:transparent; color:var(--text-secondary); }
+  .dm-rp-emoji:hover, .dm-menu-reactions span:hover { transform:none; }
+  .dm-send-btn:hover, .pd-send-btn:hover { transform:none; }
+  .ann-item:hover { border-color:var(--border-light); background:transparent; }
+  .ann-actions button:hover { background:transparent; color:var(--text-secondary); }
+  .ann-actions button.del:hover { color:var(--ann-today-text); background:transparent; }
+  .add-ann-btn:hover { background:transparent; color:var(--text-secondary); border-color:var(--border); }
+  .activity-item:hover { background:transparent; }
+  .activity-header .activity-mark-read:hover { background:none; color:var(--text-secondary); }
+  .profile-more-btn:hover { background:transparent; }
+  .profile-dropdown button:hover { background:transparent; }
+  .profile-clock .partner-link:hover { text-decoration:none; }
+  .pd-dropdown button:hover { background:transparent; }
+  .pd-dropdown button.danger:hover { background:transparent; }
+  .pd-comment-menu-btn:hover { background:transparent; color:var(--text-secondary); }
+  .pd-comment-dropdown button:hover { background:transparent; }
+  .pd-comment-dropdown button.danger:hover { background:transparent; }
+  .pd-reply-preview button:hover { background:var(--border-light); }
+  .pd-reply-to-btn:hover { color:var(--text-secondary); }
+  .feed-card-menu-btn:hover, .pd-menu-btn:hover, .create-tool-btn:hover, .dm-img-btn:hover, .pd-img-btn:hover { background:transparent; color:var(--text-secondary); }
+  .create-header .back-btn:hover { background:transparent; }
+  .create-header .submit-btn:hover:not(:disabled) { background:var(--text-link); }
+  .create-image-preview .pimg .remove-btn:hover { background:rgba(200,50,70,0.9); }
+  .btn-primary:hover { background:var(--text-link); }
+  .btn-secondary:hover { background:var(--input-bg); }
+  .dropdown-menu button:hover { background:transparent; }
+  .feed-card-comments:hover { color:var(--text-primary); }
+  .pv-top button:hover { background:rgba(255,255,255,0.1); }
+  .pv-nav:hover { background:rgba(255,255,255,0.08); }
+  .pv-zoom-btn:hover { background:rgba(255,255,255,0.12); }
+}
 </style>
 </head>
 <body>
@@ -1199,7 +1270,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <button class="pin-key" data-digit="9" onclick="handlePinPress('9')">9</button>
       <button class="pin-key empty"></button>
       <button class="pin-key" data-digit="0" onclick="handlePinPress('0')">0</button>
-      <button class="pin-key delete" data-digit="del" onclick="handlePinDelete()">🌻</button>
+      <button class="pin-key delete" data-digit="del" onclick="handlePinDelete()"><i class="fas fa-delete-left"></i></button>
     </div>
     <div class="lock-error" id="lock-error"></div>
   </div>
@@ -1245,13 +1316,11 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     
     <div class="page active" id="page-feed">
       <div class="feed-header">
+        <button class="feed-create-btn" onclick="openCreatePage()"><i class="far fa-square-plus"></i></button>
         <div class="logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
-        <div class="feed-header-actions">
-          <button onclick="openCreatePage()"><i class="far fa-square-plus"></i></button>
-          <button id="dm-header-btn" onclick="switchPage('direct')" style="position:relative;"><i class="fab fa-facebook-messenger"></i><span class="dm-unread-badge" id="dm-header-badge" style="display:none;">0</span></button>
-        </div>
       </div>
       <div id="stories-container" class="stories-container"></div>
+      <div id="write-reminder-banner" class="write-reminder-banner" style="display:none;"></div>
       <div class="feed-posts" id="feed-posts"></div>
     </div>
 
@@ -1352,8 +1421,8 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   <div id="bottom-nav">
     <div class="nav-item active" data-page="feed" onclick="switchPage('feed')"><i class="fas fa-house"></i></div>
     <div class="nav-item" data-page="explore" onclick="switchPage('explore')"><i class="fas fa-compass"></i></div>
-    <div class="nav-item" onclick="openCreatePage()"><div class="nav-plus"><i class="fas fa-plus"></i></div></div>
-    <div class="nav-item" data-page="activity" onclick="switchPage('activity')"><i class="fas fa-heart"></i><span class="activity-badge nav-badge">0</span></div>
+    <div class="nav-item" data-page="direct" onclick="switchPage('direct')"><i class="fab fa-facebook-messenger"></i><span class="nav-badge" id="dm-nav-badge" style="display:none;">0</span></div>
+    <div class="nav-item" data-page="activity" onclick="switchPage('activity')"><i class="fas fa-heart"></i><span class="activity-badge nav-badge" style="display:none;">0</span></div>
     <div class="nav-item" data-page="profile" onclick="switchPage('profile')"><i class="fas fa-user"></i></div>
   </div>
 
@@ -1470,7 +1539,45 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     </div>
     <div class="form-group"><label class="form-label" for="ann-form-date">Ngày</label><input type="date" class="form-input" id="ann-form-date" /></div>
     <div class="form-group"><label class="form-label" for="ann-form-name">Tên kỷ niệm</label><input type="text" class="form-input" id="ann-form-name" placeholder="VD: Ngày đầu yêu nhau" maxlength="80" /></div>
+    <div class="form-group">
+      <label class="form-label">Ảnh đại diện (tùy chọn)</label>
+      <input type="file" id="ann-file-input" accept="image/*" onchange="handleAnnImage(this)" style="display:none;" />
+      <div class="ann-img-field" id="ann-img-preview" onclick="document.getElementById('ann-file-input').click()"></div>
+    </div>
     <div class="button-row"><button class="btn-secondary" onclick="closeModal('modal-ann-form')">Hủy</button><button class="btn-primary" onclick="saveAnnForm()"><i class="fas fa-check"></i> Lưu</button></div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="modal-ann-crop">
+  <div class="modal-box" style="max-width:420px;text-align:center;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div class="modal-title"><i class="fas fa-crop-alt" style="margin-right:6px;color:var(--text-secondary);"></i> Cắt ảnh kỷ niệm</div>
+      <button class="modal-close" onclick="closeModal('modal-ann-crop');annCropCleanup()"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="padding:3px;width:180px;height:180px;margin:8px auto;border-radius:14px;background:var(--story-gradient);" id="ann-crop-wrapper">
+      <div style="width:174px;height:174px;border-radius:12px;overflow:hidden;position:relative;background:var(--border-light);" id="ann-crop-container">
+        <img id="ann-crop-img" alt="" style="position:absolute;cursor:grab;" draggable="false">
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;max-width:240px;margin:10px auto 6px;">
+      <i class="fas fa-search-minus" style="color:var(--text-secondary);font-size:0.7rem;"></i>
+      <input type="range" id="ann-zoom-slider" min="1" max="3" step="0.01" value="1" style="flex:1;accent-color:var(--text-link);" oninput="annClamp();applyAnnCropPos()">
+      <i class="fas fa-search-plus" style="color:var(--text-secondary);font-size:0.7rem;"></i>
+    </div>
+    <p style="font-size:0.7rem;color:var(--text-secondary);margin:2px 0 8px;">Kéo để di chuyển · Thanh trượt để phóng to</p>
+    <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn-secondary" style="font-size:0.8rem;padding:8px 14px;" onclick="document.getElementById('ann-crop-file-input').click()">
+        <i class="fas fa-image"></i> Chọn ảnh
+      </button>
+      <button class="btn-primary" style="font-size:0.8rem;padding:8px 14px;" onclick="saveAnnCrop()">
+        <i class="fas fa-check"></i> Lưu
+      </button>
+      <button class="btn-secondary" style="font-size:0.8rem;padding:8px 14px;" onclick="closeModal('modal-ann-crop');annCropCleanup()">
+        <i class="fas fa-times"></i> Hủy
+      </button>
+    </div>
+    <input type="file" id="ann-crop-file-input" accept="image/*" style="display:none;" onchange="handleAnnCropFile(event)" />
   </div>
 </div>
 
@@ -1690,6 +1797,8 @@ var FEED_INIT = 15;
 var FEED_MORE = 20;
 var feedRenderCount = 0;
 var feedObserver = null;
+var _feedCarouselState = {};
+var _feedCaptionExpanded = {};
 
 
 var userProfiles = null;
@@ -1806,6 +1915,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',func
 var _activitySeenMap = {};
 var _activityUnsub = null;
 var _entriesUnsub = null;
+var _annUnsub = null;
 
 function loadActivitySeen() {
   if (_activityUnsub) return;
@@ -1837,11 +1947,11 @@ function getRecentActivities(){
     }
     (e.comments||[]).forEach(function(c){
       if(c.time&&c.time>cutoff){
-        acts.push({type:'comment',entryId:e.id,authorPin:getPinForUser(c.author),time:c.time,preview:(c.text||'').substring(0,120)});
+        acts.push({type:'comment',entryId:e.id,commentId:c.id,authorPin:getPinForUser(c.author),time:c.time,preview:(c.text||'').substring(0,120)});
       }
       (c.replies||[]).forEach(function(r){
         if(r.time&&r.time>cutoff){
-          acts.push({type:'reply',entryId:e.id,authorPin:getPinForUser(r.author),time:r.time,preview:(r.text||'').substring(0,120)});
+          acts.push({type:'reply',entryId:e.id,commentId:c.id,replyId:r.id,authorPin:getPinForUser(r.author),time:r.time,preview:(r.text||'').substring(0,120)});
         }
       });
     });
@@ -1890,7 +2000,7 @@ function getPinForUser(userName) {
   for (var pin in userProfiles) {
     if (userProfiles[pin].name === userName) return pin;
   }
-  if (userName === CONFIG.USER1_NAME || userName.replace(/ 🌻| 💖/g,'') === CONFIG.USER1_NAME.replace(/ 🌻| 💖/g,'')) return CONFIG.PIN_USER1;
+  if (userName === CONFIG.USER1_NAME || String(userName||'').replace(/ 🌻| 💖/g,'') === CONFIG.USER1_NAME.replace(/ 🌻| 💖/g,'')) return CONFIG.PIN_USER1;
   return CONFIG.PIN_USER2;
 }
 
@@ -1910,6 +2020,8 @@ function getEffectiveAvatar(author) {
 
 
 function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function cleanName(name){return String(name||'').replace(/\s*[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]+$/gu,'');}
+function countComments(comments){return (comments||[]).reduce(function(s,c){return s+1+(c.replies?c.replies.length:0)},0)}
 function driveThumb(url, w) {
   if (!url) return '';
   var id = '';
@@ -2088,7 +2200,7 @@ function initApp(){
   loadOfflineQueue();
   processOfflineQueue();
   startClock();
-  loadData(function(){setupDmListener();setupRealtimeEntries();updateDmBadge();});
+  loadData(function(){setupDmListener();setupRealtimeEntries();setupRealtimeAnniversaries();updateDmBadge();setupWriteReminder();});
   loadActivitySeen();
   updateActivityBadge();
   setupPresence();
@@ -2110,7 +2222,7 @@ function updateUserUI(){
   applyTheme();
   var ava = getDisplayAvatar(appState.currentPin);
   var displayName = getEffectiveName(currentUser);
-  var plainName = displayName.replace(/ [\w💖🌻]+$/g,'');
+  var plainName = cleanName(displayName);
   var avaTag = ava ? '<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : '<i class="fas fa-user-circle" style="font-size:1.6rem;color:var(--text-secondary);"></i>';
   document.getElementById('create-user-avatar').innerHTML = avaTag;
   document.getElementById('create-user-name').innerHTML = esc(plainName)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.75rem;"></i>';
@@ -2126,7 +2238,7 @@ function openEditName(){
   closeModal('modal-settings');
   loadUserProfiles();
   var profile=userProfiles[appState.currentPin];
-  document.getElementById('edit-name-input').value=profile?profile.name.replace(/ [\w💖🌻]+$/g,''):currentUser.replace(/ [\w💖🌻]+$/g,'');
+  document.getElementById('edit-name-input').value=profile?cleanName(profile.name):cleanName(currentUser);
   document.getElementById('edit-name-hint').textContent='Tên hiện tại: '+(profile?profile.name:currentUser);
   openModal('modal-edit-name');
 }
@@ -2168,6 +2280,40 @@ function syncProfileToBackend(){
 
 var avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
 var AC_SIZE=174;
+var annCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
+var ANN_CROP_SIZE=174;
+
+function cropClamp(ctx,size){
+  var cw=size,ch=size;
+  var scale=Math.max(cw/ctx.imgW,ch/ctx.imgH);
+  var dispW=ctx.imgW*scale*ctx.zoom;
+  var dispH=ctx.imgH*scale*ctx.zoom;
+  var maxDx=(dispW-cw)/2;
+  var maxDy=(dispH-ch)/2;
+  ctx.dx=Math.min(maxDx,Math.max(-maxDx,ctx.dx));
+  ctx.dy=Math.min(maxDy,Math.max(-maxDy,ctx.dy));
+}
+function applyCropPos(imgId,ctx,size){
+  var img=document.getElementById(imgId);
+  if(!img||!img.src||!img.naturalWidth)return;
+  var sliderId=imgId==='ann-crop-img'?'ann-zoom-slider':'avatar-zoom-slider';
+  var zoom=parseFloat(document.getElementById(sliderId).value);
+  ctx.zoom=zoom;
+  var scale=Math.max(size/ctx.imgW,size/ctx.imgH);
+  var dispW=ctx.imgW*scale*zoom;
+  var dispH=ctx.imgH*scale*zoom;
+  img.style.width=dispW+'px';
+  img.style.height=dispH+'px';
+  img.style.left=((size-dispW)/2+ctx.dx)+'px';
+  img.style.top=((size-dispH)/2+ctx.dy)+'px';
+}
+function cropDragStart(el,ctx,x,y){ctx.isDragging=true;ctx.startX=x-ctx.dx;ctx.startY=y-ctx.dy;el.style.cursor='grabbing'}
+function cropDragMove(ctx,imgId,size,x,y){
+  if(!ctx.isDragging)return;
+  ctx.dx=x-ctx.startX;ctx.dy=y-ctx.startY;
+  cropClamp(ctx,size);applyCropPos(imgId,ctx,size);
+}
+function cropDragEnd(el,ctx){if(!ctx.isDragging)return;ctx.isDragging=false;if(el)el.style.cursor='grab'}
 
 function acClamp(){
   var d=avatarCrop;
@@ -2262,30 +2408,25 @@ function saveCroppedAvatar(){
 }
 function uploadAvatarOrFallback(compressed,rawData){
   loadUserProfiles();
-  var oldUrl=userProfiles[appState.currentPin]&&userProfiles[appState.currentPin].avatar||'';
-  var match=oldUrl.match(/id=([^&]+)/);
-  var oldDriveId=match?match[1]:null;
-  var deletePromise=oldDriveId?
-    fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete_image',driveId:oldDriveId})})
-    .catch(function(){}):Promise.resolve();
-  deletePromise.then(function(){
-    var payload={action:'upload_avatar',pin:appState.currentPin,imageData:rawData};
-    return fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
-    .then(function(r){return r.json()}).then(function(result){
-      if(result&&result.url){
-        avatarUploadDone(result);
-      }else if(result&&result.error&&result.error.indexOf('Hành động không hợp lệ')>=0){
-        return uploadImage(compressed,'avatar_'+appState.currentPin+'.jpg','avatars',avatarUploadDone);
-      }else{
-        avatarUploadFail(compressed,result&&result.error?result.error:'Lỗi tải ảnh lên');
-      }
-    });
+  var payload={action:'upload_avatar',pin:appState.currentPin,imageData:rawData};
+  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+  .then(function(r){return r.json()}).then(function(result){
+    if(result&&result.url){
+      avatarUploadDone(result);
+    }else if(result&&result.error&&result.error.indexOf('Hành động không hợp lệ')>=0){
+      uploadImage(compressed,'avatar_'+appState.currentPin+'.jpg','avatars',avatarUploadDone);
+    }else{
+      avatarUploadFail(compressed,result&&result.error?result.error:'Lỗi tải ảnh lên');
+    }
   }).catch(function(err){
     avatarUploadFail(compressed,'Lỗi mạng');
   });
 }
 function avatarUploadDone(r){
   loadUserProfiles();
+  var oldUrl=userProfiles[appState.currentPin]&&userProfiles[appState.currentPin].avatar||'';
+  var oldMatch=oldUrl.match(/id=([^&]+)/);
+  var oldDriveId=oldMatch?oldMatch[1]:null;
   userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
   userProfiles[appState.currentPin].avatar=r.url;
   saveUserProfiles();
@@ -2294,11 +2435,12 @@ function avatarUploadDone(r){
   syncProfileToBackend();
   closeModal('modal-edit-avatar');
   avatarCropReset();
+  if(oldDriveId&&oldUrl!==r.url){
+    fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete_image',driveId:oldDriveId})}).catch(function(){});
+  }
 }
 function avatarUploadFail(compressed,msg){
   showToast('<i class="fas fa-exclamation-triangle"></i> '+esc(msg));
-  closeModal('modal-edit-avatar');
-  avatarCropReset();
 }
 
 function avatarCropReset(){avatarCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};var img=document.getElementById('avatar-crop-img');if(img){img.style.left='';img.style.top='';img.style.width='';img.style.height='';img.src=''}var s=document.getElementById('avatar-zoom-slider');if(s)s.value='1'}
@@ -2312,6 +2454,8 @@ function avatarCropCleanup(){
 
 function removeCustomAvatar(){
   loadUserProfiles();
+  var oldUrl=userProfiles[appState.currentPin]&&userProfiles[appState.currentPin].avatar||'';
+  if(oldUrl&&oldUrl.indexOf('data:')!==0)deleteRemoteImages([{url:oldUrl}]);
   userProfiles[appState.currentPin]=userProfiles[appState.currentPin]||{name:'',avatar:''};
   userProfiles[appState.currentPin].avatar='';
   saveUserProfiles();
@@ -2325,44 +2469,36 @@ function removeCustomAvatar(){
 
 document.addEventListener('mousedown',function(e){
   var el=e.target;
+  if(el.id==='ann-crop-img'){cropDragStart(el,annCrop,e.clientX,e.clientY);e.preventDefault();return}
   if(el.id!=='avatar-crop-img')return;
-  avatarCrop.isDragging=true;
-  avatarCrop.startX=e.clientX-avatarCrop.dx;
-  avatarCrop.startY=e.clientY-avatarCrop.dy;
-  el.style.cursor='grabbing';
+  cropDragStart(el,avatarCrop,e.clientX,e.clientY);
   e.preventDefault();
 });
 document.addEventListener('mousemove',function(e){
-  if(!avatarCrop.isDragging)return;
-  avatarCrop.dx=e.clientX-avatarCrop.startX;
-  avatarCrop.dy=e.clientY-avatarCrop.startY;
-  acClamp();applyAvatarCropPos();
+  if(annCrop.isDragging){cropDragMove(annCrop,'ann-crop-img',ANN_CROP_SIZE,e.clientX,e.clientY);return}
+  cropDragMove(avatarCrop,'avatar-crop-img',AC_SIZE,e.clientX,e.clientY);
 });
 document.addEventListener('mouseup',function(){
-  if(!avatarCrop.isDragging)return;
-  avatarCrop.isDragging=false;
-  var img=document.getElementById('avatar-crop-img');
-  if(img)img.style.cursor='grab';
+  cropDragEnd(document.getElementById('ann-crop-img'),annCrop);
+  cropDragEnd(document.getElementById('avatar-crop-img'),avatarCrop);
 });
 
 document.addEventListener('touchstart',function(e){
   var el=e.target;
+  if(el.id==='ann-crop-img'){var t=e.touches[0];cropDragStart(el,annCrop,t.clientX,t.clientY);e.preventDefault();return}
   if(el.id!=='avatar-crop-img')return;
   var t=e.touches[0];
-  avatarCrop.isDragging=true;
-  avatarCrop.startX=t.clientX-avatarCrop.dx;
-  avatarCrop.startY=t.clientY-avatarCrop.dy;
+  cropDragStart(el,avatarCrop,t.clientX,t.clientY);
   e.preventDefault();
 },{passive:false});
 document.addEventListener('touchmove',function(e){
-  if(!avatarCrop.isDragging)return;
+  if(!annCrop.isDragging&&!avatarCrop.isDragging)return;
   var t=e.touches[0];
-  avatarCrop.dx=t.clientX-avatarCrop.startX;
-  avatarCrop.dy=t.clientY-avatarCrop.startY;
-  acClamp();applyAvatarCropPos();
+  if(annCrop.isDragging)cropDragMove(annCrop,'ann-crop-img',ANN_CROP_SIZE,t.clientX,t.clientY);
+  else cropDragMove(avatarCrop,'avatar-crop-img',AC_SIZE,t.clientX,t.clientY);
   e.preventDefault();
 },{passive:false});
-document.addEventListener('touchend',function(){avatarCrop.isDragging=false});
+document.addEventListener('touchend',function(){cropDragEnd(document.getElementById('ann-crop-img'),annCrop);cropDragEnd(document.getElementById('avatar-crop-img'),avatarCrop)});
 
 
 var _clockInterval = null;
@@ -2423,35 +2559,12 @@ function loadData(callback){
     appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
     profilesFromData(profilesObj);
     normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
-    if (!appState.hasWelcomed) { appState.hasWelcomed = true; showToast('<i class="fas fa-gem"></i> Xin chào ' + esc(currentUser) + '!'); }
+    if (!appState.hasWelcomed && !localStorage.getItem('love_welcomed')) { appState.hasWelcomed = true; localStorage.setItem('love_welcomed','1'); showToast('<i class="fas fa-gem"></i> Xin chào ' + esc(currentUser) + '!'); }
     if (callback) callback(appState.data);
   }).catch(function(err) {
     console.warn('Firestore error:', err);
     hideLoadingBar();
     if (callback) callback(null);
-  });
-}
-
-function refreshData(callback){
-  showLoadingBar();
-  Promise.all([
-    db.collection('entries').get(),
-    db.collection('anniversaries').get(),
-    db.collection('config').doc('profiles').get()
-  ]).then(function(results) {
-    var entriesArr = [], annsArr = [], profilesObj = {};
-    if (!results[0].empty) results[0].forEach(function(doc) { entriesArr.push(doc.data()); });
-    if (!results[1].empty) results[1].forEach(function(doc) { annsArr.push(doc.data()); });
-    if (results[2].exists) profilesObj = results[2].data().profiles || {};
-    appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
-    profilesFromData(profilesObj);
-    normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
-    hideLoadingBar();
-    if (callback) callback(appState.data);
-  }).catch(function(err) {
-    console.warn('Refresh error:', err);
-    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi làm mới dữ liệu');
-    hideLoadingBar();
   });
 }
 
@@ -2464,6 +2577,12 @@ function normalizeData(){
     if(!e.images||!Array.isArray(e.images))e.images=[];
     if(!e.updatedAt)e.updatedAt=e.date?e.date+'T00:00:00.000Z':e.createdAt||new Date().toISOString();
     if(!e.createdAt)e.createdAt=e.updatedAt;
+  });
+  (appState.data.anniversaries||[]).forEach(function(a){
+    if(!a.id)a.id='ann_'+Date.now()+'_'+Math.random().toString(36).substr(2,4);
+    if(!a.name)a.name='Kỷ niệm';
+    if(!a.date)a.date='2000-01-01';
+    if(!a.image)a.image=null;
   })
 }
 function sortEntries(arr){
@@ -2491,13 +2610,13 @@ function processOfflineQueue(){
   }
   processNext(0);
 }
-window.addEventListener('online',function(){appState.isOnline=true;processOfflineQueue()})
+window.addEventListener('online',function(){appState.isOnline=true;processOfflineQueue();flushPendingDmMessages()})
 window.addEventListener('offline',function(){appState.isOnline=false;showToast('<i class="fas fa-wifi"></i> Mất kết nối, dữ liệu sẽ lưu tạm')})
 
 
 function sendPayload(payload, successMsg, callback) {
   var action = payload.action;
-  var p = showSaving('Đang xử lý...');
+  showSaving('Đang xử lý...');
 
   function done(smsg) {
     hideSaving();
@@ -2530,23 +2649,39 @@ function sendPayload(payload, successMsg, callback) {
   if (action === 'delete_entry') {
     db.collection('entries').doc(payload.id).delete().then(function() {
       done(successMsg || 'Đã xóa!');
-    }).catch(function(err) { fail('Lỗi xóa'); });
+    }).catch(function(err) {
+      if (!navigator.onLine) { addQueue({payload: payload}); done(successMsg || 'Đã xóa tạm'); showToast('<i class="fas fa-save"></i> Đã xóa tạm, sẽ đồng bộ khi có mạng'); }
+      else fail('Lỗi xóa');
+    });
     return;
   }
 
   if (action === 'save_anniversary') {
     var ann = payload.anniversary;
     if (!ann || !ann.id) { fail('Thiếu dữ liệu'); return; }
+    var found = false;
+    appState.data.anniversaries = appState.data.anniversaries || [];
+    for (var ai = 0; ai < appState.data.anniversaries.length; ai++) {
+      if (appState.data.anniversaries[ai].id === ann.id) { appState.data.anniversaries[ai] = ann; found = true; break; }
+    }
+    if (!found) appState.data.anniversaries.push(ann);
     db.collection('anniversaries').doc(ann.id).set(ann).then(function() {
       done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
-    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+    }).catch(function(err) {
+      if (!navigator.onLine) { addQueue({payload: payload}); done(successMsg || '<i class="fas fa-save"></i> Đã lưu tạm!'); showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ khi có mạng'); }
+      else fail('Lỗi đồng bộ');
+    });
     return;
   }
 
   if (action === 'delete_anniversary') {
+    appState.data.anniversaries = (appState.data.anniversaries || []).filter(function(a) { return a.id !== payload.id; });
     db.collection('anniversaries').doc(payload.id).delete().then(function() {
       done(successMsg || 'Đã xóa!');
-    }).catch(function(err) { fail('Lỗi xóa'); });
+    }).catch(function(err) {
+      if (!navigator.onLine) { addQueue({payload: payload}); done(successMsg || 'Đã xóa tạm'); showToast('<i class="fas fa-save"></i> Đã xóa tạm, sẽ đồng bộ khi có mạng'); }
+      else fail('Lỗi xóa');
+    });
     return;
   }
 
@@ -2563,7 +2698,10 @@ function sendPayload(payload, successMsg, callback) {
       return profilesRef.set(data);
     }).then(function() {
       done(successMsg || '<i class="fas fa-check-circle"></i> Đã lưu!');
-    }).catch(function(err) { fail('Lỗi đồng bộ'); });
+    }).catch(function(err) {
+      if (!navigator.onLine) { addQueue({payload: payload}); done(successMsg || '<i class="fas fa-check-circle"></i> Đã lưu tạm!'); showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ khi có mạng'); }
+      else fail('Lỗi đồng bộ');
+    });
     return;
   }
 
@@ -2583,9 +2721,10 @@ function sendPayload(payload, successMsg, callback) {
   fetch(CONFIG.BACKEND_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body, mode: 'cors' })
     .then(function(r) { return r.json().catch(function() { return null; }); })
     .then(function(result) {
+      hideSaving();
       if (successMsg && result && result.success) showToast(successMsg);
       if (callback) callback(result);
-    }).catch(function() { if (callback) callback(null); });
+    }).catch(function() { hideSaving(); if (callback) callback(null); });
 }
 
 function handleCommentAction(payload, successMsg, callback) {
@@ -2594,12 +2733,12 @@ function handleCommentAction(payload, successMsg, callback) {
 
   db.runTransaction(function(transaction) {
     return transaction.get(entryRef).then(function(doc) {
-      if (!doc.exists) { if (callback) callback(null); return Promise.reject('DOC_MISSING'); }
+      if (!doc.exists) { hideSaving(); if (callback) callback(null); return Promise.reject('DOC_MISSING'); }
       var comments = (doc.data().comments || []).slice();
 
       if (payload.action === 'add_comment') {
         var newComment = {
-          id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+          id: payload.commentId || ('c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
           author: payload.author || currentUser,
           text: payload.text || '',
           time: new Date().toISOString()
@@ -2613,7 +2752,7 @@ function handleCommentAction(payload, successMsg, callback) {
           if (c.id === payload.commentId) {
             if (!c.replies) c.replies = [];
             var nr = {
-              id: 'r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+              id: payload.replyId || ('r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
               author: payload.author || currentUser,
               text: payload.text || '',
               time: new Date().toISOString()
@@ -2642,15 +2781,50 @@ function handleCommentAction(payload, successMsg, callback) {
       return comments;
     });
   }).then(function(comments) {
-    
+    hideSaving();
     var master = appState.data.entries.find(function(e) { return e.id === entryId; });
     if (master) master.comments = comments;
     if (callback) callback({ success: true, comments: comments });
   }).catch(function(err) {
+    hideSaving();
     if (err === 'DOC_MISSING') return;
+    if (!navigator.onLine) {
+      addQueue({payload: payload});
+      showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ khi có mạng');
+      if (callback) callback({ success: true });
+      return;
+    }
     showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi đồng bộ');
     if (callback) callback(null);
   });
+}
+
+function applyCommentLocal(payload){
+  var master=appState.data.entries.find(function(e){return e.id===payload.entryId});
+  if(!master)return;
+  if(!master.comments||!Array.isArray(master.comments))master.comments=[];
+  if(payload.action==='add_comment'){
+    var nc={id:payload.commentId||('c_'+Date.now()),author:payload.author||currentUser,text:payload.text||'',time:new Date().toISOString()};
+    if(payload.image)nc.image=payload.image;
+    master.comments.push(nc);
+  }else if(payload.action==='reply_comment'){
+    master.comments.forEach(function(c){
+      if(c.id===payload.commentId){
+        if(!c.replies)c.replies=[];
+        var nr={id:payload.replyId||('r_'+Date.now()),author:payload.author||currentUser,text:payload.text||'',time:new Date().toISOString()};
+        if(payload.image)nr.image=payload.image;
+        c.replies.push(nr);
+      }
+    });
+  }else if(payload.action==='delete_comment'){
+    master.comments=master.comments.filter(function(c){return c.id!==payload.commentId});
+  }else if(payload.action==='edit_comment'){
+    master.comments.forEach(function(c){if(c.id===payload.commentId){c.text=payload.text;if(payload.image!==undefined)c.image=payload.image||''}});
+  }else if(payload.action==='edit_reply'){
+    master.comments.forEach(function(c){if(c.id===payload.commentId&&c.replies){c.replies.forEach(function(r){if(r.id===payload.replyId){r.text=payload.text;if(payload.image!==undefined)r.image=payload.image||''}})}});
+  }else if(payload.action==='delete_reply'){
+    master.comments.forEach(function(c){if(c.id===payload.commentId&&c.replies){c.replies=c.replies.filter(function(r){return r.id!==payload.replyId})}});
+  }
 }
 
 function sendCommentPayload(payload, callback) {
@@ -2706,13 +2880,13 @@ function initSoundToggle(){
   var cb=document.getElementById('sound-toggle');
   if(!cb)return;
   cb.checked=_soundEnabled;
-  document.getElementById('sound-toggle-slider').style.background=_soundEnabled?'#ff4081':'var(--text-secondary)';
+  document.getElementById('sound-toggle-slider').style.background=_soundEnabled?'var(--text-link)':'var(--text-secondary)';
   document.getElementById('sound-toggle-knob').style.transform=_soundEnabled?'translateX(18px)':'translateX(0)';
 }
 function toggleSound(on){
   _soundEnabled=on;
   localStorage.setItem('soundEnabled', on?'1':'0');
-  document.getElementById('sound-toggle-slider').style.background=on?'#ff4081':'var(--text-secondary)';
+  document.getElementById('sound-toggle-slider').style.background=on?'var(--text-link)':'var(--text-secondary)';
   document.getElementById('sound-toggle-knob').style.transform=on?'translateX(18px)':'translateX(0)';
 }
 function playSentSound() {
@@ -2770,6 +2944,8 @@ function playActivitySound() {
 
 var dmMessagesCache = [];
 var dmUnsubscribe = null;
+var _dmStatusPartnerUnsub = null;
+var _dmStatusMyUnsub = null;
 var partnerLastSeen = '';
 var _myDmLastSeen = '';
 var _prevDmCount = 0;
@@ -2790,7 +2966,7 @@ function getDmUnreadCount() {
 function updateDmBadge() {
   var count = getDmUnreadCount();
   var badge1 = document.getElementById('dm-sidebar-badge');
-  var badge2 = document.getElementById('dm-header-badge');
+  var badge2 = document.getElementById('dm-nav-badge');
   if (badge1) { badge1.textContent = count; badge1.style.display = count > 0 ? 'flex' : 'none'; }
   if (badge2) { badge2.textContent = count; badge2.style.display = count > 0 ? 'flex' : 'none'; }
 }
@@ -2807,6 +2983,28 @@ function markDmSeen() {
       .set({ lastSeen: new Date().toISOString() }).catch(function() {});
   }
   updateDmBadge();
+}
+
+function getPendingDmMessages(){try{return JSON.parse(localStorage.getItem('pending_dm_messages')||'[]')||[]}catch(e){return[]}}
+function savePendingDmMessages(q){try{localStorage.setItem('pending_dm_messages',JSON.stringify(q))}catch(e){}}
+function queuePendingDmMessage(m){var q=getPendingDmMessages();q.push(m);savePendingDmMessages(q)}
+function flushPendingDmMessages(){
+  if(!navigator.onLine)return;
+  var q=getPendingDmMessages();
+  if(!q.length)return;
+  var chatRef=db.collection('messages').doc(getChatId()).collection('messages');
+  var chain=Promise.resolve();
+  q.forEach(function(m){
+    chain=chain.then(function(){
+      var data={sender:m.sender,text:m.text||'',createdAt:m.createdAt||new Date().toISOString()};
+      if(m.replyTo)data.replyTo=m.replyTo;
+      return chatRef.doc(m.clientId).set(data);
+    });
+  });
+  chain.then(function(){
+    savePendingDmMessages([]);
+    showToast('<i class="fas fa-paper-plane"></i> Đã gửi '+q.length+' tin nhắn khi có mạng');
+  }).catch(function(){});
 }
 
 function onDmInput(el){
@@ -2863,10 +3061,19 @@ var _editingDmMsgText = '';
 function sendDmMessage() {
   var input = document.getElementById('dm-input');
   var text = input.value.trim().replace(/🖕/g, '💖');
-  if (!text && !_pendingDmImage) return;
+  if (!text && !_pendingDmImage && !_editingDmMsgId) return;
   var btn = document.getElementById('dm-send-btn');
   btn.disabled = true;
   if (_editingDmMsgId) {
+    var pmsg=getDmMsgFromCache(_editingDmMsgId);
+    if(pmsg&&pmsg.pending){
+      editPendingDmMessage(_editingDmMsgId,text||'');
+      input.value='';autoResize(input);btn.disabled=false;_editingDmMsgId=null;playSentSound();
+      document.getElementById('dm-send-btn').textContent='Gửi';_dmShouldScroll=true;
+      var dib=document.querySelector('.dm-img-btn');if(dib)dib.style.display='';
+      renderDmMessages();
+      return;
+    }
     db.collection('messages').doc(getChatId()).collection('messages').doc(_editingDmMsgId).update({
       text: text || '',
       editedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -2889,6 +3096,23 @@ function sendDmMessage() {
   function doSend() {
     var sentText = input.value;
     input.value = ''; autoResize(input);
+    if (!navigator.onLine) {
+      if (msg.image) {
+        showToast('<i class="fas fa-exclamation-triangle"></i> Mất kết nối, không gửi được ảnh');
+        if (sentText) { input.value = sentText; autoResize(input); }
+        btn.disabled = false;
+        return;
+      }
+      msg.clientId = 'dm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+      msg.id = msg.clientId;
+      msg.pending = true;
+      queuePendingDmMessage(msg);
+      dmMessagesCache.push(msg);
+      renderDmMessages(); markDmSeen(); _dmShouldScroll = true; playSentSound();
+      btn.disabled = false;
+      showToast('<i class="fas fa-clock"></i> Đã lưu tạm, gửi khi có mạng');
+      return;
+    }
     db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
       btn.disabled = false; playSentSound();
       _dmShouldScroll = true;
@@ -2901,8 +3125,11 @@ function sendDmMessage() {
     var img = _pendingDmImage; clearDmImage();
     var today = todayStr();
     uploadImage(img, 'dm_' + Date.now() + '.jpg', today, function(r) {
-      if (r && r.url) msg.image = r.url;
-      doSend();
+      if (r && r.url) { msg.image = r.url; doSend(); }
+      else {
+        btn.disabled = false;
+        showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh lên, thử lại');
+      }
     });
   } else {
     if (_pendingDmImage) { msg.image = _pendingDmImage; clearDmImage(); }
@@ -3020,7 +3247,7 @@ function replyToMessage(msgId) {
   if (!msg) return;
   if (_editingDmMsgId) cancelEditDm();
   _replyingDmMsg = { id: msgId, text: msg.text||'', sender: msg.sender, image: !!msg.image };
-  var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
+  var partnerName = cleanName(getPartnerName());
   var replyer = msg.sender === appState.currentPin ? 'Bạn' : partnerName;
   document.getElementById('dm-reply-name').textContent = replyer;
   document.getElementById('dm-reply-text').textContent = msg.text || (msg.image ? 'Ảnh' : '');
@@ -3064,19 +3291,50 @@ function deleteDmMessage() {
   unfocusDmMessage();
   showConfirm('Xóa tin nhắn?', 'Tin nhắn sẽ bị xóa cho cả hai.', function(ok) {
     if (!ok) return;
+    var msg=getDmMsgFromCache(msgId);
+    if(msg&&msg.pending){
+      deletePendingDmMessage(msgId);
+      renderDmMessages();
+      return;
+    }
     db.collection('messages').doc(getChatId()).collection('messages').doc(msgId).update({
       text: '', image: '', deleted: true
     }).catch(function(err) { console.warn('Delete DM err:', err); });
   });
 }
 
+function editPendingDmMessage(msgId,newText){
+  var q=getPendingDmMessages();
+  var changed=false;
+  q.forEach(function(m){if(m.clientId===msgId){m.text=newText;m.editedAt=new Date().toISOString();changed=true}});
+  if(changed)savePendingDmMessages(q);
+  dmMessagesCache.forEach(function(m){if(m.id===msgId&&m.pending){m.text=newText;m.editedAt=new Date().toISOString();changed=true}});
+  return changed;
+}
+function deletePendingDmMessage(msgId){
+  var q=getPendingDmMessages().filter(function(m){return m.clientId!==msgId});
+  savePendingDmMessages(q);
+  dmMessagesCache.forEach(function(m){if(m.id===msgId&&m.pending)m.deleted=true});
+}
+
 var _dmFirstRender = true;
 var _dmShouldScroll = false;
-function renderDmMessages() {
+var _dmRenderPending = false;
+function renderDmMessages(){
+  if (_dmRenderPending) return;
+  _dmRenderPending = true;
+  requestAnimationFrame(function() {
+    _dmRenderPending = false;
+    renderDmMessagesNow();
+  });
+}
+function renderDmMessagesNow() {
   var container = document.getElementById('dm-messages');
-  var msgs = dmMessagesCache;
+  var msgs = dmMessagesCache.slice();
+  getPendingDmMessages().forEach(function(p){if(p&&p.clientId&&!msgs.some(function(x){return x.id===p.clientId}))msgs.push(p)});
+  msgs.sort(function(a,b){return (a.time||a.createdAt||'').localeCompare(b.time||b.createdAt||'')});
   var partnerPin = getPartnerPin();
-  var partnerName = getPartnerName().replace(/ [\w💖🌻]+$/g, '');
+  var partnerName = cleanName(getPartnerName());
   document.getElementById('dm-partner-name').textContent = partnerName;
   var partnerAva = getDisplayAvatar(partnerPin);
   var ha = document.getElementById('dm-header-avatar');
@@ -3095,6 +3353,7 @@ function renderDmMessages() {
     var gPrev = gp && gm.sender===gp.sender && gds===(new Date(gp.time||gp.createdAt||'').getFullYear()+'-'+pad(new Date(gp.time||gp.createdAt||'').getMonth()+1)+'-'+pad(new Date(gp.time||gp.createdAt||'').getDate())) && (gd-new Date(gp.time||gp.createdAt||''))<300000;
     if (gNext && !gPrev) grpStart[g] = 1;
     if (!gNext && gPrev) grpEnd[g] = 1;
+    if (!gNext && !gPrev) { grpStart[g] = 1; grpEnd[g] = 1; }
   }
   function fmtFull(iso){
     if(!iso)return'';
@@ -3102,6 +3361,13 @@ function renderDmMessages() {
       var dd=new Date(iso);if(isNaN(dd))return'';
       var days=['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
       return days[dd.getDay()]+', '+pad(dd.getHours())+':'+pad(dd.getMinutes())+' · '+dd.getDate()+'/'+(dd.getMonth()+1)+'/'+dd.getFullYear();
+    }catch(e){return''}
+  }
+  function fmtShort(iso){
+    if(!iso)return'';
+    try{
+      var dd=new Date(iso);if(isNaN(dd))return'';
+      return pad(dd.getHours())+':'+pad(dd.getMinutes());
     }catch(e){return''}
   }
   var html = '';
@@ -3127,8 +3393,9 @@ function renderDmMessages() {
     }
     var isSent = m.sender === appState.currentPin;
     var seen = isSent && partnerLastSeen && t && t <= partnerLastSeen;
-    var statusText = isSent ? (seen ? 'Đã xem' : 'Đã gửi') : '';
-    var statusHtml = statusText ? '<span class="dm-msg-status '+(seen?'seen':'sent')+'">'+statusText+'</span>' : '';
+    var statusCls = isSent ? (m.pending ? '' : (seen ? 'seen' : 'sent')) : '';
+    var statusIcon = isSent ? (m.pending ? '' : (seen ? '<i class="fas fa-check-double"></i>' : '<i class="fas fa-check"></i>')) : '';
+    var statusHtml = (statusIcon && !m.deleted) ? '<span class="dm-msg-status dm-tick '+statusCls+'">'+statusIcon+'</span>' : '';
     var cls = isSent ? 'sent' : 'received';
     if (m.deleted) cls += ' deleted';
     var isLatestSent = isSent && i === lastSentIdx;
@@ -3187,7 +3454,7 @@ function renderDmMessages() {
       html += '</div>';
     }
     html += '</div></div>';
-    if (isLatestSent) html += '<div class="dm-msg-status-latest"><span class="dm-msg-status '+(seen?'seen':'sent')+'">'+statusText+'</span></div>';
+    if (isLatestSent) html += '<div class="dm-msg-status-latest">'+statusHtml+'</div>';
     html += '<div class="dm-msg-time">' + fmtFull(t) + statusHtml + '</div>';
     html += '</div>';
     html += '</div>';
@@ -3212,6 +3479,10 @@ var _dmTouchData = null;
 var _dmSwipeReset = null;
 var _dmLongPressTimer = null;
 var _dmMenuJustOpened = false;
+function cancelDmSwipe(){
+  if(_dmTouchData&&_dmTouchData.el){_dmTouchData.el.style.transform='';_dmTouchData.el.style.transition='';}
+  _dmTouchData=null;
+}
 document.getElementById('dm-messages').addEventListener('touchstart', function(e) {
   if (_dmSwipeReset) { clearTimeout(_dmSwipeReset); _dmSwipeReset = null; }
   var el = e.target.closest('.dm-msg');
@@ -3239,10 +3510,10 @@ document.getElementById('dm-messages').addEventListener('touchmove', function(e)
   var dx = t.clientX - _dmTouchData.startX;
   var dy = Math.abs(t.clientY - _dmTouchData.startY);
   var isSent = _dmTouchData.el.classList.contains('sent');
-  if (dy > Math.abs(dx)) { if(_dmTouchData.el)_dmTouchData.el.style.transform = ''; _dmTouchData = null; return; }
+  if (dy > Math.abs(dx)) { cancelDmSwipe(); return; }
   if (dx === 0) return;
-  if (!isSent && dx < 0) { if(_dmTouchData.el)_dmTouchData.el.style.transform = ''; _dmTouchData = null; return; }
-  if (isSent && dx > 0) { if(_dmTouchData.el)_dmTouchData.el.style.transform = ''; _dmTouchData = null; return; }
+  if (!isSent && dx < 0) { cancelDmSwipe(); return; }
+  if (isSent && dx > 0) { cancelDmSwipe(); return; }
   if (!isSent && dx < 5) { _dmTouchData.el.style.transform = ''; return; }
   if (isSent && dx > -5) { _dmTouchData.el.style.transform = ''; return; }
   e.preventDefault();
@@ -3274,13 +3545,42 @@ function setupRealtimeEntries() {
   _entriesUnsub = db.collection('entries').onSnapshot(function(snap) {
     var entriesArr = [];
     snap.forEach(function(doc) { entriesArr.push(doc.data()); });
+    var pdOverlay=document.getElementById('post-overlay');
+    var pdOpen=pdOverlay?pdOverlay.classList.contains('open'):false;
+    var openId=pdEntryId;
+    var oldCommentsJSON=null;
+    if(pdOpen&&openId){
+      var oldEntry=appState.data.entries.find(function(e){return e.id===openId});
+      if(oldEntry)oldCommentsJSON=JSON.stringify(oldEntry.comments||[]);
+    }
     appState.data.entries = entriesArr;
     sortEntries(); renderAll(); updateActivityBadge();
+    if(pdOpen&&openId){
+      var newEntry=appState.data.entries.find(function(e){return e.id===openId});
+      if(newEntry&&oldCommentsJSON!==JSON.stringify(newEntry.comments||[]))renderPdComments();
+    }
+  }, function() {});
+}
+
+function setupRealtimeAnniversaries() {
+  if (_annUnsub) return;
+  _annUnsub = db.collection('anniversaries').onSnapshot(function(snap) {
+    var annsArr = [];
+    snap.forEach(function(doc) { annsArr.push(doc.data()); });
+    appState.data.anniversaries = annsArr;
+    normalizeData();
+    renderAnnList();
+    renderStories();
   }, function() {});
 }
 
 function setupDmListener() {
   if (dmUnsubscribe) { dmUnsubscribe(); dmUnsubscribe = null; }
+  if (_dmStatusPartnerUnsub) { _dmStatusPartnerUnsub(); _dmStatusPartnerUnsub = null; }
+  if (_dmStatusMyUnsub) { _dmStatusMyUnsub(); _dmStatusMyUnsub = null; }
+  partnerLastSeen = '';
+  _myDmLastSeen = '';
+  _prevDmCount = 0;
   dmMessagesCache = [];
   dmUnsubscribe = db.collection('messages').doc(getChatId()).collection('messages')
     .onSnapshot(function(snapshot) {
@@ -3294,16 +3594,16 @@ function setupDmListener() {
       dmMessagesCache.sort(function(a, b) {
         return (a.createdAt || '').localeCompare(b.createdAt || '');
       });
+      var hasNewIncoming = false;
+      if (_prevDmCount > 0 && dmMessagesCache.length > _prevDmCount) {
+        for (var j = _prevDmCount; j < dmMessagesCache.length; j++) {
+          if (dmMessagesCache[j].sender !== appState.currentPin) { hasNewIncoming = true; break; }
+        }
+      }
+      if (hasNewIncoming) playIncomingSound();
       if (appState.currentPage === 'direct') {
         renderDmMessages();
         markDmSeen();
-      } else if (_prevDmCount > 0 && dmMessagesCache.length > _prevDmCount) {
-        for (var j = _prevDmCount; j < dmMessagesCache.length; j++) {
-          if (dmMessagesCache[j].sender !== appState.currentPin) {
-            playIncomingSound();
-            break;
-          }
-        }
       }
       _prevDmCount = dmMessagesCache.length;
       updateDmBadge();
@@ -3313,7 +3613,7 @@ function setupDmListener() {
   
   var partnerPin = getPartnerPin();
   if (partnerPin) {
-    db.collection('dm_status').doc(getChatId()).collection('status').doc(partnerPin)
+    _dmStatusPartnerUnsub = db.collection('dm_status').doc(getChatId()).collection('status').doc(partnerPin)
       .onSnapshot(function(snap) {
         partnerLastSeen = snap.exists ? (snap.data().lastSeen || '') : '';
         if (appState.currentPage === 'direct') renderDmMessages();
@@ -3321,7 +3621,7 @@ function setupDmListener() {
   }
   
   if (appState.currentPin) {
-    db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
+    _dmStatusMyUnsub = db.collection('dm_status').doc(getChatId()).collection('status').doc(appState.currentPin)
       .onSnapshot(function(snap) {
         _myDmLastSeen = snap.exists ? (snap.data().lastSeen || '') : '';
         updateDmBadge();
@@ -3350,6 +3650,21 @@ function setupPresence() {
   });
 }
 
+function formatLastSeen(iso){
+  if(!iso)return'';
+  try{
+    var d=new Date(iso);if(isNaN(d))return'';
+    var now=new Date();
+    var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    var day=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    var diffDays=Math.round((today-day)/86400000);
+    var hm=pad(d.getHours())+':'+pad(d.getMinutes());
+    if(diffDays===0)return 'Lần cuối: hôm nay '+hm;
+    if(diffDays===1)return 'Lần cuối: hôm qua '+hm;
+    return 'Lần cuối: '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+hm;
+  }catch(e){return''}
+}
+
 function setupPartnerPresenceListener() {
   if (partnerPresenceUnsub) { partnerPresenceUnsub(); partnerPresenceUnsub = null; }
   var el = document.getElementById('dm-online-status');
@@ -3360,8 +3675,10 @@ function setupPartnerPresenceListener() {
     .where('pin', '==', partnerPin)
     .onSnapshot(function(snapshot) {
       var isOnline = false;
+      var lastSeenIso = '';
       snapshot.forEach(function(doc) {
         var d = doc.data();
+        if (d.lastSeen && d.lastSeen > lastSeenIso) lastSeenIso = d.lastSeen;
         if (d.online) {
           var age = Date.now() - new Date(d.lastSeen || 0).getTime();
           if (age < 70000) isOnline = true;
@@ -3369,7 +3686,7 @@ function setupPartnerPresenceListener() {
       });
       el.innerHTML = isOnline
         ? '<span class="online-dot"></span> Đang hoạt động'
-        : '<span class="offline-dot"></span> Ngoại tuyến';
+        : '<span class="offline-dot"></span> '+formatLastSeen(lastSeenIso);
     }, function(err) {
       console.warn('Presence listener err:', err);
     });
@@ -3388,7 +3705,7 @@ function openImageViewer(src) {
   var _img=document.getElementById('pv-image');gsap.fromTo(_img,{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out',onComplete:function(){_img.style.transform='none'}})
 }
 
-function goHome(){switchPage('feed');refreshData()}
+function goHome(){switchPage('feed')}
 function smoothScroll(el,to,dur){
   if(!el)return;
   var start=el.scrollTop,startTime=null;
@@ -3431,14 +3748,22 @@ function switchProfileTab(tab){
 }
 
 
+var _renderAllPending = false;
 function renderAll(){
-  renderFeed();
-  renderExplore();
-  renderActivity();
-  if(!profileViewUser)renderProfile();
-  renderStories();
-  renderDmMessages();
-  updateDmBadge();
+  if (_renderAllPending) return;
+  _renderAllPending = true;
+  requestAnimationFrame(function() {
+    _renderAllPending = false;
+    var page=appState.currentPage||'feed';
+    if(page==='feed')renderFeed();
+    else if(page==='explore')renderExplore();
+    else if(page==='activity')renderActivity();
+    else if(page==='profile'){if(profileViewUser)renderProfileForUser(profileViewUser);else renderProfile();}
+    renderStories();
+    if(page==='direct')renderDmMessages();
+    updateDmBadge();
+    updateWriteReminderBanner();
+  });
 }
 
 
@@ -3451,9 +3776,36 @@ function renderStories(){
   function avaHtml(ava,fallback){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':fallback;}
   var html='';
   var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.8rem;color:var(--text-secondary);"></i>';
-  html+='<div class="story-item"><div class="story-avatar"><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Bạn</div></div>';
-  html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(otherDisplayName.replace(/ [\w💖🌻]+$/g,''))+'</div></div>';
+  html+='<div class="story-item" onclick="switchPage(\'profile\')"><div class="story-avatar"><span class="story-plus"><i class="fas fa-plus"></i></span><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Bạn</div></div>';
+  html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(cleanName(otherDisplayName))+'</div></div>';
+  var annInfo=annHighlightInfo();
+  var annInner=annInfo.img?'<img src="'+esc(driveThumb(annInfo.img,160))+'" loading="lazy" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas '+annInfo.icon+' ann-highlight-icon"></i>';
+  html+='<div class="story-item" onclick="openAnnModal()"><div class="story-avatar ann-highlight'+(annInfo.today?' ann-today':'')+'"><div class="inner">'+annInner+'</div></div><div class="story-name">Kỷ niệm</div></div>';
   container.innerHTML=html;
+}
+
+function annHighlightInfo(){
+  var anns=appState.data.anniversaries||[];
+  var today=new Date();today.setHours(0,0,0,0);
+  var best=null,bestDays=999,isToday=false;
+  anns.forEach(function(a){
+    if(!a.date)return;
+    var p=a.date.split('-');
+    var next=new Date(today.getFullYear(),parseInt(p[1])-1,parseInt(p[2]));
+    if(next<today)next.setFullYear(next.getFullYear()+1);
+    var days=Math.round((next-today)/86400000);
+    if(days===0)isToday=true;
+    if(days<bestDays){bestDays=days;best=a}
+  });
+  var icon='fa-gift';
+  if(best){
+    var anName=(best.name||'').toLowerCase();
+    if(anName.includes('yêu'))icon='fa-heart';
+    else if(anName.includes('cưới'))icon='fa-ring';
+    else if(anName.includes('sinh'))icon='fa-cake-candles';
+  }
+  var img=best&&best.image&&best.image.url?best.image.url:'';
+  return{icon:icon,today:isToday,img:img}
 }
 
 function switchToUserProfile(){
@@ -3471,13 +3823,13 @@ function renderProfileForUser(pin){
   var displayName=getDisplayName(pin);
   var ava=getDisplayAvatar(pin);
   profileViewUser=pin;
-  var plainName=displayName.replace(/ [\w💖🌻]+$/g,'');
+  var plainName=cleanName(displayName);
   function imgHtml(){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:2.4rem;color:var(--text-secondary);"></i>';}
   document.getElementById('profile-avatar-inner').innerHTML=imgHtml();
   document.getElementById('profile-username').innerHTML=esc(plainName)+' <i class="fas fa-check-circle verified-badge"></i>';
   var entries=(appState.data.entries||[]).filter(function(e){return getEffectiveName(e.author)===displayName});
   var photoCount=0;var commentCount=0;
-  entries.forEach(function(e){if(e.images)photoCount+=e.images.length;if(e.comments)commentCount+=e.comments.length});
+  entries.forEach(function(e){if(e.images)photoCount+=e.images.length;commentCount+=countComments(e.comments)});
   document.getElementById('profile-post-count').textContent=entries.length;
   document.getElementById('profile-photo-count').textContent=photoCount;
   document.getElementById('profile-comment-count').textContent=commentCount;
@@ -3496,10 +3848,10 @@ function resetProfileView(){
 }
 
 function viewProfile(pin){
-  if(!pin||pin===appState.currentPin){resetProfileView();return}
   closePostDetail();
   switchPage('profile');
-  renderProfileForUser(pin);
+  if(pin&&pin!==appState.currentPin)renderProfileForUser(pin);
+  else resetProfileView();
 }
 
 
@@ -3517,9 +3869,9 @@ function renderFeed(){
   var entries=getFeedEntries();
   var container=document.getElementById('feed-posts');
   if(feedObserver){feedObserver.disconnect();feedObserver=null}
-  if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào<br><span style="font-size:0.75rem;">Hãy viết nhật ký đầu tiên nhé!</span></div>';feedRenderCount=0;return}
-  feedRenderCount=Math.min(entries.length,FEED_INIT);
-  container.innerHTML=entries.slice(0,feedRenderCount).map(function(e,i){return '<div style="animation-delay:'+(i*0.04)+'s">'+buildFeedCard(e)+'</div>'}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
+  if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào<br><span style="font-size:0.75rem;">Hãy viết nhật ký đầu tiên nhé!</span></div>';feedRenderCount=0;_feedCarouselState={};_feedCaptionExpanded={};return}
+  feedRenderCount=Math.min(entries.length,Math.max(FEED_INIT,feedRenderCount||0));
+  container.innerHTML=entries.slice(0,feedRenderCount).map(function(e){return buildFeedCard(e)}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
   observeFeed();
 }
 function observeFeed(){
@@ -3536,9 +3888,12 @@ function loadMoreFeed(){
   if(feedRenderCount>=entries.length)return;
   var add=Math.min(entries.length-feedRenderCount,FEED_MORE);
   if(add<=0)return;
-  feedRenderCount+=add;
   var container=document.getElementById('feed-posts');
-  container.innerHTML=entries.slice(0,feedRenderCount).map(function(e){return buildFeedCard(e)}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
+  var newCards=entries.slice(feedRenderCount,feedRenderCount+add).map(function(e){return buildFeedCard(e)}).join('');
+  var sentinel=document.getElementById('feed-sentinel');
+  if(sentinel)sentinel.insertAdjacentHTML('beforebegin',newCards);
+  else container.insertAdjacentHTML('beforeend',newCards+'<div id="feed-sentinel" style="height:1px"></div>');
+  feedRenderCount+=add;
   observeFeed();
 }
 
@@ -3547,7 +3902,7 @@ function buildFeedCard(entry){
   var authorPin=getPinForUser(entry.author);
   var ava=getDisplayAvatar(authorPin);
   var avatar=ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
-  var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
+  var username=cleanName(effectiveAuthor);
   var isOwner=getEffectiveName(entry.author)===getEffectiveName(currentUser);
   var timeDisplay=timeAgo(entry.createdAt||entry.updatedAt);
 
@@ -3555,31 +3910,34 @@ function buildFeedCard(entry){
   var hasImages=entry.images&&entry.images.length>0;
   if(hasImages){
     var total=entry.images.length;
+    var curIdx=(_feedCarouselState[entry.id]||0);
+    if(curIdx<0||curIdx>=total)curIdx=0;
     var imgs=entry.images.map(function(img,idx){
       return '<img class="fc-carousel-img" src="'+esc(driveThumb(img.url||img,800))+'" data-index="'+idx+'" onload="fcFitImg(this)"'+(idx===0?'':' loading="lazy"')+' />'
     }).join('');
-    var dots=total>1?entry.images.map(function(_,idx){return '<span class="fc-dot'+(idx===0?' active':'')+'" onclick="event.stopPropagation();fcCarouselGoTo(\''+entry.id+'\','+idx+')"></span>'}).join(''):'';
-    var nav=total>1?'<button class="fc-carousel-nav prev" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',-1)"><i class="fas fa-chevron-left"></i></button><button class="fc-carousel-nav next" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',1)"><i class="fas fa-chevron-right"></i></button><span class="fc-carousel-count">1/'+total+'</span>':'';
-    imgGrid='<div class="feed-card-images"><div class="fc-carousel" data-id="'+entry.id+'" data-total="'+total+'" data-current="0" onclick="openPostDetail(\''+entry.id+'\')"><div class="fc-carousel-inner">'+imgs+'</div>'+nav+'<div class="fc-carousel-dots">'+dots+'</div></div></div>';
+    var dots=total>1?entry.images.map(function(_,idx){return '<span class="fc-dot'+(idx===curIdx?' active':'')+'" onclick="event.stopPropagation();fcCarouselGoTo(\''+entry.id+'\','+idx+')"></span>'}).join(''):'';
+    var nav=total>1?'<button class="fc-carousel-nav prev" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',-1)"><i class="fas fa-chevron-left"></i></button><button class="fc-carousel-nav next" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',1)"><i class="fas fa-chevron-right"></i></button><span class="fc-carousel-count">'+(curIdx+1)+'/'+total+'</span>':'';
+    imgGrid='<div class="feed-card-images"><div class="fc-carousel" data-id="'+entry.id+'" data-total="'+total+'" data-current="'+curIdx+'" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')"><div class="fc-carousel-inner" style="transform:translateX(-'+(curIdx*100)+'%)">'+imgs+'</div>'+nav+'<div class="fc-carousel-dots">'+dots+'</div></div></div>';
   }
 
   var caption=entry.content||'';
-  var captionShort=caption.length>120?caption.substring(0,120)+'...':caption;
+  var captionExpanded=!!_feedCaptionExpanded[entry.id];
+  var captionShort=captionExpanded?caption:(caption.length>120?caption.substring(0,120)+'...':caption);
   var hasMore=caption.length>120;
   var commentCount=entry.comments?entry.comments.reduce(function(s,c){return s+1+(c.replies?c.replies.length:0)},0):0;
 
   return '<div class="feed-card" onclick="openPostDetail(\''+entry.id+'\')">'+
     '<div class="feed-card-header">'+
       '<div class="feed-card-user">'+
-        '<div class="feed-card-avatar"><div class="inner">'+avatar+'</div></div>'+
-        '<div><div class="feed-card-username">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></div><div class="feed-card-time">'+timeDisplay+'</div></div>'+
+        '<div class="feed-card-avatar" style="cursor:pointer;" onclick="event.stopPropagation();viewProfile(\''+authorPin+'\')"><div class="inner">'+avatar+'</div></div>'+
+        '<div><div class="feed-card-username" style="cursor:pointer;" onclick="event.stopPropagation();viewProfile(\''+authorPin+'\')">'+esc(username)+' <i class="fas fa-check-circle verified-badge"></i></div><div class="feed-card-time">'+timeDisplay+'</div></div>'+
       '</div>'+
       (isOwner?'<div class="feed-card-actions"><button class="feed-card-menu-btn" onclick="event.stopPropagation();toggleFeedMenu(\''+entry.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="feed-menu-'+entry.id+'"><button onclick="event.stopPropagation();editPost(\''+entry.id+'\')">Sửa bài</button><button class="danger" onclick="event.stopPropagation();deletePost(\''+entry.id+'\')">Xóa bài</button></div></div>':'')+
     '</div>'+
     imgGrid+
     '<div class="feed-card-content">'+
       '<div class="feed-card-caption"><span id="feed-caption-'+entry.id+'">'+esc(captionShort)+'</span>'+
-        (hasMore?'<div class="feed-card-caption-expand" id="feed-caption-btn-'+entry.id+'" onclick="event.stopPropagation();toggleCaption(\''+entry.id+'\')">Xem thêm</div>':'')+
+        (hasMore?'<div class="feed-card-caption-expand" id="feed-caption-btn-'+entry.id+'" onclick="event.stopPropagation();toggleCaption(\''+entry.id+'\')">'+(captionExpanded?'Thu gọn':'Xem thêm')+'</div>':'')+
       '</div>'+
       (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Thêm bình luận...</div>')+
     '</div>'+
@@ -3595,9 +3953,11 @@ function toggleCaption(id){
   if(btn.textContent==='Thu gọn'){
     el.textContent=full.length>120?full.substring(0,120)+'...':full;
     btn.textContent='Xem thêm';
+    _feedCaptionExpanded[id]=false;
   }else{
     el.textContent=full;
     btn.textContent='Thu gọn';
+    _feedCaptionExpanded[id]=true;
   }
 }
 
@@ -3630,6 +3990,7 @@ function fcCarouselGoTo(entryId,index){
   var carousel=document.querySelector('.fc-carousel[data-id="'+entryId+'"]');
   if(!carousel)return;
   carousel.dataset.current=index;
+  _feedCarouselState[entryId]=index;
   var inner=carousel.querySelector('.fc-carousel-inner');
   var dots=carousel.querySelectorAll('.fc-dot');
   if(!inner)return;
@@ -3721,7 +4082,6 @@ document.addEventListener('click',function(e){
 
 
 var _exploreImages=[];
-var _profileImages=[];
 
 function renderExplore(){
   _exploreImages=[];
@@ -3731,7 +4091,7 @@ function renderExplore(){
   entries.forEach(function(e){
     if(e.images&&e.images.length){
       e.images.forEach(function(img,i){
-        allImages.push({url:img.url||img,entryId:e.id,index:i,date:e.date,title:e.title})
+        allImages.push({url:img.url||img,entryId:e.id,index:i,total:e.images.length,date:e.date,title:e.title})
       })
     }
   });
@@ -3743,7 +4103,7 @@ function renderExplore(){
   }
   _exploreImages=allImages;
   var html=allImages.map(function(img,idx){
-    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" /></div>'
+    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" />'+(img.total>1?'<div class="multi-icon"><i class="fas fa-clone"></i></div>':'')+'</div>'
   }).join('');
   container.innerHTML=html||'<div class="explore-empty"><i class="fas fa-search" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Không tìm thấy ảnh nào</div>';
 }
@@ -3778,10 +4138,10 @@ function renderActivity(){
   var html=acts.slice(0,50).map(function(a){
     var isNew=!seen||a.time>seen;
     var authorName=getDisplayName(a.authorPin)||'Ai đó';
-    var name=authorName.replace(/ [\w💖🌻]+$/g,'');
+    var name=cleanName(authorName);
     var label=a.type==='post'?'đã thêm bài viết mới':a.type==='reply'?'đã trả lời bình luận':'đã bình luận';
     var preview=a.preview?esc(a.preview).substring(0,100):'';
-    return '<div class="activity-item'+(isNew?' activity-new':'')+'" onclick="openPostDetail(\''+a.entryId+'\')">'+
+    return '<div class="activity-item'+(isNew?' activity-new':'')+'" onclick="handleActivityClick(\''+a.entryId+'\',\''+(a.commentId||'')+'\',\''+(a.replyId||'')+'\')">'+
       '<div class="activity-avatar">'+(a.type==='post'?'<i class="fas fa-file-lines"></i>':'<i class="fa-regular fa-comment"></i>')+'</div>'+
       '<div style="flex:1;min-width:0;">'+
         '<div class="activity-text"><strong>'+esc(name)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.75rem;"></i></strong> '+label+'</div>'+
@@ -3800,7 +4160,7 @@ function renderProfile(){
   var entries=(appState.data.entries||[]).slice();
   var userEntries=entries.filter(function(e){return getEffectiveName(e.author)===getEffectiveName(currentUser)});
   var photoCount=0;var commentCount=0;
-  userEntries.forEach(function(e){if(e.images)photoCount+=e.images.length;if(e.comments)commentCount+=e.comments.length});
+  userEntries.forEach(function(e){if(e.images)photoCount+=e.images.length;commentCount+=countComments(e.comments)});
   document.getElementById('profile-post-count').textContent=userEntries.length;
   document.getElementById('profile-photo-count').textContent=photoCount;
   document.getElementById('profile-comment-count').textContent=commentCount;
@@ -3817,12 +4177,12 @@ function renderProfileContent(){
 
   if(appState.profileTab==='posts'){
     container.innerHTML='<div class="threads-list">'+userEntries.map(function(e){
-      var commentCount=e.comments?e.comments.length:0;
+      var commentCount=countComments(e.comments);
       var imgHtml='';
       if(e.images&&e.images.length>0){
         imgHtml='<div class="threads-img"><img src="'+esc(driveThumb(e.images[0].url||e.images[0],600))+'" loading="lazy" /></div>';
       }
-      var uname=getEffectiveName(e.author).replace(/ [\w💖🌻]+$/g,'');
+      var uname=cleanName(getEffectiveName(e.author));
       var authorPin=getPinForUser(e.author);
       var ava=getDisplayAvatar(authorPin);
   var avatar=ava?'<img class="fcard-ava" src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
@@ -3841,13 +4201,12 @@ function renderProfileContent(){
     var allImages=[];
     userEntries.forEach(function(e){
       if(e.images&&e.images.length){
-        e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i,commentCount:e.comments?e.comments.length:0})})
+        e.images.forEach(function(img,i){allImages.push({url:img.url||img,entryId:e.id,index:i,total:e.images.length,commentCount:countComments(e.comments)})})
       }
     });
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
-    _profileImages=allImages;
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
-      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" /><div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
+      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" />'+(img.total>1?'<div class="overlay-multi"><i class="fas fa-clone"></i></div>':'')+'<div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -3882,6 +4241,30 @@ function openPostDetail(entryId){
   overlay.classList.add('open');
 }
 
+function handleActivityClick(entryId, commentId, replyId){
+  openPostDetail(entryId);
+  if(!commentId)return;
+  setTimeout(function(){
+    var target=replyId?document.getElementById('pd-reply-'+commentId+'-'+replyId):document.getElementById('pd-cmt-'+commentId);
+    if(!target)target=document.querySelector('.pd-comment-item[data-id="'+commentId+'"]');
+    if(!target)return;
+    var box=target.closest?target.closest('.pd-comment-item,.pd-reply-item'):null;
+    var anchor=box||target;
+    var scroll=document.getElementById('pd-scroll');
+    if(scroll&&anchor.scrollIntoView)anchor.scrollIntoView({block:'center',behavior:'smooth'});
+    flashPdTarget(anchor);
+  },420);
+}
+function flashPdTarget(el){
+  var box=el.closest?el.closest('.pd-comment-item,.pd-reply-item'):null;
+  var target=box||el;
+  target.classList.remove('pd-highlight');
+  void target.offsetWidth;
+  target.classList.add('pd-highlight');
+  clearTimeout(target._pdFlashTimer);
+  target._pdFlashTimer=setTimeout(function(){target.classList.remove('pd-highlight')},1500);
+}
+
 function closePostDetail(){
   var overlay=document.getElementById('post-overlay');
   pdEntryId=null;
@@ -3909,7 +4292,7 @@ function renderPostDetail(){
 
   
   var avatarHtml=avaUrl?'<img src="'+esc(avaUrl)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
-  var username=effectiveAuthor.replace(/ [\w💖🌻]+$/g,'');
+  var username=cleanName(effectiveAuthor);
   var timeDisplay=timeAgo(entry.createdAt||entry.updatedAt);
   var menuHtml=isOwner?'<div class="pd-author-actions"><button class="pd-menu-btn" onclick="event.stopPropagation();togglePdMenu()"><i class="fas fa-ellipsis-h"></i></button><div class="pd-dropdown" id="pd-dropdown"><button onclick="editFromPostDetail()"><i class="fas fa-pen"></i><span>Sửa bài viết</span></button><button class="danger" onclick="deleteFromPostDetail()"><i class="fas fa-trash-alt"></i><span>Xóa bài viết</span></button></div></div>':'';
   document.getElementById('pd-author').innerHTML=
@@ -3991,16 +4374,46 @@ function updatePdNav(){
 }
 
 var _pdReplyToCommentId = null;
+var _pdReplyToReplyId = null;
 var _pdReplyToName = '';
-function replyToPdComment(commentId, name){
+function pdReplyTargetName(commentId, replyId){
+  var entry=appState.data.entries.find(function(e){return e.id===pdEntryId});
+  if(!entry)return '';
+  var c=(entry.comments||[]).find(function(x){return x.id===commentId});
+  if(!c)return '';
+  if(replyId&&c.replies){
+    var r=c.replies.find(function(x){return x.id===replyId});
+    if(r)return cleanName(getEffectiveName(r.author));
+  }
+  return cleanName(getEffectiveName(c.author));
+}
+function replyToPdComment(commentId){
+  var name=pdReplyTargetName(commentId);
   _pdReplyToCommentId = commentId;
+  _pdReplyToReplyId = null;
   _pdReplyToName = name;
-  document.getElementById('pd-reply-name').textContent = 'Đang trả lời ' + name;
+  pdEditingCommentId=null;pdEditingReply=null;
+  var pdInp=document.getElementById('pd-input');pdInp.classList.remove('edit-mode');
+  document.getElementById('pd-cancel-btn').style.display='none';
+  document.getElementById('pd-reply-name').textContent = name ? 'Đang trả lời ' + name : 'Đang trả lời bình luận';
+  document.getElementById('pd-reply-preview').style.display = 'flex';
+  document.getElementById('pd-input').focus();
+}
+function replyToPdReply(commentId, replyId){
+  var name=pdReplyTargetName(commentId, replyId);
+  _pdReplyToCommentId = commentId;
+  _pdReplyToReplyId = replyId;
+  _pdReplyToName = name;
+  pdEditingCommentId=null;pdEditingReply=null;
+  var pdInp=document.getElementById('pd-input');pdInp.classList.remove('edit-mode');
+  document.getElementById('pd-cancel-btn').style.display='none';
+  document.getElementById('pd-reply-name').textContent = name ? 'Đang trả lời ' + name : 'Đang trả lời bình luận';
   document.getElementById('pd-reply-preview').style.display = 'flex';
   document.getElementById('pd-input').focus();
 }
 function cancelReplyPdComment(){
   _pdReplyToCommentId = null;
+  _pdReplyToReplyId = null;
   _pdReplyToName = '';
   document.getElementById('pd-reply-preview').style.display = 'none';
 }
@@ -4010,7 +4423,7 @@ function renderPdComments(){
   if(!entry){document.getElementById('pd-comments').innerHTML='';return}
   var comments=entry.comments||[];
   var container=document.getElementById('pd-comments');
-  var html='<div class="pd-comments-header"><i class="fa-regular fa-comment"></i> '+(comments.length>0?comments.length+' bình luận':'Bình luận')+'</div>';
+  var html='<div class="pd-comments-header"><i class="fa-regular fa-comment"></i> '+(comments.length>0?countComments(comments)+' bình luận':'Bình luận')+'</div>';
   if(!comments.length){
     html+='<div class="pd-comment-empty">Chưa có bình luận nào</div>';
   }else{
@@ -4022,7 +4435,7 @@ function renderPdComments(){
       var cavatar=cava?'<img src="'+esc(cava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--text-secondary);"></i>';
       var cimgHtml = '';
       if (c.image) cimgHtml = '<div class="comment-img-content"><img src="'+esc(driveThumb(c.image,600))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(c.image)+'\')"></div>';
-      var cname = esc(ceffective.replace(/ [\w💖🌻]+$/g,''));
+      var cname = esc(cleanName(ceffective));
       var repliesHtml = '';
       if (c.replies && c.replies.length) {
         repliesHtml = '<div class="pd-replies">' + c.replies.map(function(r){
@@ -4032,7 +4445,7 @@ function renderPdComments(){
           var ravtar=rava?'<img src="'+esc(rava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas fa-user-circle" style="font-size:1rem;color:var(--text-secondary);"></i>';
           var rimg = r.image ? '<div class="comment-img-content"><img src="'+esc(driveThumb(r.image,600))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(r.image)+'\')"></div>' : '';
           var rIsOwner=getEffectiveName(reff)===getEffectiveName(currentUser);
-          return '<div class="pd-reply-item"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(reff.replace(/ [\w💖🌻]+$/g,''))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editPdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(pdEditingReply&&pdEditingReply.replyId===r.id?' editing':'')+'" id="pd-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+esc(reff.replace(/ [\w💖🌻]+$/g,''))+'\')">Trả lời</button></div></div></div>';
+          return '<div class="pd-reply-item"><div class="pd-comment-avatar pd-reply-avatar">'+ravtar+'</div><div class="pd-comment-body"><div style="display:flex;align-items:center;gap:6px;width:100%;"><div class="pd-comment-user">'+esc(cleanName(reff))+' <i class="fas fa-check-circle verified-badge"></i></div>'+(rIsOwner?'<div class="pd-comment-actions"><button class="pd-comment-menu-btn" onclick="event.stopPropagation();toggleReplyMenu(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-ellipsis-h"></i></button><div class="pd-comment-dropdown" id="reply-dropdown-'+c.id+'-'+r.id+'"><button onclick="editPdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-pen"></i>Sửa</button><button class="danger" onclick="deletePdReply(\''+c.id+'\',\''+r.id+'\')"><i class="fas fa-trash-alt"></i>Xóa</button></div></div>':'')+'</div>'+(r.text?'<div class="pd-comment-text'+(pdEditingReply&&pdEditingReply.replyId===r.id?' editing':'')+'" id="pd-reply-'+c.id+'-'+r.id+'">'+esc(r.text)+'</div>':'')+rimg+'<div class="pd-comment-time">'+timeAgo(r.time)+' <button class="pd-reply-to-btn" onclick="replyToPdReply(\''+c.id+'\',\''+r.id+'\')">Trả lời</button></div></div></div>';
         }).join('') + '</div>';
       }
       return '<div class="pd-comment-item" data-id="'+c.id+'">'+
@@ -4044,7 +4457,7 @@ function renderPdComments(){
           '</div>'+
           (c.text?'<div class="pd-comment-text'+(pdEditingCommentId===c.id?' editing':'')+'" id="pd-cmt-'+c.id+'">'+esc(c.text)+'</div>':'')+
           cimgHtml+
-          '<div class="pd-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\',\''+cname+'\')">Trả lời</button></div>'+
+          '<div class="pd-comment-time">'+timeAgo(c.time)+' <button class="pd-reply-to-btn" onclick="replyToPdComment(\''+c.id+'\')">Trả lời</button></div>'+
           repliesHtml+
         '</div>'+
       '</div>'
@@ -4063,14 +4476,17 @@ function sendPdComment(){
 
   if(_pdReplyToCommentId){
     function doReply(imgUrl){
-      var payload={action:'reply_comment',entryId:pdEntryId,commentId:_pdReplyToCommentId,author:currentUser,text:text};
+      var payload={action:'reply_comment',entryId:pdEntryId,commentId:_pdReplyToCommentId,replyId:'r_'+Date.now()+'_'+Math.random().toString(36).substr(2,4),author:currentUser,text:text};
       if(imgUrl)payload.image=imgUrl;
       sendCommentPayload(payload,function(result){
-        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
-        if(result&&result.comments){if(master)master.comments=result.comments}
-        _pdReplyToCommentId=null;_pdReplyToName='';_pendingPdImage=null;showImgPreview('pd');
-        input.value='';autoResize(input);btn.disabled=false;
-        document.getElementById('pd-reply-preview').style.display='none';
+        if(result){
+          var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+          if(result.comments){if(master)master.comments=result.comments}else applyCommentLocal(payload);
+          _pdReplyToCommentId=null;_pdReplyToReplyId=null;_pdReplyToName='';_pendingPdImage=null;showImgPreview('pd');
+          input.value='';autoResize(input);
+          document.getElementById('pd-reply-preview').style.display='none';
+        }
+        btn.disabled=false;
         renderPdComments();renderFeed();
       });
     }
@@ -4088,11 +4504,14 @@ function sendPdComment(){
       var payload={action:'edit_reply',entryId:pdEntryId,commentId:pdEditingReply.commentId,replyId:pdEditingReply.replyId,text:text};
       if(imgUrl!==undefined)payload.image=imgUrl;
       sendCommentPayload(payload,function(result){
-        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
-        if(result&&result.comments){if(master)master.comments=result.comments}
-        pdEditingReply=null;_pendingPdImage=null;showImgPreview('pd');
-        input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
-        document.getElementById('pd-cancel-btn').style.display='none';
+        if(result){
+          var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+          if(result.comments){if(master)master.comments=result.comments}else applyCommentLocal(payload);
+          pdEditingReply=null;_pendingPdImage=null;showImgPreview('pd');
+          input.value='';input.classList.remove('edit-mode');autoResize(input);
+          document.getElementById('pd-cancel-btn').style.display='none';
+        }
+        btn.disabled=false;
         renderPdComments();renderFeed();
       });
     }
@@ -4116,11 +4535,14 @@ function sendPdComment(){
       var payload={action:'edit_comment',entryId:pdEntryId,commentId:pdEditingCommentId,text:text,author:origAuthor};
       if(imgUrl!==undefined)payload.image=imgUrl;
       sendCommentPayload(payload,function(result){
-        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
-        if(result&&result.comments){if(master)master.comments=result.comments}
-        pdEditingCommentId=null;_pendingPdImage=null;showImgPreview('pd');
-        input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
-        document.getElementById('pd-cancel-btn').style.display='none';
+        if(result){
+          var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+          if(result.comments){if(master)master.comments=result.comments}else applyCommentLocal(payload);
+          pdEditingCommentId=null;_pendingPdImage=null;showImgPreview('pd');
+          input.value='';input.classList.remove('edit-mode');autoResize(input);
+          document.getElementById('pd-cancel-btn').style.display='none';
+        }
+        btn.disabled=false;
         renderPdComments();renderFeed();
       });
     }
@@ -4138,14 +4560,17 @@ function sendPdComment(){
     return;
   }
   function doSend(imgUrl){
-    var payload={action:'add_comment',entryId:pdEntryId,author:currentUser,text:text};
+    var payload={action:'add_comment',entryId:pdEntryId,author:currentUser,text:text,commentId:'c_'+Date.now()+'_'+Math.random().toString(36).substr(2,4)};
     if(imgUrl)payload.image=imgUrl;
     sendCommentPayload(payload,function(result){
-      var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
-      if(result&&result.comments){if(master)master.comments=result.comments}
-      input.value='';input.classList.remove('edit-mode');autoResize(input);btn.disabled=false;
-      document.getElementById('pd-cancel-btn').style.display='none';
-      _pendingPdImage=null;showImgPreview('pd');
+      if(result){
+        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+        if(result.comments){if(master)master.comments=result.comments}else applyCommentLocal(payload);
+        input.value='';input.classList.remove('edit-mode');autoResize(input);
+        document.getElementById('pd-cancel-btn').style.display='none';
+        _pendingPdImage=null;showImgPreview('pd');
+      }
+      btn.disabled=false;
       renderPdComments();renderFeed();
     })
   }
@@ -4167,6 +4592,7 @@ function editPdComment(id){
   var comment=entry.comments.find(function(c){return c.id===id});
   if(!comment||getEffectiveName(comment.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ sửa được bình luận của mình');return}
   pdEditingCommentId=id;
+  cancelReplyPdComment();
   var input=document.getElementById('pd-input');
   input.value=comment.text;
   input.classList.add('edit-mode');
@@ -4201,9 +4627,11 @@ function deletePdComment(id){
     if(!ok)return;
     var payload={action:'delete_comment',entryId:pdEntryId,commentId:id,author:comment.author};
     sendCommentPayload(payload,function(result){
-      var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
-      if(result&&result.comments){if(master)master.comments=result.comments}
-      if(pdEditingCommentId===id){pdEditingCommentId=null;var inp=document.getElementById('pd-input');inp.value='';inp.classList.remove('edit-mode');autoResize(inp)}
+      if(result){
+        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+        if(result.comments){if(master)master.comments=result.comments}else applyCommentLocal(payload);
+        if(pdEditingCommentId===id){pdEditingCommentId=null;var inp=document.getElementById('pd-input');inp.value='';inp.classList.remove('edit-mode');autoResize(inp)}
+      }
       renderPdComments();renderFeed();
     })
   })
@@ -4217,6 +4645,7 @@ function editPdReply(commentId, replyId){
   var reply=comment.replies.find(function(r){return r.id===replyId});
   if(!reply||getEffectiveName(reply.author)!==getEffectiveName(currentUser)){showToast('<i class="fas fa-exclamation-triangle"></i> Bạn chỉ sửa được bình luận của mình');return}
   pdEditingReply={commentId:commentId,replyId:replyId};
+  cancelReplyPdComment();
   var input=document.getElementById('pd-input');
   input.value=reply.text||'';
   input.classList.add('edit-mode');
@@ -4239,9 +4668,11 @@ function deletePdReply(commentId, replyId){
     if(!ok)return;
     var payload={action:'delete_reply',entryId:pdEntryId,commentId:commentId,replyId:replyId};
     sendCommentPayload(payload,function(result){
-      var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
-      if(result&&result.comments){if(master)master.comments=result.comments}
-      if(pdEditingReply&&pdEditingReply.replyId===replyId){pdEditingReply=null;var inp=document.getElementById('pd-input');inp.value='';inp.classList.remove('edit-mode');autoResize(inp);document.getElementById('pd-cancel-btn').style.display='none'}
+      if(result){
+        var master=appState.data.entries.find(function(e){return e.id===pdEntryId});
+        if(result.comments){if(master)master.comments=result.comments}else applyCommentLocal(payload);
+        if(pdEditingReply&&pdEditingReply.replyId===replyId){pdEditingReply=null;var inp=document.getElementById('pd-input');inp.value='';inp.classList.remove('edit-mode');autoResize(inp);document.getElementById('pd-cancel-btn').style.display='none'}
+      }
       renderPdComments();renderFeed();
     })
   })
@@ -4317,16 +4748,6 @@ function deleteFromPostDetail(){
   })
 }
 
-function openProfilePhotoViewer(index){
-  if(!_profileImages||!_profileImages.length)return;
-  appState.photoImages=_profileImages.slice();
-  appState.photoIndex=index||0;
-  var viewer=document.getElementById('photo-viewer');
-  viewer.classList.add('open');document.body.style.overflow='hidden';
-  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
-  updatePhotoViewer();
-  gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out'})
-}
 function openPhotoViewer(entryId,index,allImages){
   if(allImages&&allImages.length){
     appState.photoImages=allImages;
@@ -4478,11 +4899,17 @@ _pvContainer.addEventListener('touchend',function(){if(_pvDragging||_pvSwiping)o
 
 
 var _createUploaded = [];
+var _createUploading = 0;
+var _createOriginalContent = null;
+var _createOriginalImages = [];
+var _createOriginalDate = '';
 function openCreatePage(editId){
   _createUploaded=[];
+  _createUploading=0;
   updateUserUI();
   var page=document.getElementById('create-page');
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
   page.classList.remove('closing');
   page.classList.add('open');
   requestAnimationFrame(function(){
@@ -4492,7 +4919,7 @@ function openCreatePage(editId){
   });
 
   document.getElementById('create-content').value='';
-  document.getElementById('create-date-wrapper').classList.toggle('show',!!editId);
+  document.getElementById('create-date-wrapper').classList.add('show');
   appState.writeImages=[];
   appState.writeEditId=editId||null;
   renderCreatePreview();
@@ -4511,10 +4938,28 @@ function openCreatePage(editId){
   }else{
     document.getElementById('create-date').value=todayStr();
   }
+  _createOriginalContent=document.getElementById('create-content').value;
+  _createOriginalImages=appState.writeImages.map(function(im){return (im&&(im.driveId||im.url))||''}).filter(Boolean);
+  _createOriginalDate=document.getElementById('create-date').value;
   setTimeout(function(){document.getElementById('create-content').focus()},200)
 }
 
-function closeCreatePage(){
+function isCreateDirty(){
+  if(_createOriginalContent===null)return true;
+  if(document.getElementById('create-content').value!==_createOriginalContent)return true;
+  if(document.getElementById('create-date').value!==_createOriginalDate)return true;
+  var cur=appState.writeImages.map(function(im){return (im&&(im.driveId||im.url))||''}).filter(Boolean).sort().join(',');
+  var orig=_createOriginalImages.slice().sort().join(',');
+  return cur!==orig;
+}
+
+function closeCreatePage(force){
+  if(!force&&isCreateDirty()){
+    showConfirm('Đóng bài viết?','Bạn chưa lưu nội dung đang viết. Đóng và bỏ nội dung này?',function(ok){
+      if(ok)closeCreatePage(true);
+    });
+    return;
+  }
   if(_createUploaded&&_createUploaded.length){deleteRemoteImages(_createUploaded);_createUploaded=[]}
   var page=document.getElementById('create-page');
   page.classList.remove('anim-in');
@@ -4524,8 +4969,15 @@ function closeCreatePage(){
       page.classList.remove('open','closing');
       document.documentElement.style.overflow='';
       document.body.style.overflow='';
+      var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
     },200);
   });
+}
+
+function updateCreateSubmitState(){
+  var btn=document.getElementById('create-submit-btn');
+  if(!btn)return;
+  btn.disabled=!!_createUploading;
 }
 
 function handleCreateImages(input){
@@ -4534,6 +4986,8 @@ function handleCreateImages(input){
   var remaining=CONFIG.MAX_IMAGES-appState.writeImages.length;
   if(files.length>remaining){showToast('<i class="fas fa-exclamation-triangle"></i> Chỉ thêm tối đa '+remaining+' ảnh');files=files.slice(0,remaining)}
   var date=document.getElementById('create-date').value||todayStr();
+  _createUploading+=files.length;
+  updateCreateSubmitState();
   files.forEach(function(file){
     var reader=new FileReader();
     reader.onload=function(e){
@@ -4541,12 +4995,16 @@ function handleCreateImages(input){
         uploadImage(base64,file.name,date,function(result){
           if(result&&result.url){
             var rec={url:result.url,driveId:result.driveId||''};
-            if(!document.getElementById('create-page').classList.contains('open')){deleteRemoteImages([rec]);return}
-            _createUploaded.push(rec);
-            appState.writeImages.push(rec);
-            renderCreatePreview()
+            if(!document.getElementById('create-page').classList.contains('open')){deleteRemoteImages([rec])}
+            else{
+              _createUploaded.push(rec);
+              appState.writeImages.push(rec);
+              renderCreatePreview()
+            }
           }
           else{showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh: '+esc(file.name))}
+          _createUploading--;
+          updateCreateSubmitState();
         })
       })
     };
@@ -4597,7 +5055,8 @@ function removeCreateImage(idx){
 
 function submitCreatePost(){
   var content=document.getElementById('create-content').value.trim();
-  if(!content){showToast('<i class="fas fa-exclamation-triangle"></i> Vui lòng nhập nội dung');return}
+  if(!content){showToast('<i class="fas fa-exclamation-triangle"></i> Hãy viết nội dung nhật ký');return}
+  if(_createUploading>0){showToast('<i class="fas fa-spinner fa-spin"></i> Đang tải ảnh, chờ chút...');return}
   var date=document.getElementById('create-date').value;
   if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chọn ngày');return}
   var btn=document.getElementById('create-submit-btn');
@@ -4622,7 +5081,7 @@ function submitCreatePost(){
     delete entry.comments;
   }
   sendPayload({action:'save_entry',entry:entry},null,function(ok){
-    if(ok){_createUploaded=[];closeCreatePage()}
+    if(ok){_createUploaded=[];closeCreatePage(true)}
     else{btn.disabled=false;btn.innerHTML=appState.writeEditId?'Cập nhật':'Đăng'}
   })
 }
@@ -4639,7 +5098,7 @@ function showDataInfo(){
   var entries=appState.data.entries||[];
   var anns=appState.data.anniversaries||[];
   var totalImages=0;entries.forEach(function(e){if(e.images)totalImages+=e.images.length});
-  var totalComments=0;entries.forEach(function(e){if(e.comments)totalComments+=e.comments.length});
+  var totalComments=0;entries.forEach(function(e){totalComments+=countComments(e.comments)});
   document.getElementById('data-info-content').innerHTML=
     '<b><i class="fas fa-chart-bar"></i> Thống kê</b><br>'+
     '• Tổng bài viết: '+entries.length+'<br>'+
@@ -4663,8 +5122,11 @@ function renderAnnList(){
   container.innerHTML=anns.map(function(a){
     var countdown=getCountdown(a,today);
     var cls=countdown.days===0?'today':countdown.days<=30?'soon':'far';
-    var icon='fa-gift';if(a.name.toLowerCase().includes('yêu'))icon='fa-heart';else if(a.name.toLowerCase().includes('cưới'))icon='fa-ring';else if(a.name.toLowerCase().includes('sinh'))icon='fa-cake-candles';
-    return '<div class="ann-item '+cls+'"><div class="ann-icon"><i class="fas '+icon+'"></i></div><div class="ann-info"><div class="ann-name">'+esc(a.name)+'</div><div class="ann-date">'+formatDateVN(a.date)+'</div><div class="ann-countdown '+cls+'">'+countdown.text+'</div></div><div class="ann-actions"><button onclick="editAnn(\''+a.id+'\')"><i class="fas fa-pen"></i></button><button class="del" onclick="deleteAnn(\''+a.id+'\')"><i class="fas fa-trash-alt"></i></button></div></div>'
+    var icon='fa-gift';var anName=(a.name||'').toLowerCase();if(anName.includes('yêu'))icon='fa-heart';else if(anName.includes('cưới'))icon='fa-ring';else if(anName.includes('sinh'))icon='fa-cake-candles';
+    var iconHtml=a.image&&a.image.url
+      ?'<div class="ann-thumb"><img src="'+esc(driveThumb(a.image.url,160))+'" loading="lazy" /></div>'
+      :'<div class="ann-icon"><i class="fas '+icon+'"></i></div>';
+    return '<div class="ann-item '+cls+'">'+iconHtml+'<div class="ann-info"><div class="ann-name">'+esc(a.name)+'</div><div class="ann-date">'+formatDateVN(a.date)+'</div><div class="ann-countdown '+cls+'">'+countdown.text+'</div></div><div class="ann-actions"><button onclick="editAnn(\''+a.id+'\')"><i class="fas fa-pen"></i></button><button class="del" onclick="deleteAnn(\''+a.id+'\')"><i class="fas fa-trash-alt"></i></button></div></div>'
   }).join('')
 }
 function getCountdown(ann,today){
@@ -4676,7 +5138,7 @@ function getCountdown(ann,today){
   return{days:days,text:text}
 }
 function openAnnForm(){
-  document.getElementById('ann-form-date').value='';document.getElementById('ann-form-name').value='';appState.editingAnnId=null;
+  document.getElementById('ann-form-date').value='';document.getElementById('ann-form-name').value='';appState.editingAnnId=null;_annImgData=null;renderAnnImgPreview();
   document.getElementById('ann-form-title').innerHTML='<i class="fas fa-plus-circle" style="margin-right:6px;color:var(--text-secondary);"></i> Thêm kỷ niệm';openModal('modal-ann-form')
 }
 function editAnn(id){
@@ -4685,18 +5147,119 @@ function editAnn(id){
   appState.editingAnnId=id;
   document.getElementById('ann-form-date').value=ann.date;
   document.getElementById('ann-form-name').value=ann.name;
+  _annImgData=(ann.image&&ann.image.url)?{url:ann.image.url,driveId:ann.image.driveId||''}:null;
+  renderAnnImgPreview();
   document.getElementById('ann-form-title').innerHTML='<i class="fas fa-pen" style="margin-right:6px;color:var(--text-secondary);"></i> Sửa kỷ niệm';openModal('modal-ann-form')
+}
+var _annImgData=null;
+function renderAnnImgPreview(){
+  var el=document.getElementById('ann-img-preview');if(!el)return;
+  if(_annImgData){
+    var src=_annImgData.dataUrl||_annImgData.url||'';
+    el.classList.add('has-img');
+    el.innerHTML='<img src="'+esc(src)+'" /><button class="ann-img-remove" onclick="event.stopPropagation();_annImgData=null;renderAnnImgPreview()">✕</button>';
+  }else{
+    el.classList.remove('has-img');
+    el.innerHTML='<i class="fas fa-image" style="font-size:1.3rem;"></i><span>Thêm ảnh</span>';
+  }
+}
+function annClamp(){cropClamp(annCrop,ANN_CROP_SIZE)}
+function applyAnnCropPos(){applyCropPos('ann-crop-img',annCrop,ANN_CROP_SIZE)}
+function openAnnCrop(dataUrl){
+  annCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
+  var img=document.getElementById('ann-crop-img');
+  img.style.left='';img.style.top='';img.style.width='';img.style.height='';
+  img.onload=function(){
+    annCrop.imgW=img.naturalWidth;
+    annCrop.imgH=img.naturalHeight;
+    applyAnnCropPos();
+  };
+  img.src=dataUrl;
+  document.getElementById('ann-zoom-slider').value='1';
+  openModal('modal-ann-crop');
+}
+function handleAnnCropFile(e){
+  var file=e.target.files[0];
+  if(!file)return;
+  if(file.size>10*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh tối đa 10MB');e.target.value='';return}
+  var reader=new FileReader();
+  reader.onload=function(ev){openAnnCrop(ev.target.result)};
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+function saveAnnCrop(){
+  var img=document.getElementById('ann-crop-img');
+  if(!img.src||!annCrop.imgW){showToast('<i class="fas fa-exclamation-triangle"></i> Chưa chọn ảnh');return}
+  var size=400;
+  var c=document.createElement('canvas');
+  c.width=size;c.height=size;
+  var ctx=c.getContext('2d');
+  var zoom=annCrop.zoom,dx=annCrop.dx,dy=annCrop.dy;
+  var cw=ANN_CROP_SIZE,ch=ANN_CROP_SIZE;
+  var scale=Math.max(cw/annCrop.imgW,ch/annCrop.imgH);
+  var dispW=annCrop.imgW*scale*zoom;
+  var dispH=annCrop.imgH*scale*zoom;
+  var l=(cw-dispW)/2+dx;
+  var t=(ch-dispH)/2+dy;
+  ctx.drawImage(img,Math.max(0,-l/(scale*zoom)),Math.max(0,-t/(scale*zoom)),Math.min(annCrop.imgW+l/(scale*zoom),cw/(scale*zoom)),Math.min(annCrop.imgH+t/(scale*zoom),ch/(scale*zoom)),0,0,size,size);
+  _annImgData={dataUrl:c.toDataURL('image/jpeg',0.85)};
+  annCropCleanup();
+  closeModal('modal-ann-crop');
+  renderAnnImgPreview();
+  showToast('<i class="fas fa-crop-alt"></i> Đã cắt ảnh');
+}
+function annCropCleanup(){
+  annCrop={zoom:1,dx:0,dy:0,isDragging:false,startX:0,startY:0,imgW:0,imgH:0};
+  var img=document.getElementById('ann-crop-img');
+  if(img){img.style.left='';img.style.top='';img.style.width='';img.style.height='';img.src=''}
+  var s=document.getElementById('ann-zoom-slider');
+  if(s)s.value='1';
+}
+function handleAnnImage(input){
+  var file=input.files[0];input.value='';
+  if(!file)return;
+  if(file.size>10*1024*1024){showToast('<i class="fas fa-exclamation-triangle"></i> Ảnh tối đa 10MB');return}
+  var reader=new FileReader();
+  reader.onload=function(ev){openAnnCrop(ev.target.result)};
+  reader.readAsDataURL(file);
+}
+function deleteOldAnnDrive(oldImg,newImg){
+  if(!oldImg||!oldImg.driveId)return;
+  var nd=newImg&&newImg.driveId||'';
+  if(nd===oldImg.driveId)return;
+  fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete_image',driveId:oldImg.driveId})}).catch(function(){})
 }
 function saveAnnForm(){
   var date=document.getElementById('ann-form-date').value;
   var name=document.getElementById('ann-form-name').value.trim();
   if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chọn ngày');return}if(!name){showToast('<i class="fas fa-exclamation-triangle"></i> Nhập tên');return}
   closeModal('modal-ann-form');
-  if(appState.editingAnnId){sendPayload({action:'save_anniversary',anniversary:{id:appState.editingAnnId,date:date,name:name}},'<i class="fas fa-save"></i> Đã cập nhật!');return}
-  sendPayload({action:'save_anniversary',anniversary:{id:'ann_'+Date.now(),date:date,name:name}},'<i class="fas fa-save"></i> Đã thêm kỷ niệm!')
+  var id=appState.editingAnnId||('ann_'+Date.now());
+  var oldAnn=(appState.data.anniversaries||[]).find(function(a){return a.id===id});
+  var oldImg=oldAnn&&oldAnn.image;
+  var imgData=_annImgData;
+  function save(image){
+    if(image&&image.url){deleteOldAnnDrive(oldImg,image)}
+    else if(oldImg&&oldImg.driveId){deleteOldAnnDrive(oldImg,null)}
+    sendPayload({action:'save_anniversary',anniversary:{id:id,date:date,name:name,image:image||null}},appState.editingAnnId?'<i class="fas fa-save"></i> Đã cập nhật!':'<i class="fas fa-save"></i> Đã thêm kỷ niệm!')
+  }
+  if(imgData&&imgData.dataUrl){
+    uploadImage(imgData.dataUrl,'ann_'+Date.now()+'.jpg',date,function(result){
+      if(result&&result.url)save({url:result.url,driveId:result.driveId||''});
+      else showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải ảnh, thử lại');
+    });
+    return;
+  }
+  if(imgData&&imgData.url)save({url:imgData.url,driveId:imgData.driveId||''});
+  else save(null)
 }
 function deleteAnn(id){
-  showConfirm('Xóa kỷ niệm?','',function(ok){if(!ok)return;sendPayload({action:'delete_anniversary',id:id},'Đã xóa!')})
+  var ann=(appState.data.anniversaries||[]).find(function(a){return a.id===id});
+  showConfirm('Xóa kỷ niệm?','',function(ok){
+    if(!ok)return;
+    if(ann&&ann.image&&ann.image.driveId){fetch(CONFIG.BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete_image',driveId:ann.image.driveId})}).catch(function(){})}
+    sendPayload({action:'delete_anniversary',id:id},'Đã xóa!')
+  })
 }
 
 
@@ -4726,25 +5289,98 @@ function showLogoutConfirm(){
 
 
 function openModal(id){
+  var el=document.getElementById(id);
+  if(el&&!el.classList.contains('open'))el._lastFocus=document.activeElement;
   document.getElementById(id).classList.add('open');
   document.body.style.overflow='hidden';
   var mc=document.getElementById('main-content');
   if(mc)mc.style.overflow='hidden';
 }
 function closeModal(id){
-  document.getElementById(id).classList.remove('open');
+  var el=document.getElementById(id);
+  el.classList.remove('open');
+  if(el._lastFocus&&el._lastFocus.focus)try{el._lastFocus.focus()}catch(e){}
   document.body.style.overflow='';
   var mc=document.getElementById('main-content');
   if(mc)mc.style.overflow='';
 }
-document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventListener('click',function(e){if(e.target!==el)return;closeModal(el.id);if(el.id==='modal-edit-avatar')avatarCropCleanup()})})
+document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventListener('click',function(e){if(e.target!==el)return;closeModal(el.id);if(el.id==='modal-edit-avatar')avatarCropCleanup();if(el.id==='modal-ann-crop')annCropCleanup()})})
 
-function showConfirm(title,msg,callback){
+function showConfirm(title,msg,callback,okText,cancelText){
   document.getElementById('confirm-title').textContent=title||'Xác nhận';
   document.getElementById('confirm-message').textContent=msg||'Bạn có chắc?';
+  document.getElementById('confirm-ok').textContent=okText||'Đồng ý';
+  document.getElementById('confirm-cancel').textContent=cancelText||'Hủy';
   openModal('modal-confirm');
   document.getElementById('confirm-ok').onclick=function(){closeModal('modal-confirm');if(callback)callback(true)};
   document.getElementById('confirm-cancel').onclick=function(){closeModal('modal-confirm');if(callback)callback(false)}
+}
+
+function updateWriteReminderBanner(){
+  var banner=document.getElementById('write-reminder-banner');
+  if(!banner)return;
+  var now=new Date();
+  if(now.getHours()<22){banner.style.display='none';return}
+  var entries=appState.data.entries||[];
+  var todayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  var wroteToday=false;
+  var last='';
+  entries.forEach(function(e){
+    if(e.createdAt){
+      if(e.createdAt>last)last=e.createdAt;
+      var d=new Date(e.createdAt);
+      if(!isNaN(d)&&(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()))===todayKey)wroteToday=true;
+    }
+  });
+  if(wroteToday){banner.style.display='none';return}
+  var days=999;
+  if(last){
+    var d=new Date(last);
+    if(!isNaN(d)){
+      var a=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+      var b=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+      days=Math.round((b-a)/86400000);
+    }
+  }
+  var text,icon;
+  if(!entries.length){text='Hãy viết nhật ký đầu tiên của hai đứa mình nhé!';icon='fa-pen'}
+  else if(days>=2){text='Đã '+days+' ngày chưa viết bài. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
+  else{text='Hôm nay chưa viết bài. Viết một dòng gì đó nhé!';icon='fa-pen'}
+  banner.style.display='flex';
+  banner.innerHTML='<i class="fas '+icon+' wrb-ic"></i><div class="wrb-text">'+esc(text)+'</div><button class="wrb-btn" onclick="openCreatePage()">Viết ngay</button>';
+}
+
+function setupWriteReminder(){
+  function daysSinceLastWrite(){
+    var entries=appState.data.entries||[];
+    var last='';
+    entries.forEach(function(e){if(e.createdAt&&e.createdAt>last)last=e.createdAt;});
+    if(!last)return 999;
+    var d=new Date(last),now=new Date();
+    var a=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    var b=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    return Math.round((b-a)/86400000);
+  }
+  function tryFire(){
+    var now=new Date();
+    if(now.getHours()<22)return;
+    var todayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+    if(localStorage.getItem('love_remind_last')===todayKey)return;
+    var ls=document.getElementById('lock-screen');
+    if(!(ls&&(ls.style.display==='none'||ls.classList.contains('hiding'))))return;
+    var createPage=document.getElementById('create-page');
+    if(createPage.classList.contains('open'))return;
+    var pd=document.getElementById('post-overlay');
+    if(pd.classList.contains('open'))return;
+    if(document.querySelector('.modal-overlay.open'))return;
+    var days=daysSinceLastWrite();
+    if(days<=0||days>=999)return;
+    localStorage.setItem('love_remind_last',todayKey);
+    var msg=days>=2?'Bạn đã '+days+' ngày chưa viết bài. Viết một nhật ký mới nhé!':'Hôm nay bạn chưa viết bài. Viết một nhật ký mới nhé!';
+    showConfirm('Nhắc nhở viết bài',msg,function(ok){if(ok)openCreatePage()},'Viết ngay','Để sau');
+  }
+  tryFire();
+  setInterval(function(){tryFire();updateWriteReminderBanner()},60000);
 }
 
 
@@ -4754,12 +5390,22 @@ function triggerSync(){showLoadingBar();loadData(function(){hideLoadingBar()})}
 
 
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){if(_editingDmMsgId){cancelEditDm()}else if(_replyingDmMsg){cancelReplyDm()}var dmOverlay=document.getElementById('dm-msg-overlay');if(dmOverlay&&dmOverlay.classList.contains('open'))unfocusDmMessage();return}
-  var createPage=document.getElementById('create-page');
-  if(createPage.classList.contains('open')&&e.key==='Escape')closeCreatePage();
+  if(e.key==='Escape'){
+    var dmOverlay=document.getElementById('dm-msg-overlay');
+    if(dmOverlay&&dmOverlay.classList.contains('open')){unfocusDmMessage();return}
+    if(_editingDmMsgId){cancelEditDm();return}
+    if(_replyingDmMsg){cancelReplyDm();return}
+    var createPage=document.getElementById('create-page');
+    if(createPage.classList.contains('open')){closeCreatePage();return}
+    var pd=document.getElementById('post-overlay');
+    if(pd.classList.contains('open')){closePostDetail();return}
+    var openModals=document.querySelectorAll('.modal-overlay.open');
+    if(openModals.length){closeModal(openModals[openModals.length-1].id);return}
+    return;
+  }
   var pd=document.getElementById('post-overlay');
-  if(pd.classList.contains('open')){
-    if(e.key==='Escape')closePostDetail();
+  var pv=document.getElementById('photo-viewer');
+  if(pd.classList.contains('open')&&!(pv&&pv.classList.contains('open'))){
     if(e.key==='ArrowLeft')pdPrev();
     if(e.key==='ArrowRight')pdNext();
   }
