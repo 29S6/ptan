@@ -295,20 +295,23 @@ html.dark #bottom-nav {
 .ann-highlight-icon { font-size:1.5rem; color:#ed4956; }
 
 
-.feed-posts { max-width:630px; margin:0 auto; padding:12px 0; }
+.feed-posts { max-width:630px; margin:0 auto; padding:0 0 12px; }
 .write-reminder-banner {
-  display:flex; align-items:center; gap:12px;
-  max-width:630px; margin:10px auto 16px; padding:12px 16px;
+  max-width:630px; margin:16px auto 16px; padding:16px;
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
-  font-size:0.82rem; color:var(--text-primary);
+  box-shadow:var(--shadow); transition:box-shadow 0.2s, transform 0.15s;
 }
-.write-reminder-banner .wrb-ic { color:#ed4956; font-size:1.05rem; flex-shrink:0; }
-.write-reminder-banner .wrb-text { flex:1; min-width:0; }
+.write-reminder-banner:hover { box-shadow:var(--shadow); }
+.write-reminder-banner .wrb-content { display:flex; align-items:center; gap:12px; width:100%; }
+.write-reminder-banner .wrb-ic { color:#ed4956; font-size:1.15rem; flex-shrink:0; width:28px; height:28px; display:flex; align-items:center; justify-content:center; }
+.write-reminder-banner .wrb-text { flex:1; min-width:0; font-size:0.88rem; color:var(--text-primary); line-height:1.4; }
 .write-reminder-banner .wrb-btn {
-  flex-shrink:0; border:1px solid rgba(237,73,86,0.4); background:transparent; color:#ed4956;
-  border-radius:20px; padding:7px 16px; font-size:0.78rem; font-weight:600; cursor:pointer; font-family:'Roboto',Arial,sans-serif;
+  flex-shrink:0; background:var(--text-link); color:#fff; border:none;
+  border-radius:20px; padding:8px 20px; font-size:0.8rem; font-weight:600; cursor:pointer;
+  transition:background 0.12s, transform 0.1s;
 }
-.write-reminder-banner .wrb-btn:active { opacity:0.8; }
+.write-reminder-banner .wrb-btn:hover { background:#c2185b; }
+.write-reminder-banner .wrb-btn:active { transform:scale(0.97); }
 .feed-card {
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
   margin-bottom:16px; position:relative;
@@ -335,8 +338,8 @@ html.dark #bottom-nav {
 .fc-carousel { position:relative; width:100%; overflow:hidden; background:var(--input-bg); }
 .fc-carousel-inner { display:flex; width:100%; transition:transform 0.2s cubic-bezier(0.25,0.1,0.25,1); }
 .fc-carousel-img { width:100%; flex-shrink:0; object-fit:cover; aspect-ratio:3/4; cursor:pointer; background:var(--input-bg); }
-.fc-carousel-img.ratio-1x1 { aspect-ratio:1/1; }
-.fc-carousel-img.ratio-4x3 { aspect-ratio:4/3; }
+.fc-carousel-img.ratio-1x1 { aspect-ratio:1/1; object-fit:cover; }
+.fc-carousel-img.ratio-4x3 { aspect-ratio:4/3; object-fit:contain; object-position:center; }
 .fc-carousel-nav {
   position:absolute; top:50%; transform:translateY(-50%); z-index:3;
   background:var(--carousel-nav-bg); border:none; border-radius:50%;
@@ -600,9 +603,9 @@ html.dark #bottom-nav {
 .pd-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
 
 .pd-scroll-images { width:100%; }
-.pd-scroll-images .pd-carousel { height:auto; max-height:50vh; min-height:180px; }
-.pd-scroll-images .pd-carousel-inner { height:auto; align-items:flex-start; }
-.pd-scroll-images .pd-carousel-img { height:auto; max-height:50vh; width:100%; flex-shrink:0; display:block; }
+.pd-scroll-images .pd-carousel { height:auto; max-height:50vh; min-height:180px; overflow:hidden; }
+.pd-scroll-images .pd-carousel-inner { height:auto; display:flex; align-items:center; }
+.pd-scroll-images .pd-carousel-img { max-height:50vh; width:auto; max-width:100%; flex-shrink:0; object-fit:contain; object-position:center; background:#000; }
 #pd-scroll-images:empty { display:none; }
 
 @media (min-width:768px) {
@@ -649,10 +652,12 @@ html.dark #bottom-nav {
   max-height:35vh; flex-shrink:0;
 }
 .pd-images:empty { display:none; }
-.pd-carousel { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.pd-carousel { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; z-index:10; }
 .pd-carousel { overflow:hidden; }
 .pd-carousel-inner { display:flex; width:100%; height:100%; transition:transform 0.2s cubic-bezier(0.25,0.1,0.25,1); }
-.pd-carousel-img { width:100%; height:100%; flex-shrink:0; object-fit:contain; cursor:pointer; max-height:420px; }
+.pd-carousel-img { width:100%; flex-shrink:0; object-fit:contain; object-position:center; cursor:pointer; max-height:420px; background:#000; }
+.pd-carousel-img.ratio-1x1 { aspect-ratio:1/1; }
+.pd-carousel-img.ratio-4x3 { aspect-ratio:4/3; }
 .pd-carousel-nav {
   position:absolute; top:50%; transform:translateY(-50%); z-index:5;
   background:rgba(255,255,255,0.15); -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
@@ -788,7 +793,7 @@ html.dark #bottom-nav {
 .pd-reply-avatar i { font-size:1rem !important; }
 
 @media (min-width:768px) {
-  #post-overlay { background:var(--overlay-bg); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); align-items:center; justify-content:center; transform:none; transition:opacity 0.25s ease; }
+  #post-overlay { background:var(--card-bg); align-items:center; justify-content:center; transform:none; transition:opacity 0.25s ease; }
   #post-overlay.open .pd-modal { transform:translateY(0) scale(1); opacity:1; }
   .pd-modal { background:var(--card-bg); border-radius:var(--radius); max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.15); will-change:transform,opacity; transform:translateY(20px) scale(0.97); opacity:0; transition:transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease; }
   .pd-modal-inner { flex-direction:row; }
@@ -4012,6 +4017,14 @@ function fcFitImg(img){
   if(r>1.2) img.classList.add('ratio-4x3');
   else if(r>0.85) img.classList.add('ratio-1x1');
 }
+function pdFitImg(img){
+  var w=img.naturalWidth,h=img.naturalHeight;
+  if(!w||!h)return;
+  var r=w/h;
+  img.classList.remove('ratio-1x1','ratio-4x3');
+  if(r>1.2) img.classList.add('ratio-4x3');
+  else if(r>0.85) img.classList.add('ratio-1x1');
+}
 
 
 (function(){
@@ -4103,7 +4116,7 @@ function renderExplore(){
   }
   _exploreImages=allImages;
   var html=allImages.map(function(img,idx){
-    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" />'+(img.total>1?'<div class="multi-icon"><i class="fas fa-clone"></i></div>':'')+'</div>'
+    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" onload="fcFitImg(this)" style="width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;" />'+(img.total>1?'<div class="multi-icon"><i class="fas fa-clone"></i></div>':'')+'</div>'
   }).join('');
   container.innerHTML=html||'<div class="explore-empty"><i class="fas fa-search" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Không tìm thấy ảnh nào</div>';
 }
@@ -4206,7 +4219,7 @@ function renderProfileContent(){
     });
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
-      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" />'+(img.total>1?'<div class="overlay-multi"><i class="fas fa-clone"></i></div>':'')+'<div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
+      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" onload="fcFitImg(this)" style="width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;" />'+(img.total>1?'<div class="overlay-multi"><i class="fas fa-clone"></i></div>':'')+'<div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -4322,28 +4335,26 @@ var pdCarouselIndex = 0;
 
 function renderPdImages(entry){
   pdCarouselIndex = 0;
+  document.getElementById('pd-images').innerHTML='';
+  document.getElementById('pd-scroll-images').innerHTML='';
   if(!entry.images||!entry.images.length){
-    document.getElementById('pd-images').innerHTML='';
-    document.getElementById('pd-scroll-images').innerHTML='';
     return
   }
   var total=entry.images.length;
   var isMobile=window.innerWidth<768;
   var imgs=entry.images.map(function(img,idx){
-    return '<img class="pd-carousel-img" src="'+esc(driveThumb(img.url||img,1200))+'" data-index="'+idx+'"'+(idx===0?'':' loading="lazy"')+' />'
+    return '<img class="pd-carousel-img" src="'+esc(driveThumb(img.url||img,1200))+'" data-index="'+idx+'" onload="pdFitImg(this)" style="width:100%;flex-shrink:0;"'+(idx===0?'':' loading="lazy"')+' />'
   }).join('');
   var dots=entry.images.map(function(_,idx){return '<span class="pd-carousel-dot'+(idx===0?' active':'')+'" onclick="pdGoTo('+idx+')"></span>'}).join('');
-  var carouselHtml='<div class="pd-carousel" data-entry="'+entry.id+'" data-current="0"><div class="pd-carousel-inner" id="pd-carousel-inner">'+imgs+'</div>';
+  var carouselHtml='<div class="pd-carousel" data-entry="'+entry.id+'" data-current="0"><div class="pd-carousel-inner" id="pd-carousel-inner" style="transform:translateX(0);">'+imgs+'</div>';
   if(total>1){
     carouselHtml+='<button class="pd-carousel-nav prev" onclick="pdPrev()" id="pd-prev"><i class="fas fa-chevron-left"></i></button><button class="pd-carousel-nav next" onclick="pdNext()" id="pd-next"><i class="fas fa-chevron-right"></i></button><span class="pd-carousel-count" id="pd-count">1/'+total+'</span><div class="pd-carousel-dots">'+dots+'</div>';
   }
   carouselHtml+='</div>';
   if(isMobile){
-    document.getElementById('pd-images').innerHTML='';
     document.getElementById('pd-scroll-images').innerHTML=carouselHtml;
   }else{
     document.getElementById('pd-images').innerHTML=carouselHtml;
-    document.getElementById('pd-scroll-images').innerHTML='';
   }
   updatePdNav();
 }
@@ -5319,9 +5330,8 @@ function showConfirm(title,msg,callback,okText,cancelText){
 function updateWriteReminderBanner(){
   var banner=document.getElementById('write-reminder-banner');
   if(!banner)return;
-  var now=new Date();
-  if(now.getHours()<22){banner.style.display='none';return}
   var entries=appState.data.entries||[];
+  var now=new Date();
   var todayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
   var wroteToday=false;
   var last='';
@@ -5343,11 +5353,12 @@ function updateWriteReminderBanner(){
     }
   }
   var text,icon;
-  if(!entries.length){text='Hãy viết nhật ký đầu tiên của hai đứa mình nhé!';icon='fa-pen'}
-  else if(days>=2){text='Đã '+days+' ngày chưa viết bài. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
-  else{text='Hôm nay chưa viết bài. Viết một dòng gì đó nhé!';icon='fa-pen'}
-  banner.style.display='flex';
-  banner.innerHTML='<i class="fas '+icon+' wrb-ic"></i><div class="wrb-text">'+esc(text)+'</div><button class="wrb-btn" onclick="openCreatePage()">Viết ngay</button>';
+  var username=cleanName(currentUser)||'Em';
+  if(!entries.length){text=username+' ơi, hãy viết nhật ký đầu tiên của hai đứa mình nhé!';icon='fa-pen'}
+  else if(days>=2){text=username+' ơi, đã '+days+' ngày chưa viết bài. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
+  else{text=username+' ơi, hôm nay chưa viết bài. Viết một dòng gì đó nhé!';icon='fa-pen'}
+  banner.style.display='block';
+  banner.innerHTML='<div class="wrb-content"><i class="fas '+icon+' wrb-ic"></i><div class="wrb-text">'+esc(text)+'</div><button class="wrb-btn" onclick="openCreatePage()">Viết ngay</button></div>';
 }
 
 function setupWriteReminder(){
@@ -5362,25 +5373,12 @@ function setupWriteReminder(){
     return Math.round((b-a)/86400000);
   }
   function tryFire(){
-    var now=new Date();
-    if(now.getHours()<22)return;
-    var todayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
-    if(localStorage.getItem('love_remind_last')===todayKey)return;
-    var ls=document.getElementById('lock-screen');
-    if(!(ls&&(ls.style.display==='none'||ls.classList.contains('hiding'))))return;
-    var createPage=document.getElementById('create-page');
-    if(createPage.classList.contains('open'))return;
-    var pd=document.getElementById('post-overlay');
-    if(pd.classList.contains('open'))return;
-    if(document.querySelector('.modal-overlay.open'))return;
     var days=daysSinceLastWrite();
     if(days<=0||days>=999)return;
-    localStorage.setItem('love_remind_last',todayKey);
-    var msg=days>=2?'Bạn đã '+days+' ngày chưa viết bài. Viết một nhật ký mới nhé!':'Hôm nay bạn chưa viết bài. Viết một nhật ký mới nhé!';
-    showConfirm('Nhắc nhở viết bài',msg,function(ok){if(ok)openCreatePage()},'Viết ngay','Để sau');
+    updateWriteReminderBanner();
   }
   tryFire();
-  setInterval(function(){tryFire();updateWriteReminderBanner()},60000);
+  setInterval(tryFire,60000);
 }
 
 
