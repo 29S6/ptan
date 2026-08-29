@@ -375,6 +375,22 @@ html.dark #bottom-nav {
 .feed-card-caption-expand { color:var(--text-secondary); font-size:0.85rem; cursor:pointer; margin-top:2px; }
 .feed-card-comments { font-size:0.88rem; color:var(--text-secondary); margin-top:4px; cursor:pointer; }
 .feed-card-comments:hover { color:var(--text-primary); }
+
+/* ------------- PC (màn hình lớn): chỉnh tỉ lệ feed hợp lý, không ảnh hưởng mobile ------------- */
+@media (min-width:1024px) {
+  .stories-container { padding:16px 24px; margin-bottom:10px; }
+  /* Khoảng cách giữa khu story và các bài trên timeline */
+  .feed-posts { max-width:780px; padding:24px 24px 40px; }
+  .feed-card { margin-bottom:28px; border-radius:14px; }
+  .feed-card-header { padding:16px 22px 12px; }
+  .feed-card-avatar { width:44px; height:44px; }
+  .feed-card-avatar .inner { font-size:1.1rem; }
+  .feed-card-content { padding:6px 22px 14px; }
+  .feed-card-caption { font-size:1.05rem; line-height:1.7; }
+  .feed-card-comments { font-size:0.95rem; margin-top:6px; }
+  .feed-card-timestamp { font-size:0.75rem; }
+  .feed-card-caption-expand { font-size:0.9rem; }
+}
 .feed-card-timestamp { font-size:0.7rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.03em; margin-top:6px; }
 
 
@@ -5440,51 +5456,60 @@ function showConfirm(title,msg,callback,okText,cancelText){
 function updateWriteReminderBanner(){
   var banner=document.getElementById('write-reminder-banner');
   if(!banner)return;
-  var entries=appState.data.entries||[];
   var now=new Date();
+  // Chỉ nhắc từ 22h trở đi; ban ngày dù chưa viết vẫn ẩn để không làm phiền.
+  if(now.getHours()<22){banner.style.display='none';return;}
+  var entries=appState.data.entries||[];
   var todayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  // Căn cứ theo ngày BÀI VIẾT (entry.date), không phải createdAt
   var wroteToday=false;
-  var last='';
+  var lastDate='';
   entries.forEach(function(e){
-    if(e.createdAt){
-      if(e.createdAt>last)last=e.createdAt;
-      var d=new Date(e.createdAt);
-      if(!isNaN(d)&&(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()))===todayKey)wroteToday=true;
-    }
+    var dStr=e.date||(e.createdAt?String(e.createdAt).slice(0,10):'');
+    if(!dStr)return;
+    if(dStr>lastDate)lastDate=dStr;
+    if(dStr===todayKey)wroteToday=true;
   });
   if(wroteToday){banner.style.display='none';return}
+
   var days=999;
-  if(last){
-    var d=new Date(last);
-    if(!isNaN(d)){
-      var a=new Date(d.getFullYear(),d.getMonth(),d.getDate());
-      var b=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-      days=Math.round((b-a)/86400000);
+  if(lastDate){
+    var parts=lastDate.split('-');
+    if(parts.length===3){
+      var dd=new Date(Number(parts[0]),Number(parts[1])-1,Number(parts[2]));
+      if(!isNaN(dd)){
+        var a=new Date(dd.getFullYear(),dd.getMonth(),dd.getDate());
+        var b=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+        days=Math.round((b-a)/86400000);
+      }
     }
   }
+
   var text,icon;
   var username=cleanName(currentUser)||'Em';
   if(!entries.length){text=username+' ơi, hãy viết nhật ký đầu tiên của hai đứa mình nhé!';icon='fa-pen'}
-  else if(days>=2){text=username+' ơi, đã '+days+' ngày chưa viết bài. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
-  else{text=username+' ơi, hôm nay chưa viết bài. Viết một dòng gì đó nhé!';icon='fa-pen'}
+  else if(days>=2){text=username+' ơi, đã '+days+' ngày (tính theo ngày nhật ký) chưa có bài viết mới. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
+  else{text=username+' ơi, hôm nay chưa có bài viết nào. Viết một dòng gì đó nhé!';icon='fa-pen'}
   banner.style.display='block';
   banner.innerHTML='<div class="wrb-content"><i class="fas '+icon+' wrb-ic"></i><div class="wrb-text">'+esc(text)+'</div><button class="wrb-btn" onclick="openCreatePage()">Viết ngay</button></div>';
 }
 
 function setupWriteReminder(){
-  function daysSinceLastWrite(){
-    var entries=appState.data.entries||[];
-    var last='';
-    entries.forEach(function(e){if(e.createdAt&&e.createdAt>last)last=e.createdAt;});
-    if(!last)return 999;
-    var d=new Date(last),now=new Date();
-    var a=new Date(d.getFullYear(),d.getMonth(),d.getDate());
-    var b=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-    return Math.round((b-a)/86400000);
+  var lastFiredToday=false;
+  function hasTodayEntry(){
+    var todayKey=todayStr();
+    return (appState.data.entries||[]).some(function(e){
+      return (e.date||String(e.createdAt||'').slice(0,10))===todayKey;
+    });
   }
   function tryFire(){
-    var days=daysSinceLastWrite();
-    if(days<=0||days>=999)return;
+    // Chỉ nhắc khi KHÔNG có bài của hôm nay; nếu vừa viết xong hôm nay thì ẩn banner luôn.
+    if(hasTodayEntry()){
+      lastFiredToday=true;
+      var banner=document.getElementById('write-reminder-banner');
+      if(banner){banner.style.display='none';}
+      return;
+    }
     updateWriteReminderBanner();
   }
   tryFire();
@@ -5621,6 +5646,8 @@ function handleCreateAI(mode){
   }
   var prompt = (AI_PROMPTS[mode] || AI_PROMPTS['polish'])(input);
   var model = document.getElementById('create-ai-model') ? document.getElementById('create-ai-model').value : AI_MODEL;
+  // Cân bằng tốc độ & độ dài: giữ mức cao cho chế độ cần văn dài, hạ xuống cho chế độ văn ngắn.
+  var maxTok = (mode==='continue'||mode==='expand') ? 2048 : ((mode==='rewrite') ? 1400 : 700);
   aiSetBusy(true);
   fetch(CONFIG.BACKEND_URL, {
     method: 'POST',
@@ -5629,8 +5656,8 @@ function handleCreateAI(mode){
       action: 'ai_generate',
       prompt: prompt,
       model: model,
-      temperature: (mode === 'continue' || mode === 'expand') ? 0.75 : 0.3,
-      maxOutputTokens: 2048
+      temperature: (mode === 'continue' || mode === 'expand') ? 0.75 : (mode === 'gen' ? 0.8 : 0.3),
+      maxOutputTokens: maxTok
     })
   }).then(function(r){ return r.json(); })
     .then(function(res){
