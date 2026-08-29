@@ -371,7 +371,7 @@ html.dark #bottom-nav {
 
 
 .feed-card-content { padding:2px 14px 12px; }
-.feed-card-caption { font-size:0.95rem; line-height:1.5; overflow-wrap:break-word; word-break:break-word; }
+.feed-card-caption { font-size:0.95rem; line-height:1.5; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
 .feed-card-caption-expand { color:var(--text-secondary); font-size:0.85rem; cursor:pointer; margin-top:2px; }
 .feed-card-comments { font-size:0.88rem; color:var(--text-secondary); margin-top:4px; cursor:pointer; }
 .feed-card-comments:hover { color:var(--text-primary); }
@@ -582,6 +582,76 @@ html.dark #bottom-nav {
 }
 .create-date-wrapper { display:none; }
 .create-date-wrapper.show { display:flex; }
+
+/* ===== AI Hỗ trợ viết nhật ký (trong modal viết bài) ===== */
+.ai-panel {
+  margin-top: 14px; padding: 12px;
+  border: 1px dashed var(--border); border-radius: var(--radius);
+  background: var(--card-bg);
+}
+.ai-panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.ai-panel-title {
+  font-size:0.8rem; font-weight:700; color:var(--text-secondary);
+  display:flex; align-items:center; gap:6px;
+}
+.ai-panel-title i { color:var(--text-link); }
+.ai-model-box { display:flex; align-items:center; gap:6px; }
+.ai-model-select {
+  background:var(--input-bg); border:1px solid var(--border); border-radius:8px;
+  padding:5px 8px; font-size:0.7rem; font-weight:600; color:var(--text-primary);
+  outline:none; cursor:pointer; font-family:inherit; max-width:195px;
+  transition:border 0.12s;
+}
+.ai-model-select:focus { border-color:var(--text-link); }
+.ai-usage {
+  margin-bottom:10px; padding:8px 10px;
+  background:var(--input-bg); border:1px solid var(--border-light); border-radius:8px;
+  display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;
+}
+.ai-usage-info { display:flex; align-items:center; gap:6px; color:var(--text-primary); font-weight:600; font-size:0.75rem; }
+.ai-usage-info i { color:var(--text-link); }
+.ai-usage-info b { color:var(--text-link); font-weight:700; font-size:0.8rem; }
+.ai-usage-reset { font-size:0.68rem; color:var(--text-secondary); }
+.ai-actions { display:flex; flex-wrap:wrap; gap:6px; }
+.ai-btn {
+  flex:1 1 auto; min-width:96px;
+  display:inline-flex; align-items:center; justify-content:center; gap:5px;
+  padding:7px 10px; font-size:0.72rem; font-weight:600;
+  background:var(--card-bg); color:var(--text-primary);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  cursor:pointer; transition:all 0.12s;
+}
+.ai-btn:hover { background:var(--hover-bg); border-color:var(--text-link); color:var(--text-link); }
+.ai-btn:disabled { opacity:0.5; cursor:not-allowed; }
+.ai-btn-gen {
+  background:linear-gradient(135deg,#f43f5e,#f59e0b); color:#fff; border:none;
+}
+.ai-btn-gen:hover { background:linear-gradient(135deg,#e11d48,#f59e0b); color:#fff; border:none; }
+.ai-status {
+  margin-top:10px; font-size:0.78rem; color:var(--text-secondary);
+  display:none; align-items:center; gap:6px;
+}
+.ai-error { margin-top:8px; font-size:0.75rem; color:var(--text-danger); display:none; }
+.ai-result { margin-top:10px; display:none; }
+.ai-result-text {
+  margin-top:8px; background:var(--input-bg); border:1px solid var(--border-light);
+  border-radius:var(--radius-sm); padding:12px 14px;
+  font-size:0.88rem; line-height:1.7; white-space:pre-wrap; word-break:break-word;
+  color:var(--text-primary); max-height:300px; overflow-y:auto;
+}
+.ai-result-actions { display:flex; gap:6px; margin-top:8px; }
+.ai-result-actions button {
+  flex:1; display:inline-flex; align-items:center; justify-content:center; gap:5px;
+  padding:8px 10px; font-size:0.72rem; font-weight:600; border-radius:var(--radius-sm);
+  border:none; cursor:pointer; transition:0.12s;
+}
+.ai-use-btn { background:var(--text-link); color:#fff; }
+.ai-use-btn:hover { filter:brightness(0.95); }
+.ai-copy-btn { background:var(--hover-bg); color:var(--text-primary); }
+.ai-copy-btn:hover { background:var(--border); }
+@media (max-width:420px){
+  .ai-btn { min-width:44%; }
+}
 
 
 #post-overlay {
@@ -1331,6 +1401,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
     
     <div class="page" id="page-direct">
+      <!-- Inbox: danh sách cuộc trò chuyện (kiểu Instagram) -->
       <div class="dm-header">
         <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
         <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <div class="dm-header-info"><span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div></div>
@@ -1449,6 +1520,42 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
         </div>
         <textarea class="create-content-input" id="create-content" placeholder="Viết gì đó..." autofocus></textarea>
         <div class="create-image-preview" id="create-image-preview"></div>
+        <div class="ai-panel">
+          <div class="ai-panel-head">
+            <span class="ai-panel-title"><i class="fas fa-magic"></i> AI Hỗ trợ viết nhật ký</span>
+            <div class="ai-model-box">
+              <select id="create-ai-model" class="ai-model-select">
+                <option value="gemini-3.6-flash" selected>Gemini 3.6 Flash (Khuyên dùng)</option>
+                <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite (Siêu nhanh)</option>
+                <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite</option>
+              </select>
+            </div>
+          </div>
+          <div class="ai-usage" id="create-ai-usage">
+            <span class="ai-usage-info"><i class="fas fa-chart-simple"></i> Đã dùng hôm nay: <b id="create-ai-daily-count">0</b> / 500 lượt miễn phí</span>
+            <span class="ai-usage-reset">Reset lúc 00:00</span>
+          </div>
+          <div class="ai-actions" id="create-ai-actions">
+            <button class="ai-btn" onclick="handleCreateAI('continue')"><i class="fas fa-fast-forward"></i> Viết tiếp</button>
+            <button class="ai-btn" onclick="handleCreateAI('polish')"><i class="fas fa-wand-magic-sparkles"></i> Chau chuốt</button>
+            <button class="ai-btn" onclick="handleCreateAI('rewrite')"><i class="fas fa-file-pen"></i> Viết lại</button>
+            <button class="ai-btn" onclick="handleCreateAI('shorten')"><i class="fas fa-compress"></i> Cô đọng</button>
+            <button class="ai-btn" onclick="handleCreateAI('expand')"><i class="fas fa-expand"></i> Mở rộng</button>
+            <button class="ai-btn" onclick="handleCreateAI('grammar')"><i class="fas fa-spell-check"></i> Sửa chính tả</button>
+            <button class="ai-btn ai-btn-gen" onclick="handleCreateAI('gen')"><i class="fas fa-fire"></i> GenZ</button>
+          </div>
+          <div class="ai-status" id="create-ai-status"><i class="fas fa-spinner fa-spin"></i> AI đang suy nghĩ và viết...</div>
+          <div class="ai-error" id="create-ai-error"></div>
+          <div class="ai-result" id="create-ai-result">
+            <span class="ai-panel-title"><i class="fas fa-bookmark"></i> Bản hoàn thiện</span>
+            <div class="ai-result-text" id="create-ai-result-text"></div>
+            <div class="ai-result-actions">
+              <button class="ai-use-btn" onclick="aiUseResult()"><i class="fas fa-arrow-up-from-bracket"></i> Dùng vào ô viết</button>
+              <button class="ai-copy-btn" onclick="aiCopyResult()"><i class="fas fa-copy"></i> Sao chép</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="create-toolbar">
         <button class="create-tool-btn" onclick="document.getElementById('create-file-input').click()" title="Thêm ảnh">
@@ -3927,8 +4034,10 @@ function buildFeedCard(entry){
 
   var caption=entry.content||'';
   var captionExpanded=!!_feedCaptionExpanded[entry.id];
-  var captionShort=captionExpanded?caption:(caption.length>120?caption.substring(0,120)+'...':caption);
-  var hasMore=caption.length>120;
+  // Chỉ rút gọn caption ở feed khi bài CÓ ảnh; bài không ảnh hiển thị đầy đủ.
+  var shouldTruncate=hasImages && (caption.length>120);
+  var captionShort=(shouldTruncate && !captionExpanded)?caption.substring(0,120)+'...':caption;
+  var hasMore=shouldTruncate;
   var commentCount=entry.comments?entry.comments.reduce(function(s,c){return s+1+(c.replies?c.replies.length:0)},0):0;
 
   return '<div class="feed-card" onclick="openPostDetail(\''+entry.id+'\')">'+
@@ -4952,6 +5061,7 @@ function openCreatePage(editId){
   _createOriginalContent=document.getElementById('create-content').value;
   _createOriginalImages=appState.writeImages.map(function(im){return (im&&(im.driveId||im.url))||''}).filter(Boolean);
   _createOriginalDate=document.getElementById('create-date').value;
+  if(typeof aiResetOnOpen==='function') aiResetOnOpen();
   setTimeout(function(){document.getElementById('create-content').focus()},200)
 }
 
@@ -5420,6 +5530,146 @@ document.addEventListener('click',function(e){
   }
 })
 
+
+/* ===== AI Hỗ trợ viết nhật ký (trong modal viết bài) ===== */
+// API key Gemini được giấu trong Apps Script (backend) — không nằm trong HTML.
+var AI_MODEL = 'gemini-3.6-flash';
+var _aiResult = '';
+var AI_DAILY_LIMIT = 500;
+
+var AI_PROMPTS = {
+  'continue': function(input){
+    return 'Bạn là người viết nội dung giàu cảm xúc.\nVăn bản gốc của người dùng:\n"' + input + '"\n\nNhiệm vụ: Hãy VIẾT TIẾP đoạn văn bản trên sao cho liền mạch, tự nhiên và giàu cảm xúc. QUAN TRỌNG: Hãy trả về TOÀN BỘ VĂN BẢN HOÀN CHỈNH gồm cả phần nội dung gốc của người dùng ở đầu và phần bạn viết nối tiếp phía sau. Không đưa ra lời chào hay giải thích mào đầu.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc. Dùng từ ngữ miền Bắc (vd: "nhỉ", "ấy", "kiểu", "chứ nhỉ", "thế nhé", "vui quá", "ngon"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay", "đc hông".';
+  },
+  'polish': function(input){
+    return 'Bạn là biên tập viên ngôn ngữ chuyên nghiệp.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy chau chuốt lại toàn bộ câu từ, làm mượt các đoạn diễn đạt lủng củng, tăng tính truyền cảm và mượt mà nhưng giữ trọn vẹn toàn bộ ý chính của tác giả. Chỉ trả về kết quả đã chau chuốt.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé", "vui quá"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
+  },
+  'rewrite': function(input){
+    return 'Bạn là chuyên gia sáng tạo nội dung.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy viết lại toàn bộ nội dung thành một bài hoàn chỉnh, mạch lạc với kết cấu mở đầu, diễn giải và kết thúc tự nhiên, giàu cảm xúc. Chỉ trả về bài viết đã hoàn thiện.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé", "vui quá"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
+  },
+  'shorten': function(input){
+    return 'Bạn là biên tập viên tóm tắt.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy cô đọng và rút gọn văn bản trên thành phiên bản ngắn gọn, súc tích nhất có thể, loại bỏ các từ ngữ dư thừa nhưng không làm mất ý chính. Chỉ trả về kết quả cô đọng.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
+  },
+  'expand': function(input){
+    return 'Bạn là người mở rộng ý tưởng.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy đào sâu, bổ sung thêm các chi tiết, cảm xúc và bối cảnh sống động để bài viết trở nên phong phú, đầy đặn hơn. Chỉ trả về bài viết đã mở rộng.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé", "vui quá"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
+  },
+  'grammar': function(input){
+    return 'Bạn là trợ lý kiểm tra văn bản.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Sửa toàn bộ lỗi chính tả, lỗi dùng từ, ngữ pháp và cách ngắt dấu câu. Giữ nguyên tối đa phong cách diễn đạt gốc. Chỉ trả về văn bản đã sửa.\n\nNGỮ ĐIỆU: Chuẩn hoá theo giọng người Hà Nội, miền Bắc. CHUYỂN các từ ngữ miền Nam (vd: "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay", "hồi nãy"...) sang cách nói miền Bắc (vd: "nhé/nhỉ", "đấy", "lúc nãy", "vui quá"...).';
+  },
+  'gen': function(input){
+    return 'Bạn là một bạn trẻ Gen Z Hà Nội, miền Bắc, đang viết nhật ký kể chuyện theo phong cách rất tự nhiên, cuốn hút.\nVăn bản gốc của người dùng:\n"' + input + '"\n\nNHIỆM VỤ: Viết lại / viết tiếp đoạn nhật ký theo đúng phong cách Gen Z, GIỌNG CHUẨN NGƯỜI HÀ NỘI.\n\nQUY TẮC NGỮ ĐIỆU:\n- Viết theo giọng Bắc, dùng từ ngữ miền Bắc (vd: "nhé/nhỉ", "ấy", "đấy", "kiểu này", "thế nhé", "lúc nãy", "vui quá"...).\n- TUYỆT ĐỐI KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "hem", "đó hem", "dạ", "quá trời", "bữa nay", "wấ"..\n\nQUY TẮC TIẾNG VIỆT (toàn Việt Nam, thuần Việt):\n- CHỈ dùng từ lóng, từ phổ biến của Việt Nam (vd: "ơi", "mèn ơi", "wơ", "xịn sò", "dữ thần", "ngao ngán", "ngầu lòi", "mê đứt đuôi", "đỉnh cao", "hết xảy", "phát rồ"...). KHÔNG dùng từ nước ngoài như chill, try hard, real, fr, ngl, best.\n- Có thể viết tắt kiểu nhắn tin Việt: "nhé", "nhỉ", "í", "v", "h", ":v", "^^".\n- Dùng icon/emoji hợp: 😆🔥✨🥹💖.\n\nTRÌNH BÀY:\n- Cân đối đoạn ngắn 2-3 câu mỗi đoạn để dễ đọc, KHÔNG xuống dòng bừa bãi, không đứt câu giữa chừng.\n- Câu từ ngắn gọn, tự nhiên, có nhịp điệu, kể chuyện mượt, khiến người đọc thấy thích thú và muốn đọc tiếp.\n- Vẫn giữ trọn ý nghĩa câu chuyện gốc.\n\nCHỈ trả về bài viết đã viết lại, không giải thích thêm.';
+  }
+};
+
+function aiSetBusy(busy){
+  document.querySelectorAll('.ai-btn').forEach(function(b){ b.disabled = busy; });
+  document.getElementById('create-ai-status').style.display = busy ? 'flex' : 'none';
+  if(busy){ var err=document.getElementById('create-ai-error'); err.style.display='none'; }
+}
+
+function aiShowError(msg){
+  var err=document.getElementById('create-ai-error');
+  err.textContent = 'Lỗi: ' + msg;
+  err.style.display = 'block';
+}
+
+function aiShowResult(text){
+  _aiResult = text;
+  document.getElementById('create-ai-result-text').textContent = text;
+  document.getElementById('create-ai-result').style.display = 'block';
+  document.getElementById('create-ai-error').style.display = 'none';
+}
+
+function aiHideResult(){
+  document.getElementById('create-ai-result').style.display = 'none';
+}
+
+function aiResetOnOpen(){
+  _aiResult = '';
+  document.getElementById('create-ai-result').style.display = 'none';
+  document.getElementById('create-ai-error').style.display = 'none';
+  document.getElementById('create-ai-status').style.display = 'none';
+  updateCreateAIDailyUsage();
+}
+
+function getCreateAIUsageKey(){
+  var t = new Date();
+  return 'create_ai_usage_' + t.getFullYear() + '_' + (t.getMonth()+1) + '_' + t.getDate();
+}
+function getCreateAIDailyUsage(){
+  return parseInt(localStorage.getItem(getCreateAIUsageKey()) || '0', 10);
+}
+function incrementCreateAIDailyUsage(){
+  var n = getCreateAIDailyUsage() + 1;
+  localStorage.setItem(getCreateAIUsageKey(), n);
+  updateCreateAIDailyUsage();
+}
+function updateCreateAIDailyUsage(){
+  var el = document.getElementById('create-ai-daily-count');
+  if(el) el.textContent = getCreateAIDailyUsage();
+}
+
+function handleCreateAI(mode){
+  var input = document.getElementById('create-content').value.trim();
+  if(!input){
+    showToast('<i class="fas fa-exclamation-triangle"></i> Viết một chút nội dung vào ô viết trước nhé');
+    return;
+  }
+  if(getCreateAIDailyUsage() >= AI_DAILY_LIMIT){
+    showToast('<i class="fas fa-exclamation-triangle"></i> Đã hết ' + AI_DAILY_LIMIT + ' lượt miễn phí hôm nay. Hẹn gặp lại sau 00:00');
+    return;
+  }
+  var prompt = (AI_PROMPTS[mode] || AI_PROMPTS['polish'])(input);
+  var model = document.getElementById('create-ai-model') ? document.getElementById('create-ai-model').value : AI_MODEL;
+  aiSetBusy(true);
+  fetch(CONFIG.BACKEND_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({
+      action: 'ai_generate',
+      prompt: prompt,
+      model: model,
+      temperature: (mode === 'continue' || mode === 'expand') ? 0.75 : 0.3,
+      maxOutputTokens: 2048
+    })
+  }).then(function(r){ return r.json(); })
+    .then(function(res){
+      var t = (res && res.ok && res.text) ? res.text.trim() : '';
+      if(t){ aiShowResult(t); incrementCreateAIDailyUsage(); }
+      else { aiShowError((res && res.error) || 'Không nhận được nội dung từ AI. Vui lòng thử lại.'); }
+    }).catch(function(e){
+      aiShowError(e.message);
+    }).finally(function(){
+      aiSetBusy(false);
+    });
+}
+
+function aiUseResult(){
+  if(!_aiResult) return;
+  document.getElementById('create-content').value = _aiResult;
+  document.getElementById('create-content').focus();
+  aiHideResult();
+}
+
+function aiCopyResult(){
+  if(!_aiResult) return;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(_aiResult).then(function(){
+      showToast('<i class="fas fa-check"></i> Đã sao chép');
+    }).catch(function(){ aiFallbackCopy(_aiResult); });
+  } else {
+    aiFallbackCopy(_aiResult);
+  }
+}
+
+function aiFallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); showToast('<i class="fas fa-check"></i> Đã sao chép'); }
+  catch(e){ showToast('<i class="fas fa-exclamation-triangle"></i> Không thể sao chép tự động'); }
+  document.body.removeChild(ta);
+}
 
 </script>
 </body>
