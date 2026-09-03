@@ -599,76 +599,66 @@ html.dark #bottom-nav {
 .create-date-wrapper { display:none; }
 .create-date-wrapper.show { display:flex; }
 
-/* ===== AI Hỗ trợ viết nhật ký (trong modal viết bài) ===== */
-.ai-panel {
-  margin-top: 14px; padding: 12px;
-  border: 1px dashed var(--border); border-radius: var(--radius);
-  background: var(--card-bg);
+/* ===== Popup chat góc màn hình (chỉ PC >=1024px) ===== */
+@media (min-width:1024px){
+  .dm-chat-fab{position:fixed;right:18px;bottom:18px;z-index:1500;width:54px;height:54px;border-radius:50%;border:none;background:var(--text-link);color:#fff;font-size:1.15rem;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;transition:transform .15s}
+  .dm-chat-fab:hover{transform:scale(1.07)}
+  html.dark .dm-chat-fab{background:#c2185b}
+  .dm-chat-fab .fab-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:var(--text-danger);color:#fff;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid var(--bg)}
+  .dm-chat-fab.bounce{animation:dmFabBounce .5s}
+  @keyframes dmFabBounce{0%,100%{transform:scale(1)}40%{transform:scale(1.18)}}
+  .dm-chat-popup{position:fixed;right:18px;bottom:0;z-index:1600;width:340px;height:460px;background:var(--card-bg);border:1px solid var(--border-light);border-bottom:none;border-radius:12px 12px 0 0;box-shadow:0 8px 40px rgba(0,0,0,0.18);display:flex;flex-direction:column;overflow:hidden;transform:translateY(110%);opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .2s}
+  .dm-chat-popup.open{transform:translateY(0);opacity:1;pointer-events:auto}
+  .dm-chat-popup.minimized{height:54px}
+  .dcp-header{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid var(--border-light);cursor:pointer;flex-shrink:0;background:var(--card-bg)}
+  .dcp-user{display:flex;align-items:center;gap:8px;min-width:0}
+  .dcp-avatar{width:34px;height:34px;border-radius:50%;background:var(--story-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.85rem;position:relative;flex-shrink:0;overflow:visible}
+  .dcp-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+  .dcp-avatar .dcp-online{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#4cd964;border:2px solid var(--card-bg)}
+  .dcp-avatar .dcp-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--text-danger);color:#fff;font-size:0.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--card-bg);z-index:2}
+  .dcp-avatar .dcp-badge.pop{animation:dmFabBounce .5s}
+  .dcp-info{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+  .dcp-name{font-size:0.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-primary)}
+  .dcp-status{font-size:0.66rem;color:var(--text-secondary)}
+  .dcp-actions{display:flex;gap:2px}
+  .dcp-actions button{width:28px;height:28px;border:none;background:none;border-radius:6px;color:var(--text-secondary);cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center}
+  .dcp-actions button:hover{background:var(--hover-bg);color:var(--text-primary)}
+  .dcp-body{flex:1;overflow-y:auto;padding:10px 12px 6px;display:flex;flex-direction:column;gap:4px}
+  .dcp-date{text-align:center;font-size:0.65rem;color:var(--text-secondary);margin:4px 0 6px}
+  .dcp-msg-wrap{display:flex;align-items:flex-end;gap:4px;max-width:100%}
+  .dcp-msg-wrap.sent{flex-direction:row-reverse;align-self:flex-end}
+  .dcp-msg-wrap.received{align-self:flex-start}
+  .dcp-msg{max-width:80%;padding:7px 12px;border-radius:16px;font-size:0.85rem;line-height:1.45;word-break:break-word;white-space:pre-wrap}
+  .dcp-msg.received{background:#f0f2f5;color:var(--text-primary);border-bottom-left-radius:4px}
+  .dcp-msg.sent{background:var(--text-link);color:#fff;border-bottom-right-radius:4px}
+  html.dark .dcp-msg.received{background:#3a3b3c;color:#e4e6eb}
+  html.dark .dcp-msg.sent{background:#c2185b}
+  .dcp-msg.deleted{background:var(--hover-bg);color:var(--text-secondary);font-style:italic}
+  .dcp-m-time{font-size:0.56rem;opacity:0.6;margin-top:2px;text-align:right}
+  .dcp-msg.sent .dcp-m-time{color:rgba(255,255,255,0.85)}
+  .dcp-ticks{font-size:0.6rem;opacity:0.85;margin-left:4px}
+  .dcp-menu-btn{width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;font-size:0.55rem;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .12s;flex-shrink:0}
+  .dcp-msg-wrap:hover .dcp-menu-btn{opacity:1}
+  .dcp-menu-btn:hover{background:var(--hover-bg);color:var(--text-primary)}
+  .dcp-empty{text-align:center;padding:40px 16px;color:var(--text-secondary);font-size:0.8rem}
+  .dcp-empty i{font-size:2rem;margin-bottom:10px;display:block;color:var(--border-light)}
+  .dcp-footer{display:flex;gap:8px;padding:8px 10px;border-top:1px solid var(--border-light);flex-shrink:0}
+  .dcp-footer textarea{flex:1;border:1px solid var(--border-light);background:var(--input-bg);color:var(--text-primary);border-radius:18px;padding:8px 12px;font-size:0.85rem;resize:none;outline:none;max-height:90px;min-height:36px;font-family:inherit;line-height:1.4}
+  .dcp-footer textarea:focus{border-color:var(--text-secondary)}
+  .dcp-send{width:36px;height:36px;border-radius:50%;border:none;background:var(--text-link);color:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .dcp-send:hover{background:#c2185b}
+  .dcp-editing{display:none;align-items:center;gap:6px;padding:4px 12px;font-size:0.68rem;color:var(--text-secondary);border-top:1px dashed var(--border-light);flex-shrink:0}
+  .dcp-editing button{margin-left:auto;border:none;background:none;color:var(--text-secondary);cursor:pointer;font-size:0.7rem;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .dcp-editing button:hover{background:var(--hover-bg);color:var(--text-primary)}
+  .cpw-menu{position:absolute;z-index:2000;min-width:140px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-dropdown);padding:4px;display:none;flex-direction:column}
+  .cpw-menu.open{display:flex}
+  .dcp-body{position:relative;}
+  .cpw-menu button{display:flex;align-items:center;gap:8px;padding:8px 10px;border:none;background:none;border-radius:6px;font-size:0.78rem;color:var(--text-primary);cursor:pointer;text-align:left;font-family:inherit}
+  .cpw-menu button:hover{background:var(--hover-bg)}
+  .cpw-menu button.danger{color:var(--text-danger)}
+  .dcp-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--toast-bg);color:var(--toast-text);padding:8px 16px;border-radius:8px;font-size:0.78rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:3000;white-space:nowrap}
+  .dcp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 }
-.ai-panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-.ai-panel-title {
-  font-size:0.8rem; font-weight:700; color:var(--text-secondary);
-  display:flex; align-items:center; gap:6px;
-}
-.ai-panel-title i { color:var(--text-link); }
-.ai-model-box { display:flex; align-items:center; gap:6px; }
-.ai-model-select {
-  background:var(--input-bg); border:1px solid var(--border); border-radius:8px;
-  padding:5px 8px; font-size:0.7rem; font-weight:600; color:var(--text-primary);
-  outline:none; cursor:pointer; font-family:inherit; max-width:195px;
-  transition:border 0.12s;
-}
-.ai-model-select:focus { border-color:var(--text-link); }
-.ai-usage {
-  margin-bottom:10px; padding:8px 10px;
-  background:var(--input-bg); border:1px solid var(--border-light); border-radius:8px;
-  display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;
-}
-.ai-usage-info { display:flex; align-items:center; gap:6px; color:var(--text-primary); font-weight:600; font-size:0.75rem; }
-.ai-usage-info i { color:var(--text-link); }
-.ai-usage-info b { color:var(--text-link); font-weight:700; font-size:0.8rem; }
-.ai-usage-reset { font-size:0.68rem; color:var(--text-secondary); }
-.ai-actions { display:flex; flex-wrap:wrap; gap:6px; }
-.ai-btn {
-  flex:1 1 auto; min-width:96px;
-  display:inline-flex; align-items:center; justify-content:center; gap:5px;
-  padding:7px 10px; font-size:0.72rem; font-weight:600;
-  background:var(--card-bg); color:var(--text-primary);
-  border:1px solid var(--border); border-radius:var(--radius-sm);
-  cursor:pointer; transition:all 0.12s;
-}
-.ai-btn:hover { background:var(--hover-bg); border-color:var(--text-link); color:var(--text-link); }
-.ai-btn:disabled { opacity:0.5; cursor:not-allowed; }
-.ai-btn-gen {
-  background:linear-gradient(135deg,#f43f5e,#f59e0b); color:#fff; border:none;
-}
-.ai-btn-gen:hover { background:linear-gradient(135deg,#e11d48,#f59e0b); color:#fff; border:none; }
-.ai-status {
-  margin-top:10px; font-size:0.78rem; color:var(--text-secondary);
-  display:none; align-items:center; gap:6px;
-}
-.ai-error { margin-top:8px; font-size:0.75rem; color:var(--text-danger); display:none; }
-.ai-result { margin-top:10px; display:none; }
-.ai-result-text {
-  margin-top:8px; background:var(--input-bg); border:1px solid var(--border-light);
-  border-radius:var(--radius-sm); padding:12px 14px;
-  font-size:0.88rem; line-height:1.7; white-space:pre-wrap; word-break:break-word;
-  color:var(--text-primary); max-height:300px; overflow-y:auto;
-}
-.ai-result-actions { display:flex; gap:6px; margin-top:8px; }
-.ai-result-actions button {
-  flex:1; display:inline-flex; align-items:center; justify-content:center; gap:5px;
-  padding:8px 10px; font-size:0.72rem; font-weight:600; border-radius:var(--radius-sm);
-  border:none; cursor:pointer; transition:0.12s;
-}
-.ai-use-btn { background:var(--text-link); color:#fff; }
-.ai-use-btn:hover { filter:brightness(0.95); }
-.ai-copy-btn { background:var(--hover-bg); color:var(--text-primary); }
-.ai-copy-btn:hover { background:var(--border); }
-@media (max-width:420px){
-  .ai-btn { min-width:44%; }
-}
-
 
 #post-overlay {
   position:fixed; inset:0; z-index:2000;
@@ -1383,7 +1373,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <div class="sidebar-item" onclick="openCreatePage()">
         <i class="fas fa-square-plus"></i><span class="label">Tạo bài viết</span>
       </div>
-      <div class="sidebar-item" data-page="direct" onclick="switchPage('direct')">
+      <div class="sidebar-item" data-page="direct" onclick="dmSidebarClick()">
         <i class="fab fa-facebook-messenger"></i><span class="label">Tin nhắn</span><span class="dm-sidebar-badge" id="dm-sidebar-badge" style="display:none;">0</span>
       </div>
       <div class="sidebar-item" data-page="activity" onclick="switchPage('activity')">
@@ -1536,42 +1526,6 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
         </div>
         <textarea class="create-content-input" id="create-content" placeholder="Viết gì đó..." autofocus></textarea>
         <div class="create-image-preview" id="create-image-preview"></div>
-        <div class="ai-panel">
-          <div class="ai-panel-head">
-            <span class="ai-panel-title"><i class="fas fa-magic"></i> AI Hỗ trợ viết nhật ký</span>
-            <div class="ai-model-box">
-              <select id="create-ai-model" class="ai-model-select">
-                <option value="gemini-3.6-flash" selected>Gemini 3.6 Flash (Khuyên dùng)</option>
-                <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite (Siêu nhanh)</option>
-                <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-                <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite</option>
-              </select>
-            </div>
-          </div>
-          <div class="ai-usage" id="create-ai-usage">
-            <span class="ai-usage-info"><i class="fas fa-chart-simple"></i> Đã dùng hôm nay: <b id="create-ai-daily-count">0</b> / 500 lượt miễn phí</span>
-            <span class="ai-usage-reset">Reset lúc 00:00</span>
-          </div>
-          <div class="ai-actions" id="create-ai-actions">
-            <button class="ai-btn" onclick="handleCreateAI('continue')"><i class="fas fa-fast-forward"></i> Viết tiếp</button>
-            <button class="ai-btn" onclick="handleCreateAI('polish')"><i class="fas fa-wand-magic-sparkles"></i> Chau chuốt</button>
-            <button class="ai-btn" onclick="handleCreateAI('rewrite')"><i class="fas fa-file-pen"></i> Viết lại</button>
-            <button class="ai-btn" onclick="handleCreateAI('shorten')"><i class="fas fa-compress"></i> Cô đọng</button>
-            <button class="ai-btn" onclick="handleCreateAI('expand')"><i class="fas fa-expand"></i> Mở rộng</button>
-            <button class="ai-btn" onclick="handleCreateAI('grammar')"><i class="fas fa-spell-check"></i> Sửa chính tả</button>
-            <button class="ai-btn ai-btn-gen" onclick="handleCreateAI('gen')"><i class="fas fa-fire"></i> GenZ</button>
-          </div>
-          <div class="ai-status" id="create-ai-status"><i class="fas fa-spinner fa-spin"></i> AI đang suy nghĩ và viết...</div>
-          <div class="ai-error" id="create-ai-error"></div>
-          <div class="ai-result" id="create-ai-result">
-            <span class="ai-panel-title"><i class="fas fa-bookmark"></i> Bản hoàn thiện</span>
-            <div class="ai-result-text" id="create-ai-result-text"></div>
-            <div class="ai-result-actions">
-              <button class="ai-use-btn" onclick="aiUseResult()"><i class="fas fa-arrow-up-from-bracket"></i> Dùng vào ô viết</button>
-              <button class="ai-copy-btn" onclick="aiCopyResult()"><i class="fas fa-copy"></i> Sao chép</button>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="create-toolbar">
         <button class="create-tool-btn" onclick="document.getElementById('create-file-input').click()" title="Thêm ảnh">
@@ -1626,6 +1580,38 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 </div>
 
 
+
+<div id="dm-chat-fab" class="dm-chat-fab" style="display:none" onclick="openDmPopup()" title="Mở tin nhắn">
+  <i class="fab fa-facebook-messenger"></i>
+  <span class="fab-badge" id="dcp-fab-badge" style="display:none">0</span>
+</div>
+
+<div id="dm-chat-popup" class="dm-chat-popup">
+  <div class="dcp-header" onclick="toggleDmPopupHeader()">
+    <div class="dcp-user">
+      <div class="dcp-avatar" id="dcp-avatar"><i class="fas fa-user"></i><span class="dcp-online"></span><span class="dcp-badge" id="dcp-badge" style="display:none">0</span></div>
+      <div class="dcp-info">
+        <span class="dcp-name" id="dcp-name">Người ấy</span>
+        <span class="dcp-status" id="dcp-status">Đang hoạt động</span>
+      </div>
+    </div>
+    <div class="dcp-actions">
+      <button title="Mở trang tin nhắn đầy đủ" onclick="event.stopPropagation();closeDmPopup();switchPage('direct')"><i class="fas fa-expand"></i></button>
+      <button title="Thu nhỏ" onclick="event.stopPropagation();minimizeDmPopup()"><i class="fas fa-minus"></i></button>
+      <button title="Đóng" onclick="event.stopPropagation();closeDmPopup()"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+  <div class="dcp-body" id="dcp-messages"></div>
+  <div class="dcp-editing" id="dcp-editing" style="display:none">
+    <i class="fas fa-pen"></i><span>Đang sửa tin nhắn</span>
+    <button onclick="dmPopupCancelEdit()" title="Hủy sửa"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="dcp-footer">
+    <textarea id="dcp-input" rows="1" placeholder="Nhắn tin..." oninput="dmPopupAutoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmPopupMsg()}"></textarea>
+    <button class="dcp-send" onclick="sendDmPopupMsg()" title="Gửi"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+<div id="dcp-toast" class="dcp-toast"></div>
 
 <div id="photo-viewer">
   <div class="pv-top">
@@ -3097,6 +3083,7 @@ function updateDmBadge() {
   var badge2 = document.getElementById('dm-nav-badge');
   if (badge1) { badge1.textContent = count; badge1.style.display = count > 0 ? 'flex' : 'none'; }
   if (badge2) { badge2.textContent = count; badge2.style.display = count > 0 ? 'flex' : 'none'; }
+  if (typeof updateDmPopupBadge === 'function') updateDmPopupBadge();
 }
 
 function markDmSeen() {
@@ -3733,6 +3720,10 @@ function setupDmListener() {
         renderDmMessages();
         markDmSeen();
       }
+      if (dmPopupIsOpen()) {
+        renderDmPopup();
+        markDmSeen();
+      }
       _prevDmCount = dmMessagesCache.length;
       updateDmBadge();
     }, function(err) {
@@ -3759,6 +3750,19 @@ function setupDmListener() {
 
 
 var partnerPresenceUnsub = null;
+var _partnerOnline = false;
+var _partnerLastSeenIso = '';
+
+function updateDmPopupPresence(){
+  var st=document.getElementById('dcp-status');
+  if(st){
+    st.innerHTML = _partnerOnline
+      ? '<span class="online-dot"></span> Đang hoạt động'
+      : '<span class="offline-dot"></span> '+formatLastSeen(_partnerLastSeenIso);
+  }
+  var dot=document.querySelector('#dcp-avatar .dcp-online');
+  if(dot) dot.style.display = _partnerOnline ? 'block' : 'none';
+}
 
 function setupPresence() {
   if (!appState.currentUid || !appState.currentPin) {
@@ -3812,9 +3816,12 @@ function setupPartnerPresenceListener() {
           if (age < 70000) isOnline = true;
         }
       });
+      _partnerOnline = isOnline;
+      _partnerLastSeenIso = lastSeenIso;
       el.innerHTML = isOnline
         ? '<span class="online-dot"></span> Đang hoạt động'
         : '<span class="offline-dot"></span> '+formatLastSeen(lastSeenIso);
+      updateDmPopupPresence();
     }, function(err) {
       console.warn('Presence listener err:', err);
     });
@@ -3857,6 +3864,16 @@ function switchPage(page){
   target.classList.add('active');
   document.querySelectorAll('.sidebar-item[data-page]').forEach(function(i){i.classList.toggle('active',i.dataset.page===page)});
   document.querySelectorAll('.nav-item[data-page]').forEach(function(i){i.classList.toggle('active',i.dataset.page===page)});
+  // Khi vào trang DM full: ẩn FAB popup (tránh cục tròn hiện chồng lên trang DM)
+  if(page==='direct'&&window.innerWidth>=1024){
+    var fab=document.getElementById('dm-chat-fab');
+    if(fab)fab.style.display='none';
+    var pop=document.getElementById('dm-chat-popup');
+    if(pop)pop.classList.remove('open','minimized');
+  } else if(page!=='direct'&&window.innerWidth>=1024){
+    var fab2=document.getElementById('dm-chat-fab');
+    if(fab2)fab2.style.display='flex';
+  }
   if(page==='feed')renderFeed();
   else if(page==='direct'){_dmShouldScroll=true;renderDmMessages();markDmSeen();setTimeout(function(){var inp=document.getElementById('dm-input');if(inp)inp.focus()},200)}
   else if(page==='explore')renderExplore();
@@ -5077,7 +5094,6 @@ function openCreatePage(editId){
   _createOriginalContent=document.getElementById('create-content').value;
   _createOriginalImages=appState.writeImages.map(function(im){return (im&&(im.driveId||im.url))||''}).filter(Boolean);
   _createOriginalDate=document.getElementById('create-date').value;
-  if(typeof aiResetOnOpen==='function') aiResetOnOpen();
   setTimeout(function(){document.getElementById('create-content').focus()},200)
 }
 
@@ -5488,7 +5504,7 @@ function updateWriteReminderBanner(){
   var text,icon;
   var username=cleanName(currentUser)||'Em';
   if(!entries.length){text=username+' ơi, hãy viết nhật ký đầu tiên của hai đứa mình nhé!';icon='fa-pen'}
-  else if(days>=2){text=username+' ơi, đã '+days+' ngày (tính theo ngày nhật ký) chưa có bài viết mới. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
+  else if(days>=2){text=username+' ơi, đã '+days+' ngày chưa viết bài. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
   else{text=username+' ơi, hôm nay chưa có bài viết nào. Viết một dòng gì đó nhé!';icon='fa-pen'}
   banner.style.display='block';
   banner.innerHTML='<div class="wrb-content"><i class="fas '+icon+' wrb-ic"></i><div class="wrb-text">'+esc(text)+'</div><button class="wrb-btn" onclick="openCreatePage()">Viết ngay</button></div>';
@@ -5555,148 +5571,284 @@ document.addEventListener('click',function(e){
   }
 })
 
-
-/* ===== AI Hỗ trợ viết nhật ký (trong modal viết bài) ===== */
-// API key Gemini được giấu trong Apps Script (backend) — không nằm trong HTML.
-var AI_MODEL = 'gemini-3.6-flash';
-var _aiResult = '';
-var AI_DAILY_LIMIT = 500;
-
-var AI_PROMPTS = {
-  'continue': function(input){
-    return 'Bạn là người viết nội dung giàu cảm xúc.\nVăn bản gốc của người dùng:\n"' + input + '"\n\nNhiệm vụ: Hãy VIẾT TIẾP đoạn văn bản trên sao cho liền mạch, tự nhiên và giàu cảm xúc. QUAN TRỌNG: Hãy trả về TOÀN BỘ VĂN BẢN HOÀN CHỈNH gồm cả phần nội dung gốc của người dùng ở đầu và phần bạn viết nối tiếp phía sau. Không đưa ra lời chào hay giải thích mào đầu.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc. Dùng từ ngữ miền Bắc (vd: "nhỉ", "ấy", "kiểu", "chứ nhỉ", "thế nhé", "vui quá", "ngon"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay", "đc hông".';
-  },
-  'polish': function(input){
-    return 'Bạn là biên tập viên ngôn ngữ chuyên nghiệp.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy chau chuốt lại toàn bộ câu từ, làm mượt các đoạn diễn đạt lủng củng, tăng tính truyền cảm và mượt mà nhưng giữ trọn vẹn toàn bộ ý chính của tác giả. Chỉ trả về kết quả đã chau chuốt.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé", "vui quá"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
-  },
-  'rewrite': function(input){
-    return 'Bạn là chuyên gia sáng tạo nội dung.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy viết lại toàn bộ nội dung thành một bài hoàn chỉnh, mạch lạc với kết cấu mở đầu, diễn giải và kết thúc tự nhiên, giàu cảm xúc. Chỉ trả về bài viết đã hoàn thiện.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé", "vui quá"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
-  },
-  'shorten': function(input){
-    return 'Bạn là biên tập viên tóm tắt.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy cô đọng và rút gọn văn bản trên thành phiên bản ngắn gọn, súc tích nhất có thể, loại bỏ các từ ngữ dư thừa nhưng không làm mất ý chính. Chỉ trả về kết quả cô đọng.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
-  },
-  'expand': function(input){
-    return 'Bạn là người mở rộng ý tưởng.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Hãy đào sâu, bổ sung thêm các chi tiết, cảm xúc và bối cảnh sống động để bài viết trở nên phong phú, đầy đặn hơn. Chỉ trả về bài viết đã mở rộng.\n\nNGỮ ĐIỆU: Viết theo giọng chuẩn người Hà Nội, miền Bắc (vd: "nhỉ", "ấy", "chứ nhỉ", "thế nhé", "vui quá"...). KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay".';
-  },
-  'grammar': function(input){
-    return 'Bạn là trợ lý kiểm tra văn bản.\nVăn bản gốc:\n"' + input + '"\n\nNhiệm vụ: Sửa toàn bộ lỗi chính tả, lỗi dùng từ, ngữ pháp và cách ngắt dấu câu. Giữ nguyên tối đa phong cách diễn đạt gốc. Chỉ trả về văn bản đã sửa.\n\nNGỮ ĐIỆU: Chuẩn hoá theo giọng người Hà Nội, miền Bắc. CHUYỂN các từ ngữ miền Nam (vd: "nè", "hén", "đó hem", "mà hem", "dạ", "quá trời", "bữa nay", "hồi nãy"...) sang cách nói miền Bắc (vd: "nhé/nhỉ", "đấy", "lúc nãy", "vui quá"...).';
-  },
-  'gen': function(input){
-    return 'Bạn là một bạn trẻ Gen Z Hà Nội, miền Bắc, đang viết nhật ký kể chuyện theo phong cách rất tự nhiên, cuốn hút.\nVăn bản gốc của người dùng:\n"' + input + '"\n\nNHIỆM VỤ: Viết lại / viết tiếp đoạn nhật ký theo đúng phong cách Gen Z, GIỌNG CHUẨN NGƯỜI HÀ NỘI.\n\nQUY TẮC NGỮ ĐIỆU:\n- Viết theo giọng Bắc, dùng từ ngữ miền Bắc (vd: "nhé/nhỉ", "ấy", "đấy", "kiểu này", "thế nhé", "lúc nãy", "vui quá"...).\n- TUYỆT ĐỐI KHÔNG dùng từ ngữ giọng miền Nam như "nè", "hén", "hem", "đó hem", "dạ", "quá trời", "bữa nay", "wấ"..\n\nQUY TẮC TIẾNG VIỆT (toàn Việt Nam, thuần Việt):\n- CHỈ dùng từ lóng, từ phổ biến của Việt Nam (vd: "ơi", "mèn ơi", "wơ", "xịn sò", "dữ thần", "ngao ngán", "ngầu lòi", "mê đứt đuôi", "đỉnh cao", "hết xảy", "phát rồ"...). KHÔNG dùng từ nước ngoài như chill, try hard, real, fr, ngl, best.\n- Có thể viết tắt kiểu nhắn tin Việt: "nhé", "nhỉ", "í", "v", "h", ":v", "^^".\n- Dùng icon/emoji hợp: 😆🔥✨🥹💖.\n\nTRÌNH BÀY:\n- Cân đối đoạn ngắn 2-3 câu mỗi đoạn để dễ đọc, KHÔNG xuống dòng bừa bãi, không đứt câu giữa chừng.\n- Câu từ ngắn gọn, tự nhiên, có nhịp điệu, kể chuyện mượt, khiến người đọc thấy thích thú và muốn đọc tiếp.\n- Vẫn giữ trọn ý nghĩa câu chuyện gốc.\n\nCHỈ trả về bài viết đã viết lại, không giải thích thêm.';
-  }
-};
-
-function aiSetBusy(busy){
-  document.querySelectorAll('.ai-btn').forEach(function(b){ b.disabled = busy; });
-  document.getElementById('create-ai-status').style.display = busy ? 'flex' : 'none';
-  if(busy){ var err=document.getElementById('create-ai-error'); err.style.display='none'; }
-}
-
-function aiShowError(msg){
-  var err=document.getElementById('create-ai-error');
-  err.textContent = 'Lỗi: ' + msg;
-  err.style.display = 'block';
-}
-
-function aiShowResult(text){
-  _aiResult = text;
-  document.getElementById('create-ai-result-text').textContent = text;
-  document.getElementById('create-ai-result').style.display = 'block';
-  document.getElementById('create-ai-error').style.display = 'none';
-}
-
-function aiHideResult(){
-  document.getElementById('create-ai-result').style.display = 'none';
-}
-
-function aiResetOnOpen(){
-  _aiResult = '';
-  document.getElementById('create-ai-result').style.display = 'none';
-  document.getElementById('create-ai-error').style.display = 'none';
-  document.getElementById('create-ai-status').style.display = 'none';
-  updateCreateAIDailyUsage();
-}
-
-function getCreateAIUsageKey(){
-  var t = new Date();
-  return 'create_ai_usage_' + t.getFullYear() + '_' + (t.getMonth()+1) + '_' + t.getDate();
-}
-function getCreateAIDailyUsage(){
-  return parseInt(localStorage.getItem(getCreateAIUsageKey()) || '0', 10);
-}
-function incrementCreateAIDailyUsage(){
-  var n = getCreateAIDailyUsage() + 1;
-  localStorage.setItem(getCreateAIUsageKey(), n);
-  updateCreateAIDailyUsage();
-}
-function updateCreateAIDailyUsage(){
-  var el = document.getElementById('create-ai-daily-count');
-  if(el) el.textContent = getCreateAIDailyUsage();
-}
-
-function handleCreateAI(mode){
-  var input = document.getElementById('create-content').value.trim();
-  if(!input){
-    showToast('<i class="fas fa-exclamation-triangle"></i> Viết một chút nội dung vào ô viết trước nhé');
-    return;
-  }
-  if(getCreateAIDailyUsage() >= AI_DAILY_LIMIT){
-    showToast('<i class="fas fa-exclamation-triangle"></i> Đã hết ' + AI_DAILY_LIMIT + ' lượt miễn phí hôm nay. Hẹn gặp lại sau 00:00');
-    return;
-  }
-  var prompt = (AI_PROMPTS[mode] || AI_PROMPTS['polish'])(input);
-  var model = document.getElementById('create-ai-model') ? document.getElementById('create-ai-model').value : AI_MODEL;
-  // Cân bằng tốc độ & độ dài: giữ mức cao cho chế độ cần văn dài, hạ xuống cho chế độ văn ngắn.
-  var maxTok = (mode==='continue'||mode==='expand') ? 2048 : ((mode==='rewrite') ? 1400 : 700);
-  aiSetBusy(true);
-  fetch(CONFIG.BACKEND_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({
-      action: 'ai_generate',
-      prompt: prompt,
-      model: model,
-      temperature: (mode === 'continue' || mode === 'expand') ? 0.75 : (mode === 'gen' ? 0.8 : 0.3),
-      maxOutputTokens: maxTok
-    })
-  }).then(function(r){ return r.json(); })
-    .then(function(res){
-      var t = (res && res.ok && res.text) ? res.text.trim() : '';
-      if(t){ aiShowResult(t); incrementCreateAIDailyUsage(); }
-      else { aiShowError((res && res.error) || 'Không nhận được nội dung từ AI. Vui lòng thử lại.'); }
-    }).catch(function(e){
-      aiShowError(e.message);
-    }).finally(function(){
-      aiSetBusy(false);
-    });
-}
-
-function aiUseResult(){
-  if(!_aiResult) return;
-  document.getElementById('create-content').value = _aiResult;
-  document.getElementById('create-content').focus();
-  aiHideResult();
-}
-
-function aiCopyResult(){
-  if(!_aiResult) return;
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(_aiResult).then(function(){
-      showToast('<i class="fas fa-check"></i> Đã sao chép');
-    }).catch(function(){ aiFallbackCopy(_aiResult); });
+/* ===== Popup chat góc màn hình (PC, Firestore realtime) ===== */
+var _dmPopupEditingId=null;
+var _dmPopupPrevUnread=0;
+var _dmPopupMenuEl=null;
+var _dmPopupScrollFn=null;
+function dmSidebarClick(){
+  if(window.innerWidth>=1024){
+    if(appState.currentPage==='direct') return; // đang ở DM full rồi, không làm gì
+    openDmPopup();
   } else {
-    aiFallbackCopy(_aiResult);
+    switchPage('direct');
   }
 }
-
-function aiFallbackCopy(text){
-  var ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.focus(); ta.select();
-  try { document.execCommand('copy'); showToast('<i class="fas fa-check"></i> Đã sao chép'); }
-  catch(e){ showToast('<i class="fas fa-exclamation-triangle"></i> Không thể sao chép tự động'); }
+function dmPopupIsOpen(){var p=document.getElementById('dm-chat-popup');return !!(p&&p.classList.contains('open')&&!p.classList.contains('minimized'));}
+function dcpTime(iso){try{var d=new Date(iso);if(isNaN(d))return'';return pad(d.getHours())+':'+pad(d.getMinutes())}catch(e){return''}}
+function renderDmPopup(){
+  var popup=document.getElementById('dm-chat-popup');
+  if(!popup||!popup.classList.contains('open')||popup.classList.contains('minimized'))return;
+  var box=document.getElementById('dcp-messages');
+  var msgs=dmMessagesCache.slice();
+  getPendingDmMessages().forEach(function(p){if(p&&p.clientId&&!msgs.some(function(x){return x.id===p.clientId}))msgs.push(p)});
+  msgs.sort(function(a,b){return (a.time||a.createdAt||'').localeCompare(b.time||b.createdAt||'')});
+  if(msgs.length>200)msgs=msgs.slice(msgs.length-200);
+  var nameEl=document.getElementById('dcp-name');
+  if(nameEl)nameEl.textContent=cleanName(getPartnerName());
+  var ava=document.getElementById('dcp-avatar');
+  if(ava){var a=getDisplayAvatar(getPartnerPin());ava.innerHTML=(a?'<img src="'+esc(a)+'" alt="">':'<i class="fas fa-user"></i>')+'<span class="dcp-online"></span><span class="dcp-badge" id="dcp-badge" style="display:none">0</span>';}
+  updateDmPopupPresence();
+  var h='<div class="dcp-date">Hôm nay</div>';
+  if(!msgs.length){
+    h='<div class="dcp-empty"><i class="fab fa-facebook-messenger"></i>Chưa có tin nhắn nào<br><span style="font-size:0.72rem;">Nhắn lời chào đầu tiên nhé!</span></div>';
+  }else{
+    for(var i=0;i<msgs.length;i++){
+      var m=msgs[i];var isSent=m.sender===appState.currentPin;
+      if(m.deleted){h+='<div class="dcp-msg-wrap '+(isSent?'sent':'received')+'"><div class="dcp-msg deleted">Tin nhắn đã được thu hồi</div></div>';continue;}
+      var edited=m.editedAt?' (đã sửa)':'';
+      h+='<div class="dcp-msg-wrap '+(isSent?'sent':'received')+'">'+
+        '<div class="dcp-msg '+(isSent?'sent':'received')+'">'+esc(m.text||'')+(isSent?'<span class="dcp-ticks">✓✓</span>':'')+'<div class="dcp-m-time">'+dcpTime(m.time||m.createdAt)+edited+'</div></div>'+
+        '<button class="dcp-menu-btn" onclick="dmPopupOpenMenu(event,\''+m.id+'\')" title="Tùy chọn"><i class="fas fa-ellipsis-h"></i></button>'+
+        '</div>';
+    }
+  }
+  box.innerHTML=h;
+  box.scrollTop=box.scrollHeight;
+}
+function dmPopupEnsureMenu(){
+  if(_dmPopupMenuEl)return _dmPopupMenuEl;
+  _dmPopupMenuEl=document.createElement('div');
+  _dmPopupMenuEl.className='cpw-menu';
+  _dmPopupMenuEl.id='cpw-menu';
+  var pop=document.getElementById('dm-chat-popup');
+  if(pop)pop.appendChild(_dmPopupMenuEl);
+  else document.body.appendChild(_dmPopupMenuEl);
+  return _dmPopupMenuEl;
+}
+function dmPopupFindMsg(id){
+  var m=dmMessagesCache.find(function(x){return x.id===id});
+  if(!m){var p=getPendingDmMessages().find(function(x){return x.clientId===id||x.id===id});m=p;}
+  return m||null;
+}
+function dmPopupOpenMenu(e,id){
+  e.stopPropagation();
+  var m=dmPopupFindMsg(id);
+  if(!m||m.deleted)return;
+  var isSent=m.sender===appState.currentPin;
+  var menu=dmPopupEnsureMenu();
+  menu.style.display='none';
+  var h='<button onclick="dmPopupCopy(\''+id+'\')"><i class="fas fa-copy"></i> Sao chép</button>';
+  if(isSent)h+='<button onclick="dmPopupEdit(\''+id+'\')"><i class="fas fa-pen"></i> Sửa</button>';
+  if(isSent)h+='<button class="danger" onclick="dmPopupDelete(\''+id+'\')"><i class="fas fa-trash-alt"></i> Xóa</button>';
+  menu.innerHTML=h;
+  var btn=e.currentTarget||e.target;
+  // Neo menu cố định theo bubble tin nhắn (dcp-msg-wrap), nằm trong popup
+  var wrap=btn?btn.closest('.dcp-msg-wrap'):null;
+  if(wrap){
+    var pop=document.getElementById('dm-chat-popup');
+    var pr=pop?pop.getBoundingClientRect():{left:0,top:0};
+    var wr=wrap.getBoundingClientRect();
+    var bw=menu.offsetWidth||140;
+    var bh=menu.offsetHeight||110;
+    var pw=pop?pop.clientWidth:340;
+    var ph=pop?pop.clientHeight:460;
+    var bx=wr.left-pr.left;
+    if(bx+bw>pw-6)bx=pw-bw-6;
+    if(bx<6)bx=6;
+    var under=wr.bottom-pr.top+6;
+    var above=wr.top-pr.top-bh-6;
+    var by;
+    if(under+bh<=ph-10){by=under;}
+    else if(above>=6){by=above;}
+    else {by=ph-bh-10;if(by<6)by=6;}
+    menu.style.left=bx+'px';
+    menu.style.top=by+'px';
+  }else{
+    menu.style.left='8px';
+    menu.style.top='8px';
+  }
+  menu.style.display='flex';
+  menu.classList.add('open');
+  // Khi cuộn khung tin nhắn thì đóng menu (menu sẽ không trôi theo bubble)
+  var box=document.getElementById('dcp-messages');
+  dmPopupUnbindScroll();
+  _dmPopupScrollFn=function(){ dmPopupCloseMenu(); };
+  if(box) box.addEventListener('scroll',_dmPopupScrollFn,{passive:true});
+}
+function dmPopupUnbindScroll(){
+  if(_dmPopupScrollFn){
+    var box=document.getElementById('dcp-messages');
+    if(box) box.removeEventListener('scroll',_dmPopupScrollFn);
+    _dmPopupScrollFn=null;
+  }
+}
+function dmPopupCloseMenu(){
+  dmPopupUnbindScroll();
+  if(_dmPopupMenuEl){ _dmPopupMenuEl.classList.remove('open'); _dmPopupMenuEl.style.display='none'; }
+}
+function dmPopupCopy(id){
+  dmPopupCloseMenu();
+  var m=dmPopupFindMsg(id);
+  if(!m)return;
+  var done=function(){dmPopupToast('Đã sao chép tin nhắn');};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(m.text||'').then(done).catch(function(){dmPopupFallbackCopy(m.text||'');done();});
+  }else{
+    dmPopupFallbackCopy(m.text||'');done();
+  }
+}
+function dmPopupFallbackCopy(t){
+  var ta=document.createElement('textarea');
+  ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy')}catch(e){}
   document.body.removeChild(ta);
 }
+function dmPopupDelete(id){
+  dmPopupCloseMenu();
+  var m=dmPopupFindMsg(id);
+  if(!m)return;
+  db.collection('messages').doc(getChatId()).collection('messages').doc(id).update({deleted:true}).then(function(){
+    dmPopupToast('Đã thu hồi tin nhắn');
+  }).catch(function(){
+    dmPopupToast('Không thu hồi được tin nhắn');
+  });
+}
+function dmPopupEdit(id){
+  dmPopupCloseMenu();
+  var m=dmPopupFindMsg(id);
+  if(!m)return;
+  _dmPopupEditingId=id;
+  var inp=document.getElementById('dcp-input');
+  inp.value=m.text||'';
+  dmPopupAutoGrow(inp);
+  inp.focus();
+  var bar=document.getElementById('dcp-editing');
+  if(bar)bar.style.display='flex';
+  var ic=document.querySelector('.dcp-send i');
+  if(ic)ic.className='fas fa-check';
+}
+function sendDmPopupMsg(){
+  if(_dmPopupEditingId){dmPopupSaveEdit();return;}
+  var inp=document.getElementById('dcp-input');
+  var t=inp.value.trim().replace(/🖕/g,'💖');
+  if(!t)return;
+  inp.value='';inp.style.height='auto';
+  if(!navigator.onLine){dmPopupToast('Mất kết nối, không gửi được');return;}
+  var msg={sender:appState.currentPin,text:t,createdAt:new Date().toISOString()};
+  db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function(){
+    playSentSound();
+  }).catch(function(){
+    dmPopupToast('Lỗi gửi tin nhắn');
+  });
+}
+function dmPopupSaveEdit(){
+  var id=_dmPopupEditingId;
+  if(!id){dmPopupCancelEdit();return;}
+  var inp=document.getElementById('dcp-input');
+  var t=inp.value.trim();
+  if(t){
+    db.collection('messages').doc(getChatId()).collection('messages').doc(id).update({text:t,editedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
+      dmPopupToast('Đã sửa tin nhắn');
+    }).catch(function(){
+      dmPopupToast('Không sửa được tin nhắn');
+    });
+  }
+  dmPopupCancelEdit();
+}
+function dmPopupCancelEdit(){
+  _dmPopupEditingId=null;
+  var inp=document.getElementById('dcp-input');
+  if(inp){inp.value='';inp.style.height='auto';}
+  var bar=document.getElementById('dcp-editing');
+  if(bar)bar.style.display='none';
+  var ic=document.querySelector('.dcp-send i');
+  if(ic)ic.className='fas fa-paper-plane';
+}
+function dmPopupAutoGrow(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
+var _dmPopupToastTimer=null;
+function dmPopupToast(msg){
+  var t=document.getElementById('dcp-toast');
+  if(!t)return;
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(_dmPopupToastTimer);
+  _dmPopupToastTimer=setTimeout(function(){t.classList.remove('show')},1800);
+}
+function openDmPopup(){
+  var popup=document.getElementById('dm-chat-popup');
+  var fab=document.getElementById('dm-chat-fab');
+  popup.classList.add('open');
+  popup.classList.remove('minimized');
+  fab.style.display='none';
+  markDmSeen();
+  renderDmPopup();
+  setTimeout(function(){var i=document.getElementById('dcp-input');if(i)i.focus();},220);
+}
+function closeDmPopup(){
+  var popup=document.getElementById('dm-chat-popup');
+  popup.classList.remove('open','minimized');
+  document.getElementById('dm-chat-fab').style.display='flex';
+  dmPopupCloseMenu();
+  updateDmPopupBadge();
+}
+function minimizeDmPopup(){
+  // Thu nhỏ = đóng popup và thành nút tròn
+  closeDmPopup();
+}
+function restoreDmPopup(){
+  openDmPopup();
+}
+function toggleDmPopupHeader(){
+  // Click header = thu nhỏ (đóng thành nút tròn)
+  closeDmPopup();
+}
+function updateDmPopupBadge(){
+  var popup=document.getElementById('dm-chat-popup');
+  var fab=document.getElementById('dm-chat-fab');
+  if(!popup||!fab)return;
+  var unread=getDmUnreadCount();
+  var cpBadge=document.getElementById('dcp-badge');
+  var fabBadge=document.getElementById('dcp-fab-badge');
+  var open=popup.classList.contains('open');
+  var isMin=popup.classList.contains('minimized');
+  // Khi đang ở trang DM full (page-direct) thì không bao giờ hiện FAB
+  var inFullDm=(appState.currentPage==='direct');
+  if(open&&!isMin){
+    if(cpBadge)cpBadge.style.display='none';
+    if(fabBadge)fabBadge.style.display='none';
+    fab.style.display='none';
+    _dmPopupPrevUnread=unread;
+    return;
+  }
+  fab.style.display=inFullDm?'none':'flex';
+  if(isMin){
+    if(cpBadge){
+      cpBadge.textContent=unread>9?'9+':unread;
+      cpBadge.style.display=unread>0?'flex':'none';
+      if(unread>_dmPopupPrevUnread){cpBadge.classList.add('pop');setTimeout(function(){cpBadge.classList.remove('pop')},600);}
+    }
+    if(fabBadge)fabBadge.style.display='none';
+  }else{
+    if(fabBadge){
+      fabBadge.textContent=unread>9?'9+':unread;
+      fabBadge.style.display=unread>0?'flex':'none';
+      if(unread>_dmPopupPrevUnread){fab.classList.add('bounce');setTimeout(function(){fab.classList.remove('bounce')},600);}
+    }
+    if(cpBadge)cpBadge.style.display='none';
+  }
+  _dmPopupPrevUnread=unread;
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.cpw-menu')&&!e.target.closest('.dcp-menu-btn'))dmPopupCloseMenu();
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){dmPopupCloseMenu();if(_dmPopupEditingId)dmPopupCancelEdit();}
+});
+if(window.innerWidth>=1024){var _fab=document.getElementById('dm-chat-fab');if(_fab)_fab.style.display='flex';}
+
+
 
 </script>
 </body>
