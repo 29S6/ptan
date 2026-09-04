@@ -659,6 +659,9 @@ html.dark #bottom-nav {
   .dcp-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--toast-bg);color:var(--toast-text);padding:8px 16px;border-radius:8px;font-size:0.78rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:3000;white-space:nowrap}
   .dcp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 }
+@media (max-width:1023px){
+  .dm-chat-popup,.dm-chat-fab,.dcp-toast{display:none!important}
+}
 
 #post-overlay {
   position:fixed; inset:0; z-index:2000;
