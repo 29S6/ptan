@@ -335,10 +335,10 @@ html.dark #bottom-nav {
 .feed-card-menu-btn:hover { background:var(--hover-bg); }
 
 
-.fc-carousel { position:relative; width:100%; overflow:hidden; background:#000; aspect-ratio:4/5; }
+.fc-carousel { position:relative; width:100%; overflow:hidden; background:#000; aspect-ratio:var(--fc-r,4/5); }
 .fc-carousel-inner { display:flex; width:100%; height:100%; transition:transform 0.2s cubic-bezier(0.25,0.1,0.25,1); }
 .fc-carousel-img { width:100%; height:100%; flex-shrink:0; object-fit:cover; object-position:center; cursor:pointer; background:#000; }
-.fc-carousel-img.ratio-1x1, .fc-carousel-img.ratio-4x3 { width:100%; height:100%; object-fit:cover; object-position:center; }
+.fc-carousel-img.ratio-4x3 { object-fit:contain; }
 .fc-carousel-nav {
   position:absolute; top:50%; transform:translateY(-50%); z-index:3;
   background:var(--carousel-nav-bg); border:none; border-radius:50%;
@@ -4158,9 +4158,27 @@ function fcFitImg(img){
   var w=img.naturalWidth,h=img.naturalHeight;
   if(!w||!h)return;
   var r=w/h;
+  var carousel=img.closest('.fc-carousel');
+  if(!carousel)return;
+  // Ảnh đầu tiên quyết định tỷ lệ khung của cả carousel -> ổn định, không nhảy layout
+  if(!carousel.dataset.ratioSet){
+    carousel.dataset.ratioSet='1';
+    var cr;
+    if(r>1.2){ carousel.dataset.ratio='wide'; cr='4/3'; }      // ngang -> 4/3
+    else if(r>0.85){ carousel.dataset.ratio='square'; cr='1/1'; } // vuông -> 1/1
+    else { carousel.dataset.ratio='tall'; cr='3/4'; }          // dọc -> 3/4
+    carousel.style.setProperty('--fc-r',cr);
+    // áp lại fit cho mọi ảnh đã render trong carousel
+    var all=carousel.querySelectorAll('.fc-carousel-img');
+    for(var i=0;i<all.length;i++) fcApplyFit(all[i],carousel.dataset.ratio);
+  } else {
+    fcApplyFit(img,carousel.dataset.ratio);
+  }
+}
+function fcApplyFit(img,ratio){
   img.classList.remove('ratio-1x1','ratio-4x3');
-  if(r>1.2) img.classList.add('ratio-4x3');
-  else if(r>0.85) img.classList.add('ratio-1x1');
+  if(ratio==='wide') img.classList.add('ratio-4x3');   // ngang -> contain giữa nền đen
+  // dọc & vuông -> cover (mặc định, giữ class ratio-1x1 không cần)
 }
 function pdFitImg(img){
   var w=img.naturalWidth,h=img.naturalHeight;
