@@ -207,13 +207,14 @@ a { color: var(--text-link); text-decoration:none; }
   z-index:100; display:flex; align-items:center; justify-content:space-around;
   width:min(calc(100% - 24px), 500px);
   height:58px; border-radius:30px;
-  background:rgba(255,255,255,0.78);
-  -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%);
+  background:rgba(255,255,255,var(--dock-alpha,0.78));
+  -webkit-backdrop-filter:blur(var(--dock-blur,20px)) saturate(180%); backdrop-filter:blur(var(--dock-blur,20px)) saturate(180%);
   border:1px solid rgba(255,255,255,0.4);
   box-shadow:0 8px 30px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
 }
+body.dock-glass-preview #bottom-nav { z-index:850; }
 html.dark #bottom-nav {
-  background:rgba(30,30,34,0.72);
+  background:rgba(30,30,34,var(--dock-alpha,0.72));
   border-color:rgba(255,255,255,0.08);
   box-shadow:0 8px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
 }
@@ -365,6 +366,66 @@ html.dark #bottom-nav {
   padding:2px 8px; border-radius:10px;
 }
 
+/* ===== Bố cục ảnh kiểu Facebook ===== */
+.fb-grid { display:grid; gap:2px; width:100%; background:#000; overflow:hidden; cursor:pointer; }
+.fb-grid .fb-cell { position:relative; overflow:hidden; background:#111; }
+.fb-grid .fb-cell img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+.fb-grid.g-1 { grid-template-columns:1fr; }
+.fb-grid.g-1 .fb-cell { display:flex; align-items:center; justify-content:center; background:#000; }
+.fb-grid.g-1 .fb-cell img { width:100%; height:auto; max-height:560px; object-fit:contain; }
+.fb-grid.g-2 { grid-template-columns:1fr 1fr; aspect-ratio:2/1; }
+.fb-grid.g-3 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; aspect-ratio:3/2; }
+.fb-grid.g-3 .fb-cell:first-child { grid-row:span 2; }
+.fb-grid.g-4 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; aspect-ratio:1/1; }
+.fb-grid .fb-cell.more::after {
+  content:attr(data-more); position:absolute; inset:0;
+  background:rgba(0,0,0,0.55); color:#fff; font-size:1.5rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* ===== Overlay danh sách ảnh trải dọc (kiểu Facebook) ===== */
+#img-list-overlay {
+  position:fixed; inset:0; z-index:3000; background:rgba(0,0,0,0.92);
+  display:none; flex-direction:column;
+  animation:fadeIn 0.2s ease;
+}
+#img-list-overlay.open { display:flex; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.img-list-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; color:#fff; flex-shrink:0;
+}
+.img-list-title { font-size:0.95rem; font-weight:600; }
+.img-list-top button {
+  background:rgba(255,255,255,0.12); border:none; color:#fff;
+  width:40px; height:40px; border-radius:10px; font-size:1.1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.img-list-top button:hover { background:rgba(255,255,255,0.22); }
+.img-list-body {
+  flex:1; overflow-y:auto; padding:0 16px 32px;
+  display:flex; flex-direction:column; gap:10px;
+  -webkit-overflow-scrolling:touch;
+}
+.img-list-body img {
+  width:100%; height:auto; border-radius:10px; display:block;
+  cursor:zoom-in; background:#1a1a1a;
+}
+
+/* ===== Trạng thái kéo-thả sắp xếp ảnh trong modal viết bài ===== */
+#create-image-preview .fb-cell { cursor:grab; -webkit-user-select:none; user-select:none; touch-action:manipulation; }
+#create-image-preview .fb-cell img { pointer-events:none; }
+#create-image-preview.fb-reordering .fb-cell { cursor:grabbing; }
+#create-image-preview.fb-reordering { touch-action:none; }
+#create-image-preview .fb-cell.fb-dragging { opacity:0.4; outline:2px dashed var(--text-link); outline-offset:-4px; }
+#create-image-preview .fb-cell.fb-dropover { outline:3px solid var(--text-link); outline-offset:-3px; }
+#create-image-preview .fb-cell .drag-hint {
+  position:absolute; bottom:6px; left:6px; z-index:3;
+  background:rgba(0,0,0,0.55); color:#fff; font-size:0.55rem;
+  padding:2px 6px; border-radius:8px; pointer-events:none;
+  display:flex; align-items:center; gap:3px;
+}
+
 
 
 
@@ -482,7 +543,7 @@ html.dark #bottom-nav {
 .threads-avatar .inner img { width:100%; height:100%; object-fit:cover; }
 .threads-time { font-size:0.7rem; color:var(--text-secondary); }
 .threads-img { margin-bottom:12px; border-radius:8px; overflow:hidden; }
-.threads-img img { width:100%; max-height:400px; object-fit:contain; display:block; background:var(--input-bg); }
+.threads-img .fb-grid { cursor:default; }
 .threads-content { font-size:0.92rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; margin-bottom:10px; color:var(--text-primary); }
 .threads-meta { display:flex; align-items:center; gap:6px; padding-top:4px; font-size:0.65rem; color:var(--text-secondary); }
 .threads-meta.stat { color:var(--text-secondary); font-weight:500; }
@@ -577,24 +638,15 @@ html.dark #bottom-nav {
 .create-tool-btn:hover { background:var(--hover-bg); color:var(--text-primary); }
 .create-tool-btn input[type="date"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
 .create-image-preview {
-  display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 10px;
+  margin:6px 0 10px;
 }
-.create-image-preview .pimg {
-  width:80px; height:80px; border-radius:8px; overflow:hidden; position:relative;
-  background:var(--placeholder-bg); border:1px solid var(--border-light); flex-shrink:0;
+.create-image-preview .fb-grid { border-radius:var(--radius-sm); overflow:hidden; cursor:default; }
+.create-image-preview .fb-cell .remove-btn {
+  position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.65); color:#fff; border:none;
+  border-radius:50%; width:24px; height:24px; font-size:0.7rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; z-index:3; transition:0.07s;
 }
-.create-image-preview .pimg img { width:100%; height:100%; object-fit:cover; }
-.create-image-preview .pimg .remove-btn {
-  position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.6); color:#fff; border:none;
-  border-radius:4px; width:18px; height:18px; font-size:0.45rem; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; z-index:2; transition:0.07s;
-}
-.create-image-preview .pimg .remove-btn:hover { background:rgba(200,50,70,0.9); }
-.create-image-preview .pimg .more-badge {
-  position:absolute; inset:0; background:rgba(0,0,0,0.4);
-  display:flex; align-items:center; justify-content:center;
-  color:#fff; font-size:0.9rem; font-weight:700;
-}
+.create-image-preview .fb-cell .remove-btn:hover { background:rgba(200,50,70,0.95); }
 .create-date-wrapper { display:none; }
 .create-date-wrapper.show { display:flex; }
 
@@ -1317,7 +1369,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   .feed-card-menu-btn:hover, .pd-menu-btn:hover, .create-tool-btn:hover, .dm-img-btn:hover, .pd-img-btn:hover { background:transparent; color:var(--text-secondary); }
   .create-header .back-btn:hover { background:transparent; }
   .create-header .submit-btn:hover:not(:disabled) { background:var(--text-link); }
-  .create-image-preview .pimg .remove-btn:hover { background:rgba(200,50,70,0.9); }
+  .create-image-preview .fb-cell .remove-btn:hover { background:rgba(200,50,70,0.95); }
   .btn-primary:hover { background:var(--text-link); }
   .btn-secondary:hover { background:var(--input-bg); }
   .dropdown-menu button:hover { background:transparent; }
@@ -1632,6 +1684,15 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   </div>
 </div>
 
+<!-- Overlay danh sách ảnh trải dọc (kiểu Facebook) -->
+<div id="img-list-overlay">
+  <div class="img-list-top">
+    <div class="img-list-title" id="img-list-title">Ảnh</div>
+    <button onclick="closeImageList()" title="Đóng"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="img-list-body" id="img-list-body"></div>
+</div>
+
 
 
 
@@ -1738,6 +1799,20 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
           <span id="sound-toggle-slider" style="position:absolute;inset:0;background:var(--text-secondary);border-radius:22px;transition:0.2s;"></span>
           <span id="sound-toggle-knob" style="position:absolute;left:3px;bottom:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
         </label>
+      </div>
+      <div style="padding:8px 0;border-bottom:1px solid var(--border-light);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:0.85rem;color:var(--text-primary);"><i class="fas fa-droplet" style="width:20px;color:var(--text-secondary);"></i> Độ trong suốt thanh dock (mobile)</span>
+          <span id="dock-glass-val" style="font-size:0.72rem;font-weight:700;color:var(--text-link);">78%</span>
+        </div>
+        <input type="range" id="dock-glass-slider" min="10" max="95" step="1" value="78"
+          oninput="onDockGlassInput(this.value)"
+          onchange="syncDockGlassToBackend()"
+          style="width:100%;height:22px;accent-color:var(--text-link);cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-secondary);margin-top:2px;">
+          <span>Trong suốt</span><span>Đục (liquid glass đậm)</span>
+        </div>
+        <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;"><i class="fas fa-hand-pointer" style="color:var(--text-link);"></i> Kéo thanh để xem trước ngay trên thanh dock phía dưới</div>
       </div>
       <div style="height:1px;background:var(--border-light);margin:2px 0;"></div>
       <button style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:0.85rem;width:100%;text-align:left;color:var(--text-primary);background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;" onclick="triggerSync()">
@@ -1949,6 +2024,7 @@ function loadUserProfiles(force) {
             if (remoteProfiles[pin].name) userProfiles[pin].name = remoteProfiles[pin].name;
             if (remoteProfiles[pin].avatar) { userProfiles[pin].avatar = remoteProfiles[pin].avatar; changed = true; }
             if (remoteProfiles[pin].theme) userProfiles[pin].theme = remoteProfiles[pin].theme;
+            if (remoteProfiles[pin].dockGlass !== undefined && remoteProfiles[pin].dockGlass !== null) userProfiles[pin].dockGlass = remoteProfiles[pin].dockGlass;
           }
         }
         var cp = appState.currentPin;
@@ -1957,6 +2033,7 @@ function loadUserProfiles(force) {
         }
         saveUserProfiles();
         updateUserUI();
+        if (typeof applyDockGlass === 'function') applyDockGlass();
         
         if (changed && appState.currentPage === 'feed') {
           var newAva = userProfiles[appState.currentPin] && userProfiles[appState.currentPin].avatar;
@@ -2389,7 +2466,8 @@ function syncProfileToBackend(){
   profilesRef.get().then(function(doc) {
     var data = doc.exists ? doc.data() : { profiles: {} };
     data.profiles = data.profiles || {};
-    data.profiles[pin] = { name: userProfiles[pin].name, avatar: userProfiles[pin].avatar || '', theme: userProfiles[pin].theme || 'auto' };
+    var dg = userProfiles[pin].dockGlass;
+    data.profiles[pin] = { name: userProfiles[pin].name, avatar: userProfiles[pin].avatar || '', theme: userProfiles[pin].theme || 'auto', dockGlass: (dg===undefined||dg===null)?78:dg };
     return profilesRef.set(data);
   }).catch(function(err) { console.warn('syncProfile error:', err); });
 }
@@ -3006,6 +3084,50 @@ function toggleSound(on){
   document.getElementById('sound-toggle-slider').style.background=on?'var(--text-link)':'var(--text-secondary)';
   document.getElementById('sound-toggle-knob').style.transform=on?'translateX(18px)':'translateX(0)';
 }
+var _dockGlassVal = 78;
+function getDockGlassVal(){
+  try{ loadUserProfiles(); }catch(e){}
+  var pin=appState&&appState.currentPin;
+  if(pin&&userProfiles&&userProfiles[pin]&&userProfiles[pin].dockGlass!==undefined&&userProfiles[pin].dockGlass!==null){
+    return parseInt(userProfiles[pin].dockGlass,10)||78;
+  }
+  var legacy=parseInt(localStorage.getItem('dockGlass'),10);
+  if(!isNaN(legacy)&&legacy)return legacy;
+  return 78;
+}
+function applyDockGlass(){
+  var v=getDockGlassVal();
+  _dockGlassVal=v;
+  document.documentElement.style.setProperty('--dock-alpha',(v/100).toFixed(2));
+  document.documentElement.style.setProperty('--dock-blur',(v*0.255).toFixed(1)+'px');
+}
+function initDockGlass(){
+  var v=getDockGlassVal();
+  _dockGlassVal=v;
+  var sl=document.getElementById('dock-glass-slider');
+  var lb=document.getElementById('dock-glass-val');
+  if(sl)sl.value=v;
+  if(lb)lb.textContent=v+'%';
+  applyDockGlass();
+}
+function onDockGlassInput(v){
+  var val=Math.max(10,Math.min(95,parseInt(v,10)||78));
+  _dockGlassVal=val;
+  var lb=document.getElementById('dock-glass-val');
+  if(lb)lb.textContent=val+'%';
+  try{ loadUserProfiles(); }catch(e){}
+  var pin=appState&&appState.currentPin;
+  if(pin){
+    if(!userProfiles[pin])userProfiles[pin]={name:'',avatar:'',theme:'auto'};
+    userProfiles[pin].dockGlass=val;
+    saveUserProfiles();
+  }
+  try{localStorage.setItem('dockGlass',val);}catch(e){}
+  document.documentElement.style.setProperty('--dock-alpha',(val/100).toFixed(2));
+  document.documentElement.style.setProperty('--dock-blur',(val*0.255).toFixed(1)+'px');
+}
+function syncDockGlassToBackend(){ try{ syncProfileToBackend(); }catch(e){} }
+applyDockGlass();
 function playSentSound() {
   if(!_soundEnabled)return;
   try {
@@ -4045,6 +4167,32 @@ function loadMoreFeed(){
   observeFeed();
 }
 
+// ===== Bố cục ảnh kiểu Facebook: 1 -> full, 2 -> 2 cột, 3 -> 1 lớn + 2 nhỏ, 4 -> 2x2, 5+ -> 2x2 + "+N" =====
+function fbImageGrid(images, opts){
+  opts=opts||{};
+  var total=images.length;
+  var max=4;
+  var cls='g-1';
+  if(total===2)cls='g-2';
+  else if(total===3)cls='g-3';
+  else if(total>=4)cls='g-4';
+  var shown=images.slice(0,max);
+  var extra=total-max;
+  var cls2=opts.className?(' '+opts.className):'';
+  var cells=shown.map(function(img,idx){
+    var src=esc(driveThumb?driveThumb(img.url||img,800):(img.url||img));
+    var isMore=(idx===max-1&&extra>0);
+    var more=isMore?' more':'';
+    var moreAttr=isMore?(' data-more="+'+extra+'"'):'';
+    // Ô "+N" có handler riêng mở danh sách, các ô khác đi theo onclick của grid
+    var cellClick=isMore&&opts.onMore?(' onclick="event.stopPropagation();'+opts.onMore+'"'):'';
+    var idxAttr=(opts.withIdx!==false)?(' data-idx="'+idx+'"'):'';
+    return '<div class="fb-cell'+more+'"'+moreAttr+cellClick+idxAttr+'><img src="'+src+'" loading="lazy" draggable="false" /></div>';
+  }).join('');
+  var click=opts.onclick?(' onclick="'+opts.onclick+'"'):'';
+  return '<div class="fb-grid '+cls+cls2+'"'+click+'>'+cells+'</div>';
+}
+
 function buildFeedCard(entry){
   var effectiveAuthor=getEffectiveName(entry.author);
   var authorPin=getPinForUser(entry.author);
@@ -4057,15 +4205,7 @@ function buildFeedCard(entry){
   var imgGrid='';
   var hasImages=entry.images&&entry.images.length>0;
   if(hasImages){
-    var total=entry.images.length;
-    var curIdx=(_feedCarouselState[entry.id]||0);
-    if(curIdx<0||curIdx>=total)curIdx=0;
-    var imgs=entry.images.map(function(img,idx){
-      return '<img class="fc-carousel-img" src="'+esc(driveThumb(img.url||img,800))+'" data-index="'+idx+'" onload="fcFitImg(this)"'+(idx===0?'':' loading="lazy"')+' />'
-    }).join('');
-    var dots=total>1?entry.images.map(function(_,idx){return '<span class="fc-dot'+(idx===curIdx?' active':'')+'" onclick="event.stopPropagation();fcCarouselGoTo(\''+entry.id+'\','+idx+')"></span>'}).join(''):'';
-    var nav=total>1?'<button class="fc-carousel-nav prev" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',-1)"><i class="fas fa-chevron-left"></i></button><button class="fc-carousel-nav next" onclick="event.stopPropagation();fcCarouselNav(\''+entry.id+'\',1)"><i class="fas fa-chevron-right"></i></button><span class="fc-carousel-count">'+(curIdx+1)+'/'+total+'</span>':'';
-    imgGrid='<div class="feed-card-images"><div class="fc-carousel" data-id="'+entry.id+'" data-total="'+total+'" data-current="'+curIdx+'" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')"><div class="fc-carousel-inner" style="transform:translateX(-'+(curIdx*100)+'%)">'+imgs+'</div>'+nav+'<div class="fc-carousel-dots">'+dots+'</div></div></div>';
+    imgGrid='<div class="feed-card-images">'+fbImageGrid(entry.images,{onclick:"event.stopPropagation();openPostDetail('"+entry.id+"')",onMore:"openImageListByEntry('"+entry.id+"')"})+'</div>';
   }
 
   var caption=entry.content||'';
@@ -4356,7 +4496,8 @@ function renderProfileContent(){
       var commentCount=countComments(e.comments);
       var imgHtml='';
       if(e.images&&e.images.length>0){
-        imgHtml='<div class="threads-img"><img src="'+esc(driveThumb(e.images[0].url||e.images[0],600))+'" loading="lazy" /></div>';
+        // Hiển thị ảnh dạng Facebook (giống trang chủ): 1 -> full, 2/3/4 -> lưới, 5+ -> +N
+        imgHtml='<div class="threads-img">'+fbImageGrid(e.images,{onclick:"event.stopPropagation();openPostDetail('"+e.id+"')",onMore:"openImageListByEntry('"+e.id+"')",withIdx:false})+'</div>';
       }
       var uname=cleanName(getEffectiveName(e.author));
       var authorPin=getPinForUser(e.author);
@@ -5204,11 +5345,22 @@ function renderCreatePreview(){
   var preview=document.getElementById('create-image-preview');
   var total=appState.writeImages.length;
   if(!total){preview.innerHTML='';return}
-  var display=appState.writeImages.slice(0,4);var extra=total-4;
-  preview.innerHTML=display.map(function(img,idx){
-    var more=idx===3&&extra>0?'<div class="more-badge">+'+extra+'</div>':'';
-    return '<div class="pimg">'+more+'<img src="'+esc(img.url||img)+'" /><button class="remove-btn" onclick="removeCreateImage('+idx+')">✕</button></div>'
-  }).join('')
+  // Bố cục ảnh kiểu Facebook + nút xóa từng ảnh + gợi ý kéo để sắp xếp
+  var max=4;
+  var cls='g-1';
+  if(total===2)cls='g-2';
+  else if(total===3)cls='g-3';
+  else if(total>=4)cls='g-4';
+  var shown=appState.writeImages.slice(0,max);
+  var extra=total-max;
+  var cells=shown.map(function(img,idx){
+    var isMore=(idx===max-1&&extra>0);
+    var more=isMore?' more':'';
+    var moreAttr=isMore?(' data-more="+'+extra+'"'):'';
+    var cellClick=isMore?' onclick="event.stopPropagation();openCreateImageList()"':'';
+    return '<div class="fb-cell'+more+'"'+moreAttr+cellClick+' data-idx="'+idx+'"><img src="'+esc(img.url||img)+'" draggable="false" /><button class="remove-btn" onclick="removeCreateImage('+idx+')">✕</button><span class="drag-hint"><i class="fas fa-arrows-up-down-left-right"></i> Kéo</span></div>';
+  }).join('');
+  preview.innerHTML='<div class="fb-grid '+cls+'">'+cells+'</div>';
 }
 
 function removeCreateImage(idx){
@@ -5226,6 +5378,153 @@ function removeCreateImage(idx){
   }
   renderCreatePreview();
 }
+
+/* ===== Overlay danh sách ảnh trải dọc (kiểu Facebook) khi bấm ô "+N" ===== */
+function openImageList(images, title){
+  var ov=document.getElementById('img-list-overlay');
+  if(!ov)return;
+  images=images||[];
+  appState.imgListImages=images;
+  document.getElementById('img-list-title').textContent=title||('Ảnh ('+images.length+')');
+  var body=document.getElementById('img-list-body');
+  body.scrollTop=0;
+  body.innerHTML=images.map(function(img,idx){
+    var src=esc(driveThumb?driveThumb(img.url||img,1200):(img.url||img));
+    return '<img src="'+src+'" loading="lazy" onclick="openPhotoViewerFromList('+idx+')" />';
+  }).join('');
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
+}
+function openImageListByEntry(entryId){
+  var entry=(appState.data.entries||[]).find(function(e){return e.id===entryId});
+  if(!entry||!entry.images||!entry.images.length)return;
+  openImageList(entry.images,'Ảnh ('+entry.images.length+')');
+}
+function openCreateImageList(){
+  openImageList(appState.writeImages,'Ảnh ('+appState.writeImages.length+')');
+}
+function closeImageList(){
+  var ov=document.getElementById('img-list-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+  var mc=document.getElementById('main-content');if(mc)mc.style.overflow='';
+}
+/* ===== Kéo-thả sắp xếp ảnh trong modal viết bài ===== */
+/* PC: giữ chuột trái và kéo. Mobile: nhấn giữ ~350ms rồi kéo. */
+var _imgDrag={active:false,isTouch:false,idx:-1,cell:null,target:null,timer:null,startX:0,startY:0,moved:false,justMoved:false};
+function imgDragBegin(cell){
+  if(!cell)return;
+  _imgDrag.active=true;_imgDrag.cell=cell;_imgDrag.moved=false;
+  _imgDrag.idx=parseInt(cell.getAttribute('data-idx'),10);
+  cell.classList.add('fb-dragging');
+  var grid=document.getElementById('create-image-preview');
+  if(grid)grid.classList.add('fb-reordering');
+  if(navigator.vibrate)navigator.vibrate(15);
+}
+function imgDragMove(x,y){
+  if(!_imgDrag.active)return;
+  _imgDrag.moved=true;
+  var el=document.elementFromPoint(x,y);
+  var cell=el&&el.closest?el.closest('#create-image-preview .fb-cell'):null;
+  if(_imgDrag.target&&_imgDrag.target!==cell)_imgDrag.target.classList.remove('fb-dropover');
+  if(cell&&cell!==_imgDrag.cell){cell.classList.add('fb-dropover');_imgDrag.target=cell;}
+  else _imgDrag.target=null;
+}
+function imgDragEnd(){
+  if(_imgDrag.timer){clearTimeout(_imgDrag.timer);_imgDrag.timer=null;}
+  if(_imgDrag.cell)_imgDrag.cell.classList.remove('fb-dragging');
+  var to=-1;
+  if(_imgDrag.target){
+    _imgDrag.target.classList.remove('fb-dropover');
+    to=parseInt(_imgDrag.target.getAttribute('data-idx'),10);
+  }
+  var from=_imgDrag.idx;
+  var grid=document.getElementById('create-image-preview');
+  if(grid)grid.classList.remove('fb-reordering');
+  var wasMoved=_imgDrag.moved;
+  _imgDrag={active:false,isTouch:false,idx:-1,cell:null,target:null,timer:null,startX:0,startY:0,moved:false};
+  if(wasMoved){_imgDrag.justMoved=true;setTimeout(function(){_imgDrag.justMoved=false;},300);}
+  if(!isNaN(to)&&to>=0&&to!==from)reorderWriteImages(from,to);
+}
+function reorderWriteImages(from,to){
+  var arr=appState.writeImages;
+  if(from<0||to<0||from>=arr.length||to>=arr.length)return;
+  var item=arr.splice(from,1)[0];
+  arr.splice(to,0,item);
+  renderCreatePreview();
+}
+function openPhotoViewerFromList(idx){
+  closeImageList();
+  var imgs=appState.imgListImages||[];
+  if(!imgs.length)return;
+  var all=imgs.map(function(i){return {url:(i&&i.url)||i};});
+  openPhotoViewer('',idx,all);
+}
+
+/* Lắng nghe chuột (PC) + cảm ứng (mobile) cho kéo-thả sắp xếp ảnh */
+// Chặn click nhầm vào ô "+N" (mở danh sách) ngay sau khi vừa kéo-thả
+document.addEventListener('click',function(e){
+  if(_imgDrag.justMoved){
+    var cell=e.target&&e.target.closest?e.target.closest('#create-image-preview .fb-cell'):null;
+    if(cell){e.stopPropagation();e.preventDefault();}
+    _imgDrag.justMoved=false;
+  }
+},true);
+document.addEventListener('mousedown',function(e){
+  var cell=e.target&&e.target.closest?e.target.closest('#create-image-preview .fb-cell'):null;
+  if(!cell||e.button!==0)return;
+  if(e.target.closest('.remove-btn'))return;
+  _imgDrag.isTouch=false;
+  _imgDrag.startX=e.clientX;_imgDrag.startY=e.clientY;
+  imgDragBegin(cell);
+  e.preventDefault();
+});
+document.addEventListener('mousemove',function(e){
+  if(!_imgDrag.active||_imgDrag.isTouch)return;
+  imgDragMove(e.clientX,e.clientY);
+});
+document.addEventListener('mouseup',function(){
+  if(!_imgDrag.active||_imgDrag.isTouch)return;
+  imgDragEnd();
+});
+document.addEventListener('touchstart',function(e){
+  var cell=e.target&&e.target.closest?e.target.closest('#create-image-preview .fb-cell'):null;
+  if(!cell)return;
+  if(e.target.closest('.remove-btn'))return;
+  var t=e.touches[0];
+  _imgDrag.isTouch=true;_imgDrag.startX=t.clientX;_imgDrag.startY=t.clientY;
+  var startCell=cell;
+  _imgDrag.timer=setTimeout(function(){
+    _imgDrag.timer=null;
+    if(!document.getElementById('create-image-preview'))return;
+    imgDragBegin(startCell);
+  },350);
+},{passive:true});
+document.addEventListener('touchmove',function(e){
+  if(!_imgDrag.isTouch)return;
+  var t=e.touches[0];
+  if(!_imgDrag.active){
+    if(Math.abs(t.clientX-_imgDrag.startX)>8||Math.abs(t.clientY-_imgDrag.startY)>8){
+      if(_imgDrag.timer){clearTimeout(_imgDrag.timer);_imgDrag.timer=null;}
+      _imgDrag.isTouch=false;
+    }
+    return;
+  }
+  e.preventDefault();
+  imgDragMove(t.clientX,t.clientY);
+},{passive:false});
+document.addEventListener('touchend',function(){
+  if(!_imgDrag.isTouch)return;
+  if(_imgDrag.timer){clearTimeout(_imgDrag.timer);_imgDrag.timer=null;}
+  if(_imgDrag.active)imgDragEnd();
+  _imgDrag.isTouch=false;
+});
+document.addEventListener('touchcancel',function(){
+  if(_imgDrag.timer){clearTimeout(_imgDrag.timer);_imgDrag.timer=null;}
+  if(_imgDrag.active)imgDragEnd();
+  _imgDrag.isTouch=false;
+});
 
 function submitCreatePost(){
   var content=document.getElementById('create-content').value.trim();
@@ -5264,6 +5563,8 @@ function submitCreatePost(){
 function openSettings(){
   updateUserUI();
   initSoundToggle();
+  initDockGlass();
+  document.body.classList.add('dock-glass-preview');
   openModal('modal-settings')
 }
 
@@ -5477,6 +5778,7 @@ function closeModal(id){
   document.body.style.overflow='';
   var mc=document.getElementById('main-content');
   if(mc)mc.style.overflow='';
+  if(id==='modal-settings')document.body.classList.remove('dock-glass-preview');
 }
 document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventListener('click',function(e){if(e.target!==el)return;closeModal(el.id);if(el.id==='modal-edit-avatar')avatarCropCleanup();if(el.id==='modal-ann-crop')annCropCleanup()})})
 
