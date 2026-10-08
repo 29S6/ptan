@@ -1515,7 +1515,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
     
     <div class="page" id="page-activity">
-      <div class="activity-header"><span>Hoạt động</span><button class="activity-mark-read" onclick="markActivitiesSeen();renderActivity()"><i class="fas fa-check-double"></i> Đã đọc hết</button></div>
+      <div class="activity-header"><span>Hoạt động</span><button class="activity-mark-read" onclick="markAllActivitiesAsRead()"><i class="fas fa-check-double"></i> Đã đọc hết</button></div>
       <div class="activity-list" id="activity-list"></div>
     </div>
 
@@ -2106,29 +2106,57 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',func
 });
 
 
-var _activitySeenMap = {};
+var _activityReadSet = {};
 var _activityUnsub = null;
 var _entriesUnsub = null;
 var _annUnsub = null;
+
+function getActivityKey(activity) {
+  var parts = [activity.type, activity.entryId];
+  if (activity.commentId) parts.push(activity.commentId);
+  if (activity.replyId) parts.push(activity.replyId);
+  parts.push(activity.time);
+  return parts.join('|');
+}
 
 function loadActivitySeen() {
   if (_activityUnsub) return;
   _activityUnsub = db.collection('config').doc('activities')
     .onSnapshot(function(doc) {
-      _activitySeenMap = doc.exists ? (doc.data().seen || {}) : {};
+      var data = doc.exists ? (doc.data().readActivities || {}) : {};
+      _activityReadSet = data;
       
-      for (var p in _activitySeenMap) {
-        localStorage.setItem('love_activity_seen_' + p, _activitySeenMap[p]);
+      for (var p in _activityReadSet) {
+        try {
+          localStorage.setItem('love_activity_read_' + p, JSON.stringify(_activityReadSet[p] || []));
+        } catch(e) {}
       }
       updateActivityBadge();
     }, function() {});
 }
 
-function getSeenAt(){
-  var fromFirestore = _activitySeenMap[appState.currentPin];
-  if (fromFirestore) return fromFirestore;
-  return (appState.data.profiles&&appState.data.profiles[appState.currentPin]&&appState.data.profiles[appState.currentPin].lastSeenAt)||localStorage.getItem('love_activity_seen_' + appState.currentPin)||null;
+function getReadActivities() {
+  var pin = appState.currentPin;
+  var fromFirestore = _activityReadSet[pin];
+  if (fromFirestore && Array.isArray(fromFirestore)) return new Set(fromFirestore);
+  try {
+    var local = localStorage.getItem('love_activity_read_' + pin);
+    if (local) return new Set(JSON.parse(local));
+  } catch(e) {}
+  return new Set();
 }
+
+function saveReadActivities(readSet) {
+  var pin = appState.currentPin;
+  if (!pin) return;
+  var arr = Array.from(readSet);
+  _activityReadSet[pin] = arr;
+  try {
+    localStorage.setItem('love_activity_read_' + pin, JSON.stringify(arr));
+  } catch(e) {}
+  db.collection('config').doc('activities').set({ readActivities: { [pin]: arr } }, { merge: true }).catch(function(){});
+}
+
 function getRecentActivities(){
   var entries=appState.data.entries||[];
   var acts=[];
@@ -2154,18 +2182,27 @@ function getRecentActivities(){
   return acts;
 }
 function getUnseenCount(){
-  var seen=getSeenAt();
+  var readSet = getReadActivities();
   var acts=getRecentActivities().filter(function(a){return a.authorPin!==appState.currentPin});
-  if(!seen)return acts.length;
-  return acts.filter(function(a){return a.time>seen}).length;
+  return acts.filter(function(a){return !readSet.has(getActivityKey(a))}).length;
 }
-function markActivitiesSeen(){
-  var pin=appState.currentPin;
-  if(!pin)return;
-  var now=new Date().toISOString();
-  _activitySeenMap[pin] = now;
+function markActivityAsRead(activity) {
+  var readSet = getReadActivities();
+  var key = getActivityKey(activity);
+  if (!readSet.has(key)) {
+    readSet.add(key);
+    saveReadActivities(readSet);
+    updateActivityBadge();
+  }
+}
+function markAllActivitiesAsRead() {
+  var readSet = getReadActivities();
+  var acts = getRecentActivities().filter(function(a){return a.authorPin!==appState.currentPin});
+  acts.forEach(function(a){ readSet.add(getActivityKey(a)) });
+  saveReadActivities(readSet);
   updateActivityBadge();
-  db.collection('config').doc('activities').set({ seen: { [pin]: now } }, { merge: true }).catch(function(){});
+  renderActivity();
+  showToast('<i class="fas fa-check-double"></i> Đã đánh dấu xem tất cả');
 }
 var _lastUnseenCount = 0;
 function updateActivityBadge(){
@@ -4002,7 +4039,7 @@ function switchPage(page){
   if(page==='feed')renderFeed();
   else if(page==='direct'){_dmShouldScroll=true;renderDmMessages();markDmSeen();setTimeout(function(){var inp=document.getElementById('dm-input');if(inp)inp.focus()},200)}
   else if(page==='explore')renderExplore();
-  else if(page==='activity'){renderActivity();markActivitiesSeen()}
+  else if(page==='activity'){renderActivity()}
   else if(page==='profile')renderProfile();
   if(page==='feed'||page==='profile')renderStories();
   document.getElementById('main-content').scrollTop=0;
@@ -4448,16 +4485,17 @@ function fmtTime(iso){
 }
 function renderActivity(){
   var container=document.getElementById('activity-list');
-  var seen=getSeenAt();
+  var readSet = getReadActivities();
   var acts=getRecentActivities().filter(function(a){return a.authorPin!==appState.currentPin});
   if(!acts.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-heart" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có hoạt động nào</div>';return}
   var html=acts.slice(0,50).map(function(a){
-    var isNew=!seen||a.time>seen;
+    var key = getActivityKey(a);
+    var isNew = !readSet.has(key);
     var authorName=getDisplayName(a.authorPin)||'Ai đó';
     var name=cleanName(authorName);
     var label=a.type==='post'?'đã thêm bài viết mới':a.type==='reply'?'đã trả lời bình luận':'đã bình luận';
     var preview=a.preview?esc(a.preview).substring(0,100):'';
-    return '<div class="activity-item'+(isNew?' activity-new':'')+'" onclick="handleActivityClick(\''+a.entryId+'\',\''+(a.commentId||'')+'\',\''+(a.replyId||'')+'\')">'+
+    return '<div class="activity-item'+(isNew?' activity-new':'')+'" data-activity-key="'+esc(key)+'" onclick="handleActivityClick(this,\''+a.entryId+'\',\''+(a.commentId||'')+'\',\''+(a.replyId||'')+'\')">'+
       '<div class="activity-avatar">'+(a.type==='post'?'<i class="fas fa-file-lines"></i>':'<i class="fa-regular fa-comment"></i>')+'</div>'+
       '<div style="flex:1;min-width:0;">'+
         '<div class="activity-text"><strong>'+esc(name)+' <i class="fas fa-check-circle verified-badge" style="font-size:0.75rem;"></i></strong> '+label+'</div>'+
@@ -4558,7 +4596,16 @@ function openPostDetail(entryId){
   overlay.classList.add('open');
 }
 
-function handleActivityClick(entryId, commentId, replyId){
+function handleActivityClick(el, entryId, commentId, replyId){
+  var key = el && el.getAttribute('data-activity-key');
+  if (key) {
+    var acts = getRecentActivities().filter(function(a){return a.authorPin!==appState.currentPin});
+    var activity = acts.find(function(a){ return getActivityKey(a) === key; });
+    if (activity) markActivityAsRead(activity);
+  }
+  if (el) el.classList.remove('activity-new');
+  var dot = el ? el.querySelector('.activity-dot') : null;
+  if (dot) dot.remove();
   openPostDetail(entryId);
   if(!commentId)return;
   setTimeout(function(){
