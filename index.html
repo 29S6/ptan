@@ -1954,41 +1954,6 @@ try {
   });
 }
 
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
-<script>
-  function setupNativeFcm() {
-    if (window.AndroidApp && typeof AndroidApp.getFcmToken === 'function') {
-      var token = AndroidApp.getFcmToken();
-      if (token) {
-        console.log('Native FCM token:', token);
-        saveTokenToServer(token);
-      }
-    }
-  }
-  function saveTokenToServer(token) {
-    try {
-      if (typeof db !== 'undefined' && db) {
-        db.collection('fcm_tokens').doc(token).set({
-          token: token,
-          platform: 'android',
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).catch(function(err) {
-          console.warn('Save FCM token failed:', err);
-        });
-      }
-    } catch(e) {
-      console.warn('FCM token save error:', e);
-    }
-  }
-  document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(setupNativeFcm, 1000);
-  });
-  window.onFcmToken = function(token) {
-    console.log('FCM token refreshed:', token);
-    saveTokenToServer(token);
-  };
-</script>
-
 var currentUser = CONFIG.USER1_NAME;
 var appState = {
   data: { entries: [], anniversaries: [] },
