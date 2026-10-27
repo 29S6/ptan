@@ -154,6 +154,7 @@ a { color: var(--text-link); text-decoration:none; }
 .lock-error { color:var(--text-danger); font-size:0.78rem; min-height:20px; margin-top:10px; font-weight:500; }
 
 
+
 @keyframes shimmer { 0%{opacity:0.3} 50%{opacity:0.7} 100%{opacity:0.3} }
 .feed-skeleton { padding:12px 16px; }
 .feed-skeleton .sk-card { background:var(--card-bg); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
@@ -166,6 +167,18 @@ a { color: var(--text-link); text-decoration:none; }
 .feed-skeleton .sk-line.w40 { width:40%; }
 .feed-skeleton .sk-img { width:100%; height:200px; background:var(--hover-bg); }
 .feed-skeleton .sk-body { padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+
+.feed-more-wrap { padding:6px 16px 30px; display:flex; justify-content:center; }
+.feed-more-btn {
+  width:100%; max-width:340px; padding:13px 18px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  border:1px solid var(--border); border-radius:24px;
+  background:var(--card-bg); color:var(--text-link);
+  font-weight:600; font-size:0.9rem; transition:0.12s;
+}
+.feed-more-btn:active { transform:scale(0.98); background:var(--hover-bg); }
+.feed-more-btn i { font-size:0.8rem; }
+.feed-end { text-align:center; padding:8px 16px 30px; font-size:0.78rem; color:var(--text-secondary); }
 
 
 
@@ -926,7 +939,7 @@ html.dark #bottom-nav {
   /* PC: nền mờ + blur chuyên nghiệp (mobile giữ full-screen như Instagram) */
   #post-overlay { background:var(--overlay-bg); -webkit-backdrop-filter:blur(8px) saturate(180%); backdrop-filter:blur(8px) saturate(180%); align-items:center; justify-content:center; transform:none; transition:opacity 0.25s ease; }
   #post-overlay.open .pd-modal { transform:translateY(0) scale(1); opacity:1; }
-  .pd-modal { background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius); max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.25); will-change:transform,opacity; transform:translateY(20px) scale(0.97); opacity:0; transition:transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease; }
+  .pd-modal { background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius); overflow:hidden; max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.25); will-change:transform,opacity; transform:translateY(20px) scale(0.97); opacity:0; transition:transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease; }
   .pd-modal-inner { flex-direction:row; }
   .pd-images { width:calc(100% - 380px); flex:none; background:#000; min-height:400px; max-height:80vh; }
   .pd-carousel-img { max-height:80vh; }
@@ -1586,12 +1599,16 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
         <button class="create-tool-btn" onclick="document.getElementById('create-file-input').click()" title="Thêm ảnh">
           <i class="fas fa-image"></i>
         </button>
+        <button class="create-tool-btn" onclick="document.getElementById('create-camera-input').click()" title="Chụp ảnh">
+          <i class="fas fa-camera"></i>
+        </button>
         <div class="create-tool-btn create-date-wrapper" id="create-date-wrapper">
           <i class="far fa-calendar-alt"></i>
           <input type="date" id="create-date" />
         </div>
       </div>
       <input type="file" id="create-file-input" accept="image/*" multiple onchange="handleCreateImages(this)" style="display:none;" />
+      <input type="file" id="create-camera-input" accept="image/*" capture="environment" onchange="handleCreateImages(this)" style="display:none;" />
     </div>
   </div>
 </div>
@@ -1943,9 +1960,7 @@ try {
   db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
     if (err.code !== 'failed-precondition') console.warn('Persistence err:', err);
   });
-  auth.signInAnonymously().catch(function(err) {
-    console.warn('Anonymous auth err:', err);
-  });
+  // Đăng nhập ngầm bằng tài khoản riêng của app — xem silentAuth()
 } catch(e) {
   console.error('Firebase không khả dụng:', e);
   document.addEventListener('DOMContentLoaded', function() {
@@ -1977,18 +1992,28 @@ var appState = {
   confirmCallback: null,
   syncTimer: null
 };
+// Tự đăng nhập ngầm để Firestore cho phép đọc/ghi. Người dùng không thấy bước này:
+// mở app là vào thẳng màn nhập 4 số như cũ.
+var APP_EMAIL = 'ngoc@ptan.app';
+var APP_PASS = '74028193';
+function silentAuth() {
+  if (auth.currentUser) return;
+  auth.signInWithEmailAndPassword(APP_EMAIL, APP_PASS).catch(function() {});
+}
 auth.onAuthStateChanged(function(user) {
-  if (user) {
-    appState.currentUid = user.uid;
-    db.collection('config').doc('pin_mapping').get().then(function(doc) {
-      if (doc.exists) appState.pinMapping = doc.data().mapping || {};
-    }).catch(function() {});
-  }
+  if (!user) { silentAuth(); return; }
+  appState.currentUid = user.uid;
+  db.collection('config').doc('pin_mapping').get().then(function(doc) {
+    if (doc.exists) appState.pinMapping = doc.data().mapping || {};
+  }).catch(function() {});
 });
-var FEED_INIT = 15;
-var FEED_MORE = 20;
+window.addEventListener('online', silentAuth);
+var FEED_PAGE = 10;          // mỗi lần tải 10 bài
 var feedRenderCount = 0;
-var feedObserver = null;
+var _entriesCursor = null;   // bài cuối cùng đã tải (cho startAfter)
+var _entriesDone = false;    // đã tải hết bài chưa
+var _entriesLoading = false;
+var _entriesWaiters = [];
 var _feedCarouselState = {};
 var _feedCaptionExpanded = {};
 
@@ -2108,7 +2133,6 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',func
 
 var _activityReadSet = {};
 var _activityUnsub = null;
-var _entriesUnsub = null;
 var _annUnsub = null;
 
 function getActivityKey(activity) {
@@ -2386,6 +2410,7 @@ function handlePinPress(d){
 }
 function handlePinDelete(){appState.pinCode=appState.pinCode.slice(0,-1);updateDots();document.getElementById('lock-error').textContent=''}
 function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('dot-'+i);d.classList.toggle('active',i<appState.pinCode.length)}}
+
 function verifyPin(){
   try {
     var p=appState.pinCode;appState.currentPin=p;
@@ -2431,7 +2456,7 @@ function initApp(){
   loadOfflineQueue();
   processOfflineQueue();
   startClock();
-  loadData(function(){setupDmListener();setupRealtimeEntries();setupRealtimeAnniversaries();updateDmBadge();setupWriteReminder();});
+  loadData(function(){setupDmListener();setupRealtimeAnniversaries();updateDmBadge();setupWriteReminder();});
   loadActivitySeen();
   updateActivityBadge();
   setupPresence();
@@ -2778,14 +2803,15 @@ function loadData(callback){
   showLoadingBar();
   var loaded = false;
   Promise.all([
-    db.collection('entries').get(),
+    db.collection('entries').orderBy('date','desc').limit(FEED_PAGE).get(),
     db.collection('anniversaries').get(),
     db.collection('config').doc('profiles').get()
   ]).then(function(results) {
     if (loaded) return; loaded = true;
     hideLoadingBar();
     var entriesArr = [], annsArr = [], profilesObj = {};
-    if (!results[0].empty) results[0].forEach(function(doc) { entriesArr.push(doc.data()); });
+    if (!results[0].empty) results[0].forEach(function(doc) { entriesArr.push(doc.data()); _entriesCursor = doc; });
+    _entriesDone = results[0].size < FEED_PAGE;
     if (!results[1].empty) results[1].forEach(function(doc) { annsArr.push(doc.data()); });
     if (results[2].exists) profilesObj = results[2].data().profiles || {};
     appState.data = { entries: entriesArr, anniversaries: annsArr, profiles: profilesObj };
@@ -2866,6 +2892,11 @@ function sendPayload(payload, successMsg, callback) {
   if (action === 'save_entry') {
     var entry = payload.entry;
     if (!entry || !entry.id) { fail('Thiếu dữ liệu'); return; }
+    // Cập nhật danh sách trong bộ nhớ ngay (trước đây nhờ listener realtime làm việc này).
+    var localEntry = appState.data.entries.find(function(x) { return x.id === entry.id; });
+    if (localEntry) { for (var lk in entry) localEntry[lk] = entry[lk]; }
+    else appState.data.entries.push(entry);
+    sortEntries();
     db.collection('entries').doc(entry.id).set(entry, {merge:true}).then(function() {
       done(successMsg || '<i class="fas fa-save"></i> Đã lưu!');
     }).catch(function(err) {
@@ -2879,6 +2910,7 @@ function sendPayload(payload, successMsg, callback) {
   }
 
   if (action === 'delete_entry') {
+    appState.data.entries = appState.data.entries.filter(function(x) { return x.id !== payload.id; });
     db.collection('entries').doc(payload.id).delete().then(function() {
       done(successMsg || 'Đã xóa!');
     }).catch(function(err) {
@@ -3817,27 +3849,43 @@ document.getElementById('dm-messages').addEventListener('touchend', function(e) 
   _dmSwipeReset = setTimeout(function() { el.classList.remove('swiped'); el.style.transition = ''; }, 260);
 }, { passive: true });
 
-function setupRealtimeEntries() {
-  if (_entriesUnsub) return;
-  _entriesUnsub = db.collection('entries').onSnapshot(function(snap) {
-    var entriesArr = [];
-    snap.forEach(function(doc) { entriesArr.push(doc.data()); });
-    var pdOverlay=document.getElementById('post-overlay');
-    var pdOpen=pdOverlay?pdOverlay.classList.contains('open'):false;
-    var openId=pdEntryId;
-    var oldCommentsJSON=null;
-    if(pdOpen&&openId){
-      var oldEntry=appState.data.entries.find(function(e){return e.id===openId});
-      if(oldEntry)oldCommentsJSON=JSON.stringify(oldEntry.comments||[]);
-    }
-    appState.data.entries = entriesArr;
-    sortEntries(); renderAll(); updateActivityBadge();
-    if(pdOpen&&openId){
-      var newEntry=appState.data.entries.find(function(e){return e.id===openId});
-      if(newEntry&&oldCommentsJSON!==JSON.stringify(newEntry.comments||[]))renderPdComments();
-    }
+// Trước đây có 1 listener nghe toàn bộ collection entries (~1.2MB, tải lại mỗi lần mở app).
+// Giờ chỉ nghe đúng bài đang mở (để bình luận của người kia hiện ngay),
+// còn feed thì tự làm mới khi quay lại app (refreshFeedIfStale).
+var _pdWatchUnsub = null;
+function watchOpenPost(id) {
+  if (_pdWatchUnsub) { _pdWatchUnsub(); _pdWatchUnsub = null; }
+  if (!id) return;
+  _pdWatchUnsub = db.collection('entries').doc(id).onSnapshot(function(doc) {
+    if (!doc.exists || pdEntryId !== id) return;
+    var data = doc.data();
+    var master = appState.data.entries.find(function(e) { return e.id === id; });
+    var oldJSON = master ? JSON.stringify(master.comments || []) : '';
+    if (master) { for (var k in data) master[k] = data[k]; }
+    else appState.data.entries.push(data);
+    if (oldJSON !== JSON.stringify(data.comments || [])) renderPdComments();
   }, function() {});
 }
+
+// Làm mới những bài đang hiển thị khi quay lại app/tab (thay cho realtime toàn bộ).
+var _lastFeedRefresh = 0;
+function refreshFeedIfStale() {
+  if (!appState.currentUid || !appState.data || !appState.data.entries) return;
+  if (_entriesLoading || document.hidden) return;
+  if (Date.now() - _lastFeedRefresh < 5000) return;
+  _lastFeedRefresh = Date.now();
+  var n = Math.max(appState.data.entries.length, FEED_PAGE);
+  db.collection('entries').orderBy('date','desc').limit(n).get().then(function(snap) {
+    var arr = [];
+    snap.forEach(function(doc) { _entriesCursor = doc; arr.push(doc.data()); });
+    _entriesDone = snap.size < n;
+    appState.data.entries = arr;
+    normalizeData(); sortEntries(); renderAll(); updateActivityBadge();
+  }).catch(function() {});
+}
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) setTimeout(refreshFeedIfStale, 300);
+});
 
 function setupRealtimeAnniversaries() {
   if (_annUnsub) return;
@@ -3999,7 +4047,7 @@ function openImageViewer(src) {
   document.getElementById('pv-image').src=src;
   document.getElementById('pv-counter').textContent='1 / 1';
   document.getElementById('pv-prev').disabled=true; document.getElementById('pv-next').disabled=true;
-  var _img=document.getElementById('pv-image');gsap.fromTo(_img,{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out',onComplete:function(){_img.style.transform='none'}})
+  var _img=document.getElementById('pv-image');if(window.gsap)gsap.fromTo(_img,{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out',onComplete:function(){_img.style.transform='none'}})
 }
 
 function goHome(){switchPage('feed')}
@@ -4038,9 +4086,9 @@ function switchPage(page){
   }
   if(page==='feed')renderFeed();
   else if(page==='direct'){_dmShouldScroll=true;renderDmMessages();markDmSeen();setTimeout(function(){var inp=document.getElementById('dm-input');if(inp)inp.focus()},200)}
-  else if(page==='explore')renderExplore();
-  else if(page==='activity'){renderActivity()}
-  else if(page==='profile')renderProfile();
+  else if(page==='explore'){renderExplore();ensureAllEntries(renderAll)}
+  else if(page==='activity'){renderActivity();ensureAllEntries(function(){renderAll();updateActivityBadge()})}
+  else if(page==='profile'){renderProfile();ensureAllEntries(renderAll)}
   if(page==='feed'||page==='profile')renderStories();
   document.getElementById('main-content').scrollTop=0;
 }
@@ -4116,13 +4164,15 @@ function annHighlightInfo(){
 }
 
 function switchToUserProfile(){
-  var otherPin=appState.currentPin===CONFIG.PIN_USER1?CONFIG.PIN_USER2:CONFIG.PIN_USER1;
-  var targetUser=getDisplayName(otherPin);
-  var entries=(appState.data.entries||[]).filter(function(e){return e.author===targetUser || getEffectiveName(e.author)===targetUser});
-  if(!entries.length){showToast('<i class="fas fa-user-circle"></i> '+esc(targetUser)+' chưa có bài viết nào');return}
-  showToast('<i class="fas fa-user-circle"></i> Xem bài viết của '+esc(targetUser));
-  switchPage('profile');
-  renderProfileForUser(otherPin);
+  ensureAllEntries(function(){
+    var otherPin=appState.currentPin===CONFIG.PIN_USER1?CONFIG.PIN_USER2:CONFIG.PIN_USER1;
+    var targetUser=getDisplayName(otherPin);
+    var entries=(appState.data.entries||[]).filter(function(e){return e.author===targetUser || getEffectiveName(e.author)===targetUser});
+    if(!entries.length){showToast('<i class="fas fa-user-circle"></i> '+esc(targetUser)+' chưa có bài viết nào');return}
+    showToast('<i class="fas fa-user-circle"></i> Xem bài viết của '+esc(targetUser));
+    switchPage('profile');
+    renderProfileForUser(otherPin);
+  });
 }
 
 var profileViewUser = null;
@@ -4175,33 +4225,103 @@ function renderFeed(){
   setTimeout(function() { _renderFeedPending = false; }, 16);
   var entries=getFeedEntries();
   var container=document.getElementById('feed-posts');
-  if(feedObserver){feedObserver.disconnect();feedObserver=null}
   if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào<br><span style="font-size:0.75rem;">Hãy viết nhật ký đầu tiên nhé!</span></div>';feedRenderCount=0;_feedCarouselState={};_feedCaptionExpanded={};return}
-  feedRenderCount=Math.min(entries.length,Math.max(FEED_INIT,feedRenderCount||0));
-  container.innerHTML=entries.slice(0,feedRenderCount).map(function(e){return buildFeedCard(e)}).join('')+'<div id="feed-sentinel" style="height:1px"></div>';
-  observeFeed();
+  feedRenderCount=Math.min(entries.length,Math.max(FEED_PAGE,feedRenderCount||0));
+  container.innerHTML=entries.slice(0,feedRenderCount).map(function(e){return buildFeedCard(e)}).join('')+feedMoreHtml();
 }
-function observeFeed(){
-  var s=document.getElementById('feed-sentinel');
-  if(!s)return;
-  if(feedObserver)feedObserver.disconnect();
-  feedObserver=new IntersectionObserver(function(entries){
-    if(entries[0].isIntersecting)loadMoreFeed();
-  },{rootMargin:'200px'});
-  feedObserver.observe(s);
+
+// Nút "Tải thêm bài" ở cuối feed (người dùng chủ động bấm để tiết kiệm data).
+function feedMoreHtml(){
+  if(feedRenderCount>=getFeedEntries().length&&_entriesDone)return '<div class="feed-end">Đã xem hết bài viết</div>';
+  return '<div class="feed-more-wrap" id="feed-more-wrap"><button class="feed-more-btn" onclick="loadMoreFeed()"><i class="fas fa-arrow-down"></i> Tải thêm bài</button></div>';
 }
+function feedSkeletonCard(){
+  return '<div class="sk-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-body"><div class="sk-line w60"></div><div class="sk-line w40"></div><div class="sk-line w60"></div></div></div>';
+}
+function showFeedMoreSkeleton(){
+  var wrap=document.getElementById('feed-more-wrap');
+  if(!wrap)return;
+  wrap.outerHTML='<div class="feed-more-wrap" id="feed-more-wrap"><div class="feed-skeleton" style="padding:0;width:100%;">'+feedSkeletonCard()+feedSkeletonCard()+'</div></div>';
+}
+
+// Tải thêm 10 bài cũ hơn từ Firestore, nối vào appState.data.entries.
+function fetchMoreEntries(cb){
+  if(_entriesDone||_entriesLoading){if(cb)cb([]);return}
+  _entriesLoading=true;
+  var q=db.collection('entries').orderBy('date','desc');
+  if(_entriesCursor)q=q.startAfter(_entriesCursor);
+  q.limit(FEED_PAGE).get().then(function(snap){
+    var added=[];
+    snap.forEach(function(doc){
+      _entriesCursor=doc;
+      var e=doc.data();
+      if(!appState.data.entries.some(function(x){return x.id===e.id})){appState.data.entries.push(e);added.push(e)}
+    });
+    if(snap.size<FEED_PAGE)_entriesDone=true;
+    _entriesLoading=false;
+    normalizeData();
+    if(cb)cb(added);
+  }).catch(function(){_entriesLoading=false;if(cb)cb([])});
+}
+
+// Tải toàn bộ bài còn lại (cho tab Ảnh / Hoạt động / Trang cá nhân / Thống kê).
+function ensureAllEntries(cb){
+  if(_entriesDone){if(cb)cb();return}
+  if(_entriesLoading){_entriesWaiters.push(function(){ensureAllEntries(cb)});return}
+  _entriesLoading=true;
+  var q=db.collection('entries').orderBy('date','desc');
+  if(_entriesCursor)q=q.startAfter(_entriesCursor);
+  q.get().then(function(snap){
+    snap.forEach(function(doc){
+      var e=doc.data();
+      if(!appState.data.entries.some(function(x){return x.id===e.id}))appState.data.entries.push(e);
+    });
+    _entriesDone=true;_entriesLoading=false;
+    normalizeData();sortEntries();
+    var w=_entriesWaiters;_entriesWaiters=[];
+    if(cb)cb();
+    w.forEach(function(f){f()});
+  }).catch(function(){
+    _entriesLoading=false;
+    var w=_entriesWaiters;_entriesWaiters=[];
+    if(cb)cb();
+    w.forEach(function(f){f()});
+  });
+}
+
+function showMoreCards(cards){
+  if(!cards.length){restoreMoreButton();return}
+  var wrap=document.getElementById('feed-more-wrap');
+  if(!wrap){renderFeed();return}
+  wrap.insertAdjacentHTML('beforebegin',cards.map(function(e){return buildFeedCard(e)}).join(''));
+  feedRenderCount+=cards.length;
+  wrap.outerHTML=feedMoreHtml();
+}
+function restoreMoreButton(){
+  var wrap=document.getElementById('feed-more-wrap');
+  if(wrap)wrap.outerHTML=feedMoreHtml();
+}
+
+var _feedLoading=false;
 function loadMoreFeed(){
+  if(_feedLoading||_entriesLoading)return;
   var entries=getFeedEntries();
-  if(feedRenderCount>=entries.length)return;
-  var add=Math.min(entries.length-feedRenderCount,FEED_MORE);
-  if(add<=0)return;
-  var container=document.getElementById('feed-posts');
-  var newCards=entries.slice(feedRenderCount,feedRenderCount+add).map(function(e){return buildFeedCard(e)}).join('');
-  var sentinel=document.getElementById('feed-sentinel');
-  if(sentinel)sentinel.insertAdjacentHTML('beforebegin',newCards);
-  else container.insertAdjacentHTML('beforeend',newCards+'<div id="feed-sentinel" style="height:1px"></div>');
-  feedRenderCount+=add;
-  observeFeed();
+  if(feedRenderCount<entries.length){
+    showMoreCards(entries.slice(feedRenderCount,feedRenderCount+FEED_PAGE));
+    return;
+  }
+  if(_entriesDone)return;
+  _feedLoading=true;
+  showFeedMoreSkeleton();
+  fetchMoreEntries(function(added){
+    _feedLoading=false;
+    if(!added.length){
+      restoreMoreButton();
+      if(!_entriesDone)showToast('<i class="fas fa-exclamation-triangle"></i> Không tải được, thử lại nhé');
+      return;
+    }
+    showMoreCards(added);
+  });
 }
 
 // ===== Bố cục ảnh kiểu Facebook: 1 -> full, 2 -> 2 cột, 3 -> 1 lớn + 2 nhỏ, 4 -> 2x2, 5+ -> 2x2 + "+N" =====
@@ -4468,8 +4588,8 @@ function openExploreViewer(index){
   var viewer=document.getElementById('photo-viewer');
   viewer.classList.add('open');document.body.style.overflow='hidden';
   updatePhotoViewer();
-  gsap.killTweensOf(document.getElementById('pv-image'));
-  gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out'})
+  if(window.gsap){gsap.killTweensOf(document.getElementById('pv-image'));
+  gsap.fromTo(document.getElementById('pv-image'),{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out'})}
 }
 
 function searchExplore(q){appState.exploreQuery=q.toLowerCase().trim();renderExplore()}
@@ -4594,6 +4714,9 @@ function openPostDetail(entryId){
   document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
   overlay.classList.add('open');
+  // scrollTop=0 lần nữa sau khi overlay hiện: trên mobile trình duyệt có thể tự cuộn lại.
+  requestAnimationFrame(function(){ if(scrollEl)scrollEl.scrollTop=0; });
+  watchOpenPost(entryId);
 }
 
 function handleActivityClick(el, entryId, commentId, replyId){
@@ -4608,17 +4731,50 @@ function handleActivityClick(el, entryId, commentId, replyId){
   if (dot) dot.remove();
   openPostDetail(entryId);
   if(!commentId)return;
-  setTimeout(function(){
-    var target=replyId?document.getElementById('pd-reply-'+commentId+'-'+replyId):document.getElementById('pd-cmt-'+commentId);
-    if(!target)target=document.querySelector('.pd-comment-item[data-id="'+commentId+'"]');
-    if(!target)return;
-    var box=target.closest?target.closest('.pd-comment-item,.pd-reply-item'):null;
-    var anchor=box||target;
-    var scroll=document.getElementById('pd-scroll');
-    if(scroll&&anchor.scrollIntoView)anchor.scrollIntoView({block:'center',behavior:'smooth'});
-    flashPdTarget(anchor);
-  },420);
+  setTimeout(function(){ followActivityComment(commentId, replyId); }, 420);
 }
+
+var _pdJumpToken=0, _pdJumpRO=null;
+function stopPdJump(){
+  _pdJumpToken++;
+  if(_pdJumpRO){_pdJumpRO.disconnect();_pdJumpRO=null}
+}
+function jumpToActivityComment(commentId, replyId){
+  var target=replyId?document.getElementById('pd-reply-'+commentId+'-'+replyId):document.getElementById('pd-cmt-'+commentId);
+  if(!target)target=document.querySelector('.pd-comment-item[data-id="'+commentId+'"]');
+  if(!target)return;
+  var box=target.closest?target.closest('.pd-comment-item,.pd-reply-item'):null;
+  var anchor=box||target;
+  var sc=document.getElementById('pd-scroll');
+  if(!sc)return;
+  var r=anchor.getBoundingClientRect(), sr=sc.getBoundingClientRect();
+  if(!(r.top>=sr.top&&r.bottom<=sr.bottom)){
+    var top=Math.max(0, sc.scrollTop+(r.top-sr.top)-(sc.clientHeight-anchor.offsetHeight)/2);
+    sc.scrollTop=top;
+  }
+  flashPdTarget(anchor);
+}
+// Cuộn tới bình luận trong thông báo. Ảnh trong bài load xong mới biết chiều cao nên
+// theo dõi thay đổi bố cục để cuộn lại cho tới khi bình luận nằm trong khung.
+function followActivityComment(commentId, replyId){
+  stopPdJump();
+  var token=_pdJumpToken;
+  jumpToActivityComment(commentId, replyId);
+  var sc=document.getElementById('pd-scroll');
+  if(!sc||!window.ResizeObserver)return;
+  _pdJumpRO=new ResizeObserver(function(){
+    if(token!==_pdJumpToken)return;
+    jumpToActivityComment(commentId, replyId);
+  });
+  for(var i=0;i<sc.children.length;i++)_pdJumpRO.observe(sc.children[i]);
+}
+// Người dùng tự vuốt thì thôi không tự cuộn nữa.
+['touchstart','wheel'].forEach(function(ev){
+  document.addEventListener(ev, function(e){
+    var t=e.target;
+    if(t&&t.closest&&t.closest('#pd-scroll'))stopPdJump();
+  }, {passive:true});
+});
 function flashPdTarget(el){
   var box=el.closest?el.closest('.pd-comment-item,.pd-reply-item'):null;
   var target=box||el;
@@ -4632,6 +4788,8 @@ function flashPdTarget(el){
 function closePostDetail(){
   var overlay=document.getElementById('post-overlay');
   pdEntryId=null;
+  stopPdJump();
+  if (_pdWatchUnsub) { _pdWatchUnsub(); _pdWatchUnsub = null; }
   pdEditingCommentId=null;
   pdEditingReply=null;
   _pendingPdImage=null;showImgPreview('pd');
@@ -5124,7 +5282,7 @@ function openPhotoViewer(entryId,index,allImages){
   viewer.classList.add('open');document.body.style.overflow='hidden';
   var mc=document.getElementById('main-content');if(mc)mc.style.overflow='hidden';
   updatePhotoViewer();
-  var _img=document.getElementById('pv-image');gsap.fromTo(_img,{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out',onComplete:function(){_img.style.transform='none'}})
+  var _img=document.getElementById('pv-image');if(window.gsap)gsap.fromTo(_img,{scale:0.9,opacity:0},{scale:1,opacity:1,duration:0.2,ease:'power2.out',onComplete:function(){_img.style.transform='none'}})
 }
 function updatePhotoViewer(){
   var total=appState.photoImages.length;
@@ -5138,6 +5296,7 @@ function navigatePhoto(d){
   if(ni<0||ni>=appState.photoImages.length)return;
   resetPvTransform();
   var img=document.getElementById('pv-image');
+  if(!window.gsap){appState.photoIndex=ni;updatePhotoViewer();img.style.transform='none';return}
   gsap.killTweensOf(img);
   img.classList.remove('pv-zoomed');
   gsap.to(img,{opacity:0,scale:0.95,duration:0.08,ease:'power2.in',onComplete:function(){
@@ -5617,6 +5776,9 @@ function openSettings(){
 
 function showDataInfo(){
   closeModal('modal-settings');
+  ensureAllEntries(showDataInfoNow);
+}
+function showDataInfoNow(){
   var entries=appState.data.entries||[];
   var anns=appState.data.anniversaries||[];
   var totalImages=0;entries.forEach(function(e){if(e.images)totalImages+=e.images.length});
