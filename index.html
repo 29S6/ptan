@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -134,9 +134,9 @@ a { color: var(--text-link); text-decoration:none; }
   position:fixed; inset:0; z-index:9999;
   background: var(--card-bg);
   display:flex; align-items:center; justify-content:center;
-  transition: opacity 0.12s, transform 0.12s;
+  transition: opacity 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.25s cubic-bezier(0.22,1,0.36,1);
 }
-#lock-screen.hiding { opacity:0; transform:scale(1.05); pointer-events:none; }
+#lock-screen.hiding { opacity:0; transform:scale(1.04); pointer-events:none; }
 .lock-inner { text-align:center; max-width:340px; width:90%; padding:20px; }
 .lock-logo { font-size:2.2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.5px; display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:4px; }
 .lock-logo i { font-size:1.6rem; background:var(--story-gradient); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
@@ -265,8 +265,8 @@ html.dark #bottom-nav {
 }
 
 .page { display:none; }
-.page.active { display:block; animation:pageIn 0.18s ease; }
-@keyframes pageIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.page.active { display:block; animation:pageIn 0.22s cubic-bezier(0.22,1,0.36,1); }
+@keyframes pageIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
 @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
 @keyframes heartPop { 0%{transform:scale(1)} 25%{transform:scale(1.3)} 50%{transform:scale(0.95)} 100%{transform:scale(1)} }
@@ -399,10 +399,11 @@ html.dark #bottom-nav {
 /* ===== Overlay danh sách ảnh trải dọc (kiểu Facebook) ===== */
 #img-list-overlay {
   position:fixed; inset:0; z-index:3000; background:rgba(0,0,0,0.92);
-  display:none; flex-direction:column;
-  animation:fadeIn 0.2s ease;
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.22s cubic-bezier(0.22,1,0.36,1);
 }
-#img-list-overlay.open { display:flex; }
+#img-list-overlay.open { opacity:1; pointer-events:auto; }
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 .img-list-top {
   display:flex; align-items:center; justify-content:space-between;
@@ -512,8 +513,9 @@ html.dark #bottom-nav {
   position:absolute; top:44px; right:0; z-index:200; min-width:220px;
   background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius-sm);
   box-shadow:var(--shadow-dropdown); padding:4px 0; display:none; overflow:hidden;
+  transform-origin:top right;
 }
-.profile-dropdown.open { display:block;   animation:fadeUp 0.12s ease; }
+.profile-dropdown.open { display:block; animation:pdDropFade 0.16s cubic-bezier(0.22,1,0.36,1); }
 .profile-dropdown button {
   width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
   font-size:0.85rem; color:var(--text-primary); background:none; border:none;
@@ -731,7 +733,7 @@ html.dark #bottom-nav {
   position:fixed; inset:0; z-index:2000;
   background:var(--card-bg); display:flex; flex-direction:column;
   transform:translateY(100%); opacity:0; pointer-events:none;
-  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease;
+  transition:transform 0.18s cubic-bezier(0.22,1,0.36,1), opacity 0.14s ease;
   will-change:transform,opacity;
 }
 #post-overlay.open { transform:translateY(0); opacity:1; pointer-events:auto; }
@@ -937,9 +939,9 @@ html.dark #bottom-nav {
 
 @media (min-width:768px) {
   /* PC: nền mờ + blur chuyên nghiệp (mobile giữ full-screen như Instagram) */
-  #post-overlay { background:var(--overlay-bg); -webkit-backdrop-filter:blur(8px) saturate(180%); backdrop-filter:blur(8px) saturate(180%); align-items:center; justify-content:center; transform:none; transition:opacity 0.25s ease; }
+  #post-overlay { background:var(--overlay-bg); -webkit-backdrop-filter:blur(8px) saturate(180%); backdrop-filter:blur(8px) saturate(180%); align-items:center; justify-content:center; transform:none; transition:opacity 0.14s ease; }
   #post-overlay.open .pd-modal { transform:translateY(0) scale(1); opacity:1; }
-  .pd-modal { background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius); overflow:hidden; max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.25); will-change:transform,opacity; transform:translateY(20px) scale(0.97); opacity:0; transition:transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease; }
+  .pd-modal { background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius); overflow:hidden; max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.25); will-change:transform,opacity; transform:translateY(8px) scale(0.98); opacity:0; transition:transform 0.16s cubic-bezier(0.22,1,0.36,1), opacity 0.14s ease; }
   .pd-modal-inner { flex-direction:row; }
   .pd-images { width:calc(100% - 380px); flex:none; background:#000; min-height:400px; max-height:80vh; }
   .pd-carousel-img { max-height:80vh; }
@@ -951,10 +953,11 @@ html.dark #bottom-nav {
 
 #photo-viewer {
   position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.92);
-  display:none; align-items:center; justify-content:center; flex-direction:column;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
   backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  opacity:0; pointer-events:none; transition:opacity 0.22s cubic-bezier(0.22,1,0.36,1);
 }
-#photo-viewer.open { display:flex; }
+#photo-viewer.open { opacity:1; pointer-events:auto; }
 .pv-top { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; padding:14px 16px; }
 .pv-top button { color:#fff; font-size:1.2rem; padding:6px 10px; background:rgba(255,255,255,0.1); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; transition:0.07s; }
 .pv-top button:hover { background:rgba(255,255,255,0.2); }
@@ -978,13 +981,17 @@ html.dark #bottom-nav {
   position:fixed; inset:0; z-index:800; background:var(--overlay-bg);
   display:flex; align-items:center; justify-content:center; padding:16px;
   backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-  opacity:0; pointer-events:none; transition:opacity 0.25s ease;
+  opacity:0; pointer-events:none; transition:opacity 0.15s cubic-bezier(0.22,1,0.36,1);
 }
 .modal-overlay.open { opacity:1; pointer-events:auto; }
 .modal-box {
   background:var(--card-bg); border-radius:var(--radius); max-width:500px; width:100%;
   max-height:85vh; overflow-y:auto; padding:20px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.08);
-  animation:scaleIn 0.15s cubic-bezier(0.22,1,0.36,1);
+  transform:scale(0.96) translateY(6px);
+  transition:transform 0.15s cubic-bezier(0.22,1,0.36,1);
+}
+.modal-overlay.open .modal-box {
+  transform:scale(1) translateY(0);
 }
 .modal-box::-webkit-scrollbar { width:4px; }
 .modal-box::-webkit-scrollbar-thumb { background:var(--border-light); border-radius:10px; }
@@ -1012,22 +1019,16 @@ html.dark #bottom-nav {
 @media (min-width:1024px) { #toast { bottom:30px; } }
 
 
-#saving-overlay {
-  position:fixed; inset:0; z-index:9500; background:var(--overlay-bg); -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-  display:none; align-items:center; justify-content:center; opacity:0; transition:opacity 0.25s ease;
-}
-#saving-overlay.show { display:flex; opacity:1; }
-.saving-box { text-align:center; }
-.saving-spinner { width:48px; height:48px; border:4px solid var(--border-light); border-top-color:var(--text-link); border-radius:50%;   animation:spin 0.5s linear infinite; margin:0 auto 12px; }
-.saving-text { font-size:0.9rem; font-weight:500; color:var(--text-primary); }
+#saving-overlay, #saving-overlay.show { display:none !important; }
 
 
 .dropdown-menu {
   position:absolute; top:100%; right:0; z-index:50;
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
   box-shadow:var(--shadow-dropdown); min-width:140px; display:none; padding:4px 0;
+  transform-origin:top right;
 }
-.dropdown-menu.show { display:block; }
+.dropdown-menu.show { display:block; animation:pdDropFade 0.16s cubic-bezier(0.22,1,0.36,1); }
 .dropdown-menu button {
   display:block; width:100%; text-align:left; padding:8px 14px;
   font-size:0.8rem; font-weight:500; color:var(--text-primary); transition:0.07s; border:none; background:transparent; cursor:pointer;
@@ -1391,6 +1392,97 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   .pv-nav:hover { background:rgba(255,255,255,0.08); }
   .pv-zoom-btn:hover { background:rgba(255,255,255,0.12); }
 }
+
+@keyframes pinShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-7px); }
+  80% { transform: translateX(7px); }
+}
+.pin-dots.shake { animation: pinShake 0.4s ease; }
+.pin-dots.shake .pin-dot { border-color: var(--text-danger); background: var(--text-danger); }
+
+/* ===== Story Viewer toàn màn hình chuẩn Instagram ===== */
+#story-viewer-overlay {
+  position: fixed; inset: 0; z-index: 4500;
+  background: rgba(10, 10, 14, 0.96);
+  display: none; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s ease;
+  user-select: none; -webkit-user-select: none;
+}
+#story-viewer-overlay.open { display: flex; }
+.sv-frame {
+  position: relative; width: 100%; max-width: 430px; height: 100dvh; max-height: 820px;
+  background: #111; overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+@media (min-width: 600px) {
+  .sv-frame { height: 92dvh; border-radius: 18px; border: 1px solid rgba(255,255,255,0.12); }
+}
+.sv-progress-row {
+  position: absolute; top: 10px; left: 10px; right: 10px; z-index: 10;
+  display: flex; gap: 4px;
+}
+.sv-prog-seg {
+  flex: 1; height: 2.5px; background: rgba(255,255,255,0.32); border-radius: 3px; overflow: hidden;
+}
+.sv-prog-fill {
+  height: 100%; width: 0%; background: #fff; border-radius: 3px;
+}
+.sv-header {
+  position: absolute; top: 20px; left: 12px; right: 12px; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+.sv-user { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.sv-ava {
+  width: 36px; height: 36px; border-radius: 50%; padding: 2px;
+  background: var(--story-gradient); display: flex; align-items: center; justify-content: center;
+}
+.sv-ava .inner {
+  width: 100%; height: 100%; border-radius: 50%; background: #222;
+  display: flex; align-items: center; justify-content: center; overflow: hidden; color: #fff;
+}
+.sv-ava .inner img { width: 100%; height: 100%; object-fit: cover; }
+.sv-meta { display: flex; flex-direction: column; }
+.sv-name { font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.sv-time { font-size: 0.72rem; opacity: 0.85; }
+.sv-top-actions { display: flex; align-items: center; gap: 6px; }
+.sv-top-btn {
+  width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.35);
+  color: #fff; border: none; display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; cursor: pointer; backdrop-filter: blur(8px);
+}
+.sv-top-btn:hover { background: rgba(255,255,255,0.2); }
+.sv-stage {
+  position: relative; flex: 1; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.sv-bg-blur {
+  position: absolute; inset: -20px; background-size: cover; background-position: center;
+  filter: blur(28px) brightness(0.45); transform: scale(1.1); pointer-events: none;
+}
+.sv-main-img {
+  position: relative; z-index: 2; max-width: 100%; max-height: 100%;
+  object-fit: contain; transition: opacity 0.18s ease;
+}
+.sv-tap-left, .sv-tap-right {
+  position: absolute; top: 70px; bottom: 90px; z-index: 6; cursor: pointer;
+}
+.sv-tap-left { left: 0; width: 32%; }
+.sv-tap-right { right: 0; width: 68%; }
+.sv-footer {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 10;
+  padding: 24px 16px 18px;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 65%, transparent 100%);
+  color: #fff; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+}
+.sv-caption {
+  flex: 1; font-size: 0.9rem; line-height: 1.45; max-height: 4.4em; overflow: hidden;
+  text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
 </style>
 </head>
 <body>
@@ -1400,8 +1492,8 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 <div id="lock-screen">
   <div class="lock-inner">
     <div class="lock-logo"><i class="fas fa-heart" style="-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
-    <p class="lock-sub">Nhập mật mã để tiếp tục</p>
-    <div class="pin-dots">
+    <p class="lock-sub">Nhập mật mã</p>
+    <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="dot-0"></div>
       <div class="pin-dot" id="dot-1"></div>
       <div class="pin-dot" id="dot-2"></div>
@@ -1430,7 +1522,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
   
   <div id="sidebar">
-    <div class="sidebar-logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
+    <div class="sidebar-logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> <span class="logo-text">Love Story</span></div>
     <nav class="sidebar-nav">
       <div class="sidebar-item active" data-page="feed" onclick="switchPage('feed')">
         <i class="fas fa-house"></i><span class="label">Trang chủ</span>
@@ -1466,7 +1558,7 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     <div class="page active" id="page-feed">
       <div class="feed-header">
         <button class="feed-create-btn" onclick="openCreatePage()"><i class="far fa-square-plus"></i></button>
-        <div class="logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
+        <div class="logo" style="cursor:pointer;" onclick="goHome()"><i class="fas fa-heart" style="color:#ed4956;-webkit-text-fill-color:#ed4956;background:none;"></i> <span class="logo-text">Love Story</span></div>
       </div>
       <div id="stories-container" class="stories-container"></div>
       <div id="write-reminder-banner" class="write-reminder-banner" style="display:none;"></div>
@@ -1708,6 +1800,36 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
     <button onclick="closeImageList()" title="Đóng"><i class="fas fa-times"></i></button>
   </div>
   <div class="img-list-body" id="img-list-body"></div>
+</div>
+
+<!-- Overlay xem Story toàn màn hình chuẩn Instagram -->
+<div id="story-viewer-overlay">
+  <div class="sv-frame" id="sv-frame">
+    <div class="sv-progress-row" id="sv-progress-row"></div>
+    <div class="sv-header">
+      <div class="sv-user" id="sv-user-info" onclick="svOpenAuthorProfile()">
+        <div class="sv-ava"><div class="inner" id="sv-ava-inner"><i class="fas fa-user"></i></div></div>
+        <div class="sv-meta">
+          <div class="sv-name" id="sv-name">Love Story</div>
+          <div class="sv-time" id="sv-time"></div>
+        </div>
+      </div>
+      <div class="sv-top-actions">
+        <button class="sv-top-btn" id="sv-ann-manage-btn" style="display:none;" onclick="event.stopPropagation();closeStoryViewer();openAnnModal()" title="Quản lý kỷ niệm"><i class="fas fa-sliders"></i></button>
+        <button class="sv-top-btn" id="sv-pause-btn" onclick="event.stopPropagation();toggleStoryPause()" title="Tạm dừng / Tiếp tục"><i class="fas fa-pause"></i></button>
+        <button class="sv-top-btn" onclick="event.stopPropagation();closeStoryViewer()" title="Đóng"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+    <div class="sv-stage" id="sv-stage">
+      <div class="sv-bg-blur" id="sv-bg-blur"></div>
+      <img class="sv-main-img" id="sv-main-img" src="" alt="" />
+      <div class="sv-tap-left" onclick="svStep(-1)"></div>
+      <div class="sv-tap-right" onclick="svStep(1)"></div>
+    </div>
+    <div class="sv-footer">
+      <div class="sv-caption" id="sv-caption"></div>
+    </div>
+  </div>
 </div>
 
 
@@ -2003,6 +2125,7 @@ function silentAuth() {
 auth.onAuthStateChanged(function(user) {
   if (!user) { silentAuth(); return; }
   appState.currentUid = user.uid;
+  loadUserProfiles(true);
   db.collection('config').doc('pin_mapping').get().then(function(doc) {
     if (doc.exists) appState.pinMapping = doc.data().mapping || {};
   }).catch(function() {});
@@ -2038,7 +2161,7 @@ function loadUserProfiles(force) {
     }
   }
   
-  if (force && appState.currentPin) {
+  if (force) {
     db.collection('config').doc('profiles').get().then(function(doc) {
       if (doc.exists) {
         var remoteProfiles = doc.data().profiles || {};
@@ -2057,11 +2180,14 @@ function loadUserProfiles(force) {
           currentUser = userProfiles[cp].name;
         }
         saveUserProfiles();
-        updateUserUI();
+        if (cp) {
+          updateUserUI();
+          if (typeof renderStories === 'function') renderStories();
+        }
         if (typeof applyDockGlass === 'function') applyDockGlass();
         
-        if (changed && appState.currentPage === 'feed') {
-          var newAva = userProfiles[appState.currentPin] && userProfiles[appState.currentPin].avatar;
+        if (changed && cp && appState.currentPage === 'feed') {
+          var newAva = userProfiles[cp] && userProfiles[cp].avatar;
           if (newAva) {
             document.querySelectorAll('.feed-card .fcard-ava').forEach(function(img) { img.src = newAva; });
           }
@@ -2416,18 +2542,31 @@ function verifyPin(){
     var p=appState.pinCode;appState.currentPin=p;
     if(p===CONFIG.PIN_USER1){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
     else if(p===CONFIG.PIN_USER2){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
-    else{document.getElementById('lock-error').textContent='Mật mã không đúng';appState.pinCode='';appState.currentPin='';updateDots()}
+    else{
+      document.getElementById('lock-error').textContent='Mật mã không đúng';
+      var dotsEl=document.getElementById('pin-dots');
+      if(dotsEl){
+        dotsEl.classList.remove('shake');
+        void dotsEl.offsetWidth;
+        dotsEl.classList.add('shake');
+        setTimeout(function(){dotsEl.classList.remove('shake')},450);
+      }
+      if(navigator.vibrate)navigator.vibrate([40,30,40]);
+      appState.pinCode='';appState.currentPin='';updateDots();
+    }
   } catch(e){document.getElementById('lock-error').textContent='Lỗi: '+e.message}
 }
 function unlockApp(){
   applyTheme();
-  document.getElementById('lock-screen').classList.add('hiding');
-  setTimeout(function(){
-    document.getElementById('lock-screen').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('main-content').scrollTop = 0;
-    initApp();
-  },300);
+  document.getElementById('app').style.display='block';
+  document.getElementById('main-content').scrollTop = 0;
+  initApp();
+  requestAnimationFrame(function(){
+    document.getElementById('lock-screen').classList.add('hiding');
+    setTimeout(function(){
+      document.getElementById('lock-screen').style.display='none';
+    },250);
+  });
 }
 function showFeedSkeleton(){
   var c=document.getElementById('feed-posts');
@@ -2453,6 +2592,7 @@ document.addEventListener('keydown',function(e){var ls=document.getElementById('
 function initApp(){
   showFeedSkeleton();
   updateUserUI();
+  renderStories();
   loadOfflineQueue();
   processOfflineQueue();
   startClock();
@@ -2775,8 +2915,8 @@ function startClock(){
 }
 
 
-function showSaving(t){document.getElementById('saving-text').textContent=t||'Đang xử lý...';document.getElementById('saving-overlay').classList.add('show')}
-function hideSaving(){document.getElementById('saving-overlay').classList.remove('show')}
+function showSaving(t){showLoadingBar()}
+function hideSaving(){hideLoadingBar()}
 
 var toastTimer=null;
 function showToast(m){if(!m)return;var el=document.getElementById('toast');el.innerHTML=m;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},3000)}
@@ -4131,11 +4271,11 @@ function renderStories(){
   function avaHtml(ava,fallback){return ava?'<img src="'+esc(ava)+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':fallback;}
   var html='';
   var fallbackHtml='<i class="fas fa-user-circle" style="font-size:1.8rem;color:var(--text-secondary);"></i>';
-  html+='<div class="story-item" onclick="switchPage(\'profile\')"><div class="story-avatar"><span class="story-plus"><i class="fas fa-plus"></i></span><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Bạn</div></div>';
-  html+='<div class="story-item" onclick="switchToUserProfile()"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(cleanName(otherDisplayName))+'</div></div>';
+  html+='<div class="story-item" onclick="openUserStory(\''+appState.currentPin+'\')"><div class="story-avatar"><span class="story-plus" onclick="event.stopPropagation();openCreatePage()" title="Đăng khoảnh khắc mới"><i class="fas fa-plus"></i></span><div class="inner">'+avaHtml(myAva,fallbackHtml)+'</div></div><div class="story-name">Tin của bạn</div></div>';
+  html+='<div class="story-item" onclick="openUserStory(\''+otherPin+'\')"><div class="story-avatar" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);"><div class="inner">'+avaHtml(otherAva,fallbackHtml)+'</div></div><div class="story-name">'+esc(cleanName(otherDisplayName))+'</div></div>';
   var annInfo=annHighlightInfo();
   var annInner=annInfo.img?'<img src="'+esc(driveThumb(annInfo.img,160))+'" loading="lazy" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">':'<i class="fas '+annInfo.icon+' ann-highlight-icon"></i>';
-  html+='<div class="story-item" onclick="openAnnModal()"><div class="story-avatar ann-highlight'+(annInfo.today?' ann-today':'')+'"><div class="inner">'+annInner+'</div></div><div class="story-name">Kỷ niệm</div></div>';
+  html+='<div class="story-item" onclick="openAnnStory()"><div class="story-avatar ann-highlight'+(annInfo.today?' ann-today':'')+'"><div class="inner">'+annInner+'</div></div><div class="story-name">Kỷ niệm</div></div>';
   container.innerHTML=html;
 }
 
@@ -6376,11 +6516,207 @@ document.addEventListener('click',function(e){
   if(!e.target.closest('.cpw-menu')&&!e.target.closest('.dcp-menu-btn'))dmPopupCloseMenu();
 });
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){dmPopupCloseMenu();if(_dmPopupEditingId)dmPopupCancelEdit();}
+  if(e.key==='Escape'){
+    dmPopupCloseMenu();
+    if(_dmPopupEditingId)dmPopupCancelEdit();
+    var svo=document.getElementById('story-viewer-overlay');
+    if(svo&&svo.classList.contains('open'))closeStoryViewer();
+  } else if(e.key==='ArrowRight'){
+    var svoR=document.getElementById('story-viewer-overlay');
+    if(svoR&&svoR.classList.contains('open'))svStep(1);
+  } else if(e.key==='ArrowLeft'){
+    var svoL=document.getElementById('story-viewer-overlay');
+    if(svoL&&svoL.classList.contains('open'))svStep(-1);
+  }
 });
 if(window.innerWidth>=1024){var _fab=document.getElementById('dm-chat-fab');if(_fab)_fab.style.display='flex';}
 
+/* ===== 3. Logic Story Viewer toàn màn hình kiểu Instagram ===== */
+var _svSlides = [];
+var _svIndex = 0;
+var _svTimer = null;
+var _svPaused = false;
+var _svStartTs = 0;
+var _svElapsed = 0;
+var _svDuration = 5000;
+var _svCurrentAuthorPin = '';
+var _svIsAnnMode = false;
 
+function openUserStory(pin){
+  ensureAllEntries(function(){
+    var targetName = getDisplayName(pin);
+    var entries = (appState.data.entries||[]).filter(function(e){
+      return (e.author===targetName || getEffectiveName(e.author)===targetName) && e.images && e.images.length>0;
+    });
+    var slides = [];
+    entries.slice(0, 6).forEach(function(e){
+      (e.images||[]).slice(0, 3).forEach(function(img){
+        var u = img.url || img;
+        if(u){
+          slides.push({
+            img: driveThumb ? driveThumb(u, 1000) : u,
+            caption: e.content || '',
+            time: formatDateVN(e.date) || timeAgo(e.createdAt||e.updatedAt),
+            entryId: e.id,
+            authorPin: pin
+          });
+        }
+      });
+    });
+    if(!slides.length){
+      if(pin===appState.currentPin){
+        showToast('<i class="fas fa-camera"></i> Bạn chưa có ảnh Story nào, hãy đăng bài mới nhé!');
+        openCreatePage();
+      } else {
+        viewProfile(pin);
+      }
+      return;
+    }
+    _svCurrentAuthorPin = pin;
+    _svIsAnnMode = false;
+    startStoryViewer(slides.slice(0, 10));
+  });
+}
+
+function openAnnStory(){
+  var anns = (appState.data.anniversaries||[]).filter(function(a){return a.image && a.image.url;});
+  if(!anns.length){
+    openAnnModal();
+    return;
+  }
+  var today = new Date(); today.setHours(0,0,0,0);
+  var slides = anns.map(function(a){
+    var p = (a.date||'2000-01-01').split('-');
+    var next = new Date(today.getFullYear(), parseInt(p[1])-1, parseInt(p[2]));
+    if(next < today) next.setFullYear(next.getFullYear()+1);
+    var days = Math.round((next-today)/86400000);
+    var sub = days===0 ? '🎉 Hôm nay là ngày kỷ niệm!' : ('Còn ' + days + ' ngày nữa · ' + formatShortDate(a.date));
+    return {
+      img: driveThumb ? driveThumb(a.image.url, 1000) : a.image.url,
+      caption: '💖 ' + (a.name || 'Kỷ niệm'),
+      time: sub,
+      entryId: null,
+      authorPin: appState.currentPin
+    };
+  });
+  _svCurrentAuthorPin = appState.currentPin;
+  _svIsAnnMode = true;
+  startStoryViewer(slides);
+}
+
+function startStoryViewer(slides){
+  _svSlides = slides;
+  _svIndex = 0;
+  _svPaused = false;
+  var ov = document.getElementById('story-viewer-overlay');
+  if(!ov)return;
+  var progRow = document.getElementById('sv-progress-row');
+  progRow.innerHTML = slides.map(function(_, i){
+    return '<div class="sv-prog-seg"><div class="sv-prog-fill" id="sv-prog-'+i+'"></div></div>';
+  }).join('');
+  var annBtn = document.getElementById('sv-ann-manage-btn');
+  if(annBtn) annBtn.style.display = _svIsAnnMode ? 'flex' : 'none';
+  ov.classList.add('open');
+  renderStorySlide(0);
+}
+
+function renderStorySlide(idx){
+  cancelAnimationFrame(_svTimer);
+  if(idx < 0) idx = 0;
+  if(idx >= _svSlides.length){
+    closeStoryViewer();
+    return;
+  }
+  _svIndex = idx;
+  for(var i=0; i<_svSlides.length; i++){
+    var f = document.getElementById('sv-prog-'+i);
+    if(f) f.style.width = (i < idx ? '100%' : '0%');
+  }
+  var s = _svSlides[idx];
+  var avaInner = document.getElementById('sv-ava-inner');
+  var nameEl = document.getElementById('sv-name');
+  var timeEl = document.getElementById('sv-time');
+  if(_svIsAnnMode){
+    avaInner.innerHTML = '<i class="fas fa-gift" style="color:#ed4956;"></i>';
+    nameEl.innerHTML = 'Kỷ niệm của hai đứa <i class="fas fa-heart" style="color:#ed4956;font-size:0.75rem;"></i>';
+  } else {
+    var ava = getDisplayAvatar(s.authorPin);
+    var uname = cleanName(getDisplayName(s.authorPin));
+    avaInner.innerHTML = ava ? '<img src="'+esc(ava)+'" alt="">' : '<i class="fas fa-user"></i>';
+    nameEl.innerHTML = esc(uname) + ' <i class="fas fa-check-circle verified-badge" style="font-size:0.8rem;"></i>';
+  }
+  timeEl.textContent = s.time || '';
+  var mainImg = document.getElementById('sv-main-img');
+  var bgBlur = document.getElementById('sv-bg-blur');
+  mainImg.style.opacity = '0.2';
+  mainImg.onload = function(){ mainImg.style.opacity = '1'; };
+  mainImg.src = s.img;
+  bgBlur.style.backgroundImage = 'url("' + esc(s.img) + '")';
+
+  var capEl = document.getElementById('sv-caption');
+  capEl.textContent = s.caption || '';
+  capEl.style.display = s.caption ? 'block' : 'none';
+
+  _svElapsed = 0;
+  _svStartTs = performance.now();
+  updatePauseBtnIcon();
+  tickStoryProgress();
+}
+
+function tickStoryProgress(){
+  if(_svPaused) return;
+  var now = performance.now();
+  var total = _svElapsed + (now - _svStartTs);
+  var pct = Math.min(100, (total / _svDuration) * 100);
+  var fill = document.getElementById('sv-prog-' + _svIndex);
+  if(fill) fill.style.width = pct + '%';
+  if(pct >= 100){
+    svStep(1);
+    return;
+  }
+  _svTimer = requestAnimationFrame(tickStoryProgress);
+}
+
+function svStep(dir){
+  var next = _svIndex + dir;
+  if(next < 0) next = 0;
+  if(next >= _svSlides.length){
+    closeStoryViewer();
+    return;
+  }
+  renderStorySlide(next);
+}
+
+function toggleStoryPause(){
+  if(!_svPaused){
+    _svPaused = true;
+    _svElapsed += (performance.now() - _svStartTs);
+    cancelAnimationFrame(_svTimer);
+  } else {
+    _svPaused = false;
+    _svStartTs = performance.now();
+    tickStoryProgress();
+  }
+  updatePauseBtnIcon();
+}
+
+function updatePauseBtnIcon(){
+  var btn = document.getElementById('sv-pause-btn');
+  if(btn) btn.innerHTML = '<i class="fas fa-'+(_svPaused?'play':'pause')+'"></i>';
+}
+
+function closeStoryViewer(){
+  cancelAnimationFrame(_svTimer);
+  var ov = document.getElementById('story-viewer-overlay');
+  if(ov) ov.classList.remove('open');
+}
+
+function svOpenAuthorProfile(){
+  var pin = _svCurrentAuthorPin;
+  closeStoryViewer();
+  if(_svIsAnnMode) openAnnModal();
+  else if(pin) viewProfile(pin);
+}
 
 </script>
 </body>
