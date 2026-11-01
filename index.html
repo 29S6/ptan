@@ -311,21 +311,118 @@ html.dark #bottom-nav {
 
 .feed-posts { max-width:630px; margin:0 auto; padding:0 0 12px; }
 .write-reminder-banner {
-  max-width:630px; margin:16px auto 16px; padding:16px;
+  max-width:630px; margin:12px auto 4px; padding:14px 16px;
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
-  box-shadow:var(--shadow); transition:box-shadow 0.2s, transform 0.15s;
+  box-shadow:var(--shadow); transition:box-shadow 0.2s, border-color 0.2s;
+  position:relative; overflow:hidden;
 }
-.write-reminder-banner:hover { box-shadow:var(--shadow); }
-.write-reminder-banner .wrb-content { display:flex; align-items:center; gap:12px; width:100%; }
-.write-reminder-banner .wrb-ic { color:#ed4956; font-size:1.15rem; flex-shrink:0; width:28px; height:28px; display:flex; align-items:center; justify-content:center; }
-.write-reminder-banner .wrb-text { flex:1; min-width:0; font-size:0.88rem; color:var(--text-primary); line-height:1.4; }
-.write-reminder-banner .wrb-btn {
-  flex-shrink:0; background:var(--text-link); color:#fff; border:none;
-  border-radius:20px; padding:8px 20px; font-size:0.8rem; font-weight:600; cursor:pointer;
-  transition:background 0.12s, transform 0.1s;
+.write-reminder-banner.streak-lit {
+  border-color:rgba(255,150,0,0.32);
+  background:linear-gradient(180deg, rgba(255,150,0,0.05) 0%, var(--card-bg) 65%);
 }
-.write-reminder-banner .wrb-btn:hover { background:#c2185b; }
-.write-reminder-banner .wrb-btn:active { transform:scale(0.97); }
+html.dark .write-reminder-banner.streak-lit {
+  border-color:rgba(255,150,0,0.28);
+  background:linear-gradient(180deg, rgba(255,150,0,0.08) 0%, var(--card-bg) 70%);
+}
+.duo-streak-top {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.duo-streak-left {
+  display:flex; align-items:center; gap:12px; min-width:0; flex:1;
+}
+.duo-flame-wrap {
+  width:46px; height:46px; border-radius:14px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; position:relative;
+  background:rgba(255,150,0,0.12);
+  transition:transform 0.2s cubic-bezier(0.22,1,0.36,1), background 0.2s;
+}
+.duo-flame-wrap.pending {
+  background:rgba(255,150,0,0.08);
+  border:1.5px dashed rgba(255,150,0,0.45);
+}
+.duo-flame-wrap.zero {
+  background:var(--hover-bg);
+}
+.duo-flame-svg {
+  width:28px; height:28px; display:block;
+}
+.streak-lit .duo-flame-svg {
+  filter:drop-shadow(0 3px 6px rgba(255,120,0,0.35));
+  animation:duoFlamePulse 2.4s ease-in-out infinite;
+}
+@keyframes duoFlamePulse {
+  0%, 100% { transform:scale(1) translateY(0); }
+  50% { transform:scale(1.06) translateY(-1px); }
+}
+.duo-streak-info { min-width:0; flex:1; }
+.duo-streak-title-row {
+  display:flex; align-items:baseline; gap:6px; flex-wrap:wrap;
+}
+.duo-streak-count {
+  font-size:1.35rem; font-weight:900; line-height:1.1; letter-spacing:-0.5px;
+  color:#ff9600;
+}
+.duo-streak-count.pending { color:#f59e0b; }
+.duo-streak-count.zero { color:var(--text-secondary); }
+.duo-streak-unit {
+  font-size:0.92rem; font-weight:800; color:var(--text-primary);
+}
+.duo-streak-best {
+  font-size:0.68rem; font-weight:700; color:#d97706;
+  background:rgba(245,158,11,0.12); padding:2px 8px; border-radius:999px;
+  display:inline-flex; align-items:center; gap:4px; margin-left:2px;
+}
+html.dark .duo-streak-best { color:#fbbf24; background:rgba(251,191,36,0.14); }
+.duo-streak-sub {
+  font-size:0.78rem; color:var(--text-secondary); margin-top:3px; line-height:1.35;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.duo-streak-btn {
+  flex-shrink:0; background:#ff9600; color:#fff; border:none;
+  border-radius:12px; padding:8px 14px; font-size:0.78rem; font-weight:800;
+  letter-spacing:0.2px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  box-shadow:0 3px 0 #d97706; transition:transform 0.1s, box-shadow 0.1s, background 0.15s;
+}
+.duo-streak-btn:hover { background:#ffa31a; }
+.duo-streak-btn:active { transform:translateY(2px); box-shadow:0 1px 0 #d97706; }
+.duo-streak-btn.done {
+  background:rgba(255,150,0,0.12); color:#e67e00; box-shadow:none;
+  border:1px solid rgba(255,150,0,0.28); font-weight:700;
+}
+html.dark .duo-streak-btn.done { color:#ffb03a; background:rgba(255,150,0,0.15); }
+.duo-streak-btn.done:hover { background:rgba(255,150,0,0.2); }
+.duo-streak-btn.done:active { transform:scale(0.97); }
+.duo-week-row {
+  display:grid; grid-template-columns:repeat(7,1fr); gap:6px;
+  margin-top:12px; padding-top:12px; border-top:1px solid var(--border-light);
+}
+.duo-day-col {
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.duo-day-label {
+  font-size:0.68rem; font-weight:700; color:var(--text-secondary); letter-spacing:0.2px;
+}
+.duo-day-col.is-today .duo-day-label { color:#ff9600; font-weight:800; }
+.duo-day-col.is-done .duo-day-label { color:#ff9600; }
+.duo-day-dot {
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.74rem; font-weight:700; color:var(--text-secondary);
+  background:var(--input-bg); border:1.5px solid var(--border-light);
+  transition:transform 0.18s cubic-bezier(0.22,1,0.36,1);
+}
+.duo-day-col.is-done .duo-day-dot {
+  background:linear-gradient(180deg,#ffad1f 0%,#ff8800 100%);
+  border-color:#ff8800; color:#fff;
+  box-shadow:0 2px 0 #cc6d00;
+}
+.duo-day-col.is-today:not(.is-done) .duo-day-dot {
+  border:2px dashed #ff9600; color:#ff9600;
+  background:rgba(255,150,0,0.08); font-weight:800;
+}
+.duo-day-col.is-future:not(.is-done) .duo-day-dot {
+  opacity:0.55;
+}
 .feed-card {
   background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius-sm);
   margin-bottom:16px; position:relative;
@@ -454,6 +551,8 @@ html.dark #bottom-nav {
 @media (min-width:1024px) {
   .stories-container { padding:16px 24px; margin-bottom:2px; }
   /* Khoảng cách giữa khu story và các bài trên timeline (bằng khoảng cách giữa các bài) */
+  .write-reminder-banner { max-width:732px; margin:14px auto 0; border-radius:14px; padding:16px 22px; }
+  .duo-day-dot { width:34px; height:34px; font-size:0.78rem; }
   .feed-posts { max-width:780px; padding:14px 24px 40px; }
   .feed-card { margin-bottom:16px; border-radius:14px; }
   .feed-card-header { padding:16px 22px 12px; }
@@ -1042,6 +1141,7 @@ html.dark #bottom-nav {
   .story-avatar .story-plus { width:18px; height:18px; font-size:0.55rem; bottom:-1px; right:-1px; }
   .story-avatar .inner { font-size:1.4rem; }
   .story-name { font-size:0.55rem; max-width:56px; }
+  .write-reminder-banner { margin:10px 12px 0; padding:12px 14px; }
   .feed-card { border-left:1px solid var(--border-light); border-right:1px solid var(--border-light); border-radius:var(--radius-sm); margin-bottom:10px; }
   .feed-posts { padding:10px 12px 12px; }
   .profile-avatar { width:64px; height:64px; }
@@ -2358,7 +2458,16 @@ var _lastUnseenCount = 0;
 function updateActivityBadge(){
   var count=getUnseenCount();
   document.querySelectorAll('.activity-badge').forEach(function(b){b.textContent=count;b.style.display=count>0?'flex':'none'});
-  if(count>_lastUnseenCount) playActivitySound();
+  if(count>_lastUnseenCount) {
+    playActivitySound();
+    var recentActs = getRecentActivities().filter(function(a){return a.authorPin!==appState.currentPin});
+    if(recentActs.length > 0) {
+      var topAct = recentActs[0];
+      var actAuthor = cleanName(topAct.authorName) || 'Người ấy';
+      var actDesc = topAct.type === 'like' ? 'đã thích một bài viết của bạn' : (topAct.type === 'comment' ? 'đã bình luận về bài viết của bạn' : 'vừa đăng một khoảnh khắc mới');
+      triggerNativeNotification('Love Story', actAuthor + ' ' + actDesc, 2002);
+    }
+  }
   _lastUnseenCount=count;
 }
 
@@ -4039,6 +4148,16 @@ function setupRealtimeAnniversaries() {
   }, function() {});
 }
 
+function triggerNativeNotification(title, message, notifId) {
+  try {
+    if (window.AndroidBridge && typeof window.AndroidBridge.pushNotification === 'function') {
+      window.AndroidBridge.pushNotification(title || 'Love Story', message || '', notifId || Math.floor(Date.now() % 1000000));
+    }
+  } catch (e) {
+    console.warn('Native notification bridge error:', e);
+  }
+}
+
 function setupDmListener() {
   if (dmUnsubscribe) { dmUnsubscribe(); dmUnsubscribe = null; }
   if (_dmStatusPartnerUnsub) { _dmStatusPartnerUnsub(); _dmStatusPartnerUnsub = null; }
@@ -4060,12 +4179,21 @@ function setupDmListener() {
         return (a.createdAt || '').localeCompare(b.createdAt || '');
       });
       var hasNewIncoming = false;
+      var lastNewMsg = null;
       if (_prevDmCount > 0 && dmMessagesCache.length > _prevDmCount) {
         for (var j = _prevDmCount; j < dmMessagesCache.length; j++) {
-          if (dmMessagesCache[j].sender !== appState.currentPin) { hasNewIncoming = true; break; }
+          if (dmMessagesCache[j].sender !== appState.currentPin) {
+            hasNewIncoming = true;
+            lastNewMsg = dmMessagesCache[j];
+          }
         }
       }
-      if (hasNewIncoming) playIncomingSound();
+      if (hasNewIncoming) {
+        playIncomingSound();
+        var senderName = cleanName(getDisplayName(lastNewMsg ? lastNewMsg.sender : getPartnerPin())) || 'Người ấy';
+        var previewText = lastNewMsg ? (lastNewMsg.text || (lastNewMsg.image ? '[Hình ảnh]' : 'Đã gửi cho bạn một tin nhắn')) : 'Đã gửi cho bạn một tin nhắn';
+        triggerNativeNotification(senderName, previewText, 2001);
+      }
       if (appState.currentPage === 'direct') {
         renderDmMessages();
         markDmSeen();
@@ -6144,64 +6272,113 @@ function showConfirm(title,msg,callback,okText,cancelText){
 function updateWriteReminderBanner(){
   var banner=document.getElementById('write-reminder-banner');
   if(!banner)return;
-  var now=new Date();
-  // Chỉ nhắc từ 22h trở đi; ban ngày dù chưa viết vẫn ẩn để không làm phiền.
-  if(now.getHours()<22){banner.style.display='none';return;}
   var entries=appState.data.entries||[];
-  var todayKey=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
-  // Căn cứ theo ngày BÀI VIẾT (entry.date), không phải createdAt
-  var wroteToday=false;
-  var lastDate='';
+  var now=new Date();
+  function fmtKey(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+  var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  var todayKey=fmtKey(today);
+
+  var dateSet={};
   entries.forEach(function(e){
     var dStr=e.date||(e.createdAt?String(e.createdAt).slice(0,10):'');
-    if(!dStr)return;
-    if(dStr>lastDate)lastDate=dStr;
-    if(dStr===todayKey)wroteToday=true;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(dStr))dateSet[dStr]=true;
   });
-  if(wroteToday){banner.style.display='none';return}
 
-  var days=999;
-  if(lastDate){
-    var parts=lastDate.split('-');
-    if(parts.length===3){
-      var dd=new Date(Number(parts[0]),Number(parts[1])-1,Number(parts[2]));
-      if(!isNaN(dd)){
-        var a=new Date(dd.getFullYear(),dd.getMonth(),dd.getDate());
-        var b=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-        days=Math.round((b-a)/86400000);
-      }
-    }
+  var wroteToday=!!dateSet[todayKey];
+  var currentStreak=0;
+  var cursor=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  if(!wroteToday){
+    cursor.setDate(cursor.getDate()-1);
+  }
+  while(dateSet[fmtKey(cursor)]){
+    currentStreak++;
+    cursor.setDate(cursor.getDate()-1);
   }
 
-  var text,icon;
-  var username=cleanName(currentUser)||'Em';
-  if(!entries.length){text=username+' ơi, hãy viết nhật ký đầu tiên của hai đứa mình nhé!';icon='fa-pen'}
-  else if(days>=2){text=username+' ơi, đã '+days+' ngày chưa viết bài. Đừng để kỷ niệm trôi qua nhé!';icon='fa-clock'}
-  else{text=username+' ơi, hôm nay chưa có bài viết nào. Viết một dòng gì đó nhé!';icon='fa-pen'}
+  var sortedDates=Object.keys(dateSet).sort();
+  var bestStreak=0,run=0,prevTime=null;
+  for(var i=0;i<sortedDates.length;i++){
+    var p=sortedDates[i].split('-');
+    var dt=new Date(Number(p[0]),Number(p[1])-1,Number(p[2])).getTime();
+    if(prevTime!==null&&Math.round((dt-prevTime)/86400000)===1){
+      run++;
+    }else{
+      run=1;
+    }
+    if(run>bestStreak)bestStreak=run;
+    prevTime=dt;
+  }
+  if(currentStreak>bestStreak)bestStreak=currentStreak;
+
+  var stateClass=wroteToday?'lit':(currentStreak>0?'pending':'zero');
+  banner.classList.toggle('streak-lit',wroteToday);
+
+  var outerColor=wroteToday?'#FF9600':(currentStreak>0?'#F59E0B':'#9CA3AF');
+  var innerColor=wroteToday?'#FFC800':(currentStreak>0?'#FDE68A':'#D1D5DB');
+  var flameSvg='<svg class="duo-flame-svg" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    +'<path d="M17.5 1.6C17.1 0.9 16.1 1.1 15.9 1.9C14.8 7.1 10.6 9.8 7.6 13.7C4.8 17.3 3.5 21.1 4.2 25.2C5.2 31.1 10.3 35 16.2 35C22.8 35 28 29.7 28 23.1C28 17.8 25.2 12.8 22.1 9.5C21.6 9 20.8 9.3 20.7 10C20.4 11.7 19.5 13 18.4 13.6C19.6 9.4 19.3 4.8 17.5 1.6Z" fill="'+outerColor+'"/>'
+    +'<path d="M16.3 15.8C16 15.3 15.2 15.4 15.1 16C14.4 18.9 12.1 20.6 10.7 22.9C9.5 24.8 9.2 27 10.1 29.1C11.1 31.5 13.5 33 16.2 33C19.9 33 22.8 30 22.8 26.3C22.8 22.3 19.1 19.8 16.3 15.8Z" fill="'+innerColor+'"/>'
+    +'</svg>';
+
+  var subText='';
+  if(wroteToday){
+    subText=currentStreak>1
+      ?'Tuyệt vời! Chuỗi '+currentStreak+' ngày liên tiếp đã được giữ vững ✨'
+      :'Đã hoàn thành bài viết hôm nay! Tiếp tục duy trì nhé ✨';
+  }else if(currentStreak>0){
+    subText='Đăng 1 bài hôm nay để nối tiếp chuỗi '+currentStreak+' ngày nhé!';
+  }else{
+    subText='Đăng 1 bài hôm nay để bắt đầu chuỗi ngày kỷ niệm nhé!';
+  }
+
+  var bestHtml=bestStreak>0
+    ?'<span class="duo-streak-best" title="Chuỗi dài nhất"><i class="fas fa-trophy"></i> Kỷ lục: '+bestStreak+'</span>'
+    :'';
+
+  var actionBtn=wroteToday
+    ?'<button class="duo-streak-btn done" onclick="openCreatePage()" title="Viết thêm bài mới"><i class="fas fa-check"></i> Đã giữ chuỗi</button>'
+    :'<button class="duo-streak-btn" onclick="openCreatePage()"><i class="fas fa-pen"></i> Viết ngay</button>';
+
+  var dayOfWeek=today.getDay();
+  var mondayOffset=(dayOfWeek===0?-6:1-dayOfWeek);
+  var monday=new Date(today.getFullYear(),today.getMonth(),today.getDate()+mondayOffset);
+  var labels=['T2','T3','T4','T5','T6','T7','CN'];
+  var weekHtml='';
+  for(var w=0;w<7;w++){
+    var wd=new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+w);
+    var wKey=fmtKey(wd);
+    var isDone=!!dateSet[wKey];
+    var isToday=(wKey===todayKey);
+    var isFuture=(wd>today);
+    var colCls='duo-day-col'+(isDone?' is-done':'')+(isToday?' is-today':'')+(isFuture?' is-future':'');
+    var dotContent=isDone?'<i class="fas fa-check"></i>':wd.getDate();
+    weekHtml+='<div class="'+colCls+'">'
+      +'<span class="duo-day-label">'+labels[w]+'</span>'
+      +'<div class="duo-day-dot">'+dotContent+'</div>'
+      +'</div>';
+  }
+
   banner.style.display='block';
-  banner.innerHTML='<div class="wrb-content"><i class="fas '+icon+' wrb-ic"></i><div class="wrb-text">'+esc(text)+'</div><button class="wrb-btn" onclick="openCreatePage()">Viết ngay</button></div>';
+  banner.innerHTML='<div class="duo-streak-top">'
+    +'<div class="duo-streak-left">'
+      +'<div class="duo-flame-wrap '+stateClass+'">'+flameSvg+'</div>'
+      +'<div class="duo-streak-info">'
+        +'<div class="duo-streak-title-row">'
+          +'<span class="duo-streak-count '+stateClass+'">'+currentStreak+'</span>'
+          +'<span class="duo-streak-unit">ngày streak</span>'
+          +bestHtml
+        +'</div>'
+        +'<div class="duo-streak-sub">'+esc(subText)+'</div>'
+      +'</div>'
+    +'</div>'
+    +actionBtn
+  +'</div>'
+  +'<div class="duo-week-row">'+weekHtml+'</div>';
 }
 
 function setupWriteReminder(){
-  var lastFiredToday=false;
-  function hasTodayEntry(){
-    var todayKey=todayStr();
-    return (appState.data.entries||[]).some(function(e){
-      return (e.date||String(e.createdAt||'').slice(0,10))===todayKey;
-    });
-  }
-  function tryFire(){
-    // Chỉ nhắc khi KHÔNG có bài của hôm nay; nếu vừa viết xong hôm nay thì ẩn banner luôn.
-    if(hasTodayEntry()){
-      lastFiredToday=true;
-      var banner=document.getElementById('write-reminder-banner');
-      if(banner){banner.style.display='none';}
-      return;
-    }
-    updateWriteReminderBanner();
-  }
-  tryFire();
-  setInterval(tryFire,60000);
+  updateWriteReminderBanner();
+  setInterval(updateWriteReminderBanner,60000);
 }
 
 
