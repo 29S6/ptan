@@ -4352,7 +4352,7 @@ function switchPage(page){
     var fab2=document.getElementById('dm-chat-fab');
     if(fab2)fab2.style.display='flex';
   }
-  if(page==='feed')renderFeed();
+  if(page==='feed'){renderFeed();updateWriteReminderBanner();}
   else if(page==='direct'){_dmShouldScroll=true;renderDmMessages();markDmSeen();setTimeout(function(){var inp=document.getElementById('dm-input');if(inp)inp.focus()},200)}
   else if(page==='explore'){renderExplore();ensureAllEntries(renderAll)}
   else if(page==='activity'){renderActivity();ensureAllEntries(function(){renderAll();updateActivityBadge()})}
@@ -4491,6 +4491,7 @@ function renderFeed(){
   if (_renderFeedPending) return;
   _renderFeedPending = true;
   setTimeout(function() { _renderFeedPending = false; }, 16);
+  updateWriteReminderBanner();
   var entries=getFeedEntries();
   var container=document.getElementById('feed-posts');
   if(!entries.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-pen" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có bài viết nào<br><span style="font-size:0.75rem;">Hãy viết nhật ký đầu tiên nhé!</span></div>';feedRenderCount=0;_feedCarouselState={};_feedCaptionExpanded={};return}
