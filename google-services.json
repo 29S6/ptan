@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "745340137438",
+    "firebase_url": "https://ptan2009-92b5a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ptan2009-92b5a",
+    "storage_bucket": "ptan2009-92b5a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745340137438:android:aaed3dcda3f86af437774f",
+        "android_client_info": {
+          "package_name": "vn.lovestory.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoCIYG46VvFECssNxU7McIW5ot958h7SQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,6 +6,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
   <title>Love Story</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
@@ -22,10 +24,10 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script>
 
-try{navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(r){r.unregister()})})}catch(e){}
 
 try{
   if(window.location.search&&window.location.search.indexOf('_=')>=0&&history.replaceState){
@@ -1593,6 +1595,12 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
   <div class="lock-inner">
     <div class="lock-logo"><i class="fas fa-heart" style="-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
     <p class="lock-sub">Nhập mật mã</p>
+    <div id="login-form" style="display:none;width:100%;max-width:280px;margin:0 auto 10px;">
+      <input id="login-email" type="email" inputmode="email" autocomplete="username" placeholder="Email" value="ngoc@ptan.app" style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--hover-bg);color:var(--text-primary);font-size:0.92rem;" />
+      <input id="login-pass" type="password" autocomplete="current-password" placeholder="Mật khẩu" onkeydown="if(event.key==='Enter')doLogin()" style="width:100%;box-sizing:border-box;margin-bottom:10px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--hover-bg);color:var(--text-primary);font-size:0.92rem;" />
+      <button onclick="doLogin()" style="width:100%;padding:12px;border:none;border-radius:12px;background:var(--text-link);color:#fff;font-weight:600;font-size:0.92rem;cursor:pointer;">Đăng nhập</button>
+      <div id="login-error" style="color:var(--text-danger);font-size:0.82rem;margin-top:8px;min-height:1.1em;text-align:center;"></div>
+    </div>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="dot-0"></div>
       <div class="pin-dot" id="dot-1"></div>
@@ -2155,13 +2163,14 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
 var CONFIG = {
   BACKEND_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
-  PIN_USER1: '2204',
-  PIN_USER2: '2009',
+  PIN_USER1: null,   // nạp từ Firestore config/pins lúc đăng nhập
+  PIN_USER2: null,
   LOVE_START: '2026-04-22',
   USER1_NAME: 'Ánh Ngọc',
   USER2_NAME: 'Anh',
   MAX_IMAGES: 10,
-  PAGE_SIZE: 10
+  PAGE_SIZE: 10,
+  VAPID_KEY: 'BAG6y-tlPZAhmOgPWsVR6IZAtuBM3K1D0HAopmrJfUYGfEkucFlJE_DCtKLqwr3-mjZ0T3MnNtmPUlsPCUPMkNM'
 };
 
 
@@ -2182,7 +2191,7 @@ try {
   db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
     if (err.code !== 'failed-precondition') console.warn('Persistence err:', err);
   });
-  // Đăng nhập ngầm bằng tài khoản riêng của app — xem silentAuth()
+  // Đăng nhập thật (một lần mỗi thiết bị) — xem doLogin()
 } catch(e) {
   console.error('Firebase không khả dụng:', e);
   document.addEventListener('DOMContentLoaded', function() {
@@ -2214,23 +2223,43 @@ var appState = {
   confirmCallback: null,
   syncTimer: null
 };
-// Tự đăng nhập ngầm để Firestore cho phép đọc/ghi. Người dùng không thấy bước này:
-// mở app là vào thẳng màn nhập 4 số như cũ.
-var APP_EMAIL = 'ngoc@ptan.app';
-var APP_PASS = '74028193';
-function silentAuth() {
-  if (auth.currentUser) return;
-  auth.signInWithEmailAndPassword(APP_EMAIL, APP_PASS).catch(function() {});
+// Đăng nhập một lần mỗi thiết bị; Firebase tự nhớ phiên. Mã PIN nằm trên Firestore.
+function showLoginForm(show) {
+  var dots = document.getElementById('pin-dots');
+  var kb = document.getElementById('pin-keyboard');
+  var form = document.getElementById('login-form');
+  var sub = document.querySelector('#lock-screen .lock-sub');
+  if (dots) dots.style.display = show ? 'none' : 'flex';
+  if (kb) kb.style.display = show ? 'none' : 'grid';
+  if (form) form.style.display = show ? 'block' : 'none';
+  if (sub) sub.textContent = show ? 'Đăng nhập để tiếp tục' : 'Nhập mật mã';
+}
+function doLogin() {
+  var email = document.getElementById('login-email').value.trim();
+  var pass = document.getElementById('login-pass').value;
+  var err = document.getElementById('login-error');
+  err.textContent = 'Đang đăng nhập...';
+  auth.signInWithEmailAndPassword(email, pass).catch(function() {
+    err.textContent = 'Sai email hoặc mật khẩu';
+  });
 }
 auth.onAuthStateChanged(function(user) {
-  if (!user) { silentAuth(); return; }
+  if (!user) { showLoginForm(true); return; }
+  showLoginForm(false);
   appState.currentUid = user.uid;
-  loadUserProfiles(true);
-  db.collection('config').doc('pin_mapping').get().then(function(doc) {
-    if (doc.exists) appState.pinMapping = doc.data().mapping || {};
-  }).catch(function() {});
+  db.collection('config').doc('pins').get().then(function(doc) {
+    if (doc.exists) {
+      var d = doc.data();
+      CONFIG.PIN_USER1 = d.user1 || null;
+      CONFIG.PIN_USER2 = d.user2 || null;
+    }
+  }).catch(function() {}).then(function() {
+    loadUserProfiles(true);
+    db.collection('config').doc('pin_mapping').get().then(function(doc) {
+      if (doc.exists) appState.pinMapping = doc.data().mapping || {};
+    }).catch(function() {});
+  });
 });
-window.addEventListener('online', silentAuth);
 var FEED_PAGE = 10;          // mỗi lần tải 10 bài
 var feedRenderCount = 0;
 var _entriesCursor = null;   // bài cuối cùng đã tải (cho startAfter)
@@ -2251,8 +2280,8 @@ function loadUserProfiles(force) {
   } catch(e) {}
   if (!userProfiles) {
     userProfiles = {};
-    userProfiles[CONFIG.PIN_USER1] = { name: CONFIG.USER1_NAME, avatar: '', theme: 'auto' };
-    userProfiles[CONFIG.PIN_USER2] = { name: CONFIG.USER2_NAME, avatar: '', theme: 'auto' };
+    if (CONFIG.PIN_USER1) userProfiles[CONFIG.PIN_USER1] = { name: CONFIG.USER1_NAME, avatar: '', theme: 'auto' };
+    if (CONFIG.PIN_USER2) userProfiles[CONFIG.PIN_USER2] = { name: CONFIG.USER2_NAME, avatar: '', theme: 'auto' };
   }
   
   for (var p in userProfiles) {
@@ -2648,9 +2677,12 @@ function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('dot-'+
 
 function verifyPin(){
   try {
+    if(!CONFIG.PIN_USER1||!CONFIG.PIN_USER2){
+      document.getElementById('lock-error').textContent='Đang tải, thử lại nhé...';
+      appState.pinCode='';updateDots();return;
+    }
     var p=appState.pinCode;appState.currentPin=p;
-    if(p===CONFIG.PIN_USER1){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
-    else if(p===CONFIG.PIN_USER2){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
+    if(p===CONFIG.PIN_USER1||p===CONFIG.PIN_USER2){loadUserProfiles(true);currentUser=getDisplayName(p);unlockApp()}
     else{
       document.getElementById('lock-error').textContent='Mật mã không đúng';
       var dotsEl=document.getElementById('pin-dots');
@@ -2670,6 +2702,7 @@ function unlockApp(){
   document.getElementById('app').style.display='block';
   document.getElementById('main-content').scrollTop = 0;
   initApp();
+  registerPushToken();
   requestAnimationFrame(function(){
     document.getElementById('lock-screen').classList.add('hiding');
     setTimeout(function(){
@@ -4152,9 +4185,53 @@ function triggerNativeNotification(title, message, notifId) {
   try {
     if (window.AndroidBridge && typeof window.AndroidBridge.pushNotification === 'function') {
       window.AndroidBridge.pushNotification(title || 'Love Story', message || '', notifId || Math.floor(Date.now() % 1000000));
+      return;
+    }
+    if (window.Notification && Notification.permission === 'granted') {
+      new Notification(title || 'Love Story', { body: message || '', icon: 'icon-192.png', tag: String(notifId || '') });
     }
   } catch (e) {
     console.warn('Native notification bridge error:', e);
+  }
+}
+
+// Đăng ký web push. Bỏ qua nếu chưa có VAPID hoặc đang chạy trong APK (APK tự lo native push).
+function registerPushToken() {
+  try {
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+    if (!CONFIG.VAPID_KEY || CONFIG.VAPID_KEY.indexOf('PASTE') === 0) return;
+    if (window.AndroidBridge || (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) return;
+
+    var saveToken = function(reg) {
+      firebase.messaging().getToken({ vapidKey: CONFIG.VAPID_KEY, serviceWorkerRegistration: reg }).then(function(token) {
+        if (!token) return;
+        var prev = localStorage.getItem('love_push_token');
+        if (prev && prev !== token) db.collection('push_tokens').doc(prev).delete().catch(function() {});
+        localStorage.setItem('love_push_token', token);
+        return db.collection('push_tokens').doc(token).set({
+          pin: appState.currentPin || '',
+          platform: 'web',
+          ua: navigator.userAgent,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      }).catch(function(e) { console.warn('FCM token err:', e); });
+    };
+
+    if (Notification.permission === 'granted') {
+      navigator.serviceWorker.register(new URL('firebase-messaging-sw.js', location.href).href)
+        .then(saveToken).catch(function(e) { console.warn('SW register err:', e); });
+    } else if (Notification.permission === 'default' && !window._pushAskBound) {
+      window._pushAskBound = true;
+      // Chờ một cú chạm kế tiếp để xin quyền đúng lúc có user gesture (Firefox bắt buộc).
+      document.addEventListener('click', function once() {
+        document.removeEventListener('click', once);
+        Notification.requestPermission().then(function(p) {
+          if (p === 'granted') registerPushToken();
+        });
+      }, { once: true });
+    }
+  } catch (e) {
+    console.warn('Push setup err:', e);
   }
 }
 
