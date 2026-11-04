@@ -2153,10 +2153,20 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
 <script>
 
+function _secVal(b64) {
+  var key = 'love_ptan_2026';
+  var raw = atob(b64);
+  var out = '';
+  for (var i = 0; i < raw.length; i++) {
+    out += String.fromCharCode(raw.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+  }
+  return out;
+}
+
 var CONFIG = {
   BACKEND_URL: 'https://script.google.com/macros/s/AKfycbwKcrU_ElfIOIimZ0SxWjDTRhLGMx5H1X1Vl2DMdio2ZGh04B8Ty3CYtDnm_oy-Yned/exec',
-  PIN_USER1: '2204',
-  PIN_USER2: '2009',
+  PIN_USER1: _secVal('Xl1GUQ=='),
+  PIN_USER2: _secVal('Xl9GXA=='),
   LOVE_START: '2026-04-22',
   USER1_NAME: 'Ánh Ngọc',
   USER2_NAME: 'Anh',
@@ -2214,13 +2224,12 @@ var appState = {
   confirmCallback: null,
   syncTimer: null
 };
-// Tự đăng nhập ngầm để Firestore cho phép đọc/ghi. Người dùng không thấy bước này:
-// mở app là vào thẳng màn nhập 4 số như cũ.
-var APP_EMAIL = 'ngoc@ptan.app';
-var APP_PASS = '74028193';
+// Tự động kết nối máy chủ qua phiên làm việc ẩn danh (không cần email hay mật khẩu)
 function silentAuth() {
   if (auth.currentUser) return;
-  auth.signInWithEmailAndPassword(APP_EMAIL, APP_PASS).catch(function() {});
+  auth.signInAnonymously().catch(function(err) {
+    console.warn('Lỗi kết nối Firebase:', err);
+  });
 }
 auth.onAuthStateChanged(function(user) {
   if (!user) { silentAuth(); return; }
@@ -2231,6 +2240,17 @@ auth.onAuthStateChanged(function(user) {
   }).catch(function() {});
 });
 window.addEventListener('online', silentAuth);
+
+// Bảo mật: Vô hiệu hóa chuột phải & phím tắt xem nguồn (F12, Ctrl+U, Ctrl+Shift+I/J)
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.addEventListener('keydown', function(e) {
+  if (e.keyCode === 123 || 
+     (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+     (e.ctrlKey && e.keyCode === 85)) {
+    e.preventDefault();
+    return false;
+  }
+});
 var FEED_PAGE = 10;          // mỗi lần tải 10 bài
 var feedRenderCount = 0;
 var _entriesCursor = null;   // bài cuối cùng đã tải (cho startAfter)
