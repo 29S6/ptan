@@ -132,26 +132,76 @@ a { color: var(--text-link); text-decoration:none; }
 
 #lock-screen {
   position:fixed; inset:0; z-index:9999;
-  background: var(--card-bg);
+  background: #0d0d0d; color: #ffffff;
   display:flex; align-items:center; justify-content:center;
-  transition: opacity 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.25s cubic-bezier(0.22,1,0.36,1);
+  transition: opacity 0.3s cubic-bezier(0.22,1,0.36,1), transform 0.3s cubic-bezier(0.22,1,0.36,1);
+  overflow: hidden;
 }
-#lock-screen.hiding { opacity:0; transform:scale(1.04); pointer-events:none; }
-.lock-inner { text-align:center; max-width:340px; width:90%; padding:20px; }
-.lock-logo { font-size:2.2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.5px; display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:4px; }
-.lock-logo i { font-size:1.6rem; background:var(--story-gradient); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.lock-sub { font-size:0.85rem; color:var(--text-secondary); margin-bottom:24px; }
-.pin-dots { display:flex; gap:14px; justify-content:center; margin-bottom:20px; }
-.pin-dot { width:16px; height:16px; border-radius:50%; background:var(--border-light); border:2px solid var(--border); transition:0.12s; }
-.pin-dot.active { background:var(--text-link); border-color:var(--text-link); transform:scale(1.15); box-shadow:0 0 12px rgba(225,48,108,0.3); }
-.pin-keyboard { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto; }
-.pin-key { background:var(--hover-bg); border:1px solid var(--border); border-radius:14px; padding:16px 0; font-size:1.3rem; font-weight:600; color:var(--text-primary); transition:0.07s; }
-.pin-key:active { transform:scale(0.92); background:var(--border-light); }
-.pin-key.pressed { transform:scale(0.92); background:var(--border-light); }
-.pin-key.delete { color:var(--text-link); font-size:1rem; display:flex; align-items:center; justify-content:center; }
-.pin-key.empty { visibility:hidden; }
+#lock-screen.hiding { opacity:0; transform:scale(1.05); pointer-events:none; }
+.lock-glow-aura {
+  position: absolute; top: -100px; width: 280px; height: 280px;
+  background: var(--story-gradient); filter: blur(95px); opacity: 0.45;
+  pointer-events: none; border-radius: 50%;
+  animation: pulseLockGlow 4s infinite alternate ease-in-out;
+}
+@keyframes pulseLockGlow { 0% { opacity:0.35; transform:scale(0.9); } 100% { opacity:0.55; transform:scale(1.1); } }
+.lock-inner {
+  text-align:center; max-width:320px; width:90%; padding:20px;
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+}
+.lock-avatar-ring {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--story-gradient); padding: 2.5px;
+  margin-bottom: 16px;
+}
+.lock-avatar-ring-inner {
+  width: 100%; height: 100%; border-radius: 50%;
+  background: #0d0d0d; display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+}
+.lock-avatar-ring-inner i {
+  background: var(--story-gradient);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.lock-logo {
+  font-size: 1.35rem; font-weight: 700; color: #ffffff;
+  margin-bottom: 4px; letter-spacing: -0.3px;
+}
+.lock-sub { font-size: 0.82rem; color: #888888; margin-bottom: 26px; }
+.pin-dots { display:flex; gap:16px; justify-content:center; margin-bottom:26px; }
+.pin-dot {
+  width: 15px; height: 15px; border-radius: 50%;
+  background: transparent; border: 2px solid #555555;
+  transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.pin-dot.active {
+  background: var(--story-gradient); border-color: transparent;
+  transform: scale(1.25); box-shadow: 0 0 16px rgba(225, 48, 108, 0.9);
+}
+.pin-keyboard {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px 22px; width: 260px; margin: 0 auto;
+}
+.pin-key {
+  width: 68px; height: 68px; border-radius: 50%;
+  background: #181818; border: 1px solid #282828; color: #ffffff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; user-select: none;
+  transition: transform 0.1s, background 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.pin-key:hover { border-color: #dc2743; }
+.pin-key:active, .pin-key.pressed {
+  transform: scale(0.92);
+  background: var(--story-gradient);
+  box-shadow: 0 0 18px rgba(220, 39, 67, 0.6);
+}
+.pin-key-num { font-size: 1.65rem; font-weight: 400; line-height: 1; }
+.pin-key-sub { font-size: 0.6rem; letter-spacing: 1px; margin-top: 3px; font-weight: 600; text-transform: uppercase; color: #888888; }
+.pin-key.empty { visibility: hidden; }
+.pin-key.delete { color: #ffffff; font-size: 1.3rem; }
 @media (hover:none) and (pointer:coarse) { .pin-key { touch-action:manipulation; } }
-.lock-error { color:var(--text-danger); font-size:0.78rem; min-height:20px; margin-top:10px; font-weight:500; }
+.lock-error { color:#ff4757; font-size:0.82rem; min-height:22px; margin-top:14px; font-weight:600; }
 
 
 
@@ -1207,23 +1257,508 @@ html.dark .duo-streak-btn.done { color:#ffb03a; background:rgba(255,150,0,0.15);
 .add-ann-btn:hover { background:var(--hover-bg); color:var(--text-primary); border-color:var(--text-secondary); }
 
 
-#page-direct { display:none; }
-#page-direct.active .dm-input-wrap {
-  position:fixed; bottom:0; left:0; right:0; z-index:20;
-  padding:6px 12px calc(6px + var(--safe-bottom));
+/* ==============================================================
+   INSTAGRAM DIRECT CHAT 2-COLUMN LAYOUT (DESKTOP & MOBILE)
+   ============================================================== */
+#page-direct {
+  display: none;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
 }
-#page-direct.active .dm-messages { padding-bottom:56px; }
-@media (min-width:1024px) {
-  #page-direct.active .dm-input-wrap { left:var(--sidebar-w); }
+#page-direct.active {
+  display: flex;
 }
-.dm-header {
-  display:flex; align-items:center; gap:8px; padding:10px 16px;
-  background:var(--sticky-bg); border-bottom:1px solid var(--border-light); flex-shrink:0;
+
+.chat-shell-pc {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  background: var(--bg);
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
 }
-.dm-back-btn { font-size:1.2rem; color:var(--text-primary); padding:4px 6px; border:none; background:none; cursor:pointer; }
-.dm-header-title { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; min-width:0; }
-.dm-header-info { display:flex; flex-direction:column; min-width:0; line-height:1.2; }
-.dm-header-title #dm-partner-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+@media (max-width: 1023px) {
+  .chat-shell-pc {
+    max-width: 100%;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* 1. Left Sidebar (PC Desktop: 350px) */
+.chat-sidebar { display: none !important; }
+.sidebar-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+  height: 60px;
+  flex-shrink: 0;
+}
+.user-handle {
+  font-size: 1.12rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.thread-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+.thread-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  cursor: pointer;
+  background: var(--card-bg);
+  transition: background 0.15s;
+}
+.thread-item:hover, .thread-item.active {
+  background: var(--hover-bg);
+}
+.thread-item.active {
+  border-left: 3px solid #e1306c;
+}
+.thread-avatar-wrap {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+.thread-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.online-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 13px;
+  height: 13px;
+  background: var(--active-green, #31a24c);
+  border: 2px solid var(--card-bg);
+  border-radius: 50%;
+}
+.thread-info {
+  flex: 1;
+  min-width: 0;
+}
+.thread-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.thread-snippet {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.thread-snippet span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 2. Right Main Chat Area */
+.chat-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+.chat-header {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--card-bg);
+  z-index: 10;
+  height: 60px;
+  flex-shrink: 0;
+}
+.dm-back-btn {
+  display: none;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin-right: 6px;
+}
+.header-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.header-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.header-name {
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.header-status {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 1px;
+}
+.header-status.online {
+  color: var(--active-green, #31a24c) !important;
+  font-weight: 500;
+}
+.header-status.online::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  background: var(--active-green, #31a24c);
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-primary);
+}
+.header-info-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  transition: background 0.15s, color 0.15s;
+}
+.header-info-btn:hover {
+  background: var(--hover-bg);
+  color: #0095f6;
+}
+
+/* Chat Messages Scroll Area */
+.chat-body, .dm-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  touch-action: pan-y;
+  background: var(--bg);
+}
+
+/* Lazy Load Button Header */
+.lazy-load-header, .dm-lazy-load-header {
+  text-align: center;
+  padding: 6px 0 10px;
+}
+.btn-load-more, .btn-dm-load-more {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-load-more:hover, .btn-dm-load-more:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+  border-color: #999;
+}
+
+/* Chat Intro Card */
+.chat-intro-card {
+  text-align: center;
+  padding: 24px 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.intro-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  margin-bottom: 10px;
+}
+.intro-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--card-bg);
+  border: 2px solid var(--card-bg);
+}
+.intro-name {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.intro-sub {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Timestamp Divider */
+.timestamp-divider, .dm-date-sep {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin: 10px 0;
+  font-weight: 500;
+}
+
+/* Chat Footer Input */
+.chat-footer {
+  padding: 12px 20px;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 15;
+  flex-shrink: 0;
+}
+.chat-input-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--hover-bg, #efefef);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 6px 14px;
+  transition: border-color 0.2s;
+}
+html.dark .chat-input-pill {
+  background: #1e1e1e;
+  border-color: #2e2e2e;
+}
+.chat-input-pill:focus-within {
+  border-color: #888;
+}
+.input-tool-icon {
+  font-size: 1.22rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, color 0.15s;
+}
+.input-tool-icon:hover {
+  transform: scale(1.15);
+  color: #0095f6;
+}
+.chat-textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.93rem;
+  resize: none;
+  max-height: 90px;
+  line-height: 1.4;
+  padding: 4px 0;
+}
+.btn-send-ig {
+  color: #0095f6;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  display: none;
+}
+.btn-send-ig:hover {
+  color: #1877f2;
+}
+.btn-heart-quick {
+  font-size: 1.3rem;
+  color: #ed4956;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.btn-heart-quick:hover {
+  transform: scale(1.2);
+}
+
+/* Shared Media Drawer */
+.shared-media-drawer, .dm-shared-drawer {
+  width: 350px;
+  height: 100%;
+  background: var(--card-bg);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+.shared-media-drawer.closed, .dm-shared-drawer.closed {
+  width: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  border-left: none !important;
+  pointer-events: none !important;
+}
+.header-info-btn.active {
+  background: var(--hover-bg);
+  color: #0095f6;
+}
+.drawer-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+}
+.drawer-title { font-weight:700; font-size:0.95rem; }
+.drawer-close-btn { background:none; border:none; color:var(--text-secondary); font-size:1.1rem; cursor:pointer; }
+.drawer-content { flex:1; overflow-y:auto; padding:16px; }
+.drawer-user-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 20px 16px 22px !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+.drawer-avatar, #dm-drawer-avatar {
+  display: block !important;
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  margin: 0 auto 12px auto !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12) !important;
+  border: 2px solid var(--border-light) !important;
+  flex-shrink: 0 !important;
+}
+.drawer-name, #dm-drawer-name {
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  color: var(--text-primary) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  gap: 6px !important;
+  line-height: 1.3 !important;
+  margin: 0 auto !important;
+}
+.drawer-sub, #dm-drawer-sub {
+  font-size: 0.8rem !important;
+  color: var(--text-secondary) !important;
+  text-align: center !important;
+  width: 100% !important;
+  margin: 4px auto 0 auto !important;
+  line-height: 1.3 !important;
+}
+.drawer-media-section { margin-top:14px; }
+.drawer-media-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:0.82rem; font-weight:600; }
+.media-count-badge { background:var(--hover-bg); color:var(--text-secondary); padding:2px 8px; border-radius:10px; font-size:0.72rem; }
+.shared-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+.shared-grid-item { aspect-ratio:1; border-radius:6px; overflow:hidden; cursor:pointer; }
+.shared-grid-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.2s; }
+.shared-grid-item:hover img { transform:scale(1.08); }
+
+/* Mobile Responsiveness for Direct Chat */
+@media (max-width: 1023px) {
+  .chat-sidebar { display: none !important; }
+  .dm-back-btn {
+    display: flex !important;
+  }
+  .chat-footer {
+    padding: 8px 12px calc(8px + var(--safe-bottom));
+  }
+  .dm-msg {
+    max-width: 88%;
+  }
+  .shared-media-drawer, .dm-shared-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 500 !important;
+    border-left: none !important;
+    box-shadow: -8px 0 25px rgba(0,0,0,0.15) !important;
+    transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .shared-media-drawer.open, .dm-shared-drawer.open {
+    right: 0 !important;
+    width: 100% !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
 
 .dm-messages { flex:1; overflow-y:auto; padding:12px 16px 4px; display:flex; flex-direction:column; gap:6px; touch-action:pan-y; }
 .dm-date-sep { text-align:center; font-size:0.7rem; color:var(--text-secondary); padding:12px 0 8px; font-weight:500; }
@@ -1277,9 +1812,19 @@ html.dark .dm-msg-reaction.active { background:rgba(255,64,129,0.25); outline-co
 .dm-msg.sent .dm-msg-reaction.active { background:rgba(255,255,255,0.25); outline-color:rgba(255,255,255,0.5); }
 .dm-msg.deleted .dm-msg-actions { display:none !important; }
 .dm-msg-bubble { padding:8px 14px; border-radius:18px; font-size:0.9rem; line-height:1.45; word-break:break-word; max-width:100%; position:relative; user-select:none; -webkit-user-select:none; }
-.dm-msg.sent .dm-msg-bubble { background:var(--text-link); color:#fff; border-bottom-right-radius:4px; }
+.dm-msg.sent .dm-msg-bubble {
+  background: linear-gradient(135deg, #ff5376 0%, #e1306c 50%, #f77062 100%);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 3px 12px rgba(225, 48, 108, 0.28);
+}
 .dm-msg.received .dm-msg-bubble { background:#f0f2f5; color:#050505; border-bottom-left-radius:4px; }
-html.dark .dm-msg.sent .dm-msg-bubble { background:#c2185b; }
+html.dark .dm-msg.sent .dm-msg-bubble {
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(255, 65, 108, 0.35);
+}
+.dm-chat-popup, .dm-chat-fab { display: none !important; }
 html.dark .dm-msg.received .dm-msg-bubble { background:#3a3b3c; color:#e4e6eb; }
 html.dark .dm-msg.received .dm-msg-reply { background:rgba(255,255,255,0.06); }
 html.dark .dm-msg.received .dm-msg-reply-name { color:#ff8a9e; }
@@ -1590,9 +2135,15 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
 
 <div id="lock-screen">
+  <div class="lock-glow-aura"></div>
   <div class="lock-inner">
-    <div class="lock-logo"><i class="fas fa-heart" style="-webkit-text-fill-color:#ed4956;background:none;"></i> Love Story</div>
-    <p class="lock-sub">Nhập mật mã</p>
+    <div class="lock-avatar-ring">
+      <div class="lock-avatar-ring-inner">
+        <i class="fas fa-heart"></i>
+      </div>
+    </div>
+    <div class="lock-logo">Love Story</div>
+    <p class="lock-sub">Nhập 4 số kỷ niệm để mở khóa</p>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="dot-0"></div>
       <div class="pin-dot" id="dot-1"></div>
@@ -1600,17 +2151,17 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       <div class="pin-dot" id="dot-3"></div>
     </div>
     <div class="pin-keyboard" id="pin-keyboard">
-      <button class="pin-key" data-digit="1" onclick="handlePinPress('1')">1</button>
-      <button class="pin-key" data-digit="2" onclick="handlePinPress('2')">2</button>
-      <button class="pin-key" data-digit="3" onclick="handlePinPress('3')">3</button>
-      <button class="pin-key" data-digit="4" onclick="handlePinPress('4')">4</button>
-      <button class="pin-key" data-digit="5" onclick="handlePinPress('5')">5</button>
-      <button class="pin-key" data-digit="6" onclick="handlePinPress('6')">6</button>
-      <button class="pin-key" data-digit="7" onclick="handlePinPress('7')">7</button>
-      <button class="pin-key" data-digit="8" onclick="handlePinPress('8')">8</button>
-      <button class="pin-key" data-digit="9" onclick="handlePinPress('9')">9</button>
+      <button class="pin-key" data-digit="1" onclick="handlePinPress('1')"><span class="pin-key-num">1</span><span class="pin-key-sub">&nbsp;</span></button>
+      <button class="pin-key" data-digit="2" onclick="handlePinPress('2')"><span class="pin-key-num">2</span><span class="pin-key-sub">ABC</span></button>
+      <button class="pin-key" data-digit="3" onclick="handlePinPress('3')"><span class="pin-key-num">3</span><span class="pin-key-sub">DEF</span></button>
+      <button class="pin-key" data-digit="4" onclick="handlePinPress('4')"><span class="pin-key-num">4</span><span class="pin-key-sub">GHI</span></button>
+      <button class="pin-key" data-digit="5" onclick="handlePinPress('5')"><span class="pin-key-num">5</span><span class="pin-key-sub">JKL</span></button>
+      <button class="pin-key" data-digit="6" onclick="handlePinPress('6')"><span class="pin-key-num">6</span><span class="pin-key-sub">MNO</span></button>
+      <button class="pin-key" data-digit="7" onclick="handlePinPress('7')"><span class="pin-key-num">7</span><span class="pin-key-sub">PQRS</span></button>
+      <button class="pin-key" data-digit="8" onclick="handlePinPress('8')"><span class="pin-key-num">8</span><span class="pin-key-sub">TUV</span></button>
+      <button class="pin-key" data-digit="9" onclick="handlePinPress('9')"><span class="pin-key-num">9</span><span class="pin-key-sub">WXYZ</span></button>
       <button class="pin-key empty"></button>
-      <button class="pin-key" data-digit="0" onclick="handlePinPress('0')">0</button>
+      <button class="pin-key" data-digit="0" onclick="handlePinPress('0')"><span class="pin-key-num">0</span><span class="pin-key-sub">&nbsp;</span></button>
       <button class="pin-key delete" data-digit="del" onclick="handlePinDelete()"><i class="fas fa-delete-left"></i></button>
     </div>
     <div class="lock-error" id="lock-error"></div>
@@ -1667,29 +2218,79 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
 
     
     <div class="page" id="page-direct">
-      <!-- Inbox: danh sách cuộc trò chuyện (kiểu Instagram) -->
-      <div class="dm-header">
-        <button class="dm-back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-        <div class="dm-header-title"><img id="dm-header-avatar" class="dm-header-avatar" src="" alt=""> <div class="dm-header-info"><span id="dm-partner-name">Người ấy</span> <span id="dm-online-status"></span></div></div>
-      </div>
-      <div class="dm-messages" id="dm-messages"></div>
-      <div class="dm-input-wrap">
-        <div class="dm-input-row">
-          <textarea id="dm-input" placeholder="Nhắn tin..." rows="1" oninput="onDmInput(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
-          <button class="dm-img-btn" onclick="document.getElementById('dm-file-input').click()" title="Gửi ảnh"><i class="fas fa-image"></i></button>
-          <button class="dm-send-btn" id="dm-send-btn" onclick="sendDmMessage()">Gửi</button>
-        </div>
-        <div class="dm-reply-preview" id="dm-reply-preview" style="display:none;">
-          <div class="dm-reply-line"></div>
-          <div class="dm-reply-info">
-            <span id="dm-reply-name"></span>
-            <span id="dm-reply-text"></span>
+      <div id="chat-shell" class="chat-shell-pc">
+        
+        <!-- 1. MAIN CHAT AREA (EXPANDS TO FILL WIDTH) -->
+        <div class="chat-main">
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <button class="dm-back-btn" onclick="goHome()" title="Quay lại"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-user-info">
+              <img id="dm-header-avatar" class="header-avatar" src="" alt="Avatar">
+              <div>
+                <div class="header-name" id="dm-partner-name">Người ấy <i class="fas fa-check-circle" style="color:#0095f6;font-size:0.8rem;"></i></div>
+                <div class="header-status" id="dm-online-status">Không hoạt động</div>
+              </div>
+            </div>
+            <div class="header-actions">
+              <button class="header-info-btn active" id="dm-header-info-btn" onclick="toggleDmSharedDrawer()" title="Thông tin cuộc trò chuyện & Ảnh đã gửi"><i class="fas fa-info-circle"></i></button>
+            </div>
           </div>
-          <button onclick="cancelReplyDm()"><i class="fas fa-times"></i></button>
+
+          <!-- Messages Thread (Chỉ load 30 tin nhắn gần nhất, vuốt lên để tải thêm) -->
+          <div class="chat-body" id="dm-messages" onscroll="onDmChatScroll(this)"></div>
+
+          <!-- Chat Footer Input -->
+          <div class="chat-footer">
+            <div class="dm-reply-preview" id="dm-reply-preview" style="display:none;">
+              <div class="dm-reply-line"></div>
+              <div class="dm-reply-info">
+                <span id="dm-reply-name"></span>
+                <span id="dm-reply-text"></span>
+              </div>
+              <button onclick="cancelReplyDm()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="img-preview" id="dm-img-preview" style="display:none;">
+              <img id="dm-img-preview-img" alt="">
+              <span class="img-preview-name">1 ảnh</span>
+              <button onclick="clearDmImage()">✕</button>
+            </div>
+            <input type="file" id="dm-file-input" accept="image/*" style="display:none" onchange="handleDmImageFile(this)">
+            <div class="chat-input-pill">
+              <i class="far fa-smile input-tool-icon" title="Biểu tượng cảm xúc" onclick="insertDmEmoji('🥰')"></i>
+              <textarea id="dm-input" class="chat-textarea" placeholder="Nhắn tin..." rows="1" oninput="onDmInput(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
+              <i class="far fa-image input-tool-icon" title="Gửi ảnh" onclick="document.getElementById('dm-file-input').click()"></i>
+              <i class="fas fa-heart btn-heart-quick" id="quick-heart-btn" title="Thả tim nhanh" onclick="sendQuickHeart()"></i>
+              <button class="btn-send-ig" id="dm-send-btn" onclick="sendDmMessage()">Gửi</button>
+            </div>
+          </div>
         </div>
-        <div class="img-preview" id="dm-img-preview" style="display:none;"><img id="dm-img-preview-img" alt=""><span class="img-preview-name">1 ảnh</span><button onclick="clearDmImage()">✕</button></div>
-        <input type="file" id="dm-file-input" accept="image/*" style="display:none" onchange="handleDmImageFile(this)">
+
+        <!-- 2. INFO & SHARED MEDIA PANEL (MẶC ĐỊNH MỞ TRÊN PC WEB) -->
+        <div class="shared-media-drawer" id="dm-shared-drawer">
+          <div class="drawer-header">
+            <div class="drawer-title">Chi tiết cuộc trò chuyện</div>
+            <button class="drawer-close-btn" onclick="toggleDmSharedDrawer()"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="drawer-content">
+            <div class="drawer-user-card">
+              <img id="dm-drawer-avatar" class="drawer-avatar" src="" alt="Avatar">
+              <div id="dm-drawer-name" class="drawer-name">Người ấy</div>
+              <div id="dm-drawer-sub" class="drawer-sub">Đoạn chat riêng tư · Love Story</div>
+            </div>
+            <div style="margin-top:18px;">
+              <div class="drawer-media-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:0.85rem;font-weight:600;color:var(--text-primary);">
+                <span><i class="far fa-images" style="color:#e1306c;margin-right:6px;"></i> File phương tiện & Ảnh</span>
+                <span class="media-count-badge" id="dm-shared-count">0 ảnh</span>
+              </div>
+              <div class="shared-grid" id="dm-shared-grid"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
+
+      <!-- Overlays and Menus -->
       <div class="dm-msg-overlay" id="dm-msg-overlay" onclick="unfocusDmMessage()"></div>
       <div class="dm-msg-menu" id="dm-msg-menu">
         <div class="dm-menu-reactions" id="dm-menu-reactions">
@@ -1707,7 +2308,6 @@ html.dark .dm-msg-time { background:#333; color:#e0e0e0; box-shadow:0 1px 4px rg
       </div>
     </div>
 
-    
     <div class="page" id="page-explore">
       <div class="explore-header">
         <div class="explore-search">
@@ -3587,6 +4187,25 @@ function flushPendingDmMessages(){
 
 function onDmInput(el){
   autoResize(el);
+  var sendBtn = document.getElementById('dm-send-btn');
+  var heartBtn = document.getElementById('quick-heart-btn');
+  var hasText = el && el.value.trim().length > 0;
+  if(sendBtn) sendBtn.style.display = hasText ? 'inline-block' : 'none';
+  if(heartBtn) heartBtn.style.display = hasText ? 'none' : 'inline-block';
+}
+
+function sendQuickHeart(){
+  var inp = document.getElementById('dm-input');
+  if(inp) inp.value = '❤️';
+  sendDmMessage();
+}
+
+function insertDmEmoji(emoji){
+  var inp = document.getElementById('dm-input');
+  if(!inp) return;
+  inp.value += (emoji || '🥰');
+  onDmInput(inp);
+  inp.focus();
 }
 
 function toggleDmReactionPopup(btn, msgId){
@@ -3656,7 +4275,7 @@ function sendDmMessage() {
       text: text || '',
       editedAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
-      input.value = ''; autoResize(input); btn.disabled = false; _editingDmMsgId = null; playSentSound();
+      input.value = ''; autoResize(input); onDmInput(input); btn.disabled = false; _editingDmMsgId = null; playSentSound();
       document.getElementById('dm-send-btn').textContent = 'Gửi'; _dmShouldScroll = true;
       var dib = document.querySelector('.dm-img-btn'); if(dib) dib.style.display = '';
     }).catch(function(err) { console.warn('Edit DM err:', err); btn.disabled = false; });
@@ -3906,22 +4525,126 @@ function renderDmMessages(){
     renderDmMessagesNow();
   });
 }
-function renderDmMessagesNow() {
+var _dmVisibleCount = 30;
+var _dmLoadingOlder = false;
+
+function loadMoreDmMessages() {
+  var total = (dmMessagesCache || []).length;
+  if (_dmLoadingOlder || _dmVisibleCount >= total) return;
+  _dmLoadingOlder = true;
   var container = document.getElementById('dm-messages');
-  var msgs = dmMessagesCache.slice();
-  getPendingDmMessages().forEach(function(p){if(p&&p.clientId&&!msgs.some(function(x){return x.id===p.clientId}))msgs.push(p)});
-  msgs.sort(function(a,b){return (a.time||a.createdAt||'').localeCompare(b.time||b.createdAt||'')});
+  var prevHeight = container ? container.scrollHeight : 0;
+  var prevTop = container ? container.scrollTop : 0;
+
+  setTimeout(function() {
+    _dmVisibleCount += 30;
+    _dmLoadingOlder = false;
+    renderDmMessagesNow(true, prevHeight, prevTop);
+  }, 200);
+}
+
+function onDmChatScroll(container) {
+  if (!container) return;
+  if (container.scrollTop <= 15 && !_dmLoadingOlder && _dmVisibleCount < (dmMessagesCache || []).length) {
+    loadMoreDmMessages();
+  }
+}
+
+function toggleDmSharedDrawer() {
+  var drawer = document.getElementById('dm-shared-drawer');
+  var btn = document.getElementById('dm-header-info-btn');
+  if (!drawer) return;
+  var isPc = window.innerWidth >= 1024;
+  renderDmSharedMedia();
+  if (isPc) {
+    drawer.classList.toggle('closed');
+    var isClosed = drawer.classList.contains('closed');
+    if (btn) btn.classList.toggle('active', !isClosed);
+  } else {
+    drawer.classList.toggle('open');
+  }
+}
+
+function closeDmInfoDrawer() {
+  var drawer = document.getElementById('dm-shared-drawer');
+  var btn = document.getElementById('dm-header-info-btn');
+  if (!drawer) return;
+  var isPc = window.innerWidth >= 1024;
+  if (isPc) {
+    drawer.classList.add('closed');
+    if (btn) btn.classList.remove('active');
+  } else {
+    drawer.classList.remove('open');
+  }
+}
+
+function renderDmSharedMedia() {
   var partnerPin = getPartnerPin();
   var partnerName = cleanName(getPartnerName());
-  document.getElementById('dm-partner-name').textContent = partnerName;
+  var partnerAva = getDisplayAvatar(partnerPin);
+
+  var nameEl = document.getElementById('dm-drawer-name');
+  if (nameEl) nameEl.innerHTML = esc(partnerName) + ' <i class="fas fa-check-circle" style="color:#0095f6;font-size:0.85rem;"></i>';
+  var avaEl = document.getElementById('dm-drawer-avatar');
+  if (avaEl && partnerAva) avaEl.src = partnerAva;
+
+  var grid = document.getElementById('dm-shared-grid');
+  var countBadge = document.getElementById('dm-shared-count');
+  var photos = (dmMessagesCache || []).filter(function(m){ return !!m.image && !m.deleted; });
+
+  if (countBadge) countBadge.textContent = photos.length + ' ảnh';
+  if (grid) {
+    if (!photos.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px 10px;color:var(--text-secondary);font-size:0.8rem;">Chưa có ảnh nào được gửi trong đoạn chat</div>';
+    } else {
+      grid.innerHTML = photos.map(function(p){
+        var thumb = driveThumb(p.image, 400);
+        return '<div class="shared-grid-item" onclick="openImageViewer(\'' + esc(p.image) + '\')">' +
+          '<img src="' + esc(thumb) + '" loading="lazy" alt="Ảnh kỷ niệm">' +
+        '</div>';
+      }).join('');
+    }
+  }
+}
+
+function renderDmMessagesNow(preserveScroll, prevHeight, prevTop) {
+  renderDmSharedMedia();
+  var container = document.getElementById('dm-messages');
+  var allMsgs = dmMessagesCache.slice();
+  getPendingDmMessages().forEach(function(p){if(p&&p.clientId&&!allMsgs.some(function(x){return x.id===p.clientId}))allMsgs.push(p)});
+  allMsgs.sort(function(a,b){return (a.time||a.createdAt||'').localeCompare(b.time||b.createdAt||'')});
+  var partnerPin = getPartnerPin();
+  var partnerName = cleanName(getPartnerName());
+  document.getElementById('dm-partner-name').innerHTML = esc(partnerName) + ' <i class="fas fa-check-circle" style="color:#0095f6;font-size:0.8rem;"></i>';
+  var sph = document.getElementById('my-profile-handle');
+  if (sph) sph.textContent = (appState.currentPin === CONFIG.PIN_USER1) ? 'anh_lovestory' : 'ngoc_lovestory';
+  var spn = document.getElementById('sidebar-partner-name');
+  if (spn) spn.textContent = partnerName + ' 💖';
+  var spa = document.getElementById('sidebar-partner-avatar');
+  if (spa) spa.src = partnerAva || '';
+  if (allMsgs && allMsgs.length > 0) {
+    var lastM = allMsgs[allMsgs.length - 1];
+    var prefix = lastM.sender === appState.currentPin ? 'Bạn: ' : '';
+    var snippet = lastM.text ? (prefix + lastM.text) : (lastM.image ? (prefix + 'Đã gửi một ảnh 📷') : 'Đoạn chat');
+    var lastMsgEl = document.getElementById('sidebar-last-msg');
+    if (lastMsgEl) lastMsgEl.textContent = snippet.length > 28 ? snippet.substring(0, 26) + '...' : snippet;
+    var lastTimeEl = document.getElementById('sidebar-last-time');
+    if (lastTimeEl) lastTimeEl.textContent = fmtShort(lastM.time || lastM.createdAt) || 'Vừa xong';
+  }
+  updatePartnerPresenceUI();
   var partnerAva = getDisplayAvatar(partnerPin);
   var ha = document.getElementById('dm-header-avatar');
   if (ha) { ha.src = partnerAva || ''; ha.style.display = partnerAva ? '' : 'none'; }
-  if (!msgs.length) {
+  if (!allMsgs.length) {
     container.innerHTML = '<div class="dm-empty"><i class="fab fa-facebook-messenger"></i>Chưa có tin nhắn nào<br><span style="font-size:0.75rem;">Hãy gửi lời nhắn đầu tiên đến '+esc(partnerName)+'</span></div>';
     return;
   }
   
+  var totalCount = allMsgs.length;
+  var hasOlder = _dmVisibleCount < totalCount;
+  var startIdx = Math.max(0, totalCount - _dmVisibleCount);
+  var msgs = allMsgs.slice(startIdx);
+
   var grpStart = {}, grpEnd = {};
   for (var g = 0; g < msgs.length; g++) {
     var gm = msgs[g], gn = msgs[g+1], gp = msgs[g-1];
@@ -4039,11 +4762,19 @@ function renderDmMessagesNow() {
     if (grpEnd[i]) html += '</div>';
   }
   
+  if (hasOlder) {
+    html = '<div class="lazy-load-header" id="lazy-load-header"><button class="btn-load-more" onclick="loadMoreDmMessages()"><i class="fas fa-clock-rotate-left"></i> <span>Cuộn lên hoặc bấm để tải thêm 30 tin nhắn cũ hơn (' + (totalCount - _dmVisibleCount) + ' tin còn lại)</span></button></div>' + html;
+  } else {
+    html = '<div class="chat-intro-card"><div class="intro-avatar"><img src="' + esc(partnerAva || '') + '" alt=""></div><div class="intro-name">' + esc(partnerName) + '</div><div class="intro-sub">Love Story · Đoạn chat riêng tư</div></div>' + html;
+  }
+
   var shouldScroll = _dmFirstRender || _dmShouldScroll || (container.scrollTop + container.clientHeight >= container.scrollHeight - 40);
   _dmFirstRender = false;
   _dmShouldScroll = false;
   container.innerHTML = html;
-  if (shouldScroll) {
+  if (preserveScroll && container) {
+    container.scrollTop = (prevTop || 0) + (container.scrollHeight - (prevHeight || 0));
+  } else if (shouldScroll) {
     container.scrollTop = container.scrollHeight;
     setTimeout(function() {
       if (container.scrollTop < container.scrollHeight - 20) {
@@ -4251,6 +4982,43 @@ var partnerPresenceUnsub = null;
 var _partnerOnline = false;
 var _partnerLastSeenIso = '';
 
+function formatLastSeen(iso){
+  if(!iso) return 'Không hoạt động';
+  try{
+    var d = new Date(iso);
+    if(isNaN(d.getTime())) return 'Không hoạt động';
+    var diffMs = Date.now() - d.getTime();
+    if(diffMs < 0) diffMs = 0;
+    var diffMin = Math.floor(diffMs / 60000);
+    if(diffMin < 1) return 'Vừa mới truy cập';
+    if(diffMin < 60) return 'Hoạt động ' + diffMin + ' phút trước';
+    var diffHr = Math.floor(diffMin / 60);
+    if(diffHr < 24) return 'Hoạt động ' + diffHr + ' giờ trước';
+    var diffDays = Math.floor(diffHr / 24);
+    if(diffDays === 1) return 'Hoạt động hôm qua';
+    if(diffDays < 7) return 'Hoạt động ' + diffDays + ' ngày trước';
+    return 'Hoạt động ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1);
+  }catch(e){ return ''; }
+}
+
+function updatePartnerPresenceUI(){
+  var el = document.getElementById('dm-online-status');
+  if(el){
+    if(_partnerOnline){
+      el.className = 'header-status online';
+      el.textContent = 'Đang hoạt động';
+    } else {
+      el.className = 'header-status';
+      el.textContent = formatLastSeen(_partnerLastSeenIso);
+    }
+  }
+  var sideDot = document.getElementById('sidebar-online-indicator');
+  if(sideDot){
+    sideDot.style.display = _partnerOnline ? 'block' : 'none';
+  }
+  updateDmPopupPresence();
+}
+
 function updateDmPopupPresence(){
   var st=document.getElementById('dcp-status');
   if(st){
@@ -4263,68 +5031,71 @@ function updateDmPopupPresence(){
 }
 
 function setupPresence() {
-  if (!appState.currentUid || !appState.currentPin) {
+  if (!appState.currentPin) {
     setTimeout(setupPresence, 500);
     return;
   }
-  var ref = db.collection('presence').doc(appState.currentUid);
-  var data = { pin: appState.currentPin, online: true, lastSeen: new Date().toISOString() };
-  ref.set(data).catch(function() {});
+  var pin = appState.currentPin;
+  var sendOnline = function(isOnline) {
+    var nowIso = new Date().toISOString();
+    var payload = { pin: pin, online: isOnline, lastSeen: nowIso };
+    db.collection('presence').doc(pin).set(payload, { merge: true }).catch(function(){});
+    if (appState.currentUid && appState.currentUid !== pin) {
+      db.collection('presence').doc(appState.currentUid).set(payload, { merge: true }).catch(function(){});
+    }
+  };
+
+  sendOnline(true);
   
   if (appState.presenceHeartbeat) clearInterval(appState.presenceHeartbeat);
   appState.presenceHeartbeat = setInterval(function() {
-    ref.update({ online: true, lastSeen: new Date().toISOString() }).catch(function() {});
-  }, 30000);
-  window.addEventListener('beforeunload', function() {
-    ref.update({ online: false, lastSeen: new Date().toISOString() }).catch(function() {});
-  });
-}
+    sendOnline(true);
+  }, 20000);
 
-function formatLastSeen(iso){
-  if(!iso)return'';
-  try{
-    var d=new Date(iso);if(isNaN(d))return'';
-    var now=new Date();
-    var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-    var day=new Date(d.getFullYear(),d.getMonth(),d.getDate());
-    var diffDays=Math.round((today-day)/86400000);
-    var hm=pad(d.getHours())+':'+pad(d.getMinutes());
-    if(diffDays===0)return 'Lần cuối: hôm nay '+hm;
-    if(diffDays===1)return 'Lần cuối: hôm qua '+hm;
-    return 'Lần cuối: '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+hm;
-  }catch(e){return''}
+  window.addEventListener('beforeunload', function() {
+    sendOnline(false);
+  });
+  document.addEventListener('visibilitychange', function() {
+    sendOnline(!document.hidden);
+  });
 }
 
 function setupPartnerPresenceListener() {
   if (partnerPresenceUnsub) { partnerPresenceUnsub(); partnerPresenceUnsub = null; }
-  var el = document.getElementById('dm-online-status');
-  if (!el) return;
   var partnerPin = getPartnerPin();
   if (!partnerPin) return;
+
+  var handleData = function(docs) {
+    var isOnline = false;
+    var lastSeenIso = '';
+    docs.forEach(function(d) {
+      if (!d) return;
+      if (d.lastSeen && d.lastSeen > lastSeenIso) lastSeenIso = d.lastSeen;
+      if (d.online) {
+        var age = Date.now() - new Date(d.lastSeen || 0).getTime();
+        if (age < 60000) isOnline = true;
+      }
+    });
+    _partnerOnline = isOnline;
+    _partnerLastSeenIso = lastSeenIso;
+    updatePartnerPresenceUI();
+  };
+
   partnerPresenceUnsub = db.collection('presence')
     .where('pin', '==', partnerPin)
     .onSnapshot(function(snapshot) {
-      var isOnline = false;
-      var lastSeenIso = '';
-      snapshot.forEach(function(doc) {
-        var d = doc.data();
-        if (d.lastSeen && d.lastSeen > lastSeenIso) lastSeenIso = d.lastSeen;
-        if (d.online) {
-          var age = Date.now() - new Date(d.lastSeen || 0).getTime();
-          if (age < 70000) isOnline = true;
-        }
+      var list = [];
+      snapshot.forEach(function(doc) { list.push(doc.data()); });
+      db.collection('presence').doc(partnerPin).get().then(function(pDoc) {
+        if (pDoc.exists) list.push(pDoc.data());
+        handleData(list);
+      }).catch(function() {
+        handleData(list);
       });
-      _partnerOnline = isOnline;
-      _partnerLastSeenIso = lastSeenIso;
-      el.innerHTML = isOnline
-        ? '<span class="online-dot"></span> Đang hoạt động'
-        : '<span class="offline-dot"></span> '+formatLastSeen(lastSeenIso);
-      updateDmPopupPresence();
     }, function(err) {
       console.warn('Presence listener err:', err);
     });
 }
-
 
 function openImageViewer(src) {
   var viewer=document.getElementById('photo-viewer');
@@ -6447,12 +7218,7 @@ var _dmPopupPrevUnread=0;
 var _dmPopupMenuEl=null;
 var _dmPopupScrollFn=null;
 function dmSidebarClick(){
-  if(window.innerWidth>=1024){
-    if(appState.currentPage==='direct') return; // đang ở DM full rồi, không làm gì
-    openDmPopup();
-  } else {
-    switchPage('direct');
-  }
+  switchPage('direct');
 }
 function dmPopupIsOpen(){var p=document.getElementById('dm-chat-popup');return !!(p&&p.classList.contains('open')&&!p.classList.contains('minimized'));}
 function dcpTime(iso){try{var d=new Date(iso);if(isNaN(d))return'';return pad(d.getHours())+':'+pad(d.getMinutes())}catch(e){return''}}
