@@ -603,7 +603,7 @@ html.dark .duo-streak-btn.done { color:#ffb03a; background:rgba(255,150,0,0.15);
   /* Khoảng cách giữa khu story và các bài trên timeline (bằng khoảng cách giữa các bài) */
   .write-reminder-banner { max-width:732px; margin:14px auto 0; border-radius:14px; padding:16px 22px; }
   .duo-day-dot { width:34px; height:34px; font-size:0.78rem; }
-  .feed-posts { max-width:780px; padding:14px 24px 40px; }
+  .feed-posts { max-width:780px; padding:14px 0 40px; }
   .feed-card { margin-bottom:16px; border-radius:14px; }
   .feed-card-header { padding:16px 22px 12px; }
   .feed-card-avatar { width:44px; height:44px; }
@@ -902,7 +902,7 @@ html.dark .duo-streak-btn.done { color:#ffb03a; background:rgba(255,150,0,0.15);
 .pd-scroll-images .pd-carousel-img { max-height:50vh; width:auto; max-width:100%; flex-shrink:0; object-fit:contain; object-position:center; background:#000; }
 #pd-scroll-images:empty { display:none; }
 
-@media (min-width:768px) {
+@media (min-width:1094px) {
   #pd-scroll-images { display:none; }
 }
 
@@ -1086,15 +1086,25 @@ html.dark .duo-streak-btn.done { color:#ffb03a; background:rgba(255,150,0,0.15);
 .pd-reply-avatar { width:24px !important; height:24px !important; min-width:24px; }
 .pd-reply-avatar i { font-size:1rem !important; }
 
-@media (min-width:768px) {
-  /* PC: nền mờ + blur chuyên nghiệp (mobile giữ full-screen như Instagram) */
-  #post-overlay { background:var(--overlay-bg); -webkit-backdrop-filter:blur(8px) saturate(180%); backdrop-filter:blur(8px) saturate(180%); align-items:center; justify-content:center; transform:none; transition:opacity 0.14s ease; }
+@media (min-width:768px) and (max-width:1093px) and (min-height:560px) {
+  /* PC cửa sổ vừa / màn hình zoom: 1 cột, rộng đúng 680px như ô đăng bài + ô streak */
+  #post-overlay { background:var(--overlay-bg); -webkit-backdrop-filter:blur(8px) saturate(180%); backdrop-filter:blur(8px) saturate(180%); align-items:center; justify-content:center; padding:16px; box-sizing:border-box; transform:none; transition:opacity 0.14s ease; }
   #post-overlay.open .pd-modal { transform:translateY(0) scale(1); opacity:1; }
-  .pd-modal { background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius); overflow:hidden; max-width:900px; width:100%; max-height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.25); will-change:transform,opacity; transform:translateY(8px) scale(0.98); opacity:0; transition:transform 0.16s cubic-bezier(0.22,1,0.36,1), opacity 0.14s ease; }
+  .pd-modal { background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius); overflow:hidden; max-width:680px; width:100%; flex:0 0 auto; height:88vh; height:88dvh; max-height:88vh; max-height:88dvh; box-shadow:0 20px 60px rgba(0,0,0,0.25); will-change:transform,opacity; transform:translateY(8px) scale(0.98); opacity:0; transition:transform 0.16s cubic-bezier(0.22,1,0.36,1), opacity 0.14s ease; }
+  .pd-scroll-images .pd-carousel { max-height:none; }
+  .pd-scroll-images .pd-carousel-img { max-height:none; height:auto; }
+}
+
+@media (min-width:1094px) and (min-height:560px) {
+  /* PC: nền mờ + blur chuyên nghiệp (mobile giữ full-screen như Instagram) */
+  #post-overlay { background:var(--overlay-bg); -webkit-backdrop-filter:blur(8px) saturate(180%); backdrop-filter:blur(8px) saturate(180%); align-items:center; justify-content:center; padding:16px; box-sizing:border-box; transform:none; transition:opacity 0.14s ease; }
+  #post-overlay.open .pd-modal { transform:translateY(0) scale(1); opacity:1; }
+  /* Gọn hơn: 960px = cột ảnh 618px + cột bình luận 340px + 2px viền, cao 88vh */
+  .pd-modal { background:var(--card-bg); border:1px solid var(--border-light); border-radius:var(--radius); overflow:hidden; max-width:960px; width:100%; height:88vh; height:88dvh; max-height:88vh; max-height:88dvh; box-shadow:0 20px 60px rgba(0,0,0,0.25); will-change:transform,opacity; transform:translateY(8px) scale(0.98); opacity:0; transition:transform 0.16s cubic-bezier(0.22,1,0.36,1), opacity 0.14s ease; }
   .pd-modal-inner { flex-direction:row; }
-  .pd-images { width:calc(100% - 380px); flex:none; background:#000; min-height:400px; max-height:80vh; }
-  .pd-carousel-img { max-height:80vh; }
-  .pd-side { width:380px; flex-shrink:0; border-left:1px solid var(--border-light); }
+  .pd-images { width:calc(100% - 340px); flex:none; background:#000; min-height:400px; max-height:78vh; }
+  .pd-carousel-img { max-height:78vh; }
+  .pd-side { width:340px; flex-shrink:0; border-left:1px solid var(--border-light); }
   .pd-input-fixed { border-left:1px solid var(--border-light); }
   #pd-scroll-images { display:none !important; }
 }
@@ -3194,14 +3204,16 @@ body[data-page="direct"] #main-content {
 }
 .fb-create-card {
   width: 100% !important;
-  max-width: 520px !important;
+  max-width: 960px !important;
+  height: 88vh !important;
+  height: 88dvh !important;
   background: var(--card-bg) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25) !important;
   display: flex !important;
   flex-direction: column !important;
-  max-height: 90vh !important;
-  max-height: 90dvh !important;
+  max-height: 88vh !important;
+  max-height: 88dvh !important;
   overflow: hidden !important;
   transform: scale(0.94) translateY(12px) !important;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -3209,16 +3221,22 @@ body[data-page="direct"] #main-content {
 #create-page.open .fb-create-card {
   transform: scale(1) translateY(0) !important;
 }
-@media (max-width: 767px) {
+@media (min-width: 768px) and (max-width: 1093px) and (min-height: 560px) {
+  .fb-create-card {
+    max-width: 680px !important;
+  }
+}
+@media (max-width: 767px), (max-height: 559px) {
   #create-page {
     padding: 0 !important;
-    align-items: flex-end !important;
+    align-items: stretch !important;
   }
   .fb-create-card {
     max-width: 100% !important;
-    border-radius: 16px 16px 0 0 !important;
-    max-height: 94vh !important;
-    max-height: 94dvh !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
     transform: translateY(100%) !important;
   }
   #create-page.open .fb-create-card {
@@ -3346,6 +3364,10 @@ body[data-page="direct"] #main-content {
 .fb-create-input::placeholder {
   color: var(--text-secondary) !important;
   opacity: 0.8 !important;
+}
+#create-page .fb-create-input {
+  flex: 1 1 auto !important;
+  max-height: none !important;
 }
 
 .fb-create-date-row {
@@ -3901,9 +3923,23 @@ html.dark .fbp-cover {
   background: var(--text-link);
 }
 .fbp-content {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 8px;
+  max-width: none;
+  margin: 0 16px;
+  padding: 0;
+}
+/* Thẻ bài viết trong trang cá nhân rộng bằng ô thông tin (3 vạch) phía trên */
+.fbp-feed-posts {
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.fbp-content .profile-posts {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 767px) {
+  .fbp-content { margin: 0 8px; }
 }
 
 @media (max-width: 767px) {
@@ -5765,6 +5801,10 @@ html.dark .fbp-cover {
             <i class="fas fa-chevron-right fbs-arrow"></i>
           </button>
         </div>
+      </div>
+
+      <div style="text-align:center;font-size:0.72rem;color:var(--text-secondary);opacity:0.75;padding:12px 0 2px;">
+        Phiên bản giao diện: 11/11/2026
       </div>
     </div>
   </div>
@@ -9025,7 +9065,7 @@ function renderPdImages(entry){
     return
   }
   var total=entry.images.length;
-  var isMobile=window.innerWidth<768;
+  var isMobile=window.innerWidth<1094;
   var imgs=entry.images.map(function(img,idx){
     return '<img class="pd-carousel-img" src="'+esc(driveThumb(img.url||img,1200))+'" data-index="'+idx+'" onload="pdFitImg(this)" style="width:100%;flex-shrink:0;"'+(idx===0?'':' loading="lazy"')+' />'
   }).join('');
