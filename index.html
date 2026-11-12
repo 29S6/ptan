@@ -5781,7 +5781,7 @@ html.dark .fbp-cover {
       </div>
 
       <div style="text-align:center;font-size:0.72rem;color:var(--text-secondary);opacity:0.75;padding:12px 0 2px;">
-        Phiên bản giao diện: 11/11/2026
+        Phiên bản giao diện: 12/11/2026
       </div>
     </div>
   </div>
@@ -6432,7 +6432,11 @@ function initApp(){
   loadOfflineQueue();
   processOfflineQueue();
   startClock();
-  loadData(function(){setupDmListener();setupRealtimeAnniversaries();updateDmBadge();setupWriteReminder();});
+  loadData(function(){
+    setupDmListener();setupRealtimeAnniversaries();updateDmBadge();setupWriteReminder();
+    // Sau khi đăng nhập ẩn danh + tải xong dữ liệu mới thử đẩy hàng đợi lên (bình luận đã lưu trên máy).
+    setTimeout(function(){ try{ processOfflineQueue(); }catch(e){} }, 1200);
+  });
   loadActivitySeen();
   updateActivityBadge();
   setupPresence();
@@ -6842,8 +6846,15 @@ function processOfflineQueue(){
   function processNext(i){
     if(i>=q.length)return;
     var a=q[i];
+    a.payload=a.payload||{};
+    a.payload.__retry=(Number(a.payload.__retry)||0)+1;
     function handler(r){
-      if(!(r&&r.success))addQueue(a);
+      // r.local = mới lưu trên máy, CHƯA lên máy chủ → vẫn phải thử lại sau.
+      var ok=r&&r.success&&!r.local;
+      if(!ok){
+        if(a.payload.__retry<8){addQueue(a);}
+        else{console.warn('[queue] bỏ qua hành động đồng bộ mãi không được:',a.payload.action);}
+      }
       processNext(i+1);
     }
     sendPayload(a.payload,null,handler)
@@ -6961,6 +6972,7 @@ function sendPayload(payload, successMsg, callback) {
 
   
   var clean = JSON.parse(JSON.stringify(payload));
+  delete clean.__retry;
   if (clean.entry && clean.entry.images) clean.entry.images = clean.entry.images.map(function(i) { return { url: i.url || '', driveId: i.driveId || '' }; });
   var body = JSON.stringify(clean);
   if (body.length > 45 * 1024 * 1024) { showToast('<i class="fas fa-exclamation-triangle"></i> Dung lượng quá lớn!'); if (callback) callback(null); return; }
@@ -6973,75 +6985,184 @@ function sendPayload(payload, successMsg, callback) {
     }).catch(function() { hideSaving(); if (callback) callback(null); });
 }
 
-function handleCommentAction(payload, successMsg, callback) {
-  var entryId = payload.entryId;
-  var entryRef = db.collection('entries').doc(entryId);
+/* ---------------- Bình luận: ghi an toàn 3 lớp (transaction → set → lưu máy + hàng đợi) ----------------
+   Trước đây chỉ dùng transaction: hễ máy chủ chậm / mất mạng / dữ liệu cũ có field lỗi là báo
+   "Lỗi đồng bộ" và bình luận biến mất. Giờ luôn lưu được trên máy trước, rồi tự đồng bộ sau. */
+function pdCleanCommentValue(v, depth) {
+  depth = depth || 0;
+  if (v === undefined || v === null) return null;
+  var t = typeof v;
+  if (t === 'function' || t === 'symbol' || t === 'bigint') return null;
+  if (t === 'number') return isFinite(v) ? v : null;
+  if (t === 'boolean') return v;
+  if (t === 'string') return v.length > 40000 ? v.slice(0, 40000) : v;
+  if (v instanceof Date) return v.toISOString();
+  if (t === 'object') {
+    // Firestore Timestamp / GeoPoint / Blob: giữ nguyên, không clone
+    if (typeof v.toDate === 'function' || typeof v.toMillis === 'function' || (typeof v.isEqual === 'function' && typeof v.latitude === 'number')) return v;
+    if (depth > 6) return null;
+    if (Array.isArray(v)) {
+      var arr = [];
+      for (var i = 0; i < v.length; i++) {
+        var av = pdCleanCommentValue(v[i], depth + 1);
+        if (av !== null) arr.push(av);
+      }
+      return arr;
+    }
+    var o = {};
+    for (var k in v) {
+      if (!Object.prototype.hasOwnProperty.call(v, k)) continue;
+      var cv = pdCleanCommentValue(v[k], depth + 1);
+      if (cv !== null) o[k] = cv;
+    }
+    return o;
+  }
+  return null;
+}
 
-  db.runTransaction(function(transaction) {
-    return transaction.get(entryRef).then(function(doc) {
-      if (!doc.exists) { hideSaving(); if (callback) callback(null); return Promise.reject('DOC_MISSING'); }
-      var comments = (doc.data().comments || []).slice();
+function pdCleanComments(list) {
+  var out = [];
+  (list || []).forEach(function(c) {
+    var cc = pdCleanCommentValue(c, 0);
+    if (cc && typeof cc === 'object' && !Array.isArray(cc)) out.push(cc);
+  });
+  return out;
+}
 
-      if (payload.action === 'add_comment') {
-        var newComment = {
-          id: payload.commentId || ('c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
+function pdMutateComments(baseComments, payload) {
+  var comments = (baseComments || []).map(function(c) {
+    var copy = {};
+    for (var k in c) if (Object.prototype.hasOwnProperty.call(c, k)) copy[k] = c[k];
+    copy.replies = (c.replies || []).map(function(r) {
+      var rc = {};
+      for (var rk in r) if (Object.prototype.hasOwnProperty.call(r, rk)) rc[rk] = r[rk];
+      return rc;
+    });
+    return copy;
+  });
+  if (payload.action === 'add_comment') {
+    var newComment = {
+      id: payload.commentId || ('c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
+      author: payload.author || currentUser,
+      text: payload.text || '',
+      time: new Date().toISOString()
+    };
+    if (payload.image) newComment.image = payload.image;
+    comments.push(newComment);
+  } else if (payload.action === 'edit_comment') {
+    comments.forEach(function(c) { if (c.id === payload.commentId) { c.text = payload.text; c.author = payload.author || c.author; if (payload.image !== undefined) c.image = payload.image || ''; } });
+  } else if (payload.action === 'reply_comment') {
+    comments.forEach(function(c) {
+      if (c.id === payload.commentId) {
+        if (!c.replies) c.replies = [];
+        var nr = {
+          id: payload.replyId || ('r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
           author: payload.author || currentUser,
           text: payload.text || '',
           time: new Date().toISOString()
         };
-        if (payload.image) newComment.image = payload.image;
-        comments.push(newComment);
-      } else if (payload.action === 'edit_comment') {
-        comments.forEach(function(c) { if (c.id === payload.commentId) { c.text = payload.text; c.author = payload.author || c.author; if (payload.image !== undefined) c.image = payload.image || ''; } });
-      } else if (payload.action === 'reply_comment') {
-        comments.forEach(function(c) {
-          if (c.id === payload.commentId) {
-            if (!c.replies) c.replies = [];
-            var nr = {
-              id: payload.replyId || ('r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
-              author: payload.author || currentUser,
-              text: payload.text || '',
-              time: new Date().toISOString()
-            };
-            if (payload.image) nr.image = payload.image;
-            c.replies.push(nr);
-          }
-        });
-      } else if (payload.action === 'delete_comment') {
-        comments = comments.filter(function(c) { return c.id !== payload.commentId; });
-      } else if (payload.action === 'edit_reply') {
-        comments.forEach(function(c) {
-          if (c.id === payload.commentId && c.replies) {
-            c.replies.forEach(function(r) { if (r.id === payload.replyId) { r.text = payload.text; if (payload.image !== undefined) r.image = payload.image || ''; } });
-          }
-        });
-      } else if (payload.action === 'delete_reply') {
-        comments.forEach(function(c) {
-          if (c.id === payload.commentId && c.replies) {
-            c.replies = c.replies.filter(function(r) { return r.id !== payload.replyId; });
-          }
-        });
+        if (payload.image) nr.image = payload.image;
+        c.replies.push(nr);
       }
+    });
+  } else if (payload.action === 'delete_comment') {
+    comments = comments.filter(function(c) { return c.id !== payload.commentId; });
+  } else if (payload.action === 'edit_reply') {
+    comments.forEach(function(c) {
+      if (c.id === payload.commentId && c.replies) {
+        c.replies.forEach(function(r) { if (r.id === payload.replyId) { r.text = payload.text; if (payload.image !== undefined) r.image = payload.image || ''; } });
+      }
+    });
+  } else if (payload.action === 'delete_reply') {
+    comments.forEach(function(c) {
+      if (c.id === payload.commentId && c.replies) {
+        c.replies = c.replies.filter(function(r) { return r.id !== payload.replyId; });
+      }
+    });
+  }
+  return comments;
+}
 
-      transaction.update(entryRef, { comments: comments });
-      return comments;
+function handleCommentAction(payload, successMsg, callback) {
+  var entryId = payload.entryId;
+  if (!entryId) { hideSaving(); if (callback) callback(null); return; }
+  var entryRef = db.collection('entries').doc(entryId);
+  var savedLocal = false;
+
+  function master() {
+    return (appState.data.entries || []).find(function(e) { return e.id === entryId; });
+  }
+
+  function commit(comments) {
+    hideSaving();
+    var m = master();
+    if (m) m.comments = comments;
+    if (callback) callback({ success: true, comments: comments });
+  }
+
+  // Luôn giữ bình luận của người dùng, kể cả khi máy chủ lỗi hoặc mất mạng.
+  function saveLocalThenRetry() {
+    if (!savedLocal) { applyCommentLocal(payload); savedLocal = true; }
+    if (!payload.__retry) addQueue({ payload: payload });
+    hideSaving();
+    var m = master();
+    showToast('<i class="fas fa-save"></i> Đã lưu bình luận trên máy, sẽ tự đồng bộ khi có mạng');
+    if (callback) callback({ success: true, comments: m ? m.comments : null, local: true });
+  }
+
+  // Lớp 2: không dùng transaction, đọc lại doc rồi ghi field comments.
+  function writeDirect() {
+    return entryRef.get().then(function(doc) {
+      if (!doc.exists) {
+        var m = master();
+        if (!m) throw new Error('DOC_MISSING_NO_LOCAL');
+        var full = pdCleanCommentValue(m, 0) || {};
+        var localComments = pdCleanComments(pdMutateComments(full.comments, payload));
+        full.comments = localComments;
+        return entryRef.set(full, { merge: true }).then(function() { return localComments; });
+      }
+      var next = pdCleanComments(pdMutateComments(doc.data().comments, payload));
+      return entryRef.set({ comments: next }, { merge: true }).then(function() { return next; });
+    });
+  }
+
+  // Lớp 1: transaction (an toàn khi 2 người cùng bình luận).
+  db.runTransaction(function(transaction) {
+    return transaction.get(entryRef).then(function(doc) {
+      if (!doc.exists) {
+        var m = master();
+        if (!m) throw new Error('DOC_MISSING_NO_LOCAL');
+        var full = pdCleanCommentValue(m, 0) || {};
+        var localComments = pdCleanComments(pdMutateComments(full.comments, payload));
+        full.comments = localComments;
+        transaction.set(entryRef, full, { merge: true });
+        return localComments;
+      }
+      var next = pdCleanComments(pdMutateComments(doc.data().comments, payload));
+      transaction.update(entryRef, { comments: next });
+      return next;
     });
   }).then(function(comments) {
-    hideSaving();
-    var master = appState.data.entries.find(function(e) { return e.id === entryId; });
-    if (master) master.comments = comments;
-    if (callback) callback({ success: true, comments: comments });
+    commit(comments);
   }).catch(function(err) {
-    hideSaving();
-    if (err === 'DOC_MISSING') return;
-    if (!navigator.onLine) {
-      addQueue({payload: payload});
-      showToast('<i class="fas fa-save"></i> Đã lưu tạm, sẽ đồng bộ khi có mạng');
-      if (callback) callback({ success: true });
+    var code = (err && (err.code || err.message)) || 'unknown';
+    console.warn('[comment] transaction thất bại:', code, err);
+    if (String(code).indexOf('permission-denied') !== -1 && auth && !auth.currentUser) {
+      try { silentAuth(); } catch(e) {}
+    }
+    if (err && err.message === 'DOC_MISSING_NO_LOCAL') {
+      hideSaving();
+      showToast('<i class="fas fa-exclamation-triangle"></i> Không tìm thấy bài viết để bình luận');
+      if (callback) callback(null);
       return;
     }
-    showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi đồng bộ');
-    if (callback) callback(null);
+    writeDirect().then(function(comments) {
+      commit(comments);
+    }).catch(function(err2) {
+      var code2 = (err2 && (err2.code || err2.message)) || 'unknown';
+      console.warn('[comment] ghi trực tiếp thất bại:', code2, err2);
+      saveLocalThenRetry();
+    });
   });
 }
 
@@ -8016,7 +8137,7 @@ function refreshFeedIfStale() {
   }).catch(function() {});
 }
 document.addEventListener('visibilitychange', function() {
-  if (!document.hidden) setTimeout(refreshFeedIfStale, 300);
+  if (!document.hidden) { setTimeout(refreshFeedIfStale, 300); try { processOfflineQueue(); } catch(e) {} }
 });
 
 function setupRealtimeAnniversaries() {
@@ -10309,7 +10430,7 @@ function setupWriteReminder(){
 
 function showLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.add('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 6s linear';i.style.width='70%'}}
 function hideLoadingBar(){var b=document.getElementById('loading-bar');if(b)b.classList.remove('active');var i=document.getElementById('loading-bar-inner');if(i){i.style.transition='width 0.25s ease';i.style.width='100%';setTimeout(function(){if(i)i.style.width='0%';if(i)i.style.transition='none'},300)}}
-function triggerSync(){showLoadingBar();loadData(function(){hideLoadingBar()})}
+function triggerSync(){showLoadingBar();try{processOfflineQueue()}catch(e){}loadData(function(){hideLoadingBar()})}
 
 
 document.addEventListener('keydown',function(e){
