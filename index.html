@@ -4957,6 +4957,202 @@ html.dark .fbp-cover {
   visibility: visible !important;
 }
 
+/* === IMAGE OPTIMIZATION & VOICE FEATURES === */
+.explore-item, .profile-grid-item, .fb-cell, .dm-msg-img-content {
+  background: linear-gradient(110deg, rgba(255,182,193,0.12) 8%, rgba(255,182,193,0.24) 18%, rgba(255,182,193,0.12) 33%);
+  background-size: 200% 100%;
+}
+.dm-voice-btn {
+  color: var(--text-secondary);
+  transition: color 0.15s, transform 0.15s;
+}
+.dm-voice-btn:hover { color: #ff3b6f; transform: scale(1.08); }
+.dm-voice-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  margin-bottom: 8px;
+  background: rgba(255, 59, 111, 0.1);
+  border: 1px solid rgba(255, 59, 111, 0.35);
+  border-radius: 22px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+.dm-voice-bar.active { display: flex; }
+.voice-rec-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff2d55;
+  flex-shrink: 0;
+  animation: voicePulse 1s infinite;
+}
+@keyframes voicePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.25); }
+}
+.dm-voice-timer { font-weight: 700; font-variant-numeric: tabular-nums; color: #ff2d55; }
+.dm-voice-spacer { flex: 1; font-size: 0.78rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dm-voice-cancel {
+  border: none;
+  background: rgba(0,0,0,0.08);
+  color: var(--text-primary);
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dm-voice-send {
+  border: none;
+  background: linear-gradient(135deg, #ff3b6f, #ff6b9d);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.voice-player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 195px;
+  max-width: 280px;
+  padding: 8px 12px;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.05);
+}
+.dm-msg.sent .voice-player {
+  background: linear-gradient(135deg, #ff3b6f, #ff6b9d);
+  color: #fff;
+}
+.dm-msg.received .voice-player {
+  background: var(--bg-secondary, #f0f2f5);
+  color: var(--text-primary);
+}
+.feed-voice-player {
+  max-width: 100%;
+  width: 100%;
+  margin: 8px 0 4px;
+  background: rgba(255, 59, 111, 0.08);
+  border: 1px solid rgba(255, 59, 111, 0.22);
+  color: var(--text-primary);
+}
+.vp-play {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: #ff3b6f;
+  color: #fff;
+  font-size: 0.85rem;
+}
+.dm-msg.sent .vp-play {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+.vp-track {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 80px;
+}
+.vp-bar {
+  height: 5px;
+  border-radius: 4px;
+  background: rgba(128,128,128,0.28);
+  overflow: hidden;
+  cursor: pointer;
+}
+.dm-msg.sent .vp-bar { background: rgba(255,255,255,0.32); }
+.vp-fill {
+  height: 100%;
+  width: 0%;
+  background: #ff3b6f;
+  border-radius: 4px;
+  transition: width 0.1s linear;
+}
+.dm-msg.sent .vp-fill { background: #fff; }
+.vp-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  opacity: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+.vp-wave {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 24px;
+  cursor: pointer;
+  padding: 2px 0;
+}
+.vp-wave-bar {
+  flex: 1;
+  min-width: 2.5px;
+  border-radius: 3px;
+  background: rgba(128,128,128,0.28);
+  transition: background 0.12s, transform 0.15s;
+}
+.dm-msg.sent .vp-wave-bar { background: rgba(255,255,255,0.34); }
+.vp-wave-bar.played { background: #ff3b6f; }
+.dm-msg.sent .vp-wave-bar.played { background: #fff; }
+.voice-player.is-playing .vp-wave-bar.played {
+  animation: waveBounce 0.65s ease-in-out infinite alternate;
+}
+@keyframes waveBounce {
+  0% { transform: scaleY(0.82); }
+  100% { transform: scaleY(1.12); }
+}
+.feed-voice-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #ff3b6f;
+  margin-bottom: 2px;
+}
+
+.fb-create-voice-box {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 59, 111, 0.08);
+  border: 1px solid rgba(255, 59, 111, 0.25);
+}
+.fb-create-voice-box.show { display: flex; }
+.fb-create-voice-remove {
+  border: none;
+  background: rgba(0,0,0,0.08);
+  color: var(--text-primary);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.cap-btn.voice-rec { color: #ff3b6f; }
+.cap-btn.voice-stt { color: #1877f2; }
+.cap-btn.recording, .cap-btn.listening {
+  background: rgba(255, 45, 85, 0.15) !important;
+  color: #ff2d55 !important;
+  animation: voicePulse 1s infinite;
+}
+
 </style>
 </head>
 <body>
@@ -5158,9 +5354,17 @@ html.dark .fbp-cover {
               <button onclick="clearDmImage()">✕</button>
             </div>
             <input type="file" id="dm-file-input" accept="image/*" style="display:none" onchange="handleDmImageFile(this)">
+            <div class="dm-voice-bar" id="dm-voice-bar">
+              <span class="voice-rec-dot"></span>
+              <span class="dm-voice-timer" id="dm-voice-timer">0:00</span>
+              <span class="dm-voice-spacer">Đang ghi âm tin nhắn thoại...</span>
+              <button type="button" class="dm-voice-cancel" onclick="cancelDmVoiceRecord()">Hủy</button>
+              <button type="button" class="dm-voice-send" onclick="stopAndSendDmVoiceRecord()"><i class="fas fa-paper-plane"></i> Gửi</button>
+            </div>
             <div class="chat-input-pill">
               <i class="far fa-smile input-tool-icon" title="Biểu tượng cảm xúc" onclick="insertDmEmoji('🥰')"></i>
               <textarea id="dm-input" class="chat-textarea" placeholder="Nhắn tin..." rows="1" oninput="onDmInput(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage()}"></textarea>
+              <i class="fas fa-microphone input-tool-icon dm-voice-btn" id="dm-voice-btn" title="Gửi tin nhắn thoại" onclick="startDmVoiceRecord()"></i>
               <i class="far fa-image input-tool-icon" title="Gửi ảnh" onclick="document.getElementById('dm-file-input').click()"></i>
               <i class="fas fa-heart btn-heart-quick" id="quick-heart-btn" title="Thả tim nhanh" onclick="sendQuickHeart()"></i>
               <button class="btn-send-ig" id="dm-send-btn" onclick="sendDmMessage()">Gửi</button>
@@ -5388,12 +5592,21 @@ html.dark .fbp-cover {
       <!-- Real Image Preview Box (Facebook grid with remove buttons) -->
       <div class="fb-create-previews" id="create-image-preview"></div>
 
+      <!-- Voice Diary Preview / Recorder Box -->
+      <div class="fb-create-voice-box" id="create-voice-preview"></div>
+
       <!-- "Thêm vào bài viết của bạn" capsule bar -->
       <div class="fb-create-capsule">
         <span class="capsule-text">Thêm vào bài viết của bạn</span>
         <div class="capsule-tools">
           <button type="button" class="cap-btn photo" onclick="document.getElementById('create-file-input').click()" title="Ảnh/video">
             <i class="fas fa-images"></i>
+          </button>
+          <button type="button" class="cap-btn voice-rec" id="create-voice-rec-btn" onclick="toggleCreateVoiceRecord()" title="Ghi âm nhật ký thoại">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button type="button" class="cap-btn voice-stt" id="create-voice-stt-btn" onclick="toggleVoiceDictation()" title="Nói để viết nhật ký (Tiếng Việt)">
+            <i class="fas fa-comment-dots"></i>
           </button>
           <button type="button" class="cap-btn feeling" onclick="toggleWriteMoodPicker()" title="Cảm xúc/hoạt động">
             <i class="fas fa-smile"></i>
@@ -6240,16 +6453,40 @@ function cleanName(name){return String(name||'').replace(/\s*[\u{1F300}-\u{1FAFF
 function countComments(comments){return (comments||[]).reduce(function(s,c){return s+1+(c.replies?c.replies.length:0)},0)}
 function driveThumb(url, w) {
   if (!url) return '';
+  w = w || 800;
+  var s = String(url);
+  if (s.indexOf('lh3.googleusercontent') > -1) {
+    return s.replace(/=w\d+/, '=w' + w);
+  }
   var id = '';
-  var m = String(url).match(/[?&]id=([^&]+)/);
+  var m = s.match(/[?&]id=([^&]+)/);
   if (m) id = m[1];
-  else if (String(url).indexOf('drive.google.com') > -1 && String(url).indexOf('lh3.googleusercontent') === -1) {
-    var m2 = String(url).match(/\/d\/([^/?#]+)/);
+  else if (s.indexOf('drive.google.com') > -1) {
+    var m2 = s.match(/\/d\/([^/?#]+)/);
     if (m2) id = m2[1];
   }
   if (!id) return url;
-  w = w || 800;
   return 'https://lh3.googleusercontent.com/d/' + encodeURIComponent(id) + '=w' + w;
+}
+function driveAudioUrl(url) {
+  if (!url) return '';
+  var s = String(url);
+  if (s.indexOf('blob:') === 0 || s.indexOf('data:') === 0) return s;
+  var id = '';
+  var m = s.match(/[?&]id=([^&]+)/);
+  if (m) id = m[1];
+  else if (s.indexOf('drive.google.com') > -1) {
+    var m2 = s.match(/\/d\/([^/?#]+)/);
+    if (m2) id = m2[1];
+  }
+  if (!id) return s;
+  return 'https://drive.google.com/uc?export=download&id=' + encodeURIComponent(id);
+}
+function formatVoiceSec(sec) {
+  sec = Math.max(0, Math.round(Number(sec) || 0));
+  var m = Math.floor(sec / 60);
+  var s = sec % 60;
+  return m + ':' + (s < 10 ? '0' + s : s);
 }
 function pad(n){return n<10?'0'+n:''+n}
 function todayStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())}
@@ -7216,6 +7453,145 @@ function deleteRemoteImages(images){
   })
 }
 
+function uploadAudioBlob(blob, filename, dateStr, callback) {
+  if (!blob) { callback(null); return; }
+  var reader = new FileReader();
+  reader.onloadend = function() {
+    var b64 = String(reader.result || '');
+    var parts = b64.split(',');
+    var data = parts[1] || parts[0];
+    if (data.length > 3.5 * 1024 * 1024) {
+      showToast('<i class="fas fa-exclamation-triangle"></i> Đoạn ghi âm quá dài (>2.5MB)');
+      callback(null);
+      return;
+    }
+    var mime = (blob.type || 'audio/webm').split(';')[0];
+    fetch(CONFIG.BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'upload_image',
+        imageData: data,
+        mimeType: mime,
+        filename: filename || ('voice_' + Date.now() + '.webm'),
+        dateStr: dateStr || todayStr()
+      })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (r && r.url) callback(r);
+      else callback(null);
+    })
+    .catch(function() { callback(null); });
+  };
+  reader.onerror = function() { callback(null); };
+  reader.readAsDataURL(blob);
+}
+
+var _activeVoiceAudio = null;
+var _activeVoiceEl = null;
+function resetActiveVoiceUI() {
+  if (_activeVoiceEl) {
+    _activeVoiceEl.classList.remove('is-playing');
+    var icon = _activeVoiceEl.querySelector('.vp-play i');
+    if (icon) icon.className = 'fas fa-play';
+    var bars = _activeVoiceEl.querySelectorAll('.vp-wave-bar');
+    bars.forEach(function(b) { b.classList.remove('played'); });
+    var curEl = _activeVoiceEl.querySelector('.vp-cur');
+    if (curEl) curEl.textContent = '0:00';
+  }
+  _activeVoiceEl = null;
+}
+function toggleVoicePlay(btn, rawUrl, totalDur) {
+  var player = btn ? btn.closest('.voice-player') : null;
+  if (!player) return;
+  var url = driveAudioUrl(rawUrl);
+  if (_activeVoiceAudio && _activeVoiceEl === player) {
+    if (_activeVoiceAudio.paused) {
+      _activeVoiceAudio.play().catch(function(){});
+      player.classList.add('is-playing');
+      btn.querySelector('i').className = 'fas fa-pause';
+    } else {
+      _activeVoiceAudio.pause();
+      player.classList.remove('is-playing');
+      btn.querySelector('i').className = 'fas fa-play';
+    }
+    return;
+  }
+  if (_activeVoiceAudio) {
+    try { _activeVoiceAudio.pause(); } catch (e) {}
+    resetActiveVoiceUI();
+  }
+  var audio = new Audio(url);
+  _activeVoiceAudio = audio;
+  _activeVoiceEl = player;
+  btn.querySelector('i').className = 'fas fa-spinner fa-spin';
+  audio.addEventListener('canplay', function() {
+    if (_activeVoiceEl === player && !audio.paused) {
+      player.classList.add('is-playing');
+      btn.querySelector('i').className = 'fas fa-pause';
+    }
+  });
+  audio.addEventListener('timeupdate', function() {
+    if (_activeVoiceEl !== player) return;
+    var dur = (audio.duration && isFinite(audio.duration)) ? audio.duration : (Number(totalDur) || 0);
+    var pct = dur > 0 ? Math.min(1, audio.currentTime / dur) : 0;
+    var bars = player.querySelectorAll('.vp-wave-bar');
+    var activeCount = Math.round(pct * bars.length);
+    for (var i = 0; i < bars.length; i++) {
+      if (i < activeCount) bars[i].classList.add('played');
+      else bars[i].classList.remove('played');
+    }
+    var curEl = player.querySelector('.vp-cur');
+    if (curEl) curEl.textContent = formatVoiceSec(audio.currentTime);
+  });
+  audio.addEventListener('ended', function() {
+    resetActiveVoiceUI();
+    _activeVoiceAudio = null;
+  });
+  audio.addEventListener('error', function() {
+    resetActiveVoiceUI();
+    _activeVoiceAudio = null;
+    showToast('<i class="fas fa-exclamation-triangle"></i> Không phát được file thoại');
+  });
+  audio.play().then(function() {
+    if (_activeVoiceEl === player) {
+      player.classList.add('is-playing');
+      btn.querySelector('i').className = 'fas fa-pause';
+    }
+  }).catch(function() {
+    resetActiveVoiceUI();
+    _activeVoiceAudio = null;
+    showToast('<i class="fas fa-exclamation-triangle"></i> Trình duyệt chặn phát âm thanh');
+  });
+}
+function seekVoicePlay(e, barEl) {
+  var player = barEl ? barEl.closest('.voice-player') : null;
+  if (!player || !_activeVoiceAudio || _activeVoiceEl !== player) return;
+  var dur = _activeVoiceAudio.duration;
+  if (!dur || !isFinite(dur)) return;
+  var rect = barEl.getBoundingClientRect();
+  var ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  _activeVoiceAudio.currentTime = ratio * dur;
+}
+var _VP_WAVE_HEIGHTS = [35,58,42,88,52,96,68,38,82,62,92,48,76,40,86,58,94,54,72,44,80,50,66,36];
+function renderVoicePlayerHtml(url, durationSec, extraCls) {
+  if (!url) return '';
+  var durText = formatVoiceSec(durationSec || 0);
+  var isFeed = (extraCls || '').indexOf('feed-voice-player') > -1;
+  var barsHtml = _VP_WAVE_HEIGHTS.map(function(h, idx) {
+    return '<span class="vp-wave-bar" style="height:' + h + '%;animation-delay:' + ((idx % 6) * 0.08) + 's"></span>';
+  }).join('');
+  return '<div class="voice-player ' + (extraCls || '') + '" onclick="event.stopPropagation()">' +
+    '<button type="button" class="vp-play" onclick="event.stopPropagation();toggleVoicePlay(this,\'' + esc(url) + '\',' + (Number(durationSec) || 0) + ')" title="Phát ghi âm"><i class="fas fa-play"></i></button>' +
+    '<div class="vp-track">' +
+      (isFeed ? '<div class="feed-voice-badge"><i class="fas fa-microphone-lines"></i> Nhật ký thoại</div>' : '') +
+      '<div class="vp-wave" onclick="event.stopPropagation();seekVoicePlay(event,this)">' + barsHtml + '</div>' +
+      '<div class="vp-meta"><span class="vp-cur">0:00</span><span>' + durText + '</span></div>' +
+    '</div>' +
+  '</div>';
+}
+
 
 function getPartnerPin() {
   return appState.currentPin === CONFIG.PIN_USER1 ? CONFIG.PIN_USER2 : CONFIG.PIN_USER1;
@@ -7507,6 +7883,117 @@ function toggleDmReaction(msgId, emoji) {
 }
 
 var _editingDmMsgId = null;
+var _dmRecorder = null;
+var _dmRecordStream = null;
+var _dmRecordChunks = [];
+var _dmRecordTimer = null;
+var _dmRecordStart = 0;
+var _dmRecordCanceled = false;
+
+function getBestAudioMime() {
+  if (typeof MediaRecorder === 'undefined') return '';
+  var types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+  for (var i = 0; i < types.length; i++) {
+    if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(types[i])) return types[i];
+  }
+  return '';
+}
+
+function startDmVoiceRecord() {
+  if (_dmRecorder && _dmRecorder.state === 'recording') return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+    showToast('<i class="fas fa-exclamation-triangle"></i> Trình duyệt chưa hỗ trợ ghi âm');
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    _dmRecordStream = stream;
+    _dmRecordChunks = [];
+    _dmRecordCanceled = false;
+    var mime = getBestAudioMime();
+    var opts = mime ? { mimeType: mime, audioBitsPerSecond: 24000 } : { audioBitsPerSecond: 24000 };
+    try { _dmRecorder = new MediaRecorder(stream, opts); } catch (e) { _dmRecorder = new MediaRecorder(stream); }
+    _dmRecordStart = Date.now();
+    var bar = document.getElementById('dm-voice-bar');
+    var timerEl = document.getElementById('dm-voice-timer');
+    if (bar) bar.classList.add('active');
+    if (timerEl) timerEl.textContent = '0:00';
+    _dmRecordTimer = setInterval(function() {
+      var sec = Math.floor((Date.now() - _dmRecordStart) / 1000);
+      if (timerEl) timerEl.textContent = formatVoiceSec(sec);
+      if (sec >= 120) stopAndSendDmVoiceRecord();
+    }, 300);
+    _dmRecorder.ondataavailable = function(ev) {
+      if (ev.data && ev.data.size > 0) _dmRecordChunks.push(ev.data);
+    };
+    _dmRecorder.onstop = function() {
+      clearInterval(_dmRecordTimer);
+      _dmRecordTimer = null;
+      if (_dmRecordStream) {
+        _dmRecordStream.getTracks().forEach(function(t) { t.stop(); });
+        _dmRecordStream = null;
+      }
+      var barEl = document.getElementById('dm-voice-bar');
+      if (barEl) barEl.classList.remove('active');
+      if (_dmRecordCanceled || !_dmRecordChunks.length) return;
+      var durSec = Math.max(1, Math.round((Date.now() - _dmRecordStart) / 1000));
+      var blob = new Blob(_dmRecordChunks, { type: _dmRecorder.mimeType || 'audio/webm' });
+      sendDmVoiceBlob(blob, durSec);
+    };
+    _dmRecorder.start(250);
+  }).catch(function() {
+    showToast('<i class="fas fa-microphone-slash"></i> Không truy cập được micro');
+  });
+}
+
+function cancelDmVoiceRecord() {
+  _dmRecordCanceled = true;
+  if (_dmRecorder && _dmRecorder.state === 'recording') {
+    _dmRecorder.stop();
+  } else {
+    clearInterval(_dmRecordTimer);
+    if (_dmRecordStream) { _dmRecordStream.getTracks().forEach(function(t){t.stop();}); _dmRecordStream = null; }
+    var bar = document.getElementById('dm-voice-bar');
+    if (bar) bar.classList.remove('active');
+  }
+}
+
+function stopAndSendDmVoiceRecord() {
+  _dmRecordCanceled = false;
+  if (_dmRecorder && _dmRecorder.state === 'recording') {
+    _dmRecorder.stop();
+  }
+}
+
+function sendDmVoiceBlob(blob, durSec) {
+  if (!navigator.onLine) {
+    showToast('<i class="fas fa-wifi"></i> Cần có mạng để gửi tin nhắn thoại');
+    return;
+  }
+  showToast('<i class="fas fa-spinner fa-spin"></i> Đang gửi tin nhắn thoại...');
+  var ext = (blob.type || '').indexOf('mp4') > -1 ? 'm4a' : 'webm';
+  uploadAudioBlob(blob, 'dm_voice_' + Date.now() + '.' + ext, todayStr(), function(r) {
+    if (!r || !r.url) {
+      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải thoại lên Drive');
+      return;
+    }
+    var msg = {
+      sender: appState.currentPin,
+      text: '',
+      audio: r.url,
+      audioDriveId: r.driveId || '',
+      audioDuration: durSec || 1,
+      createdAt: new Date().toISOString()
+    };
+    db.collection('messages').doc(getChatId()).collection('messages').add(msg).then(function() {
+      playSentSound();
+      _dmShouldScroll = true;
+    }).catch(function(err) {
+      console.warn('Send DM voice err:', err);
+      showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi lưu tin nhắn thoại');
+    });
+  });
+}
+
 var _editingDmMsgText = '';
 function sendDmMessage() {
   var input = document.getElementById('dm-input');
@@ -7978,9 +8465,12 @@ function renderDmMessagesNow(preserveScroll, prevHeight, prevTop) {
       contentHtml = '<div class="dm-msg-bubble">Tin nhắn đã được thu hồi</div>';
     } else {
       var imgHtml = '';
-      if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(driveThumb(m.image,800))+'" loading="lazy" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
+      if (m.image) imgHtml = '<div class="dm-msg-img-content"><img src="'+esc(driveThumb(m.image,800))+'" loading="lazy" decoding="async" onclick="event.stopPropagation();openImageViewer(\''+esc(m.image)+'\')"></div>';
+      var audioHtml = '';
+      if (m.audio) audioHtml = renderVoicePlayerHtml(m.audio, m.audioDuration || 0, 'dm-voice-player');
       var hasText=!!(replyHtml||m.text);
-      if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div></div>'}
+      if(audioHtml){contentHtml+=audioHtml+reactionsHtml}
+      else if(imgHtml&&hasText){contentHtml+='<div class="dm-msg-media">'+imgHtml+'<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div></div>'}
       else if(imgHtml)contentHtml+=imgHtml
       else if(hasText)contentHtml+='<div class="dm-msg-bubble">'+replyHtml+esc(m.text||'').replace(/🖕/g,'💖')+reactionsHtml+'</div>'
       else if(reactionsHtml)contentHtml+='<div class="dm-msg-bubble">'+reactionsHtml+'</div>'
@@ -8657,7 +9147,7 @@ function fbImageGrid(images, opts){
     // Ô "+N" có handler riêng mở danh sách, các ô khác đi theo onclick của grid
     var cellClick=isMore&&opts.onMore?(' onclick="event.stopPropagation();'+opts.onMore+'"'):'';
     var idxAttr=(opts.withIdx!==false)?(' data-idx="'+idx+'"'):'';
-    return '<div class="fb-cell'+more+'"'+moreAttr+cellClick+idxAttr+'><img src="'+src+'" loading="lazy" draggable="false" /></div>';
+    return '<div class="fb-cell'+more+'"'+moreAttr+cellClick+idxAttr+'><img src="'+src+'" loading="lazy" decoding="async" draggable="false" /></div>';
   }).join('');
   var click=opts.onclick?(' onclick="'+opts.onclick+'"'):'';
   return '<div class="fb-grid '+cls+cls2+'"'+click+'>'+cells+'</div>';
@@ -8699,6 +9189,7 @@ function buildFeedCard(entry){
       '<div class="feed-card-caption"><span id="feed-caption-'+entry.id+'">'+esc(captionShort)+'</span>'+
         (hasMore?'<div class="feed-card-caption-expand" id="feed-caption-btn-'+entry.id+'" onclick="event.stopPropagation();toggleCaption(\''+entry.id+'\')">'+(captionExpanded?'Thu gọn':'Xem thêm')+'</div>':'')+
       '</div>'+
+      (entry.audio&&entry.audio.url?renderVoicePlayerHtml(entry.audio.url,entry.audio.duration||0,'feed-voice-player'):'')+
       (commentCount>0?'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Xem '+commentCount+' bình luận</div>':'<div class="feed-card-comments" onclick="event.stopPropagation();openPostDetail(\''+entry.id+'\')">Thêm bình luận...</div>')+
     '</div>'+
   '</div>';
@@ -8889,7 +9380,7 @@ function renderExplore(){
   }
   _exploreImages=allImages;
   var html=allImages.map(function(img,idx){
-    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" onload="fcFitImg(this)" style="width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;" />'+(img.total>1?'<div class="multi-icon"><i class="fas fa-clone"></i></div>':'')+'</div>'
+    return '<div class="explore-item" onclick="openExploreViewer('+idx+')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" decoding="async" onload="fcFitImg(this)" style="width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;" />'+(img.total>1?'<div class="multi-icon"><i class="fas fa-clone"></i></div>':'')+'</div>'
   }).join('');
   container.innerHTML=html||'<div class="explore-empty"><i class="fas fa-search" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Không tìm thấy ảnh nào</div>';
 }
@@ -8994,7 +9485,7 @@ function renderProfileContent(){
     });
     if(!allImages.length){container.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary);font-size:0.85rem;"><i class="fas fa-image" style="font-size:2rem;margin-bottom:12px;display:block;color:var(--border-light);"></i>Chưa có ảnh nào</div>';return}
     container.innerHTML='<div class="profile-grid">'+allImages.map(function(img,idx){
-      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" onload="fcFitImg(this)" style="width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;" />'+(img.total>1?'<div class="overlay-multi"><i class="fas fa-clone"></i></div>':'')+'<div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
+      return '<div class="profile-grid-item" onclick="openPostDetail(\''+img.entryId+'\')"><img src="'+esc(driveThumb(img.url,400))+'" loading="lazy" decoding="async" onload="fcFitImg(this)" style="width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;" />'+(img.total>1?'<div class="overlay-multi"><i class="fas fa-clone"></i></div>':'')+'<div class="overlay"><span><i class="fa-regular fa-comment"></i> '+img.commentCount+'</span></div></div>'
     }).join('')+'</div>'
   }
 }
@@ -9144,6 +9635,7 @@ function renderPostDetail(){
   var captionHtml='';
   if(entry.title)captionHtml+='<div class="pd-caption-title">'+esc(entry.title)+'</div>';
   if(entry.content)captionHtml+='<div class="pd-caption-text">'+esc(entry.content)+'</div>';
+  if(entry.audio&&entry.audio.url)captionHtml+=renderVoicePlayerHtml(entry.audio.url,entry.audio.duration||0,'feed-voice-player');
   document.getElementById('pd-caption').innerHTML=captionHtml||'<div class="pd-caption-text"></div>';
 
   
@@ -10047,7 +10539,8 @@ document.addEventListener('touchcancel',function(){
 
 function submitCreatePost(){
   var content=document.getElementById('create-content').value.trim();
-  if(!content){showToast('<i class="fas fa-exclamation-triangle"></i> Hãy viết nội dung nhật ký');return}
+  var hasVoice=!!window._pendingCreateAudio;
+  if(!content&&!hasVoice){showToast('<i class="fas fa-exclamation-triangle"></i> Hãy viết nội dung hoặc ghi âm nhật ký');return}
   if(_createUploading>0){showToast('<i class="fas fa-spinner fa-spin"></i> Đang tải ảnh, chờ chút...');return}
   var date=document.getElementById('create-date').value;
   if(!date){showToast('<i class="fas fa-exclamation-triangle"></i> Chọn ngày');return}
@@ -10072,10 +10565,30 @@ function submitCreatePost(){
     else delete entry.createdAt;
     delete entry.comments;
   }
-  sendPayload({action:'save_entry',entry:entry},null,function(ok){
-    if(ok){_createUploaded=[];closeCreatePage(true)}
-    else{btn.disabled=false;btn.innerHTML=appState.writeEditId?'Cập nhật':'Đăng'}
-  })
+  function finalizeSave(){
+    sendPayload({action:'save_entry',entry:entry},null,function(ok){
+      if(ok){_createUploaded=[];window._pendingCreateAudio=null;closeCreatePage(true)}
+      else{btn.disabled=false;btn.innerHTML=appState.writeEditId?'Cập nhật':'Đăng'}
+    });
+  }
+  var va=window._pendingCreateAudio;
+  if(va&&va.blob){
+    var ext=(va.blob.type||'').indexOf('mp4')>-1?'m4a':'webm';
+    uploadAudioBlob(va.blob,'diary_voice_'+Date.now()+'.'+ext,date,function(r){
+      if(r&&r.url){
+        entry.audio={url:r.url,driveId:r.driveId||'',duration:va.duration||1};
+        finalizeSave();
+      }else{
+        btn.disabled=false;btn.innerHTML=appState.writeEditId?'Cập nhật':'Đăng';
+        showToast('<i class="fas fa-exclamation-triangle"></i> Lỗi tải nhật ký thoại lên Drive');
+      }
+    });
+  }else if(va&&va.url){
+    entry.audio={url:va.url,driveId:va.driveId||'',duration:va.duration||0};
+    finalizeSave();
+  }else{
+    finalizeSave();
+  }
 }
 
 
@@ -11294,6 +11807,7 @@ function svOpenAuthorProfile(){
     appState.writeImages = [];
     appState.writeEditId = editId || null;
     window._currentWriteMood = null;
+    window._pendingCreateAudio = null;
     window.removeWriteMood();
 
     $('create-submit-btn').disabled = false;
@@ -11308,6 +11822,9 @@ function svOpenAuthorProfile(){
         if (entry.images && entry.images.length) {
           appState.writeImages = entry.images.slice();
         }
+        if (entry.audio && entry.audio.url) {
+          window._pendingCreateAudio = { url: entry.audio.url, driveId: entry.audio.driveId || '', duration: entry.audio.duration || 0 };
+        }
         if (entry.mood) {
           window.setWriteMood(entry.moodEmoji || '🥰', entry.mood);
         }
@@ -11321,6 +11838,7 @@ function svOpenAuthorProfile(){
     } catch (e) {}
 
     window.renderCreatePreview();
+    if (typeof window.renderCreateVoicePreview === 'function') window.renderCreateVoicePreview();
     window.updateCreateSubmitState();
     if (window.history && window.history.pushState) {
       try {
@@ -11337,13 +11855,15 @@ function svOpenAuthorProfile(){
     var val = input ? input.value.trim() : '';
     var hasImages = appState.writeImages && appState.writeImages.length > 0;
     var hasMood = !!window._currentWriteMood;
+    var hasVoice = !!(window._pendingCreateAudio && window._pendingCreateAudio.blob);
     if (appState.writeEditId) {
       if (_createOriginalContent !== null && val !== (_createOriginalContent || '').trim()) return true;
+      if (hasVoice) return true;
       var curIm = (appState.writeImages || []).map(function (im) { return (im && (im.driveId || im.url)) || ''; }).filter(Boolean).sort().join(',');
       var origIm = (_createOriginalImages || []).slice().sort().join(',');
       return curIm !== origIm;
     }
-    return val.length > 0 || hasImages || hasMood;
+    return val.length > 0 || hasImages || hasMood || !!window._pendingCreateAudio;
   };
 
   window.closeCreatePage = function (force, fromPopstate) {
@@ -11353,6 +11873,7 @@ function svOpenAuthorProfile(){
       });
       return;
     }
+    if (typeof window.stopCreateVoiceAndDictation === 'function') window.stopCreateVoiceAndDictation();
     if (_createUploaded && _createUploaded.length) {
       try { deleteRemoteImages(_createUploaded); } catch (e) {}
       _createUploaded = [];
@@ -11422,8 +11943,159 @@ function svOpenAuthorProfile(){
     if (!btn) return;
     var text = ($('create-content') ? $('create-content').value : '').trim();
     var hasImgs = appState.writeImages && appState.writeImages.length > 0;
+    var hasVoice = !!window._pendingCreateAudio;
     var isUploading = !!_createUploading;
-    btn.disabled = isUploading || (!text && !hasImgs);
+    btn.disabled = isUploading || (!text && !hasImgs && !hasVoice);
+  };
+
+  var _createRec = null;
+  var _createRecStream = null;
+  var _createRecChunks = [];
+  var _createRecTimer = null;
+  var _createRecStart = 0;
+  var _createStt = null;
+  var _createSttListening = false;
+
+  window.renderCreateVoicePreview = function () {
+    var box = $('create-voice-preview');
+    if (!box) return;
+    if (_createRec && _createRec.state === 'recording') {
+      box.className = 'fb-create-voice-box show';
+      var sec = Math.floor((Date.now() - _createRecStart) / 1000);
+      box.innerHTML = '<span class="voice-rec-dot"></span><span class="dm-voice-timer" id="create-voice-timer">' + formatVoiceSec(sec) + '</span><span class="dm-voice-spacer">Đang ghi âm nhật ký thoại...</span><button type="button" class="dm-voice-send" onclick="toggleCreateVoiceRecord()">Dừng</button>';
+      return;
+    }
+    var va = window._pendingCreateAudio;
+    if (!va) {
+      box.className = 'fb-create-voice-box';
+      box.innerHTML = '';
+      return;
+    }
+    box.className = 'fb-create-voice-box show';
+    box.innerHTML = '<div style="flex:1;min-width:0;">' + renderVoicePlayerHtml(va.previewUrl || va.url, va.duration || 0, 'feed-voice-player') + '</div>' +
+      '<button type="button" class="fb-create-voice-remove" onclick="removeCreateVoice()" title="Xóa bản ghi âm"><i class="fas fa-times"></i></button>';
+  };
+
+  window.removeCreateVoice = function () {
+    if (window._pendingCreateAudio && window._pendingCreateAudio.previewUrl) {
+      try { URL.revokeObjectURL(window._pendingCreateAudio.previewUrl); } catch (e) {}
+    }
+    window._pendingCreateAudio = null;
+    window.renderCreateVoicePreview();
+    window.updateCreateSubmitState();
+  };
+
+  window.toggleCreateVoiceRecord = function () {
+    var btn = $('create-voice-rec-btn');
+    if (_createRec && _createRec.state === 'recording') {
+      _createRec.stop();
+      if (btn) btn.classList.remove('recording');
+      return;
+    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+      showToast('<i class="fas fa-exclamation-triangle"></i> Trình duyệt chưa hỗ trợ ghi âm');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      _createRecStream = stream;
+      _createRecChunks = [];
+      var mime = typeof getBestAudioMime === 'function' ? getBestAudioMime() : '';
+      var opts = mime ? { mimeType: mime, audioBitsPerSecond: 24000 } : { audioBitsPerSecond: 24000 };
+      try { _createRec = new MediaRecorder(stream, opts); } catch (e) { _createRec = new MediaRecorder(stream); }
+      _createRecStart = Date.now();
+      if (btn) btn.classList.add('recording');
+      window.renderCreateVoicePreview();
+      _createRecTimer = setInterval(function () {
+        var sec = Math.floor((Date.now() - _createRecStart) / 1000);
+        var tEl = $('create-voice-timer');
+        if (tEl) tEl.textContent = formatVoiceSec(sec);
+        if (sec >= 180) window.toggleCreateVoiceRecord();
+      }, 300);
+      _createRec.ondataavailable = function (ev) {
+        if (ev.data && ev.data.size > 0) _createRecChunks.push(ev.data);
+      };
+      _createRec.onstop = function () {
+        clearInterval(_createRecTimer);
+        _createRecTimer = null;
+        if (_createRecStream) { _createRecStream.getTracks().forEach(function (t) { t.stop(); }); _createRecStream = null; }
+        if (btn) btn.classList.remove('recording');
+        if (!_createRecChunks.length) { window.renderCreateVoicePreview(); return; }
+        var durSec = Math.max(1, Math.round((Date.now() - _createRecStart) / 1000));
+        var blob = new Blob(_createRecChunks, { type: _createRec.mimeType || 'audio/webm' });
+        var pUrl = URL.createObjectURL(blob);
+        window._pendingCreateAudio = { blob: blob, previewUrl: pUrl, duration: durSec };
+        window.renderCreateVoicePreview();
+        window.updateCreateSubmitState();
+      };
+      _createRec.start(250);
+    }).catch(function () {
+      showToast('<i class="fas fa-microphone-slash"></i> Không truy cập được micro');
+    });
+  };
+
+  window.toggleVoiceDictation = function () {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      showToast('<i class="fas fa-exclamation-triangle"></i> Trình duyệt chưa hỗ trợ nhận diện giọng nói');
+      return;
+    }
+    var btn = $('create-voice-stt-btn');
+    if (_createSttListening && _createStt) {
+      _createSttListening = false;
+      try { _createStt.stop(); } catch (e) {}
+      if (btn) btn.classList.remove('listening');
+      if (_createRec && _createRec.state === 'recording') window.toggleCreateVoiceRecord();
+      return;
+    }
+    _createStt = new SR();
+    _createStt.lang = 'vi-VN';
+    _createStt.continuous = true;
+    _createStt.interimResults = false;
+    _createStt.onresult = function (ev) {
+      var input = $('create-content');
+      if (!input) return;
+      var added = '';
+      for (var i = ev.resultIndex; i < ev.results.length; i++) {
+        if (ev.results[i].isFinal) {
+          added += (ev.results[i][0] ? ev.results[i][0].transcript : '') + ' ';
+        }
+      }
+      added = added.trim();
+      if (added) {
+        var cur = input.value;
+        input.value = cur ? (cur.replace(/\s+$/, '') + ' ' + added) : added;
+        window.updateCreateSubmitState();
+      }
+    };
+    _createStt.onerror = function () {
+      _createSttListening = false;
+      if (btn) btn.classList.remove('listening');
+      if (_createRec && _createRec.state === 'recording') window.toggleCreateVoiceRecord();
+      showToast('<i class="fas fa-microphone-slash"></i> Không nhận diện được giọng nói');
+    };
+    _createStt.onend = function () {
+      _createSttListening = false;
+      if (btn) btn.classList.remove('listening');
+      if (_createRec && _createRec.state === 'recording') window.toggleCreateVoiceRecord();
+    };
+    _createSttListening = true;
+    if (btn) btn.classList.add('listening');
+    if (!_createRec || _createRec.state !== 'recording') window.toggleCreateVoiceRecord();
+    showToast('<i class="fas fa-comment-dots"></i> Đang nghe & ghi âm... Hãy nói nội dung nhật ký');
+    try { _createStt.start(); } catch (e) { _createSttListening = false; if (btn) btn.classList.remove('listening'); }
+  };
+
+  window.stopCreateVoiceAndDictation = function () {
+    if (_createRec && _createRec.state === 'recording') {
+      _createRecChunks = [];
+      try { _createRec.stop(); } catch (e) {}
+    }
+    if (_createSttListening && _createStt) {
+      _createSttListening = false;
+      try { _createStt.stop(); } catch (e) {}
+    }
+    var rBtn = $('create-voice-rec-btn'); if (rBtn) rBtn.classList.remove('recording');
+    var sBtn = $('create-voice-stt-btn'); if (sBtn) sBtn.classList.remove('listening');
   };
 
   window.renderCreatePreview = function () {
