@@ -7490,6 +7490,18 @@ function uploadAudioBlob(blob, filename, dateStr, callback) {
 
 var _activeVoiceAudio = null;
 var _activeVoiceEl = null;
+function getGlobalVoiceAudio() {
+  var el = document.getElementById('global-voice-audio');
+  if (!el) {
+    el = document.createElement('audio');
+    el.id = 'global-voice-audio';
+    el.setAttribute('playsinline', '');
+    el.setAttribute('preload', 'auto');
+    el.style.display = 'none';
+    document.body.appendChild(el);
+  }
+  return el;
+}
 function resetActiveVoiceUI() {
   if (_activeVoiceEl) {
     _activeVoiceEl.classList.remove('is-playing');
@@ -7506,33 +7518,28 @@ function toggleVoicePlay(btn, rawUrl, totalDur) {
   var player = btn ? btn.closest('.voice-player') : null;
   if (!player) return;
   var url = driveAudioUrl(rawUrl);
-  if (_activeVoiceAudio && _activeVoiceEl === player) {
-    if (_activeVoiceAudio.paused) {
-      _activeVoiceAudio.play().catch(function(){});
-      player.classList.add('is-playing');
-      btn.querySelector('i').className = 'fas fa-pause';
+  var audio = getGlobalVoiceAudio();
+  if (_activeVoiceAudio === audio && _activeVoiceEl === player) {
+    if (audio.paused) {
+      audio.play().then(function() {
+        player.classList.add('is-playing');
+        btn.querySelector('i').className = 'fas fa-pause';
+      }).catch(function(){});
     } else {
-      _activeVoiceAudio.pause();
+      audio.pause();
       player.classList.remove('is-playing');
       btn.querySelector('i').className = 'fas fa-play';
     }
     return;
   }
-  if (_activeVoiceAudio) {
-    try { _activeVoiceAudio.pause(); } catch (e) {}
-    resetActiveVoiceUI();
-  }
-  var audio = new Audio(url);
+  try { audio.pause(); } catch (e) {}
+  resetActiveVoiceUI();
   _activeVoiceAudio = audio;
   _activeVoiceEl = player;
   btn.querySelector('i').className = 'fas fa-spinner fa-spin';
-  audio.addEventListener('canplay', function() {
-    if (_activeVoiceEl === player && !audio.paused) {
-      player.classList.add('is-playing');
-      btn.querySelector('i').className = 'fas fa-pause';
-    }
-  });
-  audio.addEventListener('timeupdate', function() {
+
+  var triedFallback = false;
+  audio.ontimeupdate = function() {
     if (_activeVoiceEl !== player) return;
     var dur = (audio.duration && isFinite(audio.duration)) ? audio.duration : (Number(totalDur) || 0);
     var pct = dur > 0 ? Math.min(1, audio.currentTime / dur) : 0;
@@ -7544,26 +7551,45 @@ function toggleVoicePlay(btn, rawUrl, totalDur) {
     }
     var curEl = player.querySelector('.vp-cur');
     if (curEl) curEl.textContent = formatVoiceSec(audio.currentTime);
-  });
-  audio.addEventListener('ended', function() {
+  };
+  audio.onended = function() {
     resetActiveVoiceUI();
     _activeVoiceAudio = null;
-  });
-  audio.addEventListener('error', function() {
-    resetActiveVoiceUI();
-    _activeVoiceAudio = null;
-    showToast('<i class="fas fa-exclamation-triangle"></i> Không phát được file thoại');
-  });
-  audio.play().then(function() {
-    if (_activeVoiceEl === player) {
-      player.classList.add('is-playing');
-      btn.querySelector('i').className = 'fas fa-pause';
+  };
+  function tryPlay(playUrl) {
+    audio.src = playUrl;
+    audio.load();
+    var p = audio.play();
+    if (p && typeof p.then === 'function') {
+      p.then(function() {
+        if (_activeVoiceEl === player) {
+          player.classList.add('is-playing');
+          btn.querySelector('i').className = 'fas fa-pause';
+        }
+      }).catch(function(err) {
+        if (!triedFallback && playUrl.indexOf('drive.google.com/uc') > -1) {
+          triedFallback = true;
+          tryPlay(playUrl.replace('https://drive.google.com/uc?export=download&id=', 'https://docs.google.com/uc?export=open&id='));
+          return;
+        }
+        resetActiveVoiceUI();
+        _activeVoiceAudio = null;
+        var msg = (err && err.name === 'NotAllowedError') ? 'Trình duyệt chặn phát âm thanh' : 'Không phát được file thoại (' + (err && err.name ? err.name : 'lỗi mạng') + ')';
+        showToast('<i class="fas fa-exclamation-triangle"></i> ' + msg);
+      });
     }
-  }).catch(function() {
+  }
+  audio.onerror = function() {
+    if (!triedFallback && audio.src.indexOf('drive.google.com/uc') > -1) {
+      triedFallback = true;
+      tryPlay(audio.src.replace('https://drive.google.com/uc?export=download&id=', 'https://docs.google.com/uc?export=open&id='));
+      return;
+    }
     resetActiveVoiceUI();
     _activeVoiceAudio = null;
-    showToast('<i class="fas fa-exclamation-triangle"></i> Trình duyệt chặn phát âm thanh');
-  });
+    showToast('<i class="fas fa-exclamation-triangle"></i> Không tải được file thoại từ Drive');
+  };
+  tryPlay(url);
 }
 function seekVoicePlay(e, barEl) {
   var player = barEl ? barEl.closest('.voice-player') : null;
