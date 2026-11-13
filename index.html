@@ -7453,39 +7453,93 @@ function deleteRemoteImages(images){
   })
 }
 
+function blobToWavBlob(blob, targetRate) {
+  targetRate = targetRate || 16000;
+  return new Promise(function(resolve) {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { resolve(blob); return; }
+      blob.arrayBuffer().then(function(buf) {
+        var ctx = new AC();
+        ctx.decodeAudioData(buf, function(decoded) {
+          try {
+            var dur = decoded.duration || 1;
+            var len = Math.max(1, Math.floor(dur * targetRate));
+            var offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, len, targetRate);
+            var src = offline.createBufferSource();
+            src.buffer = decoded;
+            src.connect(offline.destination);
+            src.start(0);
+            offline.startRendering().then(function(rendered) {
+              var ch = rendered.getChannelData(0);
+              var wavBuf = new ArrayBuffer(44 + ch.length * 2);
+              var view = new DataView(wavBuf);
+              function ws(off, s) { for (var i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); }
+              ws(0, 'RIFF');
+              view.setUint32(4, 36 + ch.length * 2, true);
+              ws(8, 'WAVEfmt ');
+              view.setUint32(16, 16, true);
+              view.setUint16(20, 1, true);
+              view.setUint16(22, 1, true);
+              view.setUint32(24, targetRate, true);
+              view.setUint32(28, targetRate * 2, true);
+              view.setUint16(32, 2, true);
+              view.setUint16(34, 16, true);
+              ws(36, 'data');
+              view.setUint32(40, ch.length * 2, true);
+              var idx = 44;
+              for (var i = 0; i < ch.length; i++) {
+                var s = Math.max(-1, Math.min(1, ch[i]));
+                view.setInt16(idx, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                idx += 2;
+              }
+              try { ctx.close(); } catch (e) {}
+              resolve(new Blob([wavBuf], { type: 'audio/wav' }));
+            }).catch(function() { try { ctx.close(); } catch (e) {} resolve(blob); });
+          } catch (e) { try { ctx.close(); } catch (e2) {} resolve(blob); }
+        }, function() { try { ctx.close(); } catch (e) {} resolve(blob); });
+      }).catch(function() { resolve(blob); });
+    } catch (e) { resolve(blob); }
+  });
+}
+
 function uploadAudioBlob(blob, filename, dateStr, callback) {
   if (!blob) { callback(null); return; }
-  var reader = new FileReader();
-  reader.onloadend = function() {
-    var b64 = String(reader.result || '');
-    var parts = b64.split(',');
-    var data = parts[1] || parts[0];
-    if (data.length > 3.5 * 1024 * 1024) {
-      showToast('<i class="fas fa-exclamation-triangle"></i> Đoạn ghi âm quá dài (>2.5MB)');
-      callback(null);
-      return;
-    }
-    var mime = (blob.type || 'audio/webm').split(';')[0];
-    fetch(CONFIG.BACKEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        action: 'upload_image',
-        imageData: data,
-        mimeType: mime,
-        filename: filename || ('voice_' + Date.now() + '.webm'),
-        dateStr: dateStr || todayStr()
+  blobToWavBlob(blob, 16000).then(function(finalBlob) {
+    var isWav = (finalBlob.type || '').indexOf('wav') > -1;
+    var finalName = isWav ? String(filename || ('voice_' + Date.now())).replace(/\.[^.]+$/, '') + '.wav' : (filename || ('voice_' + Date.now() + '.webm'));
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      var b64 = String(reader.result || '');
+      var parts = b64.split(',');
+      var data = parts[1] || parts[0];
+      if (data.length > 4.2 * 1024 * 1024) {
+        showToast('<i class="fas fa-exclamation-triangle"></i> Đoạn ghi âm quá dài (>3MB)');
+        callback(null);
+        return;
+      }
+      var mime = (finalBlob.type || 'audio/wav').split(';')[0];
+      fetch(CONFIG.BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'upload_image',
+          imageData: data,
+          mimeType: mime,
+          filename: finalName,
+          dateStr: dateStr || todayStr()
+        })
       })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(r) {
-      if (r && r.url) callback(r);
-      else callback(null);
-    })
-    .catch(function() { callback(null); });
-  };
-  reader.onerror = function() { callback(null); };
-  reader.readAsDataURL(blob);
+      .then(function(r) { return r.json(); })
+      .then(function(r) {
+        if (r && r.url) callback(r);
+        else callback(null);
+      })
+      .catch(function() { callback(null); });
+    };
+    reader.onerror = function() { callback(null); };
+    reader.readAsDataURL(finalBlob);
+  });
 }
 
 var _activeVoiceAudio = null;
@@ -7539,6 +7593,14 @@ function toggleVoicePlay(btn, rawUrl, totalDur) {
   btn.querySelector('i').className = 'fas fa-spinner fa-spin';
 
   var triedFallback = false;
+  function getFallbackDriveUrl(u) {
+    var m = String(u).match(/[?&]id=([^&]+)/);
+    if (!m) return '';
+    if (window.AndroidBridge && location.origin.indexOf('29s6.github.io') > -1) {
+      return 'https://29s6.github.io/__drive_audio__?id=' + encodeURIComponent(m[1]);
+    }
+    return 'https://docs.google.com/uc?export=open&id=' + encodeURIComponent(m[1]);
+  }
   audio.ontimeupdate = function() {
     if (_activeVoiceEl !== player) return;
     var dur = (audio.duration && isFinite(audio.duration)) ? audio.duration : (Number(totalDur) || 0);
@@ -7567,10 +7629,9 @@ function toggleVoicePlay(btn, rawUrl, totalDur) {
           btn.querySelector('i').className = 'fas fa-pause';
         }
       }).catch(function(err) {
-        if (!triedFallback && playUrl.indexOf('drive.google.com/uc') > -1) {
-          triedFallback = true;
-          tryPlay(playUrl.replace('https://drive.google.com/uc?export=download&id=', 'https://docs.google.com/uc?export=open&id='));
-          return;
+        if (!triedFallback && playUrl.indexOf('__drive_audio__') === -1) {
+          var fb = getFallbackDriveUrl(playUrl);
+          if (fb) { triedFallback = true; tryPlay(fb); return; }
         }
         resetActiveVoiceUI();
         _activeVoiceAudio = null;
@@ -7580,10 +7641,9 @@ function toggleVoicePlay(btn, rawUrl, totalDur) {
     }
   }
   audio.onerror = function() {
-    if (!triedFallback && audio.src.indexOf('drive.google.com/uc') > -1) {
-      triedFallback = true;
-      tryPlay(audio.src.replace('https://drive.google.com/uc?export=download&id=', 'https://docs.google.com/uc?export=open&id='));
-      return;
+    if (!triedFallback && audio.src.indexOf('__drive_audio__') === -1) {
+      var fb = getFallbackDriveUrl(audio.src);
+      if (fb) { triedFallback = true; tryPlay(fb); return; }
     }
     resetActiveVoiceUI();
     _activeVoiceAudio = null;
