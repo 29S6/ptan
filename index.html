@@ -3685,7 +3685,7 @@ html.dark .fb-create-submit:disabled {
   position: absolute;
   top: 20px;
   right: 22px;
-  z-index: 3;
+  z-index: 5;
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -3699,6 +3699,16 @@ html.dark .fb-create-submit:disabled {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 6px 18px rgba(120, 0, 40, 0.22);
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.16s, background 0.16s;
+}
+.fbp-cover-stamp:hover {
+  background: rgba(255, 255, 255, 0.24);
+  transform: scale(1.05);
+}
+.fbp-cover-stamp:active {
+  transform: scale(0.94);
 }
 html.dark .fbp-cover {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255,255,255,0.22);
@@ -5701,7 +5711,7 @@ html.dark .bot-rich code { background: rgba(255,255,255,0.12); }
         <i class="fas fa-heart fbp-heart h4"></i>
         <i class="far fa-heart fbp-heart h5"></i>
       </div>
-      <div class="fbp-cover-stamp" aria-hidden="true"><i class="fas fa-heart"></i></div>
+      <button type="button" class="fbp-cover-stamp" onclick="openSettings()" title="Cài đặt &amp; quyền riêng tư" aria-label="Cài đặt"><i class="fas fa-gear"></i></button>
       <div class="fbp-cover-content">
         <div class="fbp-cover-kicker">Our Love Story</div>
         <div class="fbp-cover-days">
@@ -6656,12 +6666,12 @@ function updateActivityBadge(){
       var isMyPost = !topAct.postAuthorPin || topAct.postAuthorPin === appState.currentPin;
       var postOwnerLabel = isMyPost ? 'bạn' : (cleanName(getDisplayName(topAct.postAuthorPin)) || 'người ấy');
       var actDesc = topAct.type === 'like'
-        ? 'đã thích bài viết của ' + postOwnerLabel
+        ? 'đã thả tim bài viết của ' + postOwnerLabel + ' ❤️'
         : (topAct.type === 'comment'
-          ? 'đã bình luận bài viết của ' + postOwnerLabel
+          ? 'đã bình luận về bài viết của ' + postOwnerLabel + (isMyPost ? ' 💬 Vào xem ngay nhé!' : ' 💬')
           : (topAct.type === 'reply'
-            ? 'đã trả lời bình luận trên bài viết của ' + postOwnerLabel
-            : 'vừa viết một trang nhật ký mới 💌 Ghé đọc và để lại bình luận cho người ấy nhé!'));
+            ? 'đã trả lời bình luận trên bài viết của ' + postOwnerLabel + ' ↩️'
+            : 'vừa viết một trang nhật ký mới 💌 Ghé đọc và để lại bình luận nhé!'));
       triggerNativeNotification('Love Story', '@' + actAuthor + ' ' + actDesc, 2002);
     }
   }
@@ -6922,7 +6932,9 @@ function initApp(){
     window.visualViewport.addEventListener('resize', function() {
       if (appState.currentPage === 'direct') {
         var c = document.getElementById('dm-messages');
-        if (c) setTimeout(function() { c.scrollTop = c.scrollHeight; }, 30);
+        if (c && (c.scrollHeight - c.scrollTop - c.clientHeight) < 60) {
+          setTimeout(function() { c.scrollTop = c.scrollHeight; }, 30);
+        }
       }
     });
   }
@@ -8041,7 +8053,7 @@ function sendDmMessage() {
       msg.pending = true;
       queuePendingDmMessage(msg);
       dmMessagesCache.push(msg);
-      renderDmMessages(); markDmSeen(); _dmShouldScroll = true; playSentSound();
+      _dmShouldScroll = true; renderDmMessages(); markDmSeen(); playSentSound();
       btn.disabled = false;
       showToast('<i class="fas fa-clock"></i> Đã lưu tạm, gửi khi có mạng');
       return;
@@ -8281,6 +8293,7 @@ function loadMoreDmMessages() {
 
 function onDmChatScroll(container) {
   if (!container) return;
+  if (typeof _activeDmChannel !== 'undefined' && _activeDmChannel !== 'main') return;
   if (container.scrollTop <= 15 && !_dmLoadingOlder && _dmVisibleCount < (dmMessagesCache || []).length) {
     loadMoreDmMessages();
   }
@@ -8344,6 +8357,7 @@ function renderDmSharedMedia() {
 }
 
 function renderDmMessagesNow(preserveScroll, prevHeight, prevTop) {
+  if (typeof _activeDmChannel !== 'undefined' && _activeDmChannel !== 'main') return;
   if (typeof renderDmInboxList === 'function') renderDmInboxList();
   if (typeof _activeDmChannel !== 'undefined' && _activeDmChannel !== 'main') {
     renderAiPageView();
@@ -8509,6 +8523,7 @@ function renderDmMessagesNow(preserveScroll, prevHeight, prevTop) {
     html = '<div class="chat-intro-card"><div class="intro-avatar"><img src="' + esc(partnerAva || '') + '" alt=""></div><div class="intro-name">' + esc(partnerName) + '</div><div class="intro-sub">Love Story · Đoạn chat riêng tư</div></div>' + html;
   }
 
+  var prevTopMain = container ? container.scrollTop : 0;
   var shouldScroll = _dmFirstRender || _dmShouldScroll || (container.scrollTop + container.clientHeight >= container.scrollHeight - 40);
   _dmFirstRender = false;
   _dmShouldScroll = false;
@@ -8522,6 +8537,8 @@ function renderDmMessagesNow(preserveScroll, prevHeight, prevTop) {
         container.scrollTop = container.scrollHeight;
       }
     }, 100);
+  } else if (container) {
+    container.scrollTop = prevTopMain;
   }
 }
 
@@ -11004,8 +11021,11 @@ function renderDmPopup(){
         '</div>';
     }
   }
+  var prevDcpTop = box.scrollTop;
+  var shouldScrollDcp = !box.innerHTML || (box.scrollTop + box.clientHeight >= box.scrollHeight - 40);
   box.innerHTML=h;
-  box.scrollTop=box.scrollHeight;
+  if (shouldScrollDcp) box.scrollTop=box.scrollHeight;
+  else box.scrollTop=prevDcpTop;
 }
 function dmPopupEnsureMenu(){
   if(_dmPopupMenuEl)return _dmPopupMenuEl;
@@ -13859,6 +13879,11 @@ function switchDmChannel(ch) {
     if (chipsBox) { chipsBox.style.display = 'none'; chipsBox.innerHTML = ''; }
     if (ha) { ha.classList.remove('ai-hidden'); ha.style.display = ''; }
     if (dot) dot.style.display = '';
+    var dmBox = document.getElementById('dm-messages');
+    if (dmBox && dmBox.dataset.aiChannel !== 'main') {
+      dmBox.dataset.aiChannel = 'main';
+      if (typeof _dmFirstRender !== 'undefined') _dmFirstRender = true;
+    }
     renderDmInboxList();
     renderDmMessages();
     return;
@@ -13881,7 +13906,7 @@ function switchDmChannel(ch) {
   }
 
   renderDmInboxList();
-  renderAiPageView();
+  renderAiPageView(true);
 }
 
 function useAiChip(ch, idx) {
@@ -13914,7 +13939,7 @@ function clearActiveAiChannel(targetCh) {
   }
 }
 
-function renderAiPageView() {
+function renderAiPageView(forceScroll) {
   var ch = _activeDmChannel;
   var t = AI_TEACHERS[ch];
   if (!t) return;
@@ -13925,6 +13950,10 @@ function renderAiPageView() {
 
   var container = document.getElementById('dm-messages');
   if (!container) return;
+  var prevScrollTop = container.scrollTop;
+  var isFirstOpen = !container.dataset.aiChannel || container.dataset.aiChannel !== ch;
+  container.dataset.aiChannel = ch;
+  var isNearBottom = (container.scrollHeight - container.scrollTop - container.clientHeight) < 40;
 
   var list = (_aiMessagesCache[ch] || []).slice();
   if (!list.length) {
@@ -13982,7 +14011,11 @@ function renderAiPageView() {
     '</div>';
   }
   container.innerHTML = h;
-  container.scrollTop = container.scrollHeight;
+  if (forceScroll || isFirstOpen || isNearBottom) {
+    container.scrollTop = container.scrollHeight;
+  } else {
+    container.scrollTop = prevScrollTop;
+  }
 }
 
 function _buildAiCompatPrompt(teacher, history, userText, askerName) {
