@@ -7635,6 +7635,28 @@ function toggleVoicePlay(btn, rawUrl, totalDur) {
     window.AndroidBridge.fetchDriveAudioAsync(driveId, reqId);
     return;
   }
+  if (driveId) {
+    fetch(CONFIG.BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'get_audio', driveId: driveId })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (_activeVoiceEl !== player) return;
+      if (r && r.success && r.dataUrl) {
+        var blobUrl = dataUrlToBlobUrl(r.dataUrl);
+        _driveAudioBlobCache[driveId] = blobUrl;
+        tryPlay(blobUrl);
+      } else {
+        tryPlay(url);
+      }
+    })
+    .catch(function() {
+      if (_activeVoiceEl === player) tryPlay(url);
+    });
+    return;
+  }
   tryPlay(url);
 }
 function seekVoicePlay(e, barEl) {
