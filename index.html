@@ -2876,13 +2876,20 @@ html, body, button, input, textarea, select, .modal-box, .ann-item, .ann-countdo
   #bottom-nav { display: none !important; }
 }
 
-body[data-page="direct"] #bottom-nav,
-#page-direct.active ~ #bottom-nav,
+body.in-mobile-chat #bottom-nav,
 #bottom-nav.nav-hidden {
   display: none !important;
 }
 body[data-page="direct"] #main-content {
+  padding-bottom: calc(54px + env(safe-area-inset-bottom, 0px)) !important;
+}
+body[data-page="direct"].in-mobile-chat #main-content {
   padding-bottom: 0 !important;
+}
+@media (min-width: 1024px) {
+  body[data-page="direct"] #main-content {
+    padding-bottom: 0 !important;
+  }
 }
 #main-content {
   padding-bottom: calc(66px + env(safe-area-inset-bottom, 0px)) !important;
@@ -5390,7 +5397,182 @@ html.dark .dm-ai-engine-badge.openrouter { color: #34d399; }
 }
 html.dark .bot-rich code { background: rgba(255,255,255,0.12); }
 
+/* ==========================================================================
+   UNSLOP + ANIMATE UI POLISH LAYER
+   ========================================================================== */
+:root {
+  --ease-out-ui: cubic-bezier(0.22, 1, 0.36, 1);
+  --bg: #faf5f7;
+  --card-bg: #ffffff;
+  --hover-bg: #f5ecef;
+  --input-bg: #f6eef1;
+  --border: rgba(31, 23, 26, 0.09);
+  --border-light: rgba(31, 23, 26, 0.06);
+  --text-primary: #1f171a;
+  --text-secondary: #68585e;
+  --text-link: #e11d48;
+  --shadow: 0 1px 2px rgba(31, 23, 26, 0.04);
+  --shadow-lg: 0 8px 24px rgba(31, 23, 26, 0.08);
+}
+html.dark {
+  --bg: #161214;
+  --card-bg: #201a1d;
+  --hover-bg: #292125;
+  --input-bg: #292125;
+  --border: rgba(244, 236, 238, 0.09);
+  --border-light: rgba(244, 236, 238, 0.06);
+  --text-primary: #f4ecee;
+  --text-secondary: #b4a2a8;
+  --text-link: #fb3b68;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Unslop: Remove decorative glowing aura & neon pink shadows */
+.lock-glow-aura { display: none !important; }
+#lock-screen {
+  background: var(--bg) !important;
+}
+html.dark #lock-screen {
+  background: #161214 !important;
+  color: #f4ecee !important;
+}
+.lock-avatar-ring {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}
+.pin-dot.active {
+  background: var(--text-link) !important;
+  box-shadow: none !important;
+}
+.pin-key {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  transition: transform 140ms var(--ease-out-ui), background-color 140ms var(--ease-out-ui), border-color 140ms var(--ease-out-ui) !important;
+}
+.pin-key:active, .pin-key.pressed {
+  transform: scale(0.95);
+}
+
+/* Unslop: Quiet chrome, hairline borders, solid accent instead of loud pink gradients/glows */
+#fb-topbar,
+.mobile-header,
+#bottom-nav {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--border) !important;
+}
+.post-card,
+.fb-card,
+.fb-composer,
+.rail-card,
+.story-bar-wrap,
+.modal-box,
+.dm-inbox-panel,
+.dm-chat-panel {
+  box-shadow: var(--shadow) !important;
+  border: 1px solid var(--border) !important;
+}
+.btn-primary,
+.fb-btn-primary,
+.dm-send-btn,
+.fab-create,
+#dm-chat-fab,
+#ai-web-dock {
+  background: var(--text-link) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+}
+.story-ring:not(.seen) {
+  background: var(--text-link) !important;
+}
+.love-days-num,
+.ann-days-left,
+.notif-badge,
+.dm-unread-badge,
+.post-likes-count,
+.story-timer {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Animate UI (A17): Immediate focus-visible ring */
+:focus-visible {
+  outline: 2px solid var(--text-link);
+  outline-offset: 2px;
+}
+
+/* Animate UI (B4): Crisp modal & popover entrance */
+.modal-overlay.active .modal-box,
+.pv-overlay.active .pv-dialog,
+.dm-ai-menu-pop.open {
+  animation: uiPopIn 180ms var(--ease-out-ui) both;
+}
+@keyframes uiPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Animate UI (A5): Responsive press feedback with named transitions */
+button,
+.fbt-icon-btn,
+.post-action-btn,
+.nav-item,
+.mobile-nav-item,
+.dm-ai-chip {
+  transition: transform 140ms var(--ease-out-ui), background-color 140ms var(--ease-out-ui), opacity 140ms var(--ease-out-ui);
+}
+button:active:not(:disabled),
+.fbt-icon-btn:active,
+.post-action-btn:active,
+.dm-ai-chip:active {
+  transform: scale(0.97);
+}
+
+/* Animate UI (A3): Hover only on hover-capable pointers */
+@media (hover: none) {
+  .post-action-btn:hover,
+  .nav-item:hover,
+  .pin-key:hover,
+  .dm-ai-chip:hover {
+    background-color: inherit;
+  }
+}
+
+/* Animate UI (A4): Pause CSS loops when tab is hidden */
+html.tab-hidden *,
+html.tab-hidden *::before,
+html.tab-hidden *::after {
+  animation-play-state: paused !important;
+}
+
+/* Animate UI (A1): Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  button:active:not(:disabled),
+  .pin-key:active,
+  .pin-key.pressed,
+  .fbt-icon-btn:active,
+  .post-action-btn:active,
+  .dm-ai-chip:active {
+    transform: none !important;
+  }
+}
+
 </style>
+<script>
+  document.addEventListener('visibilitychange', function () {
+    document.documentElement.classList.toggle('tab-hidden', document.hidden);
+  });
+</script>
 </head>
 <body>
 <div id="loading-bar"><div class="bar" id="loading-bar-inner"></div></div>
@@ -8884,8 +9066,8 @@ function smoothScroll(el,to,dur){
 function switchPage(page){
   if(page!=='direct'){cancelEditDm();cancelReplyDm();closeDmMenu();unfocusDmMessage();}
   appState.currentPage=page;
-  var nav=document.getElementById('bottom-nav');if(nav)nav.style.display=page==='direct'?'none':'';
-  var mc=document.getElementById('main-content');if(mc){mc.style.paddingBottom=page==='direct'?'0':'';mc.style.overflow=page==='direct'?'hidden':'';}
+  var nav=document.getElementById('bottom-nav');if(nav)nav.style.display='';
+  var mc=document.getElementById('main-content');if(mc){mc.style.paddingBottom=(page==='direct'&&window.innerWidth<1024)?'calc(54px + env(safe-area-inset-bottom, 0px))':(page==='direct'?'0':'');mc.style.overflow=page==='direct'?'hidden':'';}
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   var target=document.getElementById('page-'+page);
   void target.offsetHeight;
@@ -8912,7 +9094,11 @@ function switchPage(page){
     var cs=document.getElementById('chat-shell');
     if(cs&&window.innerWidth<1024)cs.classList.remove('mobile-in-chat');
     if(typeof renderDmInboxList==='function')renderDmInboxList();
-    _dmShouldScroll=true;renderDmMessages();markDmSeen();
+    if(typeof _activeDmChannel!=='undefined'&&_activeDmChannel!=='main'&&typeof renderAiPageView==='function'){
+      renderAiPageView(true);
+    }else{
+      _dmShouldScroll=true;renderDmMessages();markDmSeen();
+    }
     setTimeout(function(){var inp=document.getElementById('dm-input');if(inp&&(window.innerWidth>=1024||(cs&&cs.classList.contains('mobile-in-chat'))))inp.focus()},200);
   }
   else if(page==='explore'){renderExplore();ensureAllEntries(renderAll)}
@@ -8944,7 +9130,13 @@ function renderAll(){
     else if(page==='activity')renderActivity();
     else if(page==='profile'){if(profileViewUser)renderProfileForUser(profileViewUser);else renderProfile();}
     renderStories();
-    if(page==='direct')renderDmMessages();
+    if(page==='direct'){
+      if(typeof _activeDmChannel!=='undefined'&&_activeDmChannel!=='main'&&typeof renderAiPageView==='function'){
+        renderAiPageView(true);
+      }else{
+        renderDmMessages();
+      }
+    }
     updateDmBadge();
     updateWriteReminderBanner();
   });
@@ -12545,12 +12737,15 @@ function svOpenAuthorProfile(){
     document.querySelectorAll('.nav-item[data-page]').forEach(function (t) { t.classList.toggle('active', t.dataset.page === page); });
 
     var bnav = $('bottom-nav');
+    var cs = $('chat-shell');
+    var inMobileChat = (page === 'direct' && window.innerWidth < 1024 && cs && cs.classList.contains('mobile-in-chat'));
+    document.body.classList.toggle('in-mobile-chat', !!inMobileChat);
     if (bnav) {
-      if (page === 'direct') {
-        bnav.classList.add('nav-hidden');
-      } else {
-        bnav.classList.remove('nav-hidden');
-      }
+      bnav.classList.toggle('nav-hidden', !!inMobileChat);
+    }
+    var mc = $('main-content');
+    if (mc && page === 'direct') {
+      mc.style.paddingBottom = (window.innerWidth < 1024 && !inMobileChat) ? 'calc(54px + env(safe-area-inset-bottom, 0px))' : '0';
     }
   }
 
@@ -13762,6 +13957,11 @@ function onDmBackClick() {
   var cs = document.getElementById('chat-shell');
   if (window.innerWidth < 1024 && cs && cs.classList.contains('mobile-in-chat')) {
     cs.classList.remove('mobile-in-chat');
+    document.body.classList.remove('in-mobile-chat');
+    var bnav = document.getElementById('bottom-nav');
+    if (bnav) bnav.classList.remove('nav-hidden');
+    var mc = document.getElementById('main-content');
+    if (mc) mc.style.paddingBottom = 'calc(54px + env(safe-area-inset-bottom, 0px))';
     renderDmInboxList();
     return;
   }
@@ -13773,6 +13973,11 @@ function openDmThread(ch) {
   var cs = document.getElementById('chat-shell');
   if (cs && window.innerWidth < 1024) {
     cs.classList.add('mobile-in-chat');
+    document.body.classList.add('in-mobile-chat');
+    var bnav = document.getElementById('bottom-nav');
+    if (bnav) bnav.classList.add('nav-hidden');
+    var mc = document.getElementById('main-content');
+    if (mc) mc.style.paddingBottom = '0';
   }
   setTimeout(function() {
     var inp = document.getElementById('dm-input');
@@ -13939,6 +14144,17 @@ function clearActiveAiChannel(targetCh) {
   }
 }
 
+function _scrollDmToBottom(container) {
+  if (!container) return;
+  container.scrollTop = container.scrollHeight;
+  requestAnimationFrame(function() {
+    if (container) container.scrollTop = container.scrollHeight;
+  });
+  setTimeout(function() {
+    if (container) container.scrollTop = container.scrollHeight;
+  }, 60);
+}
+
 function renderAiPageView(forceScroll) {
   var ch = _activeDmChannel;
   var t = AI_TEACHERS[ch];
@@ -13951,9 +14167,10 @@ function renderAiPageView(forceScroll) {
   var container = document.getElementById('dm-messages');
   if (!container) return;
   var prevScrollTop = container.scrollTop;
+  var isVisible = container.clientHeight > 0;
   var isFirstOpen = !container.dataset.aiChannel || container.dataset.aiChannel !== ch;
-  container.dataset.aiChannel = ch;
-  var isNearBottom = (container.scrollHeight - container.scrollTop - container.clientHeight) < 40;
+  if (isVisible) container.dataset.aiChannel = ch;
+  var isNearBottom = (container.scrollHeight - container.scrollTop - container.clientHeight) < 60;
 
   var list = (_aiMessagesCache[ch] || []).slice();
   if (!list.length) {
@@ -14012,7 +14229,7 @@ function renderAiPageView(forceScroll) {
   }
   container.innerHTML = h;
   if (forceScroll || isFirstOpen || isNearBottom) {
-    container.scrollTop = container.scrollHeight;
+    _scrollDmToBottom(container);
   } else {
     container.scrollTop = prevScrollTop;
   }
@@ -14139,7 +14356,7 @@ async function sendAiChannelMessage(source, explicitCh) {
       error: true
     });
     renderDmInboxList();
-    if (_activeDmChannel === ch) renderAiPageView();
+    if (_activeDmChannel === ch) renderAiPageView(true);
     return;
   }
 
@@ -14156,7 +14373,7 @@ async function sendAiChannelMessage(source, explicitCh) {
     pending: true
   };
   renderDmInboxList();
-  if (_activeDmChannel === ch) renderAiPageView();
+  if (_activeDmChannel === ch) renderAiPageView(true);
 
   try {
     var reply = await callAiTeacherApi(teacher, historyBefore, text, askerName);
@@ -14186,7 +14403,7 @@ async function sendAiChannelMessage(source, explicitCh) {
     _aiPendingMsg[ch] = null;
     if (sendBtn) sendBtn.disabled = false;
     renderDmInboxList();
-    if (_activeDmChannel === ch) renderAiPageView();
+    if (_activeDmChannel === ch) renderAiPageView(true);
   }
 }
 
