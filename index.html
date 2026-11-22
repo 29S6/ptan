@@ -715,16 +715,24 @@ html.dark .u252-pl::after{background:linear-gradient(100deg,transparent,rgba(255
   padding:16px!important;gap:10px!important;
 }
 html.dark .chat-body,html.dark .dm-messages{background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.04) 1px,transparent 0) 0 0/22px 22px,var(--ux-page)!important}
+.dm-msg-group{display:flex;flex-direction:column;gap:2px!important}
 .dm-msg.sent .dm-msg-bubble{
   background:linear-gradient(135deg,#ff5c88 0%,#ff3b6f 58%,#ff1e56 100%)!important;color:#fff!important;
-  border-radius:22px 22px 6px 22px!important;padding:10px 15px!important;
+  border-radius:20px!important;padding:9px 14px!important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 10px 24px -12px rgba(255,30,86,.55)!important;
 }
 .dm-msg:not(.sent) .dm-msg-bubble{
   background:var(--ux-surface)!important;color:var(--ux-ink)!important;
-  border:1px solid var(--ux-line)!important;border-radius:22px 22px 22px 6px!important;padding:10px 15px!important;
+  border:1px solid var(--ux-line)!important;border-radius:20px!important;padding:9px 14px!important;
   box-shadow:0 8px 20px -16px var(--ux-shadow-strong)!important;
 }
+.dm-msg-group .dm-msg:only-child .dm-msg-bubble{border-radius:20px!important}
+.dm-msg-group .dm-msg.sent:first-child:not(:last-child) .dm-msg-bubble{border-radius:20px 20px 6px 20px!important}
+.dm-msg-group .dm-msg:not(.sent):first-child:not(:last-child) .dm-msg-bubble{border-radius:20px 20px 20px 6px!important}
+.dm-msg-group .dm-msg.sent:not(:first-child):not(:last-child) .dm-msg-bubble{border-radius:20px 6px 6px 20px!important}
+.dm-msg-group .dm-msg:not(.sent):not(:first-child):not(:last-child) .dm-msg-bubble{border-radius:6px 20px 20px 6px!important}
+.dm-msg-group .dm-msg.sent:last-child:not(:first-child) .dm-msg-bubble{border-radius:20px 6px 20px 20px!important}
+.dm-msg-group .dm-msg:not(.sent):last-child:not(:first-child) .dm-msg-bubble{border-radius:6px 20px 20px 20px!important}
 .dm-ai-chips{
   background:var(--ux-glass)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;
   border-top:1px solid var(--ux-line)!important;padding:8px 14px 4px!important;gap:8px!important;
@@ -1500,12 +1508,32 @@ html.dark #create-page .fb-create-card{
     box-shadow:0 2px 8px -4px var(--ux-shadow-strong)!important;
   }
   .u041-shadow{box-shadow:0 6px 16px -8px var(--ux-shadow-strong)!important}
+
+  /* Snappy mobile transitions so touch interactions feel immediate */
+  .u041-ic,.u041-lab,.u039-pill,.u044-body,.dm-msg-inner,#create-page .fb-create-card,#post-overlay .pd-modal,.modal-overlay .modal-box{
+    transition-duration:.24s!important;
+  }
+  .dm-msg.u078-in-rec,.dm-msg.u078-in-sent{animation-duration:.28s!important}
 }
 @media (max-width:1023px){
   #app,#main-content{height:var(--vv-h,100dvh)!important}
   body[data-page="direct"]:has(.mobile-in-chat) #main-content,
   body[data-page="direct"].in-mobile-chat #main-content{padding-bottom:0!important}
-  .chat-input-pill .input-tool-icon,.chat-input-pill .btn-heart-quick,#post-overlay .pd-img-btn{flex-shrink:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+  .chat-input-pill .input-tool-icon,#post-overlay .pd-img-btn{flex-shrink:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+  .chat-input-pill .btn-heart-quick{flex-shrink:0!important}
+}
+.chat-input-pill.has-text .btn-heart-quick,
+.chat-input-pill.has-text #quick-heart-btn{display:none!important}
+.u022-float-heart{
+  position:fixed;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;
+  pointer-events:none;z-index:9650;will-change:transform,opacity;
+  animation:u022FloatUp var(--dur,950ms) cubic-bezier(.22,.8,.36,1) var(--del,0ms) forwards;
+}
+.u022-float-heart svg{width:100%;height:100%;display:block}
+@keyframes u022FloatUp{
+  0%{opacity:0;transform:translate3d(0,0,0) scale(.45) rotate(var(--r0,-8deg))}
+  18%{opacity:1;transform:translate3d(calc(var(--dx,0px) * .25),-26px,0) scale(var(--sc,1.08)) rotate(var(--r1,8deg))}
+  100%{opacity:0;transform:translate3d(var(--dx,0px),var(--dy,-175px),0) scale(.72) rotate(var(--r2,-12deg))}
 }
 </style>
 <script>document.addEventListener("visibilitychange",function(){document.documentElement.classList.toggle("tab-hidden",document.hidden)});</script>
@@ -3121,15 +3149,31 @@ html.dark #create-page .fb-create-card{
   window.addEventListener('online', function () { updateNetBar(true); });
   if (!navigator.onLine) updateNetBar(false);
 
-  var dmInputEl = document.getElementById('dm-input'), u028Ring = document.getElementById('u028-ring'), u028Left = u028Ring ? u028Ring.querySelector('.u028-left') : null, U028_MAX = 500;
+  var dmInputEl = document.getElementById('dm-input'), dmInputPill = dmInputEl ? dmInputEl.closest('.chat-input-pill') : null, u028Ring = document.getElementById('u028-ring'), u028Left = u028Ring ? u028Ring.querySelector('.u028-left') : null, U028_MAX = 500;
+  function syncDmInputHasText() {
+    if (!dmInputEl || !dmInputPill) return;
+    dmInputPill.classList.toggle('has-text', dmInputEl.value.trim().length > 0);
+  }
   function updateU028Ring() {
     if (!dmInputEl || !u028Ring) return;
+    syncDmInputHasText();
     var n = Array.from(dmInputEl.value || '').length; u028Ring.classList.toggle('on', n >= 80);
     var rest = U028_MAX - n; u028Ring.style.setProperty('--p', Math.min(1, n / U028_MAX).toFixed(3));
     u028Ring.classList.toggle('is-near', rest <= 100 && rest >= 0); u028Ring.classList.toggle('is-over', rest < 0);
     if (u028Left) u028Left.textContent = rest <= 100 ? String(rest) : '';
   }
-  if (dmInputEl) dmInputEl.addEventListener('input', updateU028Ring);
+  if (dmInputEl) {
+    dmInputEl.addEventListener('input', updateU028Ring);
+    syncDmInputHasText();
+  }
+  var origOnDmInput = window.onDmInput;
+  if (typeof origOnDmInput === 'function') {
+    window.onDmInput = function () {
+      var r = origOnDmInput.apply(this, arguments);
+      syncDmInputHasText();
+      return r;
+    };
+  }
 
   var dmSendBtn = document.getElementById('dm-send-btn');
   var u005PlaneSvg = '<svg viewBox="0 0 28 24"><path d="M1 3 27 12 10 13Z" fill="#fff"/><path d="M10 13 27 12 6 22Z" fill="#ffd9e4"/><path d="M10 13 27 12 12.5 17Z" fill="#ffa0b8"/><path d="M1 3 27 12 10 13Z" fill="none" stroke="#ff3b6f" stroke-width=".9" stroke-linejoin="round"/><path d="M10 13 27 12 6 22Z" fill="none" stroke="#ff3b6f" stroke-width=".9" stroke-linejoin="round"/></svg>';
@@ -3353,12 +3397,57 @@ html.dark #create-page .fb-create-card{
     burst.innerHTML = '<span class="u022-ring" aria-hidden="true"></span>' + HEART_ANGLES.map(function (d) { return '<span class="u022-dot" style="--a:' + d[0] + 'deg;--c:' + d[1] + ';--c2:' + d[2] + '" aria-hidden="true"><i></i><i></i></span>'; }).join('');
     document.body.appendChild(burst); setTimeout(function () { if (burst.parentNode) burst.remove(); }, 780);
   };
+  window.triggerLucianFloatingHearts = function (targetEl) {
+    if (!targetEl || isReducedMotion()) return;
+    var rect = targetEl.getBoundingClientRect();
+    if (!rect.width && !rect.height) return;
+    var cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+    var specs = [
+      { dx: -26, dy: -165, sc: 1.05, r0: -12, r1: 10, r2: -16, dur: 940, del: 0, c: '#ff1e56' },
+      { dx: 18, dy: -190, sc: 1.2, r0: 10, r1: -8, r2: 14, dur: 1020, del: 55, c: '#ff4d6d' },
+      { dx: -8, dy: -145, sc: 0.88, r0: -6, r1: 14, r2: -10, dur: 860, del: 95, c: '#ff758c' },
+      { dx: 30, dy: -155, sc: 0.95, r0: 14, r1: -12, r2: 18, dur: 920, del: 130, c: '#ff3b6f' },
+      { dx: -36, dy: -135, sc: 0.82, r0: -18, r1: 8, r2: -20, dur: 880, del: 170, c: '#ff8aa6' },
+      { dx: 6, dy: -210, sc: 1.1, r0: 6, r1: -10, r2: 12, dur: 1060, del: 210, c: '#ff1e56' }
+    ];
+    var frag = document.createDocumentFragment();
+    var nodes = [];
+    specs.forEach(function (sp) {
+      var h = document.createElement('span');
+      h.className = 'u022-float-heart';
+      h.style.left = cx + 'px';
+      h.style.top = cy + 'px';
+      h.style.setProperty('--dx', sp.dx + 'px');
+      h.style.setProperty('--dy', sp.dy + 'px');
+      h.style.setProperty('--sc', sp.sc);
+      h.style.setProperty('--r0', sp.r0 + 'deg');
+      h.style.setProperty('--r1', sp.r1 + 'deg');
+      h.style.setProperty('--r2', sp.r2 + 'deg');
+      h.style.setProperty('--dur', sp.dur + 'ms');
+      h.style.setProperty('--del', sp.del + 'ms');
+      h.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="' + sp.c + '" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+      frag.appendChild(h);
+      nodes.push(h);
+    });
+    document.body.appendChild(frag);
+    setTimeout(function () {
+      nodes.forEach(function (n) { if (n.parentNode) n.remove(); });
+    }, 1320);
+  };
   var quickHeartBtn = document.getElementById('quick-heart-btn');
-  if (quickHeartBtn) quickHeartBtn.addEventListener('click', function () { window.triggerLucianHeartBurst(quickHeartBtn); });
+  if (quickHeartBtn) quickHeartBtn.addEventListener('click', function () {
+    window.triggerLucianHeartBurst(quickHeartBtn);
+    window.triggerLucianFloatingHearts(quickHeartBtn);
+  });
   document.addEventListener('click', function (e) {
-    var annHeart = e.target.closest('.fba-hero-heart'); if (annHeart) { window.triggerLucianHeartBurst(annHeart); return; }
-    var reactBtn = e.target.closest('.post-action-btn, .fb-react-btn, .fc-rp-emoji, [data-react-emoji], .dm-rp-emoji, .dm-menu-reactions span');
-    if (reactBtn) window.triggerLucianHeartBurst(reactBtn);
+    var annHeart = e.target.closest('.fba-hero-heart'); if (annHeart) { window.triggerLucianHeartBurst(annHeart); window.triggerLucianFloatingHearts(annHeart); return; }
+    var reactBtn = e.target.closest('.post-action-btn, .fb-react-btn, .fc-rp-emoji, [data-react-emoji], .dm-rp-emoji, .dm-menu-reactions span, .dm-msg-reaction');
+    if (reactBtn) {
+      window.triggerLucianHeartBurst(reactBtn);
+      if (/❤️|💖|💕|💗|💓|love/i.test(reactBtn.textContent || reactBtn.getAttribute('title') || '')) {
+        window.triggerLucianFloatingHearts(reactBtn);
+      }
+    }
   });
 
   /* ===== 12. #079 Skeleton & Bloom + Magnetic .feed-more-btn ===== */
