@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
   <title>Love Story</title>
@@ -614,9 +614,9 @@ html.dark .u252-pl::after{background:linear-gradient(100deg,transparent,rgba(255
 .fc-act-btn.reacted-love,.fc-act-btn.reacted-like,.fc-act-btn.reacted-care,.fc-act-btn.reacted-haha,.fc-act-btn.reacted-wow,.fc-act-btn.reacted-sad,.fc-act-btn.reacted-angry{animation:u077-chip-pop .42s var(--ux-spring)}
 @keyframes u077-chip-pop{0%{transform:scale(.55)}60%{transform:scale(1.16)}100%{transform:none}}
 
-.chat-input-pill{border-radius:24px!important;box-shadow:0 0 0 1.5px var(--ux-line),0 10px 26px -18px var(--ux-shadow-strong)!important;transition:box-shadow .28s var(--ux-ease),border-color .28s!important}
-.chat-input-pill:focus-within{box-shadow:0 0 0 2px var(--ux-accent),0 0 0 6px var(--ux-accent-soft)!important}
-#dm-input{transition:height .2s var(--ux-ease)}
+.chat-input-pill{border-radius:24px!important;background:var(--ux-surface-2)!important;border:1px solid var(--ux-line)!important;box-shadow:none!important;gap:6px!important;transition:box-shadow .22s var(--ux-ease),border-color .22s,background-color .22s!important}
+.chat-input-pill:focus-within{background:var(--ux-surface)!important;border-color:var(--ux-accent)!important;box-shadow:0 0 0 3px var(--ux-accent-soft)!important}
+#dm-input,#dm-input:focus,#dm-input:focus-visible{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:none!important;padding:7px 4px!important;min-height:24px!important;max-height:108px!important;line-height:1.4!important;font-size:15px!important;transition:height .2s var(--ux-ease)}
 .u028-ring{position:relative;width:24px;height:24px;flex:none;display:none;place-items:center;transition:transform .4s var(--ux-spring)}
 .u028-ring.on{display:grid}
 .u028-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
@@ -630,9 +630,7 @@ html.dark .u252-pl::after{background:linear-gradient(100deg,transparent,rgba(255
 .u028-ring.is-near .u028-left{color:var(--ux-warn)}
 .u028-ring.is-over .u028-left{color:var(--ux-danger)}
 
-#dm-send-btn,#pd-send-btn{position:relative;overflow:visible!important;min-width:44px!important;padding:0 14px!important;border-radius:999px!important;background:var(--ux-grad)!important;color:#fff!important;font-weight:800!important;transition:transform .35s var(--ux-spring),background .35s,filter .2s!important}
-#dm-send-btn{height:40px!important}
-#pd-send-btn{height:36px!important}
+#dm-send-btn,#pd-send-btn{position:relative;overflow:visible!important;min-width:58px!important;height:36px!important;min-height:36px!important;padding:0 13px!important;border-radius:999px!important;background:var(--ux-grad)!important;color:#fff!important;font-weight:800!important;font-size:.86rem!important;flex-shrink:0;transition:transform .3s var(--ux-spring),background .3s,filter .2s!important}
 #dm-send-btn:active,#pd-send-btn:active{transform:scale(.92)!important}
 .u005-inner{display:inline-flex;align-items:center;justify-content:center;gap:6px;position:relative}
 .u005-pl{width:17px;height:15px;transform:translate(-1px,1px) rotate(-12deg);transition:transform .45s var(--ux-spring),opacity .2s}
@@ -739,9 +737,9 @@ html.dark .chat-body,html.dark .dm-messages{background:radial-gradient(circle at
 .dm-ai-chip:hover{transform:translateY(-2px);border-color:var(--ux-accent)!important;background:var(--ux-accent-soft)!important}
 .chat-footer{
   background:var(--ux-glass)!important;backdrop-filter:blur(16px) saturate(160%)!important;-webkit-backdrop-filter:blur(16px) saturate(160%)!important;
-  border-top:1px solid var(--ux-line)!important;padding:10px 14px calc(10px + var(--safe-bottom))!important;
+  border-top:1px solid var(--ux-line)!important;padding:8px 10px calc(8px + var(--safe-bottom))!important;
 }
-.chat-input-pill{border-radius:26px!important;background:var(--ux-surface)!important;padding:4px 6px 4px 14px!important}
+.chat-input-pill{border-radius:24px!important;padding:4px 5px 4px 12px!important}
 .btn-heart-quick{transition:transform .3s var(--ux-spring),filter .2s!important}
 .btn-heart-quick:hover{transform:scale(1.16)}
 .btn-heart-quick:active{transform:scale(.85)}
@@ -904,9 +902,14 @@ html.dark .u379-recap-card .duo-flame-wrap{background:rgba(255,122,26,.16)!impor
 #post-overlay .pd-dropdown.show{border-radius:16px!important;background:var(--ux-glass)!important;backdrop-filter:blur(16px);box-shadow:0 0 0 1px var(--ux-line),0 18px 40px -18px var(--ux-shadow-strong)!important;animation:u077MenuPop .3s var(--ux-spring) both!important}
 #post-overlay .pd-reply-preview{border-radius:14px!important;background:var(--ux-surface-2)!important;animation:u078-rep-slide .28s var(--ux-spring) both!important}
 @keyframes luxCmtIn{from{opacity:0;transform:translateY(8px) scale(.98)}}
-#post-overlay .pd-input-fixed{background:var(--ux-glass)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important;border-top:1px solid var(--ux-line)!important}
-#post-overlay .pd-input-row{border-radius:22px!important;padding:6px 8px 6px 12px!important;background:var(--ux-surface-2)!important;box-shadow:inset 0 0 0 1px var(--ux-line);transition:box-shadow .25s var(--ux-ease)}
-#post-overlay .pd-input-row:focus-within{box-shadow:inset 0 0 0 1.5px var(--ux-accent),0 0 0 4px var(--ux-accent-soft)}
+#post-overlay .pd-input-fixed{background:var(--ux-glass)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important;border-top:1px solid var(--ux-line)!important;padding:8px 10px calc(8px + var(--safe-bottom))!important}
+#post-overlay .pd-input-row{border-radius:24px!important;padding:4px 5px 4px 12px!important;gap:6px!important;background:var(--ux-surface-2)!important;border:1px solid var(--ux-line)!important;box-shadow:none!important;transition:box-shadow .22s var(--ux-ease),border-color .22s,background-color .22s!important}
+#post-overlay .pd-input-row:focus-within{background:var(--ux-surface)!important;border-color:var(--ux-accent)!important;box-shadow:0 0 0 3px var(--ux-accent-soft)!important}
+#pd-input,#pd-input:focus,#pd-input:focus-visible{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:none!important;padding:7px 4px!important;min-height:24px!important;max-height:108px!important;line-height:1.4!important;font-size:15px!important}
+@media (max-width:767px){
+  #post-overlay{padding:0!important;align-items:flex-end!important}
+  #post-overlay .pd-modal{width:100%!important;max-width:100%!important;height:var(--vv-h,100dvh)!important;max-height:var(--vv-h,100dvh)!important;border-radius:22px 22px 0 0!important}
+}
 #post-overlay .pd-carousel-img{cursor:zoom-in;transform-origin:0 0;transition:transform .42s var(--ux-ease);user-select:none;-webkit-user-select:none}
 #post-overlay .pd-carousel-img.u061-now{transition:none}
 #post-overlay.u061-zooming .pd-carousel-img{cursor:grab;touch-action:none}
@@ -1497,6 +1500,12 @@ html.dark #create-page .fb-create-card{
     box-shadow:0 2px 8px -4px var(--ux-shadow-strong)!important;
   }
   .u041-shadow{box-shadow:0 6px 16px -8px var(--ux-shadow-strong)!important}
+}
+@media (max-width:1023px){
+  #app,#main-content{height:var(--vv-h,100dvh)!important}
+  body[data-page="direct"]:has(.mobile-in-chat) #main-content,
+  body[data-page="direct"].in-mobile-chat #main-content{padding-bottom:0!important}
+  .chat-input-pill .input-tool-icon,.chat-input-pill .btn-heart-quick,#post-overlay .pd-img-btn{flex-shrink:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
 }
 </style>
 <script>document.addEventListener("visibilitychange",function(){document.documentElement.classList.toggle("tab-hidden",document.hidden)});</script>
@@ -4332,6 +4341,20 @@ html.dark #create-page .fb-create-card{
       }
       return r;
     };
+  }
+
+  /* Sync mobile visualViewport height so chat & comment input bars sit flush above soft keyboard */
+  function syncVisualViewport() {
+    if (window.innerWidth >= 1024 || !window.visualViewport) {
+      document.documentElement.style.removeProperty('--vv-h');
+      return;
+    }
+    document.documentElement.style.setProperty('--vv-h', Math.round(window.visualViewport.height) + 'px');
+  }
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', syncVisualViewport, { passive: true });
+    window.addEventListener('orientationchange', function () { setTimeout(syncVisualViewport, 120); }, { passive: true });
+    syncVisualViewport();
   }
 
   /* Initialize on load */
